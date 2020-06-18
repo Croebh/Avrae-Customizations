@@ -1,0 +1,3 @@
+snippet ----
+{{nTitle=get('nTitle','[charname] makes a [cname] check').strip('!')+f"{', and'*exists('nTitle')} ####!"}}
+-title "{{nTitle}}"

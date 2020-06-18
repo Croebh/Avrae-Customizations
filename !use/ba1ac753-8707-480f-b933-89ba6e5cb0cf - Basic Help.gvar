@@ -1,0 +1,33 @@
+**`!use [args]`**
+
+Rolls saves for combatants in init. Pulls their save bonuses and relevant effects from the combat. 
+
+
+**__Valid Arguments__**
+
+Arguments marked with **†** allow for variable evaluation via `{}`
+
+`-save [str|dex|con|wis|cha|int]` - Sets the save to be rolled (Default: Dexterity)
+`-dc [#]` - Sets the DC (Default: 10). **†**
+`-h` - Hides the DC and Damage
+
+`-t \"[target]\"` - Sets targets for the save. You can chain multiple targets or do a single target. If you pass no targets, it will roll the save for your active character.
+`adv/dis` - Causes the save or saves to be rolled at dis/advantage. (`adv/dis` cancels `dis/adv` in the cvar, double up to apply instead.)
+`-b [conditional bonus]` - Adds (or subtracts) a bonus to the saves (accepts dice). **†**
+
+`pass` - Automatically succeed on the save.
+`fail` - Automatically fail the save.
+
+`-d [damage]` - Sets damage to be dealt on a fail. **†**
+`crit` - Doubles the dice in `-d`
+`-effect \"[name]|[effects]|[duration]\"` - Adds an effect to the target. If no duration is given, defaults to infinite. **†**
+`-max [#]` - Modifies the max health of those who fail the save. **†**
+"
+
+-f "_ _|`-title \"[title]\"` - Replaces the title. `[name]` and `[sname]`  will be replaced automatically. **†**
+`-phrase \"[flavor text]\"` - Adds flavor text to the save. **†**
+`-desc \"[descriptive text]\"` - Adds a field for rules text and such. **†**
+`-thumb [url]` - Adds a thumbnail image.
+`-roll [dice]` - Rolls additional dice, just for display. **†**
+
+> Use `!use ?` to view the full listing of arguments.

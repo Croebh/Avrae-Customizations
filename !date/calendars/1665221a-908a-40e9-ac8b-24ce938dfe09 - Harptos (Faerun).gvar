@@ -1,0 +1,157 @@
+{
+  "length": 365,
+  "name": "Calendar of Harptos",
+  "moon": 
+    [
+      "🌕 Full Moon",
+      "🌖 Waning Gibbous",
+      "🌗 Last Quarter",
+      "🌘 Waning Crescent",
+      "🌑 New Moon",
+      "🌒 Waxing Crescent",
+      "🌓 First Quarter",
+      "🌔 Waxing Gibbous"
+    ],
+  "moonCycle": 3.75,
+  "seasons": 
+    [
+      {
+        "name": "❄ Winter",
+        "start": 1,
+        "end": 79
+      },
+      {
+        "name": "🌱 Spring",
+        "start": 80,
+        "end": 171 
+      },
+      {
+        "name": "☀️ Summer",
+        "start": 172,
+        "end": 263
+      },
+      {
+        "name": "🍂 Fall",
+        "start": 264,
+        "end": 354
+      },
+      {
+        "name": "❄ Winter",
+        "start": 355,
+        "end": 365
+      }
+    ],
+  "months":
+    [
+      {
+        "name": "Hammer (*Deepwinter*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Midwinter",
+        "length": 1,
+        "holidays":[]
+      },
+      {
+        "name": "Alturiak (*The Claw of Winter* or *The Claws of the Cold*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Ches (*The Claw of Sunsets*)",
+        "length": 30,
+        "holidays":
+          [
+            {
+              "name": "Spring Equinox",
+              "day": 19
+            }
+          ]
+      },
+      {
+        "name": "Tarsakh (*The Claw of Storms*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Greengrass",
+        "length": 1,
+        "holidays":[]
+      },
+    
+      {
+        "name": "Mirtul (*The Melting*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Kythorn (*The Time of Flowers*)",
+        "length": 30,
+        "holidays":
+          [
+            {
+              "name": "Summer Solstice",
+              "day": "20"
+            }
+          ]
+        },
+      {
+        "name": "Flamerule (*Summertide*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Midsummer",
+        "length": 1,
+        "holidays":[]
+      },
+      {
+        "name": "Eleasis (*Highsun*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Eleint (*The Fading*)",
+        "length": 30,
+        "holidays":
+          [
+            {
+              "name": "Autumn Equinox",
+              "day": 21
+            }
+          ]
+            },
+      {
+        "name": "Highharvestide",
+        "length": 1,
+        "holidays":[]
+      },
+      {
+        "name": "Marpenoth (*Leafall*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Uktar (*The Rotting*)",
+        "length": 30,
+        "holidays":[]
+      },
+      {
+        "name": "Feast of the Moon",
+        "length": 1,
+        "holidays":[]
+      },
+      {
+        "name": "Nightal (*The Drawing Down*)",
+        "length": 30,
+        "holidays":
+          [
+            {
+              "name": "Winter Solstice",
+              "day": 20
+            }
+          ]
+      }
+    ]
+}

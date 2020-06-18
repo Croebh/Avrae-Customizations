@@ -1,0 +1,297 @@
+{
+  "common":[
+    {
+      "name": "Ace of Swords - Avenger",
+      "image": "KqMQhI7",
+      "desc": "The treasure lies in a dragon's house, in hands once clean and now corrupted." 
+    },
+    {
+      "name": "Two of Swords - Paladin",
+      "image": "93Egeaf",
+      "desc": "I see a sleeping prince, a servant of light and the brother of darkness. The treasure lies with him." 
+    },
+    {
+      "name": "Three of Swords - Soldier",
+      "image": "pTaq779",
+      "desc": "Go to the mountains. Climb the white tower guarded by golden knights." 
+    },
+    {
+      "name": "Four of Swords - Mercenary",
+      "image": "nkpdn0I",
+      "desc": "The thing you seek lies with the dead, under mountains of gold coins." 
+    },
+    {
+      "name": "Five of Swords - Myrmidon",
+      "image": "PSUqc78",
+      "desc": "Look for a den of wolves in the hills overlooking a mountain lake. The treasure belongs to Mother Night." 
+    },
+    {
+      "name": "Six of Swords - Berserker",
+      "image": "8XlGNJM",
+      "desc": "Find the Mad Dog's crypt. The treasure lies within, beneath blackened bones." 
+    },
+    {
+      "name": "Seven of Swords - Hooded One",
+      "image": "apUZAUP",
+      "desc": "I see a faceless god. He awaits you at the end of a long and winding road, deep in the mountains." 
+    },
+    {
+      "name": "Eight of Swords - Dictator",
+      "image": "y0XuQKV",
+      "desc": "I see a throne fit for a king." 
+    },
+    {
+      "name": "Nine of Swords - Torturer",
+      "image": "ByJ5xbX",
+      "desc": "There is a town where all is not well, there you will find a house of corruption, and within, a dark room full of still ghosts." 
+    },
+    {
+      "name": "Master of Swords - Warrior",
+      "image": "MmFTird",
+      "desc": "That which you seek lies in the womb of darkness, the devil's lair: the one place to which he must return." 
+    },
+    {
+      "name": "Ace of Coins - Swashbuckler",
+      "image": "1WtkmKz",
+      "desc": "I see the skeleton of a deadly warrior, lying on a bed of stone flanked by gargoyles" 
+    },
+    {
+      "name": "Two of Coins - Philanthropist",
+      "image": "WybU22R",
+      "desc": "Look to a place where sickness and madness are bred. Where children once cried, the treasure lies still." 
+    },
+    {
+      "name": "Three of Coins - Trader",
+      "image": "6RLCu6r",
+      "desc": "Look to the wizard of wines! In wood and sand the treasure hides." 
+    },
+    {
+      "name": "Four of Coins - Merchant",
+      "image": "qdCsDh4",
+      "desc": "Seek a cask that once contained the finest wine, of which not a drop remains." 
+    },
+    {
+      "name": "Five of Coins - Guild Member",
+      "image": "mQM1VLt",
+      "desc": "I see a dark room full of bottles. It is the tomb of a guild member." 
+    },
+    {
+      "name": "Six of Coins - Beggar",
+      "image": "AV3QgpZ",
+      "desc": "A wounded elf has what you seek. He will part with the treasure to see his dark dreams fulfilled." 
+    },
+    {
+      "name": "Seven of Coins - Thief",
+      "image": "gkEstd6",
+      "desc": "What you seek lies at the crossroads of life and death, among the buried dead." 
+    },
+    {
+      "name": "Eight of Coins - Tax Collector",
+      "image": "ZPpmjzt",
+      "desc": "The Vistani have what you see. A missing child holds the key to the treasure's release." 
+    },
+    {
+      "name": "Nine of Coins - Miser",
+      "image": "1DeX56C",
+      "desc": "Look for a fortress inside a fortress, in a place hidden behind fire." 
+    },
+    {
+      "name": "Master of Coins - Rogue",
+      "image": "9L16uJI",
+      "desc": "I see a nest of ravens. There you will find the prize. " 
+    },
+    {
+      "name": "Ace of Glyphs - Monk",
+      "image": "9nciu9l",
+      "desc": "The treasure you seek is hidden behind the sun, in the house of a saint" 
+    },
+    {
+      "name": "Two of Glyphs - Missionary",
+      "image": "vQJLKNO",
+      "desc": "I see a garden dusted with snow, watched over by a scarecrow with a sackcloth grin. Look not to the garden but to the guardian." 
+    },
+    {
+      "name": "Three of Glyphs - Healer",
+      "image": "LfghP9X",
+      "desc": "Look to the west. Find a pool blessed by the light of the white sun." 
+    },
+    {
+      "name": "Four of Glyphs - Shephard",
+      "image": "E51Oezz",
+      "desc": "Find the mother—she who gave birth to evil." 
+    },
+    {
+      "name": "Five of Glyphs - Druid",
+      "image": "x9WpBQs",
+      "desc": "An evil tree grows atop a hill of graves where the ancient dead sleep. The ravens can help you find it. Look for the treasure there." 
+    },
+    {
+      "name": "Six of Glyphs - Anarchist",
+      "image": "CDW8JQb",
+      "desc": "I see walls of bones, a chandelier of bones, and a table of bones—all that remains of enemies long forgotten." 
+    },
+    {
+      "name": "Seven of Glyphs - Charlatan",
+      "image": "u0hGWVI",
+      "desc": "I see a lonely mill on a precipice. The treasure lies within." 
+    },
+    {
+      "name": "Eight of Glyphs - Bishop",
+      "image": "iS7GztF",
+      "desc": "What you seek lies in a pile of treasure, beyond a set of amber doors." 
+    },
+    {
+      "name": "Nine of Glyphs - Traitor",
+      "image": "oQUpzaM",
+      "desc": "Look for a wealthy woman. A staunch ally of the devil, she keeps the treasure under lock and key, with the bones of an ancient enemy." 
+    },
+    {
+      "name": "Master of Glyphs - Priest",
+      "image": "jWuZfii",
+      "desc": "You will find what you seek in the castle, amid the ruins of a place of supplication." 
+    },
+    {
+      "name": "Ace of Stars - Transmuter",
+      "image": "usYMeTL",
+      "desc": "Go to a place of dizzying heights, where the stone itself is alive!" 
+    },
+    {
+      "name": "Two of Stars - Diviner",
+      "image": "Lu3jE8Y",
+      "desc": "Look to the one who sees all. The treasure is hidden in her camp." 
+    },
+    {
+      "name": "Three of Stars - Enchanter",
+      "image": "XemGaaJ",
+      "desc": "I see a kneeling woman—a rose of great beauty plucked too soon. The master of the marsh knows of whom I speak." 
+    },
+    {
+      "name": "Four of Stars - Abjurer",
+      "image": "7IRFLDl",
+      "desc": "I see a fallen house guarded by a great stone dragon. Look to the highest peak." 
+    },
+    {
+      "name": "Five of Stars - Elementalist",
+      "image": "vNieu9O",
+      "desc": "The treasure is hidden in a small castle beneath a mountain, guarded by amber giants." 
+    },
+    {
+      "name": "Six of Stars - Evoker",
+      "image": "lXi4Lqf",
+      "desc": "Search for the crypt of a wizard ordinaire. His staff is the key." 
+    },
+    {
+      "name": "Seven of Stars - Illusionist",
+      "image": "S8ECoFO",
+      "desc": "A man is not what he seems. He comes here in a carnival wagon. Therein lies what you seek." 
+    },
+    {
+      "name": "Eight of Stars - Necromancer",
+      "image": "UzkI9mR",
+      "desc": "A woman hangs above a roaring fire. Find her, and you will find the treasure." 
+    },
+    {
+      "name": "Nine of Stars - Conjurer",
+      "image": "PO40SFH",
+      "desc": "I see a dead village, drowned by a river, ruled by one who has brought great evil into the world." 
+    },
+    {
+      "name": "Master of Stars - Wizard",
+      "image": "42kp5Uz",
+      "desc": "Look for a wizard’s tower on a lake. Let the wizard’s name and servant guide you to that which you seek." 
+    }
+  ],
+  "high":[
+    {
+      "name": "Artifact",
+      "image": "VA90oMM",
+      "descE": "Look for an entertaining man with a monkey. This man is more than he seems.",
+      "descS": "He lurks in the darkness where the morning light once shone - a sacred place." 
+    },
+    {
+      "name": "Beast",
+      "image": "8Um8F6R",
+      "descE": "A werewolf holds a secret hatred for your enemy. Use her hatred to your advantage.",
+      "descS": "The beast sits on his dark throne." 
+    },
+    {
+      "name": "Broken One",
+      "image": "YTIoYT9",
+      "descE": "Your greatest ally will be a wizard. His mind is broken, but his spells are strong.",
+      "descS": "He haunts the tomb of the man he envied above all." 
+    },
+    {
+      "name": "Darklord",
+      "image": "O0LBWcD",
+      "descE": "Ah, the worst of all truths. You must face the evil of this land alone!",
+      "descS": "He lurks in the depths of darkness, in the one place to which he must return." 
+    },
+    {
+      "name": "Donjon",
+      "image": "roDJZkV",
+      "descE": "Search for a troubled young man surrounded by wealth and madness. His home is his prison.",
+      "descS": "He lurks in a hall of bones, in the dark pits of his castle" 
+    },
+    {
+      "name": "Executioner",
+      "image": "FfDa3fU",
+      "descE": "Seek out the brother of the devil's brid.e They call him \"the lesser,\" but he has a powerful soul.",
+      "descS": "I see a dark figure on a balcony, looking down upon this tortured land with a twisted smile." 
+    },
+    {
+      "name": "Ghost",
+      "image": "07N9oWE",
+      "descE": "I see a fallen paladin of a fallen order of knights. He lingers like a ghost in a dead dragon's lair.",
+      "descS": "Look to the father's tomb." 
+    },
+    {
+      "name": "Horseman",
+      "image": "ng9j4cH",
+      "descE": "I see a dead man of noble birth, guarded by his widow. Return life to the dead man's corpse, and he will be your staunch ally.",
+      "descS": "He lurks in the one place to which he must return - a place of death." 
+    },
+    {
+      "name": "Innocent",
+      "image": "0eXUsUK",
+      "descE": "I see a young man with a kind heart. A mother's boy! He is strong in body but weak of mind. Seek him out in the village of Barovia.",
+      "descS": "He dwells with the one whose blood sealed his doom, a brother of light snuffed out too soon." 
+    },
+    {
+      "name": "Marionette",
+      "image": "LLgg34D",
+      "descE": "What horror is this? I see a man made by a man. Ageless and alone, it haunts the towers of the castle.",
+      "descS": "Look to great heights. Find the beating heart of the castle. He waits nearby." 
+    },
+    {
+      "name": "Mists",
+      "image": "5HLWYBg",
+      "descE": "A Vistana wanders this land alone, searching for her mentor. She does not stay in one place for long. Seek her out at Saint Markvoia's abbey, near the mists.",
+      "descS": "The cards can't see where the evil lurks. The mists obscure all!" 
+    },
+    {
+      "name": "Raven",
+      "image": "hj7Rhag",
+      "descE": "Find the leader of the feathered ones who live among the vines. Though old, he has one more fight left in him.",
+      "descS": "Look to the mother's tomb." 
+    },
+    {
+      "name": "Seer",
+      "image": "tuaCkUj",
+      "descE": "Look for a dusk elf living among the Vistani. He has suffered a great loss and is haunted by dark dreams. Help him, and he will help you in return.",
+      "descS": "He waits for you in a place of wisdom, warmth, and despair. Great secrets are there." 
+    },
+    {
+      "name": "Tempter",
+      "image": "DDF7tFG",
+      "descE": "I see a child- a Vistana. You must hurry, for her fate hangs in the balance. Find her at the lake!",
+      "descS": "I see a secret place - A vault of temptation hidden behind a woman of great beauty. The evil waits atop his tower of treasure." 
+    }
+  ],
+  "drawDesc": [
+    "This card tells of history. Knowledge of the ancient will help you better understand your enemy.",
+    "This card tells of a powerful force for good and protection, a holy symbol of great hope.",
+    "This is a card of power and strength. It tells of a weapon of vengeance: a sword of sunlight.",
+    "This card sheds light on one who will help you greatly in the battle against darkness.",
+    "Your enemy is a creature of darkness, whos powers are beyond mortality. This card will lead you to him!"
+  ]
+}

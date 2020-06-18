@@ -1,0 +1,1990 @@
+[
+  {
+    "name": "Encode Thoughts",
+    "level": 0
+  },
+  {
+    "name": "Acid Splash",
+    "level": 0
+  },
+  {
+    "name": "Aid",
+    "level": 2
+  },
+  {
+    "name": "Alarm",
+    "level": 1
+  },
+  {
+    "name": "Alter Self",
+    "level": 2
+  },
+  {
+    "name": "Animal Friendship",
+    "level": 1
+  },
+  {
+    "name": "Animal Messenger",
+    "level": 2
+  },
+  {
+    "name": "Animal Shapes",
+    "level": 8
+  },
+  {
+    "name": "Animate Dead",
+    "level": 3
+  },
+  {
+    "name": "Animate Objects",
+    "level": 5
+  },
+  {
+    "name": "Antilife Shell",
+    "level": 5
+  },
+  {
+    "name": "Antimagic Field",
+    "level": 8
+  },
+  {
+    "name": "Antipathy/Sympathy",
+    "level": 8
+  },
+  {
+    "name": "Arcane Eye",
+    "level": 4
+  },
+  {
+    "name": "Arcane Gate",
+    "level": 6
+  },
+  {
+    "name": "Arcane Lock",
+    "level": 2
+  },
+  {
+    "name": "Armor of Agathys",
+    "level": 1
+  },
+  {
+    "name": "Arms of Hadar",
+    "level": 1
+  },
+  {
+    "name": "Astral Projection",
+    "level": 9
+  },
+  {
+    "name": "Augury",
+    "level": 2
+  },
+  {
+    "name": "Aura of Life",
+    "level": 4
+  },
+  {
+    "name": "Aura of Purity",
+    "level": 4
+  },
+  {
+    "name": "Aura of Vitality",
+    "level": 3
+  },
+  {
+    "name": "Awaken",
+    "level": 5
+  },
+  {
+    "name": "Bane",
+    "level": 1
+  },
+  {
+    "name": "Banishing Smite",
+    "level": 5
+  },
+  {
+    "name": "Banishment",
+    "level": 4
+  },
+  {
+    "name": "Barkskin",
+    "level": 2
+  },
+  {
+    "name": "Beacon of Hope",
+    "level": 3
+  },
+  {
+    "name": "Beast Sense",
+    "level": 2
+  },
+  {
+    "name": "Bestow Curse",
+    "level": 3
+  },
+  {
+    "name": "Bigby's Hand",
+    "level": 5
+  },
+  {
+    "name": "Blade Barrier",
+    "level": 6
+  },
+  {
+    "name": "Blade Ward",
+    "level": 0
+  },
+  {
+    "name": "Bless",
+    "level": 1
+  },
+  {
+    "name": "Blight",
+    "level": 4
+  },
+  {
+    "name": "Blinding Smite",
+    "level": 3
+  },
+  {
+    "name": "Blindness/Deafness",
+    "level": 2
+  },
+  {
+    "name": "Blink",
+    "level": 3
+  },
+  {
+    "name": "Blur",
+    "level": 2
+  },
+  {
+    "name": "Branding Smite",
+    "level": 2
+  },
+  {
+    "name": "Burning Hands",
+    "level": 1
+  },
+  {
+    "name": "Call Lightning",
+    "level": 3
+  },
+  {
+    "name": "Calm Emotions",
+    "level": 2
+  },
+  {
+    "name": "Chain Lightning",
+    "level": 6
+  },
+  {
+    "name": "Charm Person",
+    "level": 1
+  },
+  {
+    "name": "Chill Touch",
+    "level": 0
+  },
+  {
+    "name": "Chromatic Orb",
+    "level": 1
+  },
+  {
+    "name": "Circle of Death",
+    "level": 6
+  },
+  {
+    "name": "Circle of Power",
+    "level": 5
+  },
+  {
+    "name": "Clairvoyance",
+    "level": 3
+  },
+  {
+    "name": "Clone",
+    "level": 8
+  },
+  {
+    "name": "Cloud of Daggers",
+    "level": 2
+  },
+  {
+    "name": "Cloudkill",
+    "level": 5
+  },
+  {
+    "name": "Color Spray",
+    "level": 1
+  },
+  {
+    "name": "Command",
+    "level": 1
+  },
+  {
+    "name": "Commune",
+    "level": 5
+  },
+  {
+    "name": "Commune with Nature",
+    "level": 5
+  },
+  {
+    "name": "Compelled Duel",
+    "level": 1
+  },
+  {
+    "name": "Comprehend Languages",
+    "level": 1
+  },
+  {
+    "name": "Compulsion",
+    "level": 4
+  },
+  {
+    "name": "Cone of Cold",
+    "level": 5
+  },
+  {
+    "name": "Confusion",
+    "level": 4
+  },
+  {
+    "name": "Conjure Animals",
+    "level": 3
+  },
+  {
+    "name": "Conjure Barrage",
+    "level": 3
+  },
+  {
+    "name": "Conjure Celestial",
+    "level": 7
+  },
+  {
+    "name": "Conjure Elemental",
+    "level": 5
+  },
+  {
+    "name": "Conjure Fey",
+    "level": 6
+  },
+  {
+    "name": "Conjure Minor Elementals",
+    "level": 4
+  },
+  {
+    "name": "Conjure Volley",
+    "level": 5
+  },
+  {
+    "name": "Conjure Woodland Beings",
+    "level": 4
+  },
+  {
+    "name": "Contact Other Plane",
+    "level": 5
+  },
+  {
+    "name": "Contagion",
+    "level": 5
+  },
+  {
+    "name": "Contingency",
+    "level": 6
+  },
+  {
+    "name": "Continual Flame",
+    "level": 2
+  },
+  {
+    "name": "Control Water",
+    "level": 4
+  },
+  {
+    "name": "Control Weather",
+    "level": 8
+  },
+  {
+    "name": "Cordon of Arrows",
+    "level": 2
+  },
+  {
+    "name": "Counterspell",
+    "level": 3
+  },
+  {
+    "name": "Create Food and Water",
+    "level": 3
+  },
+  {
+    "name": "Create Undead",
+    "level": 6
+  },
+  {
+    "name": "Create or Destroy Water",
+    "level": 1
+  },
+  {
+    "name": "Creation",
+    "level": 5
+  },
+  {
+    "name": "Crown of Madness",
+    "level": 2
+  },
+  {
+    "name": "Crusader's Mantle",
+    "level": 3
+  },
+  {
+    "name": "Cure Wounds",
+    "level": 1
+  },
+  {
+    "name": "Dancing Lights",
+    "level": 0
+  },
+  {
+    "name": "Darkness",
+    "level": 2
+  },
+  {
+    "name": "Darkvision",
+    "level": 2
+  },
+  {
+    "name": "Daylight",
+    "level": 3
+  },
+  {
+    "name": "Death Ward",
+    "level": 4
+  },
+  {
+    "name": "Delayed Blast Fireball",
+    "level": 7
+  },
+  {
+    "name": "Demiplane",
+    "level": 8
+  },
+  {
+    "name": "Destructive Wave",
+    "level": 5
+  },
+  {
+    "name": "Detect Evil and Good",
+    "level": 1
+  },
+  {
+    "name": "Detect Magic",
+    "level": 1
+  },
+  {
+    "name": "Detect Poison and Disease",
+    "level": 1
+  },
+  {
+    "name": "Detect Thoughts",
+    "level": 2
+  },
+  {
+    "name": "Dimension Door",
+    "level": 4
+  },
+  {
+    "name": "Disguise Self",
+    "level": 1
+  },
+  {
+    "name": "Disintegrate",
+    "level": 6
+  },
+  {
+    "name": "Dispel Evil and Good",
+    "level": 5
+  },
+  {
+    "name": "Dispel Magic",
+    "level": 3
+  },
+  {
+    "name": "Dissonant Whispers",
+    "level": 1
+  },
+  {
+    "name": "Divination",
+    "level": 4
+  },
+  {
+    "name": "Divine Favor",
+    "level": 1
+  },
+  {
+    "name": "Divine Word",
+    "level": 7
+  },
+  {
+    "name": "Dominate Beast",
+    "level": 4
+  },
+  {
+    "name": "Dominate Monster",
+    "level": 8
+  },
+  {
+    "name": "Dominate Person",
+    "level": 5
+  },
+  {
+    "name": "Drawmij's Instant Summons",
+    "level": 6
+  },
+  {
+    "name": "Dream",
+    "level": 5
+  },
+  {
+    "name": "Druidcraft",
+    "level": 0
+  },
+  {
+    "name": "Earthquake",
+    "level": 8
+  },
+  {
+    "name": "Eldritch Blast",
+    "level": 0
+  },
+  {
+    "name": "Elemental Weapon",
+    "level": 3
+  },
+  {
+    "name": "Enhance Ability",
+    "level": 2
+  },
+  {
+    "name": "Enlarge/Reduce",
+    "level": 2
+  },
+  {
+    "name": "Ensnaring Strike",
+    "level": 1
+  },
+  {
+    "name": "Entangle",
+    "level": 1
+  },
+  {
+    "name": "Enthrall",
+    "level": 2
+  },
+  {
+    "name": "Etherealness",
+    "level": 7
+  },
+  {
+    "name": "Evard's Black Tentacles",
+    "level": 4
+  },
+  {
+    "name": "Expeditious Retreat",
+    "level": 1
+  },
+  {
+    "name": "Eyebite",
+    "level": 6
+  },
+  {
+    "name": "Fabricate",
+    "level": 4
+  },
+  {
+    "name": "Faerie Fire",
+    "level": 1
+  },
+  {
+    "name": "False Life",
+    "level": 1
+  },
+  {
+    "name": "Fear",
+    "level": 3
+  },
+  {
+    "name": "Feather Fall",
+    "level": 1
+  },
+  {
+    "name": "Feeblemind",
+    "level": 8
+  },
+  {
+    "name": "Feign Death",
+    "level": 3
+  },
+  {
+    "name": "Find Familiar",
+    "level": 1
+  },
+  {
+    "name": "Find Steed",
+    "level": 2
+  },
+  {
+    "name": "Find Traps",
+    "level": 2
+  },
+  {
+    "name": "Find the Path",
+    "level": 6
+  },
+  {
+    "name": "Finger of Death",
+    "level": 7
+  },
+  {
+    "name": "Fire Bolt",
+    "level": 0
+  },
+  {
+    "name": "Fire Shield",
+    "level": 4
+  },
+  {
+    "name": "Fire Storm",
+    "level": 7
+  },
+  {
+    "name": "Fireball",
+    "level": 3
+  },
+  {
+    "name": "Flame Blade",
+    "level": 2
+  },
+  {
+    "name": "Flame Strike",
+    "level": 5
+  },
+  {
+    "name": "Flaming Sphere",
+    "level": 2
+  },
+  {
+    "name": "Flesh to Stone",
+    "level": 6
+  },
+  {
+    "name": "Fly",
+    "level": 3
+  },
+  {
+    "name": "Fog Cloud",
+    "level": 1
+  },
+  {
+    "name": "Forbiddance",
+    "level": 6
+  },
+  {
+    "name": "Forcecage",
+    "level": 7
+  },
+  {
+    "name": "Foresight",
+    "level": 9
+  },
+  {
+    "name": "Freedom of Movement",
+    "level": 4
+  },
+  {
+    "name": "Friends",
+    "level": 0
+  },
+  {
+    "name": "Gaseous Form",
+    "level": 3
+  },
+  {
+    "name": "Gate",
+    "level": 9
+  },
+  {
+    "name": "Geas",
+    "level": 5
+  },
+  {
+    "name": "Gentle Repose",
+    "level": 2
+  },
+  {
+    "name": "Giant Insect",
+    "level": 4
+  },
+  {
+    "name": "Glibness",
+    "level": 8
+  },
+  {
+    "name": "Globe of Invulnerability",
+    "level": 6
+  },
+  {
+    "name": "Glyph of Warding",
+    "level": 3
+  },
+  {
+    "name": "Goodberry",
+    "level": 1
+  },
+  {
+    "name": "Grasping Vine",
+    "level": 4
+  },
+  {
+    "name": "Grease",
+    "level": 1
+  },
+  {
+    "name": "Greater Invisibility",
+    "level": 4
+  },
+  {
+    "name": "Greater Restoration",
+    "level": 5
+  },
+  {
+    "name": "Guardian of Faith",
+    "level": 4
+  },
+  {
+    "name": "Guards and Wards",
+    "level": 6
+  },
+  {
+    "name": "Guidance",
+    "level": 0
+  },
+  {
+    "name": "Guiding Bolt",
+    "level": 1
+  },
+  {
+    "name": "Gust of Wind",
+    "level": 2
+  },
+  {
+    "name": "Hail of Thorns",
+    "level": 1
+  },
+  {
+    "name": "Hallow",
+    "level": 5
+  },
+  {
+    "name": "Hallucinatory Terrain",
+    "level": 4
+  },
+  {
+    "name": "Harm",
+    "level": 6
+  },
+  {
+    "name": "Haste",
+    "level": 3
+  },
+  {
+    "name": "Heal",
+    "level": 6
+  },
+  {
+    "name": "Healing Word",
+    "level": 1
+  },
+  {
+    "name": "Heat Metal",
+    "level": 2
+  },
+  {
+    "name": "Hellish Rebuke",
+    "level": 1
+  },
+  {
+    "name": "Heroes' Feast",
+    "level": 6
+  },
+  {
+    "name": "Heroism",
+    "level": 1
+  },
+  {
+    "name": "Hex",
+    "level": 1
+  },
+  {
+    "name": "Hold Monster",
+    "level": 5
+  },
+  {
+    "name": "Hold Person",
+    "level": 2
+  },
+  {
+    "name": "Holy Aura",
+    "level": 8
+  },
+  {
+    "name": "Hunger of Hadar",
+    "level": 3
+  },
+  {
+    "name": "Hunter's Mark",
+    "level": 1
+  },
+  {
+    "name": "Hypnotic Pattern",
+    "level": 3
+  },
+  {
+    "name": "Ice Storm",
+    "level": 4
+  },
+  {
+    "name": "Identify",
+    "level": 1
+  },
+  {
+    "name": "Illusory Script",
+    "level": 1
+  },
+  {
+    "name": "Imprisonment",
+    "level": 9
+  },
+  {
+    "name": "Incendiary Cloud",
+    "level": 8
+  },
+  {
+    "name": "Inflict Wounds",
+    "level": 1
+  },
+  {
+    "name": "Insect Plague",
+    "level": 5
+  },
+  {
+    "name": "Invisibility",
+    "level": 2
+  },
+  {
+    "name": "Jump",
+    "level": 1
+  },
+  {
+    "name": "Knock",
+    "level": 2
+  },
+  {
+    "name": "Legend Lore",
+    "level": 5
+  },
+  {
+    "name": "Leomund's Secret Chest",
+    "level": 4
+  },
+  {
+    "name": "Leomund's Tiny Hut",
+    "level": 3
+  },
+  {
+    "name": "Lesser Restoration",
+    "level": 2
+  },
+  {
+    "name": "Levitate",
+    "level": 2
+  },
+  {
+    "name": "Light",
+    "level": 0
+  },
+  {
+    "name": "Lightning Arrow",
+    "level": 3
+  },
+  {
+    "name": "Lightning Bolt",
+    "level": 3
+  },
+  {
+    "name": "Locate Animals or Plants",
+    "level": 2
+  },
+  {
+    "name": "Locate Creature",
+    "level": 4
+  },
+  {
+    "name": "Locate Object",
+    "level": 2
+  },
+  {
+    "name": "Longstrider",
+    "level": 1
+  },
+  {
+    "name": "Mage Armor",
+    "level": 1
+  },
+  {
+    "name": "Mage Hand",
+    "level": 0
+  },
+  {
+    "name": "Magic Circle",
+    "level": 3
+  },
+  {
+    "name": "Magic Jar",
+    "level": 6
+  },
+  {
+    "name": "Magic Missile",
+    "level": 1
+  },
+  {
+    "name": "Magic Mouth",
+    "level": 2
+  },
+  {
+    "name": "Magic Weapon",
+    "level": 2
+  },
+  {
+    "name": "Major Image",
+    "level": 3
+  },
+  {
+    "name": "Mass Cure Wounds",
+    "level": 5
+  },
+  {
+    "name": "Mass Heal",
+    "level": 9
+  },
+  {
+    "name": "Mass Healing Word",
+    "level": 3
+  },
+  {
+    "name": "Mass Suggestion",
+    "level": 6
+  },
+  {
+    "name": "Maze",
+    "level": 8
+  },
+  {
+    "name": "Meld into Stone",
+    "level": 3
+  },
+  {
+    "name": "Melf's Acid Arrow",
+    "level": 2
+  },
+  {
+    "name": "Mending",
+    "level": 0
+  },
+  {
+    "name": "Message",
+    "level": 0
+  },
+  {
+    "name": "Meteor Swarm",
+    "level": 9
+  },
+  {
+    "name": "Mind Blank",
+    "level": 8
+  },
+  {
+    "name": "Minor Illusion",
+    "level": 0
+  },
+  {
+    "name": "Mirage Arcane",
+    "level": 7
+  },
+  {
+    "name": "Mirror Image",
+    "level": 2
+  },
+  {
+    "name": "Mislead",
+    "level": 5
+  },
+  {
+    "name": "Misty Step",
+    "level": 2
+  },
+  {
+    "name": "Modify Memory",
+    "level": 5
+  },
+  {
+    "name": "Moonbeam",
+    "level": 2
+  },
+  {
+    "name": "Mordenkainen's Faithful Hound",
+    "level": 4
+  },
+  {
+    "name": "Mordenkainen's Magnificent Mansion",
+    "level": 7
+  },
+  {
+    "name": "Mordenkainen's Private Sanctum",
+    "level": 4
+  },
+  {
+    "name": "Mordenkainen's Sword",
+    "level": 7
+  },
+  {
+    "name": "Move Earth",
+    "level": 6
+  },
+  {
+    "name": "Nondetection",
+    "level": 3
+  },
+  {
+    "name": "Nystul's Magic Aura",
+    "level": 2
+  },
+  {
+    "name": "Otiluke's Freezing Sphere",
+    "level": 6
+  },
+  {
+    "name": "Otiluke's Resilient Sphere",
+    "level": 4
+  },
+  {
+    "name": "Otto's Irresistible Dance",
+    "level": 6
+  },
+  {
+    "name": "Pass without Trace",
+    "level": 2
+  },
+  {
+    "name": "Passwall",
+    "level": 5
+  },
+  {
+    "name": "Phantasmal Force",
+    "level": 2
+  },
+  {
+    "name": "Phantasmal Killer",
+    "level": 4
+  },
+  {
+    "name": "Phantom Steed",
+    "level": 3
+  },
+  {
+    "name": "Planar Ally",
+    "level": 6
+  },
+  {
+    "name": "Planar Binding",
+    "level": 5
+  },
+  {
+    "name": "Plane Shift",
+    "level": 7
+  },
+  {
+    "name": "Plant Growth",
+    "level": 3
+  },
+  {
+    "name": "Poison Spray",
+    "level": 0
+  },
+  {
+    "name": "Polymorph",
+    "level": 4
+  },
+  {
+    "name": "Power Word Heal",
+    "level": 9
+  },
+  {
+    "name": "Power Word Kill",
+    "level": 9
+  },
+  {
+    "name": "Power Word Stun",
+    "level": 8
+  },
+  {
+    "name": "Prayer of Healing",
+    "level": 2
+  },
+  {
+    "name": "Prestidigitation",
+    "level": 0
+  },
+  {
+    "name": "Prismatic Spray",
+    "level": 7
+  },
+  {
+    "name": "Prismatic Wall",
+    "level": 9
+  },
+  {
+    "name": "Produce Flame",
+    "level": 0
+  },
+  {
+    "name": "Programmed Illusion",
+    "level": 6
+  },
+  {
+    "name": "Project Image",
+    "level": 7
+  },
+  {
+    "name": "Protection from Energy",
+    "level": 3
+  },
+  {
+    "name": "Protection from Evil and Good",
+    "level": 1
+  },
+  {
+    "name": "Protection from Poison",
+    "level": 2
+  },
+  {
+    "name": "Purify Food and Drink",
+    "level": 1
+  },
+  {
+    "name": "Raise Dead",
+    "level": 5
+  },
+  {
+    "name": "Rary's Telepathic Bond",
+    "level": 5
+  },
+  {
+    "name": "Ray of Enfeeblement",
+    "level": 2
+  },
+  {
+    "name": "Ray of Frost",
+    "level": 0
+  },
+  {
+    "name": "Ray of Sickness",
+    "level": 1
+  },
+  {
+    "name": "Regenerate",
+    "level": 7
+  },
+  {
+    "name": "Reincarnate",
+    "level": 5
+  },
+  {
+    "name": "Remove Curse",
+    "level": 3
+  },
+  {
+    "name": "Resistance",
+    "level": 0
+  },
+  {
+    "name": "Resurrection",
+    "level": 7
+  },
+  {
+    "name": "Reverse Gravity",
+    "level": 7
+  },
+  {
+    "name": "Revivify",
+    "level": 3
+  },
+  {
+    "name": "Rope Trick",
+    "level": 2
+  },
+  {
+    "name": "Sacred Flame",
+    "level": 0
+  },
+  {
+    "name": "Sanctuary",
+    "level": 1
+  },
+  {
+    "name": "Scorching Ray",
+    "level": 2
+  },
+  {
+    "name": "Scrying",
+    "level": 5
+  },
+  {
+    "name": "Searing Smite",
+    "level": 1
+  },
+  {
+    "name": "See Invisibility",
+    "level": 2
+  },
+  {
+    "name": "Seeming",
+    "level": 5
+  },
+  {
+    "name": "Sending",
+    "level": 3
+  },
+  {
+    "name": "Sequester",
+    "level": 7
+  },
+  {
+    "name": "Shapechange",
+    "level": 9
+  },
+  {
+    "name": "Shatter",
+    "level": 2
+  },
+  {
+    "name": "Shield",
+    "level": 1
+  },
+  {
+    "name": "Shield of Faith",
+    "level": 1
+  },
+  {
+    "name": "Shillelagh",
+    "level": 0
+  },
+  {
+    "name": "Shocking Grasp",
+    "level": 0
+  },
+  {
+    "name": "Silence",
+    "level": 2
+  },
+  {
+    "name": "Silent Image",
+    "level": 1
+  },
+  {
+    "name": "Simulacrum",
+    "level": 7
+  },
+  {
+    "name": "Sleep",
+    "level": 1
+  },
+  {
+    "name": "Sleet Storm",
+    "level": 3
+  },
+  {
+    "name": "Slow",
+    "level": 3
+  },
+  {
+    "name": "Spare the Dying",
+    "level": 0
+  },
+  {
+    "name": "Speak with Animals",
+    "level": 1
+  },
+  {
+    "name": "Speak with Dead",
+    "level": 3
+  },
+  {
+    "name": "Speak with Plants",
+    "level": 3
+  },
+  {
+    "name": "Spider Climb",
+    "level": 2
+  },
+  {
+    "name": "Spike Growth",
+    "level": 2
+  },
+  {
+    "name": "Spirit Guardians",
+    "level": 3
+  },
+  {
+    "name": "Spiritual Weapon",
+    "level": 2
+  },
+  {
+    "name": "Staggering Smite",
+    "level": 4
+  },
+  {
+    "name": "Stinking Cloud",
+    "level": 3
+  },
+  {
+    "name": "Stone Shape",
+    "level": 4
+  },
+  {
+    "name": "Stoneskin",
+    "level": 4
+  },
+  {
+    "name": "Storm of Vengeance",
+    "level": 9
+  },
+  {
+    "name": "Suggestion",
+    "level": 2
+  },
+  {
+    "name": "Sunbeam",
+    "level": 6
+  },
+  {
+    "name": "Sunburst",
+    "level": 8
+  },
+  {
+    "name": "Swift Quiver",
+    "level": 5
+  },
+  {
+    "name": "Symbol",
+    "level": 7
+  },
+  {
+    "name": "Tasha's Hideous Laughter",
+    "level": 1
+  },
+  {
+    "name": "Telekinesis",
+    "level": 5
+  },
+  {
+    "name": "Telepathy",
+    "level": 8
+  },
+  {
+    "name": "Teleport",
+    "level": 7
+  },
+  {
+    "name": "Teleportation Circle",
+    "level": 5
+  },
+  {
+    "name": "Tenser's Floating Disk",
+    "level": 1
+  },
+  {
+    "name": "Thaumaturgy",
+    "level": 0
+  },
+  {
+    "name": "Thorn Whip",
+    "level": 0
+  },
+  {
+    "name": "Thunderous Smite",
+    "level": 1
+  },
+  {
+    "name": "Thunderwave",
+    "level": 1
+  },
+  {
+    "name": "Time Stop",
+    "level": 9
+  },
+  {
+    "name": "Tongues",
+    "level": 3
+  },
+  {
+    "name": "Transport via Plants",
+    "level": 6
+  },
+  {
+    "name": "Tree Stride",
+    "level": 5
+  },
+  {
+    "name": "True Polymorph",
+    "level": 9
+  },
+  {
+    "name": "True Resurrection",
+    "level": 9
+  },
+  {
+    "name": "True Seeing",
+    "level": 6
+  },
+  {
+    "name": "True Strike",
+    "level": 0
+  },
+  {
+    "name": "Tsunami",
+    "level": 8
+  },
+  {
+    "name": "Unseen Servant",
+    "level": 1
+  },
+  {
+    "name": "Vampiric Touch",
+    "level": 3
+  },
+  {
+    "name": "Vicious Mockery",
+    "level": 0
+  },
+  {
+    "name": "Wall of Fire",
+    "level": 4
+  },
+  {
+    "name": "Wall of Force",
+    "level": 5
+  },
+  {
+    "name": "Wall of Ice",
+    "level": 6
+  },
+  {
+    "name": "Wall of Stone",
+    "level": 5
+  },
+  {
+    "name": "Wall of Thorns",
+    "level": 6
+  },
+  {
+    "name": "Warding Bond",
+    "level": 2
+  },
+  {
+    "name": "Water Breathing",
+    "level": 3
+  },
+  {
+    "name": "Water Walk",
+    "level": 3
+  },
+  {
+    "name": "Web",
+    "level": 2
+  },
+  {
+    "name": "Weird",
+    "level": 9
+  },
+  {
+    "name": "Wind Walk",
+    "level": 6
+  },
+  {
+    "name": "Wind Wall",
+    "level": 3
+  },
+  {
+    "name": "Wish",
+    "level": 9
+  },
+  {
+    "name": "Witch Bolt",
+    "level": 1
+  },
+  {
+    "name": "Word of Recall",
+    "level": 6
+  },
+  {
+    "name": "Wrathful Smite",
+    "level": 1
+  },
+  {
+    "name": "Zone of Truth",
+    "level": 2
+  },
+  {
+    "name": "Booming Blade",
+    "level": 0
+  },
+  {
+    "name": "Green-Flame Blade",
+    "level": 0
+  },
+  {
+    "name": "Lightning Lure",
+    "level": 0
+  },
+  {
+    "name": "Sword Burst",
+    "level": 0
+  },
+  {
+    "name": "Arcane Hacking (UA)",
+    "level": 2
+  },
+  {
+    "name": "Commune with City (UA)",
+    "level": 5
+  },
+  {
+    "name": "Conjure Knowbot (UA)",
+    "level": 4
+  },
+  {
+    "name": "Digital Phantom (UA)",
+    "level": 2
+  },
+  {
+    "name": "Find Vehicle (UA)",
+    "level": 2
+  },
+  {
+    "name": "Haywire (UA)",
+    "level": 3
+  },
+  {
+    "name": "Infallible Relay (UA)",
+    "level": 1
+  },
+  {
+    "name": "Invisibility to Cameras (UA)",
+    "level": 3
+  },
+  {
+    "name": "On/Off (UA)",
+    "level": 0
+  },
+  {
+    "name": "Protection from Ballistics (UA)",
+    "level": 3
+  },
+  {
+    "name": "Remote Access (UA)",
+    "level": 1
+  },
+  {
+    "name": "Shutdown (UA)",
+    "level": 5
+  },
+  {
+    "name": "Synchronicity (UA)",
+    "level": 4
+  },
+  {
+    "name": "System Backdoor (UA)",
+    "level": 4
+  },
+  {
+    "name": "Cause Fear (UA)",
+    "level": 1
+  },
+  {
+    "name": "Ceremony (UA)",
+    "level": 1
+  },
+  {
+    "name": "Chaos Bolt (UA)",
+    "level": 1
+  },
+  {
+    "name": "Guiding Hand (UA)",
+    "level": 1
+  },
+  {
+    "name": "Hand of Radiance (UA)",
+    "level": 0
+  },
+  {
+    "name": "Healing Elixir (UA)",
+    "level": 1
+  },
+  {
+    "name": "Infestation (UA)",
+    "level": 0
+  },
+  {
+    "name": "Primal Savagery (UA)",
+    "level": 0
+  },
+  {
+    "name": "Puppet (UA)",
+    "level": 1
+  },
+  {
+    "name": "Sense Emotion (UA)",
+    "level": 1
+  },
+  {
+    "name": "Snare (UA)",
+    "level": 1
+  },
+  {
+    "name": "Sudden Awakening (UA)",
+    "level": 1
+  },
+  {
+    "name": "Toll the Dead (UA)",
+    "level": 0
+  },
+  {
+    "name": "Unearthly Chorus (UA)",
+    "level": 1
+  },
+  {
+    "name": "Virtue (UA)",
+    "level": 0
+  },
+  {
+    "name": "Wild Cunning (UA)",
+    "level": 1
+  },
+  {
+    "name": "Zephyr Strike (UA)",
+    "level": 1
+  },
+  {
+    "name": "Conjure Barlgura (UA)",
+    "level": 4
+  },
+  {
+    "name": "Conjure Hezrou (UA)",
+    "level": 7
+  },
+  {
+    "name": "Conjure Lesser Demon (UA)",
+    "level": 3
+  },
+  {
+    "name": "Conjure Shadow Demon (UA)",
+    "level": 4
+  },
+  {
+    "name": "Conjure Vrock (UA)",
+    "level": 5
+  },
+  {
+    "name": "Abi-Dalzim's Horrid Wilting",
+    "level": 8
+  },
+  {
+    "name": "Absorb Elements",
+    "level": 1
+  },
+  {
+    "name": "Aganazzar's Scorcher",
+    "level": 2
+  },
+  {
+    "name": "Beast Bond",
+    "level": 1
+  },
+  {
+    "name": "Bones of the Earth",
+    "level": 6
+  },
+  {
+    "name": "Catapult",
+    "level": 1
+  },
+  {
+    "name": "Catnap",
+    "level": 3
+  },
+  {
+    "name": "Cause Fear",
+    "level": 1
+  },
+  {
+    "name": "Ceremony",
+    "level": 1
+  },
+  {
+    "name": "Chaos Bolt",
+    "level": 1
+  },
+  {
+    "name": "Charm Monster",
+    "level": 4
+  },
+  {
+    "name": "Control Flames",
+    "level": 0
+  },
+  {
+    "name": "Control Winds",
+    "level": 5
+  },
+  {
+    "name": "Create Bonfire",
+    "level": 0
+  },
+  {
+    "name": "Create Homunculus",
+    "level": 6
+  },
+  {
+    "name": "Crown of Stars",
+    "level": 7
+  },
+  {
+    "name": "Danse Macabre",
+    "level": 5
+  },
+  {
+    "name": "Dawn",
+    "level": 5
+  },
+  {
+    "name": "Dragon's Breath",
+    "level": 2
+  },
+  {
+    "name": "Druid Grove",
+    "level": 6
+  },
+  {
+    "name": "Dust Devil",
+    "level": 2
+  },
+  {
+    "name": "Earth Tremor",
+    "level": 1
+  },
+  {
+    "name": "Earthbind",
+    "level": 2
+  },
+  {
+    "name": "Elemental Bane",
+    "level": 4
+  },
+  {
+    "name": "Enemies Abound",
+    "level": 3
+  },
+  {
+    "name": "Enervation",
+    "level": 5
+  },
+  {
+    "name": "Erupting Earth",
+    "level": 3
+  },
+  {
+    "name": "Far Step",
+    "level": 5
+  },
+  {
+    "name": "Find Greater Steed",
+    "level": 4
+  },
+  {
+    "name": "Flame Arrows",
+    "level": 3
+  },
+  {
+    "name": "Frostbite",
+    "level": 0
+  },
+  {
+    "name": "Guardian of Nature",
+    "level": 4
+  },
+  {
+    "name": "Gust",
+    "level": 0
+  },
+  {
+    "name": "Healing Spirit",
+    "level": 2
+  },
+  {
+    "name": "Holy Weapon",
+    "level": 5
+  },
+  {
+    "name": "Ice Knife",
+    "level": 1
+  },
+  {
+    "name": "Illusory Dragon",
+    "level": 8
+  },
+  {
+    "name": "Immolation",
+    "level": 5
+  },
+  {
+    "name": "Infernal Calling",
+    "level": 5
+  },
+  {
+    "name": "Infestation",
+    "level": 0
+  },
+  {
+    "name": "Investiture of Flame",
+    "level": 6
+  },
+  {
+    "name": "Investiture of Ice",
+    "level": 6
+  },
+  {
+    "name": "Investiture of Stone",
+    "level": 6
+  },
+  {
+    "name": "Investiture of Wind",
+    "level": 6
+  },
+  {
+    "name": "Invulnerability",
+    "level": 9
+  },
+  {
+    "name": "Life Transference",
+    "level": 3
+  },
+  {
+    "name": "Maddening Darkness",
+    "level": 8
+  },
+  {
+    "name": "Maelstrom",
+    "level": 5
+  },
+  {
+    "name": "Magic Stone",
+    "level": 0
+  },
+  {
+    "name": "Mass Polymorph",
+    "level": 9
+  },
+  {
+    "name": "Maximilian's Earthen Grasp",
+    "level": 2
+  },
+  {
+    "name": "Melf's Minute Meteors",
+    "level": 3
+  },
+  {
+    "name": "Mental Prison",
+    "level": 6
+  },
+  {
+    "name": "Mighty Fortress",
+    "level": 8
+  },
+  {
+    "name": "Mind Spike",
+    "level": 2
+  },
+  {
+    "name": "Mold Earth",
+    "level": 0
+  },
+  {
+    "name": "Negative Energy Flood",
+    "level": 5
+  },
+  {
+    "name": "Power Word Pain",
+    "level": 7
+  },
+  {
+    "name": "Primal Savagery",
+    "level": 0
+  },
+  {
+    "name": "Primordial Ward",
+    "level": 6
+  },
+  {
+    "name": "Psychic Scream",
+    "level": 9
+  },
+  {
+    "name": "Pyrotechnics",
+    "level": 2
+  },
+  {
+    "name": "Scatter",
+    "level": 6
+  },
+  {
+    "name": "Shadow Blade",
+    "level": 2
+  },
+  {
+    "name": "Shadow of Moil",
+    "level": 4
+  },
+  {
+    "name": "Shape Water",
+    "level": 0
+  },
+  {
+    "name": "Sickening Radiance",
+    "level": 4
+  },
+  {
+    "name": "Skill Empowerment",
+    "level": 5
+  },
+  {
+    "name": "Skywrite",
+    "level": 2
+  },
+  {
+    "name": "Snare",
+    "level": 1
+  },
+  {
+    "name": "Snilloc's Snowball Swarm",
+    "level": 2
+  },
+  {
+    "name": "Soul Cage",
+    "level": 6
+  },
+  {
+    "name": "Steel Wind Strike",
+    "level": 5
+  },
+  {
+    "name": "Storm Sphere",
+    "level": 4
+  },
+  {
+    "name": "Summon Greater Demon",
+    "level": 4
+  },
+  {
+    "name": "Summon Lesser Demons",
+    "level": 3
+  },
+  {
+    "name": "Synaptic Static",
+    "level": 5
+  },
+  {
+    "name": "Temple of the Gods",
+    "level": 7
+  },
+  {
+    "name": "Tenser's Transformation",
+    "level": 6
+  },
+  {
+    "name": "Thunder Step",
+    "level": 3
+  },
+  {
+    "name": "Thunderclap",
+    "level": 0
+  },
+  {
+    "name": "Tidal Wave",
+    "level": 3
+  },
+  {
+    "name": "Tiny Servant",
+    "level": 3
+  },
+  {
+    "name": "Toll the Dead",
+    "level": 0
+  },
+  {
+    "name": "Transmute Rock",
+    "level": 5
+  },
+  {
+    "name": "Vitriolic Sphere",
+    "level": 4
+  },
+  {
+    "name": "Wall of Light",
+    "level": 5
+  },
+  {
+    "name": "Wall of Sand",
+    "level": 3
+  },
+  {
+    "name": "Wall of Water",
+    "level": 3
+  },
+  {
+    "name": "Warding Wind",
+    "level": 2
+  },
+  {
+    "name": "Watery Sphere",
+    "level": 4
+  },
+  {
+    "name": "Whirlwind",
+    "level": 7
+  },
+  {
+    "name": "Word of Radiance",
+    "level": 0
+  },
+  {
+    "name": "Wrath of Nature",
+    "level": 5
+  },
+  {
+    "name": "Zephyr Strike",
+    "level": 1
+  }
+]

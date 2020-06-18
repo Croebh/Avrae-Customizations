@@ -1,0 +1,3 @@
+-f "Commands | `!weather [biome] [season]` ~~     ~~ roll for weather for a given biome in a given season.
+`!weather [list]` ~~     ~~  displays list of supported biomes"
+-footer "Weather Generator, Version 0.1.5 | Developed by @silverbass#2407 and @newtim#1227 and @Croebh#5603"

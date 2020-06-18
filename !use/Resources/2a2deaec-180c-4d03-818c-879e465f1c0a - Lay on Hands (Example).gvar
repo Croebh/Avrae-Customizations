@@ -1,0 +1,18 @@
+{
+    "lay": {
+        "fail": "True",
+        "d": "-{ccnum} [Lay on Hands]",
+        "cc": "Lay on Hands",
+        "title": "[name] uses their Lay on Hands ability!",
+        "desc": "As an action, you can touch a creature and draw power from the pool to restore a number of hit points to that creature, up to the maximum amount remaining in your pool.",
+        "thumb": "https://cdn.discordapp.com/attachments/269276476023635978/634105147198537768/unknown.png"
+    },
+    "smite": {
+        "fail": "True",
+        "d": "{1+slot-(slot//5)-(slot//6)-(slot//7)-(slot//8)-(slot//9)}d8 [radiant]",
+        "slot": 1,
+        "title": "[name] uses their Divine Smite!",
+        "desc": "When you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage to the target, in addition to the weapon's damage. The extra damage is 2d8 for a 1st-level spell slot, plus 1d8 for each spell level higher than 1st, to a maximum of 5d8. The damage increases by 1d8 if the target is an undead or a fiend, to a maximum of 6d8.",
+        "thumb": "https://media.discordapp.net/attachments/269276476023635978/634104690275254312/unknown.png"
+    }
+}

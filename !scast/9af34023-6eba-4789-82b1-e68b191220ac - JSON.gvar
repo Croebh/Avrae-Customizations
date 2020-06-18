@@ -1,0 +1,57 @@
+[
+    {
+        "args": ["careful"],
+        "points": "1",
+        "out": "-f \"Careful Spell|When you cast a spell that forces other creatures to make a saving throw, you can protect some of those creatures from the spellʼs full force. To do so, you spend 1 sorcery point and choose a number of those creatures up to your Charisma modifier (minimum of one creature). A chosen creature automatically succeeds on its saving throw against the spell.\""
+    },
+    {
+        "args": ["distant"],
+        "points": "1",
+        "out": "-f \"Distant Spell|When you cast a spell that has a range of 5 feet or greater, you can spend 1 sorcery point to double the range of the spell.\n\nWhen you cast a spell that has a range of touch, you can spend 1 sorcery point to make the range of the spell 30 feet.\""
+    },
+    {
+        "args": ["empowered","empower"],
+        "points": "1",
+        "out": "-f \"Empowered Spell|When you roll damage for a spell, you can spend 1 sorcery point to reroll a number of the damage dice up to your Charisma modifier (minimum of one). You must use the new rolls.\n\nYou can use Empowered Spell even if you have already used a different Metamagic option during the casting of the spell.\n\n**Note:** You will need to reroll and apply the difference separately.\""
+    },
+    {
+        "args": ["extended","extend"],
+        "points": "1",
+        "out": "-f \"Extended Spell|When you cast a spell that has a duration of 1 minute or longer, you can spend 1 sorcery point to double its duration, to a maximum duration of 24 hours.\""
+    },
+    {
+        "args": ["heightened","heighten"],
+        "points": "3",
+        "out": "-f \"Heightened Spell|When you cast a spell that forces a creature to make a saving throw to resist its effects, you can spend 3 sorcery points to give one target of the spell disadvantage on its first saving throw made against the spell.\""
+    },
+    {
+        "args": ["quickened","quicken"],
+        "points": "2",
+        "out": "-f \"Quickened Spell|When you cast a spell that has a casting time of 1 action, you can spend 2 sorcery points to change the casting time to 1 bonus action for this casting.\""
+    },
+    {
+        "args": ["subtle"],
+        "points": "1",
+        "out": "-f \"Subtle Spell|When you cast a spell, you can spend 1 sorcery point to cast it without any somatic or verbal components.\""
+    },
+    {
+        "args": ["twinned","twin"],
+        "points": "spell_level",
+        "out": "-f \"Twinned Spell|When you cast a spell that doesnʼt have a range of self and is incapable of targeting more than one creature at the spellʼs current level, you can spend a number of sorcery points equal to the spellʼs level to target a second creature in range with the same spell (1 sorcery point if the spell is a cantrip).\n\nTo be eligible, a spell must be incapable of targeting more than one creature at the spellʼs current level. For example, magic missile and scorching ray arenʼt eligible, but ray of frost and chromatic orb are.\""
+    },
+    {
+        "args": ["elemental","element"],
+        "points": "1",
+        "out": "-f \"Elemental Spell|When you cast a spell that deals a type of damage from the following list, you can spend 1 sorcery point to change that damage type to one of the other listed types: acid, cold, fire, lightning, thunder.\""
+    },
+    {
+        "args": ["seeking","seek"],
+        "points": "1",
+        "out": "-f \"Seeking Spell|When you cast a spell that requires you to make a spell attack roll or that forces a target to make a Dexterity saving throw, you can spend 1 sorcery point to ignore the effects of half- and three-quarters cover against targets of the spell.\""
+    },
+    {
+        "args": ["unerring","unerr"],
+        "points": "1",
+        "out": "-f \"Unerring Spell|If you make an attack roll for a spell and miss, you can spend 2 sorcery points to reroll the attack roll. You must use the result of the secondn roll.\n You can use Unerring Spell even if you have already used a different Metamagic option during the casting of the spell.\""
+    }
+]

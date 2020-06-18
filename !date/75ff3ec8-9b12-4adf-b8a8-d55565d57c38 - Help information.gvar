@@ -1,0 +1,37 @@
+**__Commands__**
+`!date` - View current date
+`!date [#]` - Temporarily view a specific date
+`!date <set> [#]` - Set your current date
+`!date [next|prev]` - Advance or Rewind the current date
+`!date [?|help]` - View this help
+`!date custom` - View help on making a custom calendar
+
+You can make a cvar named `year` to denote what year it is in your campaign (eg., `!cvar year 312 D.R.`)
+
+##############
+
+**__Custom Calendar__**
+You can add a cvar/uvar named `DateGvar`, containing a gvar id, in order to use a custom calender. You can either copy the base gvar (`!gvarcopy 1665221a-908a-40e9-ac8b-24ce938dfe09` on the Avrae Dev server) and edit to suit your needs, or you can view a stripped down example with `!gvar 9f6f16fe-f1c1-4d93-886f-22378a03437e`.
+
+Faerun (default) - `1665221a-908a-40e9-ac8b-24ce938dfe09`
+Eberron - `afb6e47c-8a29-4a33-b4d7-3b322c913c6b` - Thanks @LonePaladin
+Real World - `9ebaa622-43c5-4f97-9ba3-7a95cab94d09`
+
+
+**__Explanation__**
+**`length`** - The total length of the year
+**`name`** - The name of the calendar
+**`weekdays`** (*optional*) - A list of the days of the week
+**`moon#`** (*up to 11*) - A list of the different phases of your moon(s). If multiple moons are desired, you can use `moon`, `moon1`, `moon2`...`moon9`
+**`moonCycle#`** - How many days between each phase of the moon
+**`moonName#`** (*optional*) - The name of the moon
+**`seasons`** - A list of the different seasons. If a season starts near the end of the year, simply add it twice.
+ **`name`** - The name of the season
+ **`start`** - The day of the year the season starts. 
+ **`end`** - The day of the year the season ends
+**`months`** - The juicy part, the months.
+ **`name`** - The name of the month
+ **`length`** - Length of the month in days
+ **`holidays`** (*optional*) - A list of the holidays in a given month
+  **`name`** - The name of the holiday
+  **`day`** - The day of the month the holiday is on
