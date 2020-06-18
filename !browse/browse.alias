@@ -1,4 +1,0 @@
-tembed
-{{args=&ARGS&}}
-{{f'''{'{'*2}query, maxWidth={args} or [''], int(get('width',75)){'}'*2}'''}} 
-{{get_gvar("232e476f-ef6b-4847-95af-63dd09dc310a")}}

@@ -1,7 +1,0 @@
-embed {{q,g='\n',load_json(get_gvar('d34c5604-ba21-4c17-8a66-fa208579f865'))}}{{n=" ".join(&ARGS&).lower() if &ARGS& else ''}}{{s=[i for i in g if n in i.name.lower() or all([x in i.name.lower() for x in n.split(' ')])]}}
-{{s=s[0] if s and (len(s)==1 or n == s[0].name.strip('`')) else [x.name for x in g] if not n else [x.name for x in s]}}
-{{raw=q.join(s)}}{{raw=raw[:1020]+'`...' if len(raw)>1024 else raw}}
-{{(f' -desc "{s.name}" -f "Description|{s.desc}"'+(' -f "Arguments|'+s.args+'"' if s.args else "")+f' -f "Returns|{s.returns}" -f "Syntax|`{s.syntax}`"') if 'name' in s else f'-f "List of Functions Containing `{n}`|{raw if s else "No Matches Found"}"' if n else '-desc "`!function [search]` to look up a function.\nIf multiple similar, aim for an exact match."'}}
--f "__{{" "*200}}__|A full list of Functions can be found at [avrae.io](https://avrae.readthedocs.io/en/latest/aliasing/api.html)"
--title "Function Lookup"
--footer "All of these functions require being wrapped in double curly brackets, and will only function inside snippets, aliases, and the `!test` or `!tembed` commands."

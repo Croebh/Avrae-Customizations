@@ -1,6 +1,0 @@
-embed {{q,g='\n',load_json(get_gvar('93016579-3dc0-4648-be3d-24c82c20a047'))}}{{n=" ".join(&ARGS&).lower() if &ARGS& else ''}}{{s=[i for i in g if i.name.lower==n or all([x in i.name.lower() for x in n.split(' ')])]}}
-{{s=s[0] if s and (len(s)==1 or s[0].name.lower()==n) else [x.name for x in g] if not n else [x.name for x in s]}}
-{{raw=q.join(s)}}{{raw=raw[:1020]+'`...' if len(raw)>1024 else raw}}
--title "Sane Magical Prices"
-{{(f' -title "{s.name}" -desc "*{s.rarity}*" -f "Price|{int(s.price):,} gp" -footer "DMG {s.page}"') if 'name' in s else f'-f "List of Items containing `{n}`|{raw if s else "No Matches Found"}"' if n else '-desc "`!sane [search]` to look up an item.\nIf multiple similar, aim for an exact match."'}}
--f "__{{" "*200}}__|[Source](https://drive.google.com/file/d/0B8XAiXpOfz9cMWt1RTBicmpmUDg/view)"

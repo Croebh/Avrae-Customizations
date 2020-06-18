@@ -1,3 +1,0 @@
-embed {{w=get_gvar('b0cc9785-e09d-4b29-b86e-873a3661d86f').split('\n')}}{{y=1 if "%1%"=="%1"+"%" else min(int("%1%"),52)}}{{num=range(52)}}{{num=num[:y]}}{{z="1d52"}}{{x="rr"}}
--title "<name> draws {{y}} card{{'s' if y>1 else ''}}!"{{z="1d52"}}{{x="rr"}}
--desc "{{'\n'.join([("" if set("a", x+str(roll(z))) else "")+w[int(a[2::])]+("" if set("z",z+a) else "") for num in num])}}"

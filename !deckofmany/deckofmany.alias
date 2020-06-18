@@ -1,5 +1,0 @@
-embed {{g,c,R=load_json(get_gvar('d26327b7-9e85-4158-b63a-99ad722efc90')),22 if '&*&'=='full' else 13,[str(vroll('1d4+1')),str(vroll('1d3'))]}}{{r=roll(f"1d{c}-1")}}
--title "<name> pulls a card from a {{c}} card Deck of Many Things - {{g[r]['name']}}!"
--desc "{{g[r]['desc'].replace('####',R[0]).replace('%%%%',R[1])}}"
--image "{{f"http://i.imgur.com/{g[r]['image']}.jpg"}}"
--footer "Deck of Many Things | DMG 162 | !deckofmany full - Select the 22 card deck."
