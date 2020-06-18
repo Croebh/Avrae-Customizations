@@ -1,0 +1,14 @@
+embed {{C,a,g=constitutionMod,&ARGS&,load_json(get_gvar('ac26f42b-3777-4dc7-944d-6efbc04aff9b'))}}
+{{v,ds=1 if a and '?' not in a else 0,f'd{a[0].split("d")[1]}' if "d" in "&1&" else "&2&"*("&2&" in ['d4','d6','d8','d10','d12','d20']) or get("hd","")}}
+{{cc=f"{g[0]} ({ds})"}}
+{{V=cc_exists(cc)}}
+{{U,M,d=int(min(get_cc(cc),int(a[0].split("d")[0]if a*v else 0)*V) if V else 0),g[1] in a,g[2] in a or g[4]in get(g[3],"")}}
+{{V and mod_cc(cc,-U)}}
+{{vh=a*V and vroll(str(U)+ds.replace("d","*"*M or "d")+(d and not M)*f"mi{C}[{g[4]}]"+"*2[Periapt of Wound Closure]"*("Wound Closure" in get("attunedItems",""))+f"+{U*C}")}}
+{{b="-b"in a and len(a)>a.index("-b")and a[a.index("-b")+1]}}
+{{br=vroll(b) if b else 0}}
+-title "{{f"{name} {'spends'*v or 'wants to spend'} additional hit dice during a Short Rest!"}}"
+-desc "{{(f'{name} spends {U}{f" {ds}"*(U>0)} hit di{"c"*(U!=1)}e{f" and {str(b).split()[0]}{g[8]}"*(b!=False)}, recovering {vh.total+int(b and br.total) if vh else 0} hit points.')*v or "This alias allows you to spend additional hit dice during a short rest without refilling counters or restoring warlock spell slots.\n\n**Basics of use:**\n`"+g[9][336:1246].replace("!sr","!hd").replace("Takes a short rest, and s","S")+g[9][1417:]}}"
+{{(mod_hp(vh and vh.total+(int(b and br.total)),0) or f'-f "Healing|{vh}"'*(vh!=[])+f' -f "Bonus Healing|{br}"'*(b!=False)+(f" -f '{cc}|{cc_str(cc)}'"if V else""))if v else ''}}
+-color <color> -thumb <image>
+-footer "{{f"{name}: <{hp_str()}> | "*v}}!hd ? - Help"

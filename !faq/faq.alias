@@ -1,0 +1,7 @@
+embed 
+{{G,n,a=load_json(get_gvar('4de933cf-2a7d-450c-924f-ffd67a6f186f')),"\n","&1&".lower() if '&' not in '&1&' else ''}}
+-title "Frequently asked Avrae questions"
+{{faq=([i for i in G if a in i.keywords]+[''])[0]}}
+{{f'-title "{faq.title}" -desc "{faq.desc}" {f"-image {faq.image}"if "image" in faq else ""}' if faq else f'''-desc "{n.join([f"**FAQ {i.keywords[0]}:** {i.title} - *{i.keywords[1:]}*" for i in G])}"'''}}
+-footer "!faq - Show the list | !faq [keyword] - Show the answer"
+-color 7289DA
