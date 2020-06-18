@@ -1,0 +1,7 @@
+{{ G = get_gvar("68c31679-634d-46de-999b-4e20b1f8b172") }}
+{{ L = [x.split(",") for x in G.split("\n\n")] }}
+{{ I = [x.pop(roll(f'1d{len(x)}-1')).title() for x in L] }}
+{{ aL = L[0] + L[1] }}
+{{ add = [aL.pop(roll(f'1d{len(aL)-1}')).title() for x in range(randint(4)+1)]}}
+{{ I = [I[0], I[1]] + add + [I[2]] }}
+-phrase "You {{" ".join(I)}}!"

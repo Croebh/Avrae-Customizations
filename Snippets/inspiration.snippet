@@ -1,0 +1,4 @@
+{{c=combat()}}
+{{e=c.me.get_effect('inspired') if c and c.me else '' }}
+{{dice, bard=e.name[e.name.index('(1d'):].strip('()') if e else '', e.name[12:e.name.index('(1d')] if e else ''}}
+{{c.me.remove_effect(e.name) or f"""-b1 {dice}[inspiration] -phrase "{name} feels inspired by {bard}!" """ if dice else ""}}
