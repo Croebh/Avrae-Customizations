@@ -1,0 +1,21 @@
+echo {{r,n=("&1&" if vroll("&1&") else ([i.damage for i in get_raw().attacks if "&1&".lower() in i.name.lower()]+['4d6kh3'])[0]) if "&" not in "&1&" else '4d6kh3',min(int("&2&") if "&" not in "&2&" and "&2&".isdigit() else 1000, 9900)}}
+{{rolls,values,counts=[],{()},{} }}{{values.remove(())}}
+{{_=[rolls.append(x) or values.add(x) or counts.update({x:counts.get(x,0)+1}) for i in range(n) if not set('x',roll(r))]}}
+{{partial=['▏','▎','▍','▌','▋','▊','▉','█']}}
+{{mi,ma,mean=min(counts,key=counts.get),max(counts,key=counts.get),round(sum(rolls)/n,3)}}
+{{limiter=100*(int(get('distWidth',14))/int(counts[ma]/n*100))}}
+{{'`'*3}}diff
+Distribution for `{{r}}` {{("" if vroll("&1&") else ([f"({i.name}) " for i in get_raw().attacks if "&1&".lower() in i.name.lower()]+[''])[0])}}over {{n}} rolls
+
+------|---------|------|{{'-'*int(get('distWidth',14))}}
+    # |       % | ENUM | BAR GRAPH
+------|---------|------|{{'-'*int(get('distWidth',14))}}
+{{'\n'.join([f"{'+' if counts[x]==counts[ma] else '-' if counts[x]==counts[mi] else ' '} {x:>3} | {counts[x]/n*100:6.2f}% | {counts[x]:>4} | "+(("█"*int((counts[x]/n)*limiter) + (partial[int((counts[x]/n)*limiter*10)%8] if int((counts[x]/n)*limiter) else '▏'))) for x in values]) }}
+------|---------|------|{{'-'*int(get('distWidth',14))}}
+{{MI,MA=[str(i) for i in counts if counts[i]==counts[mi]],[str(i) for i in counts if counts[i]==counts[ma]]}}{{_=(MI.sort(),MA.sort())}}
+Standard Deviation: {{f"{sqrt(sum([((x-mean)*(x-mean))*counts[x] for x in counts])/n):.3}"}}
+  Observable Range: {{min(values)}}-{{max(values)}}
+      Average Roll: {{mean}}
++   Highest Chance: {{f"{', '.join(MA[:-1])}, or {MA[-1]}" if len(MA)>1 else MA[0]}} ({{f"{counts[ma]/n*100:.2f}%"}} with {{counts[ma]}} rolled)
+-    Lowest Chance: {{f"{', '.join(MI[:-1])}, or {MI[-1]}" if len(MI)>1 else MI[0]}} ({{f"{counts[mi]/n*100:.2f}%"}} with {{counts[mi]}} rolled)
+{{'`'*3}}
