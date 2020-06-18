@@ -1,0 +1,10 @@
+embed {{G,l=load_json(get_gvar('5bdc7417-9fd7-4223-b59d-cb2fb3d85357')),0}}{{G.T+name+G.t}}{{hpg,thpd,hd,C,a,N,E=hp-get_hp(),get_temphp(),G.hd,get_raw().consumables.get('custom',{}),&ARGS&,G.n,G.e}}{{H,h,A='-h'not in a,'?'not in a,G.a not in a}}{{not h or(set_hp(hp),set_temphp(0))}}{{e,n=C.get(E),int(max(1,level/(2 if A else 4)))}}{{eD=get_cc(E)if e else 0}}{{e=f"{cc_str(E)} {'(-1)'if A and eD else''}"if e and h and not mod_cc(E,-A)else 0}}{{c=[x for x in C if'reset'in C[x]and C[x].reset and C[x].reset in G.r]}}{{c.sort()}}{{ccs=N.join([f"{x}: {cc_str(x)} {f'(+{X})'if X else''}"for x in c if not(set("X",get_cc_max(x)-get_cc(x))or set_cc(x,get_cc_max(x)))])if h else''}}{{ccs=N.join([set("l",l+len(x))or x+str(set("l",0)or G.F if l>900 else"")for x in ccs.split(N)])if len(ccs)>1024 else ccs}}{{S=N.join([set("d",get_slots_max(i)-get_slots(i))or set_slots(i,get_slots_max(i))or f"{slots_str(i)}{f' (+{d})'if d else''}"for i in range(1,10)if get_slots_max(i)])if h else''}}{{ib=a.index("-b")if"-b"in a else -1}}{{bhd=int(a[ib+1])if len(a)>ib and ib>=0 and a[ib+1].strip('-+').isdigit()else 0}}{{hdD,n,dList={},n+bhd,G.l}}{{[set("M",f"{hd}{x}")or set("d",min(n,get_cc_max(M)-get_cc(M)))or set_cc(M,get_cc(M)+d)or hdD.update({hd+x:d})or set("n",n-d)for x in dList if f"Hit Dice{x}"in C]if h else''}}{{HD=N.join([f'**{x.strip(f"{hd}()")}:** {cc_str(x)} {f"(+{hdD[x]})"if hdD[x]else""}'for x in C if hd in x])if h else''}}
+{{H*h*f'{G.HP}{hp_str()} {f"(+{hpg})"if hpg else""}"'}}
+{{H*h*f'-f "{hd}|{HD}"'if HD else""}}
+{{H*h*f'-f "{E}|{e}"'if e else""}}
+{{H*h*f'{G.S}{S}"'if S else""}}
+{{H*h*f'{G.C}{ccs}"'if ccs else""}}
+{{G.f % {"i":image,"c":color} }}
+-desc "{{G.R if h else G.h}}{{''if A else G.A}}{{(G.hp+(G.ss if S else'')+(G.HD if HD else'')+', '.join(['']+c)).rstrip(', ')*h if not H else''}}{{G.thp*h if thpd else''}}"
+
+{{"-t 15"if chanid()=="664259555752148992"else""}}

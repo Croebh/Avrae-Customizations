@@ -1,0 +1,3 @@
+tembed
+{{args=&ARGS&}} 
+{{f'''{'{'*2}a={args}{'}'*2}'''}} {{get_gvar("60c3f96d-bfea-4bbb-910f-42cf9bde8d63")}}

@@ -1,0 +1,118 @@
+{{c = []}}
+{{args, init = argparse(a), combat()}}
+
+{{silverServers = servid() in ["502231291152957450"]}}
+
+{{gvar, help_text, min_help_text = load_json(get_gvar("e5add2ac-61fd-40da-8362-dbdcfab38359")), get_gvar('1f58cef3-bb05-498d-9623-c70c62502396'), get_gvar('ba1ac753-8707-480f-b933-89ba6e5cb0cf')}}
+{{stats, N = ["dexterity", "strength", "constitution", "wisdom", "intelligence", "charisma"], '\n'}}
+{{help = not a or ('?' in args or 'help' in args)}}
+{{out = args.last('out')}}
+
+{{cvar, cgvar = args.last('cvar') or (a[0] if a else '{}'), {} }}
+
+{{_ = [cgvar.update(load_json(get_gvar(x))) for x in load_json(get('resources','[]'))]}}
+
+{{_ = help or out or [([[c.extend([f"-{x[0]}", str(i)]) for i in x[1]] if typeof(x[1])=='list' else c.append(f"-{x[0]}"), c.append(str(x[1]))]) for x in (load_json(get(cvar, '{}')) or cgvar.get(cvar, '{}')).items()] if get(cvar) or cgvar.get(cvar) else ''}}
+{{args = argparse(c + a)}}
+
+{{CHAR_STATS = {} }}{{_ = [CHAR_STATS.update(get_raw()[x]) for x in  ['stats', 'saves', 'levels', 'cvars', 'skills']]}}
+{{CHAR_STATS['armor'] = armor}}
+{{scale = load_json(argparse(c).last('scale', '{"1" : 1, "5" : 2, "11" : 3, "17" : 4}').replace("'", '"'))}}
+{{_ = [set('scaleNum', scale[x]) for x in scale if x.isdigit() and get("level",0) >= int(x)]}}
+{{CHAR_STATS['scale'] = get('scaleNum',0)}}
+
+{{CHAR_STATS['spellDC'] = get('spellDC', get_raw().spellbook.dc)}}
+{{CHAR_STATS['spellAB'] = get('spellAB', get_raw().spellbook.attackBonus)}}
+
+{{CHAR_STATS={'{' + i[0] + '}' : str(i[1]) for i in CHAR_STATS.items()}.items() }}
+
+
+{{target_cache, targets = args.get('t') or [name], []}}
+{{target_cache=[[init.get_combatant(i.split('|', 1)[0].replace('{name}', name)) or init.get_group(i.split('|', 1)[0]), argparse(i.split('|', 1)[1] if '|' in i else '')] for i in target_cache if init]}}
+{{_ = [targets.append(i) if 'c' in i[0].type else [targets.append([e, i[1]]) for e in i[0].combatants] for i in target_cache if i[0]]}}
+
+{{ignore = 'i' in args}}
+
+{{ccnum, cc = (args.last('ccnum', 1, int)), args.last('cc')}}
+{{'' if ignore or out or not ccnum or not cc or get_cc(cc) >= (ccnum) else err(f'You don\'t have enough uses of "{cc}" remaining to do that.')}}
+{{ccout = out or ignore or not cc or not get_cc(cc) >= (ccnum) or mod_cc(cc, -1 * ccnum, 1) or f' -f "{cc} {f"({-1 * ccnum:+})" if ccnum else ""}|{cc_str(cc)}"'}}
+
+{{slotnum, slot = -1*(args.last('slotnum', 1, int)), args.last('slot', None, int)}}
+{{'' if ignore or out or not slot or not slotnum or (get_slots(slot)+slotnum >= 0 and get_slots(slot)+slotnum < get_slots_max(slot)) else err(f'You don\'t have enough slots of level {slot} remaining to do that.')}}
+{{slotout = (out or ignore or not slot or (set_slots(slot, get_slots(slot)+slotnum) if slotnum else 1) or f' -f "Slots Remaining {f"({slotnum:+})" if slotnum else ""}|{slots_str(int(slot))}"')}}
+
+{{bag = load_json(get('bags', '[]'))}}
+{{itemqty, item  =  (args.last('itemqty', 1, int)), args.last('item').split('|') if args.last('item') else ''}}
+{{itemv = ignore or [i[1][item[1]] for i in bag if i[0] == item[0] and item[1] in i[1] and (i[1][item[1]] + (-1 * itemqty)) >= 0 and not i[1].update({item[1] : (i[1][item[1]] + (-1 * itemqty))}) and not set_cvar('bags', dump_json(bag))] or err(f'Not enough `{item[1]}` found in container `{item[0]}`.') if item and not out else 0}}
+{{itemout = out or ignore or not itemv or f' -f "Items Remaining in `{item[0]}`|`{item[1]}`: {itemv[0]} {f"({(-1 * itemqty):+})" if (-1 * itemqty) else ""}"'}}
+
+{{user = out or help or not init or init.get_combatant(args.last('user', name))}}
+
+{{dc, phrase, effect, seffect, desc, title, save_bonus, damage, maxhp, xroll, temphp, n, ndesc, crit = args.last('dc', '10', str), args.last('phrase', '', str), args.last('effect'), args.last('seffect'), args.last('desc', '', str), args.last('title', '', str), args.last('b', '', type_ = str), args.last('d', '', type_ = str), args.last('max', '', str), args.last('roll'), args.last('thp', '', str), args.last('n'), args.last('ndesc', 'Number'), 'crit' in args}}
+
+
+
+{{annotated, mathsep= ["dc", "phrase", "effect", "desc", "title", "save_bonus", "damage", "seffect", "maxhp", "xroll", "temphp", "n", "ndesc"], "+-()/*[]"}}
+
+{{_ = [[set(x, get(x).replace(i[0], i[1])) for i in CHAR_STATS] for x in annotated if get(x)]}}
+{{_ = [[set(items, get(items).replace(repl[0], repl[1])) for repl in {item : str(roll(thing) or thing) for item in [get(items)[x:][get(items)[x:].index('{'):get(items)[x:].index('}')+1] for x in range(len(get(items))) if get(items)[x:].startswith('{') and get(items)[x:].count('}') ] if not set('thing', ''.join([str(args.last(i, get(i, i))) for i in "".join([(f" {char} " if char in "+-()/*" else char ) for char in item[1:-1]]).split()]))}.items()] for items in annotated if get(items)]}}
+
+{{damage= (damage.split('|')+['']*2)[:3]}}
+{{damage, minDamage, maxDamage = damage[0], roll(damage[1]) if damage[1] and vroll(damage[1]) else None, roll(damage[2]) if damage[2] and vroll(damage[2]) else None}}
+
+{{dc, save_type, adv, phrase, save_bonus, damage, half, avoid, hidden, effect, seffect, xroll = sum([int(get(i, i)) for i in dc.split('+')]), args.last('save','').lower() or args.last('s', 'dex').lower() , args.adv(boolwise = True), '*' + phrase + '*' if phrase else '', [vroll(save_bonus) for x in range(len(targets)) if save_bonus], vroll(damage, 1 + crit) if damage else None, 'half' in args, 'avoid' in args, 'h' in args, ([effect.split("|")[0]]+["|".join(effect.split("|")[1:4])]+effect.split("|")[4:] if "-attack" in effect and len(effect.split("|"))>3 else (effect.split('|')+['-1']*2)[:3]) if effect else 0, (seffect.split('|')+['-1']*2)[:3] if seffect else 0, vroll(xroll) if xroll else None}}
+
+{{damageOut = min(maxDamage, max(minDamage, damage.total)) if minDamage and maxDamage else min(maxDamage, damage.total) if maxDamage else max(minDamage, damage.total) if minDamage else damage.consolidated() if damage else ''}}
+{{damageOut = damage.consolidated() if damage and roll(damageOut)==damage.total else damageOut}}
+
+{{maxes = {x[0].name : x[0].maxhp for x in targets} }}
+{{temps = {x[0].name : x[0].temphp for x in targets} }}
+
+{{saves = '' if help else [x[0].save(save_type, x[1].adv( boolwise = True) if ('adv' in x[1] or 'dis' in x[1]) else adv) for x in targets]}}
+{{save_range = range(len(saves))}}
+
+-title "{{(("U wanna cvar?" if out else '') or gvar.t * help or get('title').replace('"', '\"') or gvar.K % stats[gvar.T.index(save_type)].title()).replace('[name]', name).replace('[sname]', stats[gvar.T.index(save_type)].title()).replace('"', '\"')}}"
+
+-desc "{{(min_help_text if not a else help_text) if help else phrase.replace("'", "ʼ")}}"
+
+{{target_bonus, target_damage, target_effect = [vroll(x[1].last('b', type_ = str)) if x[1].last('b') else None for x in targets], [(x[1].last('d', type_ = str)) for x in targets], [(x[1].last('effect').split('|')+['-1']*2)[:3] if x[1].last('effect') else 0 for x in targets]}}
+
+{{successes = [3 if ('pass' in args and not 'fail' in targets[x][1]) or 'pass' in targets[x][1] else 2 if ('fail' in args and not 'pass' in targets[x][1]) or 'fail' in targets[x][1] else (saves[x].total + (save_bonus[x].total if save_bonus else 0) + (target_bonus[x].total if target_bonus[x] else 0)) >= dc for x in save_range]}}
+
+{{help or out or ((f'-f "{user.name}|'+'\n'.join([user.add_effect(ename, seffect[1], int(seffect[2]) if seffect[2] or typeof(seffect[2])==int or seffect[2].isdigit() else -1, 'conc' in seffect[1], None, "end" in seffect[1]) or f"{gvar.e}{user.get_effect(ename)}" for x in save_range if not successes[x]%2 and not set('ename', seffect[0].replace('[tname]',targets[x][0].name) if '[tname]' in seffect[0] else seffect[0] + f' - {targets[x][0].name}')])+'"') if "separate" in seffect[1] else user.add_effect(seffect[0], seffect[1],  int(seffect[2]) if seffect[2] or typeof(seffect[2])==int or seffect[2].isdigit() else -1, 'conc' in seffect[1], None, "end" in seffect[1]) or f'-f "{user.name}|{gvar.e}{user.get_effect(seffect[0])}"') if seffect and any([1 for x in successes if not x%2])and user else ""}}
+
+{{save_list = [f'''{"" if "pass" in args or "fail" in args else gvar.M[gvar.T.index(save_type)]}{"" if "pass" in args or "fail" in args else "Automatic Success!" + N if successes[x] == 3 else "Automatic Fail!"+N if successes[x] == 2 else f"""{saves[x].dice}{f" + {save_bonus[x].dice.strip(gvar.L)}" if save_bonus else ""}{f" + {target_bonus[x].dice.strip(gvar.L)}" if target_bonus[x] else ""} = {saves[x].total + (save_bonus[x].total if save_bonus else 0) + (target_bonus[x].total if target_bonus[x] else 0)}; {gvar.s[successes[x] == 0] + N}"""}''' for x in save_range]}}
+
+{{damage_list = [targets[x][0].damage(f"{'(' * ((half or 'half' in targets[x][1]) * (successes[x]%2) or (avoid or 'avoid' in targets[x][1]))}{((str(damageOut) if damage else '') + (' + ' + target_damage[x] if target_damage[x] else '')).strip(gvar.L)}{')/2' if ((successes[x]%2) and (half or 'half' in targets[x][1]) and not (avoid or 'avoid' in targets[x][1])) or ((not successes[x] % 2) and (avoid or 'avoid' in targets[x][1])) else ')*0' if ((successes[x]%2) and (avoid or 'avoid' in targets[x][1])) else ''}", crit) if (damage or target_damage[x]) and ((successes[x] == 2 or successes[x] == 0) or (half or 'half' in targets[x][1])) else "" for x in save_range]}}
+
+{{effects_list = [f"""{targets[x][0].add_effect(effect[0], effect[1],  int(effect[2]) if effect[2] or typeof(effect[2])==int or effect[2].isdigit() else -1, 'conc' in effect[1], user.get_effect((seffect[0].replace("[tname]",targets[x][0].name) if "[tname]" in seffect[0] else seffect[0] + f" - {targets[x][0].name}") if "separate" in seffect[1] else seffect[0]) if user and seffect and "parent" in seffect[1] else None, "end" in effect[1]) or f"{gvar.e}{targets[x][0].get_effect(effect[0])}" + N if effect * (not successes[x] % 2) else ""}""" for x in save_range]}}
+{{effects_list = [effects_list[x]+f"""{targets[x][0].add_effect(target_effect[x][0], target_effect[x][1],  int(target_effect[x][2]) if target_effect[x][2] or typeof(target_effect[x][2])==int or target_effect[x][2].isdigit() else -1, "conc" in target_effect[x][1], user.get_effect((seffect[0].replace("[tname]",targets[x][0].name) if "[tname]" in seffect[0] else seffect[0] + f" - {targets[x][0].name}") if "separate" in seffect[1] else seffect[0]) if user and seffect and "parent" in seffect[1] else None, "end" in target_effect[x][1]) or f"{gvar.e}{targets[x][0].get_effect(target_effect[x][0])}" + N if target_effect[x] * (not successes[x] % 2) else ""}""" for x in save_range]}}
+
+{{conc_list = [f"**Concentration:** DC {max(10, damage_list[x].total//2)}"+N if damage_list[x] and any([i for i in targets[x][0].effects if i.conc]) else '' for x in save_range]}}
+
+{{maxhp = vroll(maxhp.replace("{damage}",damage.consolidated() if damage else "")) if maxhp else None}}
+{{max_list = [targets[x][0].set_maxhp(maxes[targets[x][0].name] + tMax.total) or f"Max HP {['Decreased','Increased'][tMax.total>0]}: {f'{tMax.dice} = `{tMax.total:+}`' if tMax.total!=maxhp.total else f'`{maxhp.total:+}`'}"+N if tMax and (not successes[x] % 2) and maxes.get(targets[x][0].name) else "" for x in save_range if not set('tMax',vroll(str(targets[x][1].last('max')).replace('{damage}',str(damage_list[x].total) if damage_list[x] else "")) or maxhp if targets[x][1].last('max') or maxhp else None)]}}
+
+{{temphp = vroll(temphp.replace('{damage}', damage.consolidated() if damage and maxhp else "")) if temphp else None}}
+{{temp_list = [(targets[x][0].set_thp(targetTemp.total) if targetTemp.total >= temps[targets[x][0].name] else '') or (f"Temp. HP Set: {f'''`{targetTemp.total}`''' if targetTemp is temphp else targetTemp}" if temps[targets[x][0].name] < targetTemp.total else f"Temp. HP Unchanged: `{temps[targets[x][0].name]}`")+N if (temphp or targets[x][1].last('thp')) and (not successes[x] % 2) else "" for x in save_range if not set('targetTemp', vroll(str(targets[x][1].last('thp', '', str).replace('{damage}', damage.consolidated() if damage_list[x] else ""))) if targets[x][1].last('thp', '', str) else temphp if targets[x][1].last('thp') or temphp else None)]}}
+
+{{damageStr = f"""{damage} {f"({f'min: {minDamage}' if minDamage is not None else ''}{', ' if minDamage is not None and maxDamage is not None else ''}{f'max: {maxDamage}' if maxDamage is not None else ''})" if maxDamage or minDamage else ''}{f' -> `{damageOut}` ' if roll(f"{damageOut}")!=damage.total else ''}""" if damage else ''}}
+
+{{meta = f'''{(f"**Damage:** {'Hidden' * hidden or damageStr}" + N if damage else "") + (f"""**Max HP:** {'Hidden' * hidden or f'{maxhp}'}""" + N if maxhp else "") + (f"""**Temp HP:** {'Hidden' * hidden or f'{temphp}'}""" + N if temphp else "") + (f"**DC**: {'Hidden' * hidden or dc}" + N if not 'pass' in args and not 'fail' in args else '')}{f'**Roll:** {xroll}' + N if xroll else ''}{f'**{ndesc}:** {n}' + N if n else ''}''' if not (out or help or not any([not 'pass' in args and not 'fail' in args, damage, maxhp, xroll, temphp])) else 0}}
+
+{{not meta or f'-f "Meta|{meta}"'}}
+
+{{out or help or ' '.join([f'''-f "{targets[x][0].name.replace('"',"'")}|{save_list[x]}{damage_list[x].damage+N if damage_list[x] else ""}{conc_list[x]}{max_list[x]}{temp_list[x]}{effects_list[x]}|inline"''' for x in save_range if any([save_list[x], damage_list[x], conc_list[x], max_list[x], temp_list[x], effects_list[x]])])}}
+
+{{f'-f "Effect|{desc}"' if desc and not out else ''}}
+
+{{('-footer "'+ ('' if help or out else f' {N}'.join([f'{targets[x][0]}' for x in save_range]) + N ).lstrip(' |') + (gvar.DF * help or gvar.F) % gvar.V + (args.last('thumb', image) or gvar.I) + " -color %x" % randint(16777216))}}
+
+{{arg_list = ["s", "dc", "h", "b", "pass", "fail", "d", "half", "effect", "max", "cc", "ccnum", "slot", "slotnum", "item", "itemqty", "title", "phrase", "desc", "thumb", "avoid", "save", "i", "seffect", "xroll", "t", "thp", "n"]}}
+{{quotes='\\"'}}
+{{cout = {x : (args.last(x) if x!='t' else args.get(x)) for x in arg_list if x in args} if out else ''}}
+{{(f"""-desc "{'`' * 3}{N}!cvar {out} {dump_json(cout).replace('"',quotes)}{N}{'`' * 3}" """) if out else ""}}
+
+{{slotout}}
+{{ccout}}
+{{itemout}}

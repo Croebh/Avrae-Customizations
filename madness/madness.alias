@@ -1,0 +1,7 @@
+embed {{g,r,t=load_json(get_gvar('fa0c87b9-44cc-41b1-9d5c-0a424ba058ba')),vroll('1d100'),'&*&' if '&*&' else 'short'}}{{R=(r.total+4)//5}}
+{{v=t in 'short long indefinite'}}{{t='short' if t in 'short' else 'long' if t in 'long' else 'indefinite'}}
+-title "{{f"Rolling on the {t.title()}{'-Term' if t!= 'indefinite' else ''} Madness table!" if v else "Error, invalid input"}}"
+-desc "{{[g[t][i].desc for i in range(len(g[t])) if R in g[t][i].index][0] if v else 'Table not found.\nPlease try `short`, `long`, or `indefinite`.'}}"
+{{f"-f 'Madness Roll|{r}'" if v else ''}}
+{{f'-f "Duration|{vroll("1d10")} minutes"' if t=='short' else f'-f "Duration|{vroll("1d10*10")} hours"' if t=="long" else ""}}
+-footer "Madness | DMG 259 | !madness [short|long|indefinite] " -color <color>

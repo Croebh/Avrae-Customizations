@@ -1,0 +1,2 @@
+embed -title "Ring of Spell Storing" -desc "`!RoSS store [-dc #] [-b #] [-mod #] [-caster name] [-l level]` - Stores a spell. If provided with the `-dc`, `-b`, and `-mod` args, it will record the caster's spell save DC, spell attack bonus, and spellcasting ability modifier. The `-caster` arg lets you record the name of the person who stored the spell. The `-l` arg allows you to store upcasted spells.
+`!RoSS cast` - Casts a spell from the ring." -footer "!RoSS ? | Alias by @""silverbass#2407"

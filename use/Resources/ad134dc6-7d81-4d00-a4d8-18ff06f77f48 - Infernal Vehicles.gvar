@@ -1,0 +1,93 @@
+{
+  "devilHelm": {
+    "fail": "True",
+    "effect": "Devils Ride: Helm|-ac +2 -sb +2|-1",
+    "title": "Taking action station on the Devil's Ride: Helm",
+    "desc": "**Helm (Requires 1 Crew and Grants Half Cover).**\nDrive and steer the Devil’s Ride."
+  },
+  "tormentHelm": {
+    "fail": "True",
+    "effect": "Tormentor: Helm|-ac +5 -sb +5|-1",
+    "title": "Taking action station on the Tormentor: Helm",
+    "desc": "**Helm (Requires 1 Crew and Grants Three-Quarters Cover).**\nDrive and steer the Tormentor."
+  },
+  "tormentHarpoon": {
+    "fail": "True",
+    "effect": "Tormentor: Harpoon Flinger|-ac +2 -sb +2 -attack '7|2d8+2[piercing^]|Ranged Weapon Attack: +7 to hit, range 120 ft., one target. Hit: 11 (2d8 + 2) piercing damage.'|-1",
+    "title": "Taking action station on the Tormentor: Harpoon",
+    "desc": "**Harpoon Flinger (Requires 1 Crew and Grants Half Cover).**\n*Ammunition:* 10 harpoons. *Ranged Weapon Attack:* +7 to hit, range 120 ft., one target. *Hit:* 11 (2d8 + 2) piercing damage."
+  },
+  "tormentRaking": {
+    "dc": "13",
+    "d": "2d10+2[slashing^]",
+    "desc": "When the Tormentor moves within 5 feet of a creature that isn’t prone or another vehicle for the first time on a turn, it can rake the creature or vehicle with its protruding blades for 13 (2d10 + 2) slashing damage. A creature moves out of the way and takes no damage if it succeeds on a DC 13 Dexterity saving throw. A vehicle moves out of the way and takes no damage if its driver succeeds on the saving throw.",
+    "save": "dex",
+    "title": "The Tormentor rakes at the target!"
+  },
+  "tormentCrush": {
+    "dc": "13",
+    "d": "2d10[bludgeoning]",
+    "effect": "Prone||1",
+    "desc": "The Tormentor can move through the space of any Medium or smaller creature. When it does, the creature must succeed on a DC 13 Dexterity saving throw or take 11 (2d10) bludgeoning damage and be knocked prone. If the creature was already prone, it takes an extra 11 (2d10) bludgeoning damage. This trait can’t be used against a particular creature more than once each turn.",
+    "save": "dex",
+    "title": "The Tormentor crushes its target(s)!"
+  },
+  "demonHelm": {
+    "fail": "True",
+    "effect": "Demon Grinder: Helm|-ac +5 -sb +5|-1",
+    "title": "Taking action station on the Demon Grinder: Helm",
+    "desc": "**Helm (Requires 1 Crew and Grants Three-Quarters Cover).**\nDrive and steer the Demon Grinder."
+  },
+  "demonHarpoon": {
+    "fail": "True",
+    "effect": "Demon Grinder: Harpoon Flinger|-ac +2 -sb +2 -attack '5|2d8[piercing^]|Ranged Weapon Attack: +5 to hit, range 120 ft., one target. Hit: 9 (2d8) piercing damage.'|-1",
+    "title": "Taking action station on the Demon Grinder: Harpoon Flinger",
+    "desc": "**2 Harpoon Flingers (Each Station Requires 1 Crew and Grants Half Cover).**\n*Ammunition:* 10 harpoons per station. *Ranged Weapon Attack:* +5 to hit, range 120 ft., one target. *Hit:* 9 (2d8) piercing damage."
+  },
+  "demonCrush": {
+    "dc": "11",
+    "d": "4d10[bludgeoning]",
+    "effect": "Prone||1",
+    "desc": "The Demon Grinder can move through the space of any Large or smaller creature. When it does, the creature must succeed on a DC 11 Dexterity saving throw or take 22 (4d10) bludgeoning damage and be knocked prone. If the creature was already prone, it takes an extra 22 (4d10) bludgeoning damage. This trait can’t be used against a particular creature more than once each turn.",
+    "save": "dex",
+    "title": "The Demon Grinder crushes its target(s)!"
+  },
+  "demonWreck": {
+    "fail": "True",
+    "effect": "Demon Grinder: Wrecking Ball|-ac +2 -sb +2 -attack '9|8d8+4[bludgeoning^]|Melee Weapon Attack: +9 to hit, reach 15 ft., one target. Hit: 40 (8d8 + 4) bludgeoning damage. Double the damage if the target is an object or a structure.'|-1",
+    "title": "Taking action station on the Demon Grinder: Wrecking Ball",
+    "desc": "**Wrecking Ball (Requires 1 Crew and Grants Half Cover).**\n*Melee Weapon Attack:* +9 to hit, reach 15 ft., one target. *Hit:* 40 (8d8 + 4) bludgeoning damage. Double the damage if the target is an object or a structure."
+  },
+  "demonChomp": {
+    "fail": "True",
+    "effect": "Demon Grinder: Chomper|-ac +2 -sb +2 -attack '9|6d6+4[piercing^]|Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 25 (6d6 + 4) piercing damage. A target reduced to 0 hit points by this damage is ground to bits and spit out through pipes on both sides of the Demon Grinder. Any nonmagical items the target was holding or carrying are destroyed as well.'|-1",
+    "title": "Taking action station on the Demon Grinder: Chomper",
+    "desc": "**Chomper (Requires 1 Crew and Grants Half Cover).**\n*Melee Weapon Attack:* +9 to hit, reach 5 ft., one target. *Hit:* 25 (6d6 + 4) piercing damage. A target reduced to 0 hit points by this damage is ground to bits and spit out through pipes on both sides of the Demon Grinder. Any nonmagical items the target was holding or carrying are destroyed as well."
+  },
+  "scavengeHelm": {
+    "fail": "True",
+    "effect": "Scavenger: Helm|-ac +5 -sb +5",
+    "title": "Taking action station on the Scavenger: Helm",
+    "desc": "**Helm (Requires 1 Crew and Grants Three-Quarters Cover).**\nDrive and steer the Scavenger."
+  },
+  "scavengeCrush": {
+    "dc": "12",
+    "d": "3d10[bludgeoning]",
+    "effect": "Prone||1",
+    "desc": "The Scavenger can move through the space of any Large or smaller creature. When it does, the creature must succeed on a DC 12 Dexterity saving throw or take 16 (3d10) bludgeoning damage and be knocked prone. If the creature was already prone, it takes an extra 16 (3d10) bludgeoning damage. This trait can’t be used against a particular creature more than once each turn.",
+    "save": "dex",
+    "title": "The Scavenger crushes its target(s)!"
+  },
+  "scavengeHarpoon": {
+    "fail": "True",
+    "effect": "Scavenger: Harpoon Flinger|-ac +2 -sb +2 -attack '6|2d8+1[piercing^]|Ranged Weapon Attack: +6 to hit, range 120 ft., one target. Hit: 10 (2d8 + 1) piercing damage.'|-1",
+    "title": "Taking action station on the Scavenger: Harpoon Flinger",
+    "desc": "**2 Harpoon Flingers (Each Station Requires 1 Crew and Grants Half Cover).**\n*Ammunition:* 10 harpoons. *Ranged Weapon Attack:* +6 to hit, range 120 ft., one target. *Hit:* 10 (2d8 + 1) piercing damage."
+  },
+  "scavengeGrappling": {
+    "fail": "True",
+    "effect": "Scavenger: Grappling Claw|-ac +2 -sb +2 -attack '10||Melee Weapon Attack: +10 to hit, reach 15 ft., one target. Hit: The target is grappled (escape DC 12). If the target is a creature, it is restrained until the grapple ends.\n\nThe grappling claw can grapple only one target at a time, and the claw’s operator can use a bonus action to make the claw release whatever it’s holding.'|-1",
+    "title": "Taking action station on the Scavenger: Grappling Hook",
+    "desc": "**Grappling Claw (Requires 1 Crew and Grants Half Cover).**\n*Melee Weapon Attack:* +10 to hit, reach 15 ft., one target. *Hit:* The target is grappled (escape DC 12). If the target is a creature, it is restrained until the grapple ends.\nThe grappling claw can grapple only one target at a time, and the claw’s operator can use a bonus action to make the claw release whatever it’s holding."
+  }
+}
