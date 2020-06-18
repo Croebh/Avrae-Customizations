@@ -1,0 +1,17 @@
+embed {{G=get('DateGvar',"1665221a-908a-40e9-ac8b-24ce938dfe09")}}{{g,n=load_json(get_gvar(G)),'\n'}}{{set_cvar_nx('Date','1')}}{{h,C='&1&'in'help?'and not'&1&'=='p','&1&'in'custom'}}
+{{dy=int(Date)if'&1&'=='&1'+'&'else int(Date)+1 if'&1&'in'next'else int(Date)-1 if'&1&'in'prev'else int('&2&')if'&2&'!='&2'+'&'and'&1&'in'set'else int('&1&')if not(h or C)else 1}}
+{{M=[i.length for i in g.months]}}{{N=[i.name for i in g.months] }}
+{{mth,dy=1,(dy if dy<=g.length else dy%g.length)}}
+{{set_cvar('Date', str(dy)) if '%1%' in 'setnextprev' else ''}}{{D=dy}}
+{{""if[set("dy",dy-M[x])or set("mth",mth+1)for x in range(len(M))if mth>x and dy>M[x]]else""}}{{mth=mth-1}}
+{{hldy=[i.name.replace("'","ʼ")for i in g.months[mth].holidays if i.day==dy]if g.months[mth].holidays else[]}}
+{{mn=(' | 'if sum([1 for i in[""]+range(20)if f"moon{i}"in g])<4 else n).join([f"""{f'''**{g.get(f'moonName{i}')}** '''if g.get(f'moonName{i}')else''}{g.get(f'moon{i}')[int(str(round((D-1)/(g.get(f'moonCycle{i}')),0))[:-2])%len(g.get(f'moon{i}'))]}"""for i in[""]+range(20)if f"moonCycle{i}"in g])}}
+{{z=int(str(dy)[-1:])}}{{sfx='th'if 14>int(dy)>10 else'st'if z==1 else'nd'if z==2 else'rd'if z==3 else'th'}}
+-title "{{'Wait, what day is it?'if h else'Wait, what multiverse is this?'if C else g.name}}"
+{{H=get_gvar('75ff3ec8-9b12-4adf-b8a8-d55565d57c38').split('##############')}}
+{{wd=g.weekdays[(D-1)%len(g.weekdays)] if 'weekdays' in g else ''}}
+-desc "{{H[0] if h else H[1] if C else f"""{f"{f'{wd}, ' if wd else ''}{dy}{sfx} day of " if g.months[mth].length != 1 else ''}{N[mth]}{f", {year}" if exists('year') else ''}"""}}"
+{{''if(h or C)else f'-f "{"Moon Phase /" if mn else ""} Season|{mn}{n}{[x.name for x in g.seasons if x.start<=D<=x.end][0]}"'}}
+{{f"-f 'Holiday_{' '*30}_|{(', '.join(hldy))}'"if hldy and not(h or C)else""}}
+{{f"-f 'Calendar Source|{G}'"if h else''}}
+-footer "{{f"📆 Croebh#5603 📆"if h or C else f"{D}/{g.length} - !date help"}}"

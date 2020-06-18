@@ -1,0 +1,1 @@
+{{a=&ARGS&}}{{get_gvar('1549b2bd-6905-4b34-9dea-231653520f0a').replace('----',a[0]).replace('####',a[1])}} {{' '.join([(f'"{i}"' if ' ' in i else i) for i in &ARGS&[2:]])}}

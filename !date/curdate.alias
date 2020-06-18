@@ -1,0 +1,22 @@
+embed {{G = "9ebaa622-43c5-4f97-9ba3-7a95cab94d09"}}
+{{g=load_json(get_gvar(G))}}{{weekday=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']}}
+{{timezone=float('&1&') if '&1&'.strip('-+').replace('.','').isdigit() else float(get('timezone',0))}}
+{{T=time() + (timezone*3600)}}
+{{day=int((T//86400)-11)}}
+{{weekday=weekday[day%7]}}
+{{ M = [i.length for i in g.months]}}
+{{ N = [i.name for i in g.months] }}
+{{ month, day = 1,(int(day) if int(day)<=g.length else int(day)%g.length)}}
+{{hour=int(T%86400//3600)}}
+{{minute=int(T%86400%3600//60)}}
+{{ m, D=int(str(round(int(day)/(g.moonCycle),0))[:-2])%len(g.moon), day}}
+{{ "" if [ set("day", day-M[x]) or set("month", month+1) for x in range(len(M)) if month>x and day > M[x] ] else ""}}
+{{z=int(str(day)[-1:])}}
+{{suffix = 'th' if 14>int(day)>10 else 'st' if z == 1 else 'nd' if z == 2 else 'rd' if z == 3 else 'th'}}
+-title "{{g.name}} UTC {{f"{timezone:+}" if timezone!=0 else ''}}"
+-desc "{{f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"}}, {{f"{weekday} the {day}{suffix} day of " if g.months[month-1].length != 1 else ''}}{{N[month-1]}}, {{int(1970 + ((time()//86400)-11)/365)}}"
+-f "Moon Phase / Season|{{g.moon[m]}}
+{{[x.name for x in g.seasons if x.start<=D<=x.end][0]}}"
+{{holiday=[i.name.replace("'","\'") for i in g.months[month-1].holidays if i.day==day] if g.months[month-1].holidays else []}} 
+{{f"-f 'Holiday|{(', '.join(holiday))}'" if holiday else ""}}
+-footer "{{f"{D}/{g.length}"}} {{'' if timezone else "- Make a 'timezone' uvar with your offset"}}"

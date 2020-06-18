@@ -1,0 +1,2 @@
+techo 15 *Applying effects to Wild Shape form...* {{c=combat()}}{{E,t=c.me.effects,c.get_combatant(f"({name})")}}
+{{t and '\n'.join([str(x) for x in E]) or "You don't have a Wild Shape active in this combat"}}{{s=t and [set("p",str(x).strip(')').rsplit('Parent: ')) or set("P",[C.get_effect(p[-1]) for C in c.combatants if C.get_effect(p[-1])][0] if len(p)>1 else None) or set("eff",' '.join([typeof(x.effect[y])=="list" and ' '.join([f'-{y} {z}' for z in x.effect[y]]) or f'-{y} {x.effect[y]}' for y in x.effect])) or t.add_effect(x.name,eff,x.remaining,x.conc,P) for x in E]}}

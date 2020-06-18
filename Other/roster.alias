@@ -1,0 +1,9 @@
+{{set_uvar('serverRoster',int(get('serverRoster',"0")=="0")) if "&1&".lower() in 'server' else ''}}{{sid=servid() if get('serverRoster',"0")=="1" else ''}}{{chars = load_json(get('characters'+sid,'{}'))}}{{disp = [x for x in chars if "&1&".lower() in x.lower() and not "&1&".lower() in ['remove', 'rem', 'delete', 'del','serv','server']]}}{{'embed' if not disp else 'char &1&'}}
+{{subclass = load_json(get('subclass','{}'))}}
+{{args = &ARGS&}}
+{{chars[name] = {'level': level, 'classes': {f"{clas[0][:-5]}{f' ({subclass.get(clas[0])})' if subclass.get(clas[0]) else ''}":clas[1] for clas in get_raw().levels.items() if 'Level' in clas[0]}, 'race': get("race", get_raw().get('race', '*Unknown Race*')) } }}
+{{not chars.pop(removed) or f'-desc "Removed character `{removed}`"' if len(args)>1 and args[0].lower() in ['remove', 'rem', 'delete', 'del'] and [i for i in chars if ' '.join(args[1:]).lower() in i.lower() and not exists('removed') and not set('removed', i)] else ''}}
+{{'' if "&1&".lower() in 'server' or disp else set_uvar('characters'+sid, dump_json(chars))}}
+{{n = '\n'}}
+{{suffix = ['st','nd','rd','th']}}
+{{' '.join([f"""-f "{f'**__{char[0]}__**'.strip('*_' if char[0]!=name else '')} - {char[1].get('race','*Unknown Race*')}{' *(active)*' if char[0]==name else ''}|{f"{char[1].level}{suffix[min(3,char[1].level-1)]} Level *(Multiclass)*"+n if len(char[1].classes)>1 else ''}{' | '.join([f"{clas[1]}{suffix[min(3,clas[1]-1)]} Level {clas[0]}" if not len(char[1].classes)>1 else f"{clas[0]} {clas[1]}" for clas in char[1].get('classes',{}).items()]) or '*None*'}" """ for char in list(chars.items())[:25] if (name!=char[0] if "&1&".lower() in 'server' else 1)]) + f""" -footer "!roster - Adds/updates current character\n!roster remove [name] - Remove a character\n!roster [name] - Switch to a character\n!roster serv - Toggles server mode/global mode." -title "Character Roster - {'Server' if sid else 'Global'}" """ if not disp else ''}}

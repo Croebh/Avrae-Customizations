@@ -1,0 +1,12 @@
+embed
+{{cc="Sorcery Points"}}
+{{mode, sl = '+' in "&*&" or 'create' in '&*&', [int(i) for i in '&*&0'.replace(' ','') if i.isdigit()][0]}}
+{{h=(not sl) or "&*&".lower() in "help?"}}
+{{cost,suffix=[2,3,5,6,7,0,0,0,0][sl-1],(["st","nd","rd"]+["th"]*6)[sl-1]}}
+{{v=cc_exists(cc) and (get_cc(cc)>=cost if mode else get_slots(sl)) and (cost if mode else sl)}}
+-title "<name> {{f"invokes the Font of Magic - {['Spend','Create'][mode]} {sl}{suffix}-Level Slot" if v else "tries to invoke the Font of Magic"}}!"
+{{(mod_cc(cc,-cost) or set_slots(sl,get_slots(sl)+1) if mode else mod_cc(cc,+sl) or use_slot(sl)) if v else ""}}
+-f "{{cc+(f" ({[f'+{sl}',f'-{cost}'][mode]})" if v else "")}}|{{cc_str(cc) if cc_exists(cc) else "*None*"}}"
+-f "{{f'''Spell Slots {f"({['-','+'][mode]}1)" if v else ""}|{slots_str(sl)}'''}}"
+-desc "{{"**Create Spell Slot:** `!font [+/create] [slot-level]`\n**Create Sorcery Points:** `!font [-/spend] [slot-level]`" if h else "You do not have this ability." if not cc_exists(cc) else [f"**Converting a Spell Slot to Sorcery Points.** As a bonus action on your turn, you can expend one spell slot and gain a number of sorcery points equal to the slot's level.\n\nSpending a {sl}{suffix} Level Slot, creating {sl} Sorcery Points.", f"**Creating Spell Slots.** You can transform unexpended sorcery points into one spell slot as a bonus action on your turn. The created spell slots vanish at the end of a long rest. You can create spell slots no higher in level than 5th.\n\nCreating a {sl}{suffix} Level Slot, spending {cost} Sorcery Points."][mode] if v else ["You do not have spell slots of the desired level.",["You do not have enough sorcery points for this.","You cannot create spell slots above 5th level."][sl>5]][mode]}}"
+-footer "Sorcerer | PHB 101 | !font help" -color <color> -thumb <image>

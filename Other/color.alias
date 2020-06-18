@@ -1,0 +1,1 @@
+embed {{a=color if color and not "&*&" else "%x"%roll('1d16777216') if "&*&" in "random" else '&*&' if len("&*&")==6 else ''.join(["&*&"[i] for i in [0,0,1,1,2,2]]) if len("&*&")==3 else "%x"%roll('1d16777216')}}{{a="0"+a if len(a)<6 else a}} -title {{a.upper()}} -color {{a}} -thumb https://colorswatches.info/{{a.lower()}}.png -footer "Source: https://colorswatches.info"

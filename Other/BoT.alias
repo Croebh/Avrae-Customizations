@@ -1,0 +1,17 @@
+embed
+{{g=load_json(get_gvar("65fd6393-709f-4295-a179-1cff6e0d16ab"))}}
+{{x=vroll("1d8")}}
+{{v=([x for x in g if "&1&".title().replace("ray", "rey") in x]+['Tan'])[0]}}
+{{cc=f"Bag of Tricks ({v})"}} 
+{{creature=g[v][x.total-1]}}
+{{create_cc_nx(cc, 0, 3, 'long', 'bubble')}}
+{{y=get_cc(cc)}}
+{{err(f"Your {v.title()} colored Bag of Tricks can't be used again until the next dawn. Use !dawn to reset if available.") if y == 0 else mod_cc(cc, -1)}}
+-f "{{cc}} (-1)|{{cc_str(cc)}}"
+-title "{{name}} pulls a ball of fluff from a {{v.title()}} colored Bag of Tricks and throws it to the ground!"
+-desc "{{x}}
+
+The ball of fluff turns into {{'an' if creature[0].lower() in ['a','e','i','o','u'] else 'a'}} **<creature>!**
+
+The <creature> is friendly to you and your companions, and it acts on your turn. You can use a bonus action to command how the <creature> moves and what action it takes on its next turn, or to give it general orders, such as to attack your enemies. In the absence of such orders, the <creature> acts in a fashion appropriate to its nature. The creature vanishes at the next dawn or when it is reduced to 0 hit points."
+-thumb <image> -color <color>

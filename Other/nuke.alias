@@ -1,0 +1,2 @@
+embed {{V='Zuul' in &ARGS&}} -title "There are no CC's or cvars!" {{c=[x for x in get_raw().consumables.custom]}}{{v=[x for x in get_raw().cvars]}}{{[delete_cc(x) for x in c if V]}}{{[delete_cvar(x) for x in v if V]}}
+-desc "{{"Only Zuul!" if V else "Only... Wait, you didn't say `Zuul`!"}}"

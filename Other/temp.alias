@@ -1,0 +1,12 @@
+embed
+{{inTemp=float("&1&".strip("-").replace(".","").isdigit() and "&1&")}}
+{{tempType="K" if "&2&".lower()=="k" else "C" if "&2&".lower()=="c" else "F"}}
+{{C=round(inTemp if tempType=="C" else (inTemp-32)*(5/9) if tempType=="F" else inTemp-273.15,2)}}
+{{F=round(inTemp if tempType=="F" else inTemp*(9/5)+32 if tempType=="C" else (inTemp-273.15)*(9/5)+32,2)}}
+{{K=round(inTemp if tempType=="K" else inTemp+273.15 if tempType=="C" else (inTemp-32)*(5/9)+273.15,2)}}
+{{[set(x,int(get(x,0)) if int(get(x,0))==get(x,0) else get(x,0)) for x in ["K","F","C"]]}}
+-title "How {{['cold','warm','hot'][(C>15)+(C>25)]}} is {{int(inTemp) if int(inTemp)==inTemp else inTemp}}{{'°' if tempType!='K' else ''}}{{tempType}}?"
+-desc "This {{['cold','warm','hot'][(C>15)+(C>25)]}}:"
+-f "Celcius|{{C}}°C"
+-f "Fahrenheit|{{F}}°F"
+-f "Kelvin|{{K}}K"

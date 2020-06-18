@@ -1,0 +1,14 @@
+embed {{c,a=combat(),&ARGS&}}{{h=len(a)<=2}}{{"" if h else '-t 15'}}
+{{t,T,TT=c.get_combatant(a[0]) if a and c and not h else '',c.get_combatant(a[2]) if a and c and not h else '',c.get_combatant(a[3]) if len(a)==4 and c and not h else ''}}
+{{e=t.effects if t else ''}}
+{{e=[i for i in e if a[1].lower() in i.name.lower()] if e else ''}}
+{{e=not e or e[0]}}
+{{P=str(e).strip(')').rsplit('Parent: ')}}
+{{P=P[-1] if len(P)-1 else ''}}
+{{P=(TT.get_effect(P) if TT else [i.get_effect(P) for i in c.combatants if i.get_effect(P)][0]) if P else None}}
+{{effects=' '.join([f'-{x} {e.effect[x]}' if typeof(e.effect[x])!="list" else ' '.join([f'-{x} {i}' for i in e.effect[x]])  for x in e.effect]) if e!=True else ''}}
+{{T.add_effect(e.name, effects, e.remaining, e.conc, P) if e!=True else ''}}
+
+{{f"-title 'Copied the effect:' -desc '{e}'  -f 'From|{t.name}' -f 'To|{T.name}' " if e!=True else" -title 'Effect Copier' -desc 'Copies a single effect from one target to another. \n\n`!effectcopy <from> <effect> <to> [parent]`\n\nThe `[parent]` arg is for cases where more than one copy of the parent exists (such as multiple people casting Bless). Defaults to first result if none given.\n\nAny errors shows this help.'"}}
+
+-footer "{{"Effect Copier 1.5 | By Croebh" if h else "!effectcopy ? for help"}}"
