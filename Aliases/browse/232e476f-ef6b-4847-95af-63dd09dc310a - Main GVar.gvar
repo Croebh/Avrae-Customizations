@@ -10,7 +10,7 @@
 {{query=query[1:] if gSource or query[0]=="combat" else query}}
 {{key=''}}
 
-{{path=("combat().combatants" if not query else f"""combat().get_combatant('{combat().get_combatant(query[0]).name}')""") if Combat else f"{name}.get_raw()" if not gSource and not cvar else ("load_json(" if get('loaded') else "")+f"get_gvar(\\\"{gSource}\\\")"+(")" if get('loaded') else "") if gSource else ("load_json(" if get('loaded') else "")+f"get(\\\"{cvar}\\\")"+(")" if get('loaded') else "")}}
+{{path=("combat().combatants" if not query else f"""combat().get_combatant('{combat().get_combatant(query[0]).name}')""") if Combat else f"{name} - get_raw()" if not gSource and not cvar else ("load_json(" if get('loaded') else "")+f"get_gvar(\\\"{gSource}\\\")"+(")" if get('loaded') else "") if gSource else ("load_json(" if get('loaded') else "")+f"get(\\\"{cvar}\\\")"+(")" if get('loaded') else "")}}
 
 {{[set("key",([k for k in current if item and item.lower()==k.lower()]+[k for k in current if item and item.lower() in k.lower()]+[''])[0] if typeof(current)=="SafeDict" else int(item) if item.isdigit() and typeof(current)=="SafeList" and int(item) in range(len(current)) else "") or set("path",((path if Combat and query[0].lower() in str(key).lower() else path[:-8]+f".get_effect('{key}')" if Combat and len(query) > 2 and query[1].lower() in 'effects' and query[2].lower() in str(key).lower() else path+f"[{key}]" if str(key).isdigit() else path+f".{key}") if key is not None else path+'')) or set("current",current[key] if key!='' else current) for item in query]}}
 
