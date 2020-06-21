@@ -1,1 +1,1 @@
-{{args=&ARGS&}}{{defaults='{"size":"24x20", "background":"https://cdn.discordapp.com/attachments/349765584302505985/714343502250508298/Arena2.jpg", "options":"nd"}' }}{{get_gvar("5eb8d24b-d660-42e5-bbea-47a659bb0827").replace('"@@@"',str(args)).replace('"&&&"', defaults)}}
+{{args=&ARGS&}}{{defaults='{"size":"", "background":"", "options":""}' }}{{get_gvar("5eb8d24b-d660-42e5-bbea-47a659bb0827").replace('"@@@"',str(args)).replace('"&&&"', defaults)}}
