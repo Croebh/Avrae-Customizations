@@ -314,14 +314,18 @@ if c:
   [i.set_note(None)for i in combat().combatants]
   people=[]
  # Join everything together and display the map if we aren't displaying the help
- if not (args.get('?') or args.get('help')):
+ if not (args.get('?') or args.get('help') or args.get('spelllist')):
   finalMap = f"""-image "{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}" """
   return finalMap + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
 <drac2>
+
+if not c or args.get('spelllist'):
+ spelllist = f"""-desc "{newline.join([f"**{spell}** - `{over}`" for spell, over in load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f")).items()])}" """
+ return spelllist
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
-if not c or args.get('?') or args.get('help'):
+elif not c or args.get('?') or args.get('help'):
  help = f"""-title "Dude, where did I park my Tarrasque?"
             -desc "`!map` - View the map
             `!map [args]` - Edit the map, its combatants, or its overlays
@@ -356,7 +360,8 @@ if not c or args.get('?') or args.get('help'):
             If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
             To remove a linked overlay, run `-over none` with a `-t` selector.
 
-            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay." 
+            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay.
+            You can see a list of available overlays with `!map spelllist`" 
 
             -f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
