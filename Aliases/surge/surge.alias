@@ -1,10 +1,10 @@
 embed {{effects = load_json(get_gvar('6868352f-8236-47e5-8d17-fe49394f878f'))}}
-{{roll = vroll('1d8')}}
-{{effect = effects[roll.total-1]}}
--f "Roll|{{roll}}"
+{{surgeRoll = vroll('1d8')}}
+{{effect = effects[surgeRoll.total-1]}}
+-f "Roll|{{surgeRoll}}"
 -f "Effect|{{effect.replace('saving throw', f'saving throw (DC {constitutionMod+proficiencyBonus+8})')}}"
 -title "<name>'s rage activates a Wild Surge!"
 
 {{c = combat()}}
 
-{{(c.me.add_effect('Wild Surge (Teleport)','',-1) if roll.total == 2 else c.me.add_effect('Wild Surge (Shroud)', f"-ac +2 -attack '|{constitutionMod-int(c.me.get_effect('Rage').effect.d)}[force]|Whenever a creature within 10 feet of you hits you with an attack, that creature takes force damage equal to your Constitution modifier.'", -1) if roll.total == 4 else c.me.add_effect('Wild Surge (Difficult Terrain)','',-1) if roll.total == 5 else c.me.add_effect('Wild Surge (Shadow Weapon)','',-1) if roll.total == 7 else '') or (f'-f "{name}|**Effect:** {c.me.get_effect("Surge")}"' if roll.total in [2, 4, 5, 7] else '') if c and c.me else ''}}
+{{(c.me.add_effect('Wild Surge (Teleport)','',-1) if surgeRoll.total == 2 else c.me.add_effect('Wild Surge (Shroud)', f"-ac +2 -attack '|{constitutionMod-int(c.me.get_effect('Rage').effect.d)}[force]|Whenever a creature within 10 feet of you hits you with an attack, that creature takes force damage equal to your Constitution modifier.'", -1) if surgeRoll.total == 4 else c.me.add_effect('Wild Surge (Difficult Terrain)','',-1) if surgeRoll.total == 5 else c.me.add_effect('Wild Surge (Shadow Weapon)','',-1) if surgeRoll.total == 7 else '') or (f'-f "{name}|**Effect:** {c.me.get_effect("Surge")}"' if surgeRoll.total in [2, 4, 5, 7] else '') if c and c.me else ''}}

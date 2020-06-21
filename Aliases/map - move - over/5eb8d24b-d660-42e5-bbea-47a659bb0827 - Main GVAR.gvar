@@ -26,6 +26,8 @@ aimTarget = ""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD = "\n", "{targ}", "{aim}"
 targPoint = ""
+spelllist = [f"**{spell}** - `{over}`" for spell, over in load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f")).items() if args.last('search','').lower() in spell.lower()]
+spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 </drac2>
 <drac2>
 # If we're in combat, check all the things
@@ -322,11 +324,28 @@ if c:
 <drac2>
 
 if not c or args.get('spelllist'):
- spelllist = f"""-desc "{newline.join([f"**{spell}** - `{over}`" for spell, over in load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f")).items()])}" """
- return spelllist
+ spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
+ return spellPage
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
 elif not c or args.get('?') or args.get('help'):
- help = f"""-title "Dude, where did I park my Tarrasque?"
+ if args.get('overlay'):
+  help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
+            -desc "**__Overlay Arguments__**
+            `-over \"circle,<diameter>,<color>,<center>\"` - Creates a circle of a given diameter and color, at the chosen location
+            `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size and color, starting and aiming where you choose
+            `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length, width, and color, starting and aiming where you choose
+            `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
+            
+            `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3).
+            
+            All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
+            For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
+            If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
+            To remove a linked overlay, run `-over none` with a `-t` selector.
+
+            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay. You can see a list of available overlays with `!map spelllist`" """.replace(" "*11,"")
+ else:
+  help = f"""-title "Dude, where did I park my Tarrasque?"
             -desc "`!map` - View the map
             `!map [args]` - Edit the map, its combatants, or its overlays
 
@@ -335,7 +354,7 @@ elif not c or args.get('?') or args.get('help'):
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
-            `-over <overlay>` - Creates an overlay on the map. Options for thise are described below.
+            `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`.
 
             **__Target Arguments__** - Requires a `-t` target
             `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
@@ -346,31 +365,16 @@ elif not c or args.get('?') or args.get('help'):
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
-            Settings can be viewed by running `!i aoo <mapattachee> map`"
+            Settings can be viewed by running `!i aoo <mapattachee> map`" """
 
-            -f "_ _|**__Overlay Arguments__**
-            `-over \"circle,<diameter>,<color>,<center>\"` - Creates a circle of a given diameter and color, at the chosen location
-            `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a circle of a given diameter and color, at the chosen location
-            `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a circle of a given diameter and color, at the chosen location
-            `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a circle of a given diameter and color, at the chosen location
-            `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3)."
-
-            -f "_ _|All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
-            For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
-            If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
-            To remove a linked overlay, run `-over none` with a `-t` selector.
-
-            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay.
-            You can see a list of available overlays with `!map spelllist`" 
-
-            -f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
+ help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
             -f "Valid Map Options|`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`1`,`2`,`3` - Different zoom options|inline" 
-            -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """.replace(" "*11,"")
+            -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
 
- return help
+ return help.replace(" "*11,"")
 </drac2>
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change" if not c or args.get('spelllist') and len(spellPagin)>1 else "" }}"
 
 <drac2>
 #this is for debugging, only display in testing channels
