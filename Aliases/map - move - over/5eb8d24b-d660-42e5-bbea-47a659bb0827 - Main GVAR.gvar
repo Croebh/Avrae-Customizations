@@ -354,7 +354,9 @@ if not c or args.get('?') or args.get('help'):
             -f "_ _|All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
             For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
             If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
-            To remove a linked overlay, run `-over none` with a `-t` selector." 
+            To remove a linked overlay, run `-over none` with a `-t` selector.
+
+            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay." 
 
             -f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
