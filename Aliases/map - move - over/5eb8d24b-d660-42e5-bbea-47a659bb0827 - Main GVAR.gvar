@@ -366,7 +366,7 @@ elif not c or args.get('?') or args.get('help'):
             -f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
             -f "Valid Map Options|`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`1`,`2`,`3` - Different zoom options|inline" 
-            -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](https://github.com/digitalsadhu/otf-battlemaps/blob/master/README.md)" """.replace(" "*11,"")
+            -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """.replace(" "*11,"")
 
  return help
 </drac2>
