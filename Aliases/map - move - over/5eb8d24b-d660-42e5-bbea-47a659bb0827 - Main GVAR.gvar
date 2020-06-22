@@ -197,19 +197,25 @@ if c:
    # Did they have a previous location? If so, lets calculate distance and draw a line
    if prevLoc:
     # Split previous location from XY to X and Y
-    prevLocX, prevLocY = prevLoc[0], prevLoc[1:]
+    prevLocX = ''.join(x for x in prevLoc if x.isalpha())
+    prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
     # Same as new location
-    newLocX, newLocY = args.last('move')[0].upper(), args.last('move')[1:]
+    newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
+    newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
     # Calculate the delta for X and Y between the two
     deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
     # Throw them in the pot with some pythag
-    distance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+    distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+    # Otherwise, average the deltas
+    deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+    # Account for Python rounding for 0.5
+    distance = round((deltaX+deltaY+0.000000000000001)/2)*5
     # Grab the targets new color if changed, old color if set, or default to dark violet
     colr = args.last('color', out[targ.name].get('color','p'))[0]
     # Add the line to the overlay list
-    overlays.append(f"*l{distance},2{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+    overlays.append(f"*l{distanceT},2{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
     # Display the change in location
-    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({distance} ft.).")
+    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
@@ -440,7 +446,9 @@ elif not c or args.get('?') or args.get('help'):
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
-            Settings can be viewed by running `!i aoo <mapattachee> map`" """
+            Settings can be viewed by running `!i aoo <mapattachee> map`
+
+            The map calculates distances based on 5ft diagonols. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
 
  help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
