@@ -163,11 +163,26 @@ if c:
     # Display the change in color
     desc.append(f"Changing color of {targ.name} to {COL[color]} ({color})")
    # If the color is None, erase the color, setting them back to black
-   elif args.last('color') in (None,"None","none"):
+   elif args.last('color') in ("None","none"):
     _ = out[targ.name].pop('color')
     # Display the change in color
     desc.append(f"Resetting color of {targ.name} to Black")
-  # If there is a -move arg, move them to the new location
+</drac2>
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', name) and gt(args.last('t', name)):
+  # If there is a -height arg, change their height
+  if args.last('height'):
+   height = args.last('height')
+   # If the height is none or 0, remove height from the target
+   if height in ("None","none","0"):
+    prevHeight = out[targ.name].pop('height')
+    if prevHeight:
+     desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} everyone.")
+   else:
+    # Otherwise, set that targets height
+    out[targ.name].update({'height':height})
 </drac2>
 <drac2>
 if c:
@@ -314,7 +329,10 @@ if c:
  # Removes any quotes in names, as that breaks the map for that target apparently
  people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color',[''])[0]}-{target.replace(' ','_').replace("'","").replace('"','')}"""for target in out if out[target].get('location')]
  for target in out:
-
+  # Do they have a height set? If so, display it
+  if out[target].get('height'):
+   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
+  # Do they have an overlay?
   if out[target].get('overlay'):
    targPoint = out[target].get('location','A1')
    # Is our target Large or bigger? If so, adjust accordingly
@@ -365,7 +383,9 @@ elif not c or args.get('?') or args.get('help'):
             All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
             For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
             If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
-            To remove a linked overlay, run `-over none` with a `-t` selector."
+            To remove a linked overlay, run `-over none` with a `-t` selector.
+
+            If your `-aim` or `-t` is a Large or bigger monster, the alias will do its best to adjust for the size difference."
 
             -f "Add your own overlays/spells| You can create a uvar (or cvar) named `mapOverlays` containing a list of gvars you or other created in order to add to or change the spells available in `-spell`. The format would be something like `[\"b5a2df67-58c9-4f1d-a240-8fc72a139953\", \"b5a2df67-58c9-4f1d-a240-8fc72a139953\"]`" """.replace(" "*12,"")
  else:
@@ -381,10 +401,11 @@ elif not c or args.get('?') or args.get('help'):
             `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
 
-            **__Target Arguments__** - Requires a `-t` target
+            **__Target Arguments__** - Defaults to your currently active character. Requires a `-t` target if `-over` is used
             `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the `-t` targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
             `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
+            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description.
             
             **__Map Arguments__** - Requires the map info to be set with `-mapattach`
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
