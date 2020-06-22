@@ -26,8 +26,28 @@ aimTarget = ""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD = "\n", "{targ}", "{aim}"
 targPoint = ""
-spelllist = [f"**{spell}** - `{over}`" for spell, over in load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f")).items() if args.last('search','').lower() in spell.lower()]
+</drac2>
+<drac2>
+# The default overlays, created by @Nerds and Dragons#2817 
+defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
+spellOverlays = defaultSpells.copy()
+# Grab the user selected spells, and update the main dict
+# This allows the user to replace/update items in the original dict
+[spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
+# Iterate over the spell dict, making it a little easier to read.
+# Only select the ones they are searching for, if they are searching
+spelllist = [f"**{spell}** - `{over}`" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
+# Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
+# Do we have a -spell?
+if args.last('spell'):
+ # Loop through our users spellOverlays, looking for that spell
+ for spell in spellOverlays:
+  if args.last('spell').lower() in spell.lower():
+   # If we find it, add the overlay to the args
+   args = argparse(["-over",spellOverlays.get(spell)]+"@@@")
+   # We only care about the first result
+   break
 </drac2>
 <drac2>
 # If we're in combat, check all the things
@@ -111,8 +131,8 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t') and gt(args.last('t')):
-  targ=gt(args.last('t'))
+ if args.last('t', name) and gt(args.last('t', name)):
+  targ=gt(args.last('t', name))
   # If they don't have a note/location set, add them to the list
   if not out.get(targ.name):
    out[targ.name] = {}
@@ -133,7 +153,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t') and gt(args.last('t')):
+ if args.last('t', name) and gt(args.last('t', name)):
   # If there is a -color arg, change their color
   if args.last('color'):
    color=args.last('color')[0].lower()
@@ -152,7 +172,8 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t') and gt(args.last('t')):
+ # If no -t, default to current character
+ if args.last('t', name) and gt(args.last('t', name)):
   if args.last('move'):
    prevLoc = out[targ.name].get('location') 
    # Did they have a previous location? If so, lets calculate distance and draw a line
@@ -283,7 +304,7 @@ if c:
     overlays.append(overlay)
     desc.append(overdesc)
   # If we have a target, but our -over arg is none, we're trying to delete our overlay
-  if args.last('t') and gt(args.last('t')) and (args.last('over') in ("none", None, "None")):
+  if args.last('t') and gt(args.last('t')) and (args.last('over') in ("none", "None")):
    _ = out[targ.name].pop('overlay')
    desc.append(f"Removed overlay linked to {targ.name}")
 </drac2> 
@@ -292,7 +313,6 @@ if c:
  # Parse the collected notes and information into the format readable by otfbm.com
  # Removes any quotes in names, as that breaks the map for that target apparently
  people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color',[''])[0]}-{target.replace(' ','_').replace("'","").replace('"','')}"""for target in out if out[target].get('location')]
- # overlays += [out[target].get('overlay').replace("{targ}", out[target].get('location','A1')).replace("{aim}", aimPoint) for target in out if out[target].get('overlay')]
  for target in out:
 
   if out[target].get('overlay'):
@@ -322,10 +342,13 @@ if c:
 </drac2>
 
 <drac2>
-
-if not c or args.get('spelllist'):
+# Are we trying to disiaply the spelllist?
+if args.get('spelllist'):
+ # Only grab the page selected, default to first
  spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
- return spellPage
+ return spellPage + f"""-title "Wait, how do you Spell that again?"
+                        -f "Add your own overlays/spells| You can create a uvar (or cvar) named `mapOverlays` containing a list of gvars you or other created in order to add to or change the spells here. The format would be something like `[\"b5a2df67-58c9-4f1d-a240-8fc72a139953\", \"b5a2df67-58c9-4f1d-a240-8fc72a139953\"]`"
+                        -f "`{targD}` and `{aimD}`| These will be replaced by the `-t` target and `-aim` target respectively."  """
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
 elif not c or args.get('?') or args.get('help'):
  if args.get('overlay'):
@@ -335,15 +358,16 @@ elif not c or args.get('?') or args.get('help'):
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length, width, and color, starting and aiming where you choose
             `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
-            
+
+            `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3).
             
             All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
             For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
             If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed at (currently)
-            To remove a linked overlay, run `-over none` with a `-t` selector.
+            To remove a linked overlay, run `-over none` with a `-t` selector."
 
-            If using the `!over` alias, you can use `!over <spell>` to attach the appropriate overlay. You can see a list of available overlays with `!map spelllist`" """.replace(" "*11,"")
+            -f "Add your own overlays/spells| You can create a uvar (or cvar) named `mapOverlays` containing a list of gvars you or other created in order to add to or change the spells available in `-spell`. The format would be something like `[\"b5a2df67-58c9-4f1d-a240-8fc72a139953\", \"b5a2df67-58c9-4f1d-a240-8fc72a139953\"]`" """.replace(" "*12,"")
  else:
   help = f"""-title "Dude, where did I park my Tarrasque?"
             -desc "`!map` - View the map
@@ -354,7 +378,8 @@ elif not c or args.get('?') or args.get('help'):
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
-            `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`.
+            `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`
+            `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
 
             **__Target Arguments__** - Requires a `-t` target
             `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
@@ -374,10 +399,10 @@ elif not c or args.get('?') or args.get('help'):
 
  return help.replace(" "*11,"")
 </drac2>
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change" if not c or args.get('spelllist') and len(spellPagin)>1 else "" }}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if not c or args.get('spelllist') else "" }}"
 
 <drac2>
-#this is for debugging, only display in testing channels
+# this is for debugging, only display in testing channels
 # if int(chanid()) in (712795723623694376, 720465301329805332) and overlays and finalMap:
  # return f"""-f "Debug|{finalMap=} {newline} {overlays=} {newline} {debug=}" """
 </drac2>
