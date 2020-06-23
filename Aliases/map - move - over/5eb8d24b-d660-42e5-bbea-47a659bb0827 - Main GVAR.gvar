@@ -208,8 +208,12 @@ if c:
     distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
     # Otherwise, average the deltas
     deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-    # Account for Python rounding for 0.5
-    distance = round((deltaX+deltaY+0.000000000000001)/2)*5
+    if deltaX and deltaY:
+     distance = round(((deltaX+deltaY)/2)+0.000000000000001)*5
+    elif deltaX:
+     distance = deltaX*5
+    else:
+     distance = deltaY*5
     # Grab the targets new color if changed, old color if set, or default to dark violet
     colr = args.last('color', out[targ.name].get('color','p'))[0]
     # Add the line to the overlay list
@@ -440,15 +444,17 @@ elif not c or args.get('?') or args.get('help'):
             `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the `-t` targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
             `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
-            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description.
+            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description."
             
-            **__Map Arguments__** - Requires the map info to be set with `-mapattach`
+            -f "_ _|**__Map Arguments__** - Requires the map info to be set with `-mapattach`
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
             Settings can be viewed by running `!i aoo <mapattachee> map`
 
-            The map calculates distances based on 5ft diagonols. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
+            If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
+
+            The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
 
  help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
