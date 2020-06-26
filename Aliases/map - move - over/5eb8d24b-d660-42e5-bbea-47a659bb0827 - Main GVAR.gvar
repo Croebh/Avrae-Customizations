@@ -217,7 +217,7 @@ if c:
     # Grab the targets new color if changed, old color if set, or default to dark violet
     colr = args.last('color', out[targ.name].get('color','p'))[0]
     # Add the line to the overlay list
-    overlays.append(f"*l{distanceT},2{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+    overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
    else:
@@ -341,6 +341,13 @@ if c:
    _ = out[targ.name].pop('overlay')
    _ = out[targ.name].pop('aim')
    desc.append(f"Removed overlay linked to {targ.name}")
+   elif oShape == "arrow" and len(overlay)==4:
+    # Arrows takes four arguments, shape, color, starting location, and the location it ends at
+     oShape  = "a" 
+     oColor, oLoc, oEloc = overlay[1:]
+     overlay = f"""*{oShape}{oColor}{oLoc}{oEloc}"""
+     overdesc= f"Creating a {COL[oColor]} arrow overlay, starting at {oLoc}, ending at {aimTarget or oEloc}"
+   elif oShape == "square" and len(overlay)==5:
 </drac2> 
 <drac2>
 if c:
@@ -413,6 +420,7 @@ elif not c or args.get('?') or args.get('help'):
             `-over \"circle,<diameter>,<color>,<center>\"` - Creates a circle of a given diameter and color, at the chosen location
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length, width, and color, starting and aiming where you choose
+            `-over \"arrow,<color>,<start>,<end>\"` - Creates an arrow of a given color, starting and ending where you choose
             `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
 
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`
