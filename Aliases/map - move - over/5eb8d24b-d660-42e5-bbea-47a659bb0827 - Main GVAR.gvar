@@ -353,7 +353,7 @@ if c:
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
  # Removes any quotes in names, as that breaks the map for that target apparently
- people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color',[''])[0]}-{target.replace(' ','_').replace("'","").replace('"','')}"""for target in out if out[target].get('location')]
+ people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color','b' if '/' in gt(target).hp_str() else 'r')[0]}-{target.replace(' ','_').replace("'","").replace('"','')}"""for target in out if out[target].get('location')]
  for target in out:
   # Do they have a height set? If so, display it
   if out[target].get('height'):
