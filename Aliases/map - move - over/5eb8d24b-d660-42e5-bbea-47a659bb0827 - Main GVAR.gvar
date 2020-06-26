@@ -27,6 +27,7 @@ targAimPoint = ""
 targAimTarget = ""
 aimStick = False
 targPoint = ""
+aim=""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD = "\n", "{targ}", "{aim}"
 </drac2>
@@ -230,117 +231,56 @@ if c:
 if c:
  # Is the user trying to set an overlay?
  if args.last('over'):
-  # Split the input by commas
-  overlay = args.last('over').split(',')
-  # First argument is always the shape
-  oShape = overlay[0].lower()
-  # Are we aiming at someone?
-  if args.last('aim'):
-   # Split our aim up, in case we have a |split
-   aim = (args.last('aim').split('|')+[""])[:2]
-   aimStick = aim[1].lower() == "stick"
-   # If the target is, well, a target, grab its location
-   for target in out:
-    if aim[0].lower() in target.lower():
-     aimPoint = out[target]['location']
-     # Is our target larger than medium? If so, we need to offset to adjust
-     if out[target].get('size',"M")[0] in "LHG":
-      aimOffset = sizeOffset.get(out[target].get('size',"M")[0])
-      aimTargX = ''.join(x for x in aimPoint if x.isalpha())
-      aimTargY = int(''.join(y for y in aimPoint if y.isdigit()))
-      aimTargX = alph[alph.index(aimTargX)+aimOffset]
-      aimTargY += aimOffset
-      aimPoint = f"{aimTargX}{aimTargY}"
-     aimTarget = target
-   # If the target wasn't a target, it was coordinates. Use them.
-   if not aimPoint:
-    aimPoint = aim[0]
-    aimTarget = aim[0].upper()
-
-  if oShape == "circle":
-   # Circle takes four arguments, shape, size, color, and starting location
-   if len(overlay)==4:
-    oShape  = "c" 
-    oSize   = overlay[1]
-    oColor  = overlay[2]
-    oLoc    = overlay[3]
-    overlay = f"""*{oShape}{oSize}{oColor}{oLoc}"""
-    overdesc= f"Creating a {COL[oColor]} circle overlay, {oSize} ft. in diameter, positioned at {oLoc}"
-   else:
-    overlay = None
-  elif oShape == "triangle" or oShape == "cone":
-   # Cone takes five arguments, shape, size, color, starting location, and the location its aimed at
-   if len(overlay)==5:
-    oShape  = "t" 
-    oSize   = overlay[1]
-    oColor  = overlay[2]
-    oLoc    = overlay[3]
-    oEloc   = overlay[4]
-    overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-    overdesc= f"Creating a {COL[oColor]} cone overlay, {oSize} ft. long, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
-   else:
-    overlay = None
-  elif oShape == "line":
-   # Lines takes six arguments, shape, size, width, color, starting location, and the location its aimed at
-   if len(overlay)==6:
-    oShape  = "l" 
-    oSize   = overlay[1]
-    oWidth  = overlay[2]
-    oColor  = overlay[3]
-    oLoc    = overlay[4]
-    oEloc   = overlay[5]
-    overlay = f"""*{oShape}{oSize},{oWidth}{oColor}{oLoc}{oEloc}"""
-    overdesc= f"Creating a {COL[oColor]} line overlay, {oSize} ft. long, {oWidth} ft. wide, starting at {oLoc}, aimed at {aimTarget or oEloc}"
-   else:
-    overlay = None
-  elif oShape == "square":
-   # Square takes five arguments, shape, size, color, starting location, and the location its aimed at
-   if len(overlay)==5:
-    oShape  = "s" 
-    oSize   = overlay[1]
-    oColor  = overlay[2]
-    oLoc    = overlay[3]
-    oEloc   = overlay[4]
-    overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-    overdesc= f"Creating a {COL[oColor]} square overlay, {oSize} ft. wide, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
-   else:
-    overlay = None
-  else:
-   overlay = None
-  # If, after all the parsing above, we managed to get a proper overlay, continue
-  if overlay:
-   # Do we have a -aim? If so, replace {aim} with the aimPoint gathered before, and display who you're aiming at
-   if aimPoint:
-    overdesc = overdesc.replace('{aim}',aimPoint)
-   # Are we attaching this overlay to a target?
-   if args.last('t') and gt(args.last('t')):
-    if not aimPoint or (aimPoint and aimStick):
-     # If so, and no -aim (or -aim but also stick), lets attach it to the notes
-     out[targ.name].update({"overlay": overlay})
-     if aimStick:
-      out[targ.name].update({"aim": aimTarget})
-    else:
-     # If so, and -aim, lets *not* attach it to the notes, and just display it once
-     targPoint = out[targ.name].get('location','A1')
-     # Is our target Large or bigger? If so, adjust accordingly
-     if out[targ.name].get('size',"M")[0] in "LHG":
-      targOffset = sizeOffset.get(out[targ.name].get('size',"M")[0])
-      TargX = ''.join(x for x in targPoint if x.isalpha())
-      TargY = int(''.join(y for y in targPoint if y.isdigit()))
-      TargX = alph[alph.index(TargX)+targOffset]
-      TargY += targOffset
-      targPoint = f"{TargX}{TargY}"
-     overlays.append(overlay.replace("{targ}", targPoint).replace("{aim}", aimPoint))
-    desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + f", linked to {gt(args.last('t')).name}")
-   else: 
-    # Otherwise, lets just display it once
-    overlays.append(overlay)
-    desc.append(overdesc)
   # If we have a target, but our -over arg is none, we're trying to delete our overlay
   if args.last('t') and gt(args.last('t')) and (args.last('over') in ("none", "None")):
-   _ = out[targ.name].pop('overlay')
-   _ = out[targ.name].pop('aim')
+   _ = out[targ.name].pop('overlay') if 'overlay' in out[targ.name] else None
+   _ = out[targ.name].pop('aim') if 'aim' in out[targ.name] else None
    desc.append(f"Removed overlay linked to {targ.name}")
+  else: # Split the input by commas
+   overlay = args.last('over').split(',')
+   # First argument is always the shape
+   oShape = overlay[0].lower()
+   # Are we aiming at someone?
+   if args.last('aim'):
+    # Split our aim up, in case we have a |split
+    aim = (args.last('aim').split('|')+[""])[:2]
+    aimStick = aim[1].lower() == "stick"
+    # If the target is, well, a target, grab its location
+    for target in out:
+     if aim[0].lower() in target.lower():
+      aimPoint = out[target]['location']
+      # Is our target larger than medium? If so, we need to offset to adjust
+      if out[target].get('size',"M")[0] in "LHG":
+       aimOffset = sizeOffset.get(out[target].get('size',"M")[0])
+       aimTargX = ''.join(x for x in aimPoint if x.isalpha())
+       aimTargY = int(''.join(y for y in aimPoint if y.isdigit()))
+       aimTargX = alph[alph.index(aimTargX)+aimOffset]
+       aimTargY += aimOffset
+       aimPoint = f"{aimTargX}{aimTargY}"
+      aimTarget = target
+    # If the target wasn't a target, it was coordinates. Use them.
+    if not aimPoint:
+     aimPoint = aim[0]
+     aimTarget = aim[0].upper()
+
+   if oShape == "circle" and len(overlay)==4:
+    # Circle takes four arguments, shape, size, color, and starting location
+     oShape  = "c" 
+     oSize, oColor, oLoc = overlay[1:]
+     overlay = f"""*{oShape}{oSize}{oColor}{oLoc}"""
+     overdesc= f"Creating a {COL[oColor]} circle overlay, {oSize} ft. in diameter, positioned at {oLoc}"
+   elif (oShape == "triangle" or oShape == "cone") and len(overlay)==5:
+    # Cone takes five arguments, shape, size, color, starting location, and the location its aimed at
+     oShape  = "t" 
+     oSize, oColor, oLoc, oEloc = overlay[1:]
+     overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
+     overdesc= f"Creating a {COL[oColor]} cone overlay, {oSize} ft. long, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
+   elif oShape == "line" and len(overlay)==6:
+    # Lines takes six arguments, shape, size, width, color, starting location, and the location its aimed at
+     oShape  = "l" 
+     oSize, oWidth, oColor, oLoc, oEloc = overlay[1:]
+     overlay = f"""*{oShape}{oSize},{oWidth}{oColor}{oLoc}{oEloc}"""
+     overdesc= f"Creating a {COL[oColor]} line overlay, {oSize} ft. long, {oWidth} ft. wide, starting at {oLoc}, aimed at {aimTarget or oEloc}"
    elif oShape == "arrow" and len(overlay)==4:
     # Arrows takes four arguments, shape, color, starting location, and the location it ends at
      oShape  = "a" 
@@ -348,6 +288,43 @@ if c:
      overlay = f"""*{oShape}{oColor}{oLoc}{oEloc}"""
      overdesc= f"Creating a {COL[oColor]} arrow overlay, starting at {oLoc}, ending at {aimTarget or oEloc}"
    elif oShape == "square" and len(overlay)==5:
+    # Square takes five arguments, shape, size, color, starting location, and the location its aimed at
+     oShape  = "s" 
+     oSize, oColor, oLoc, oEloc = overlay[1:]
+     overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
+     overdesc= f"Creating a {COL[oColor]} square overlay, {oSize} ft. wide, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
+   else:
+    overlay = None
+   # If, after all the parsing above, we managed to get a proper overlay, continue
+   if overlay:
+    # Do we have a -aim? If so, replace {aim} with the aimPoint gathered before, and display who you're aiming at
+    if aimPoint:
+     overdesc = overdesc.replace('{aim}',aimPoint)
+    # Are we attaching this overlay to a target?
+    if args.last('t') and gt(args.last('t')):
+     if not aimPoint or (aimPoint and aimStick):
+      # If so, and no -aim (or -aim but also stick), lets attach it to the notes
+      out[targ.name].update({"overlay": overlay})
+      if aimStick:
+       out[targ.name].update({"aim": aimTarget})
+     else:
+      # If so, and -aim, lets *not* attach it to the notes, and just display it once
+      targPoint = out[targ.name].get('location','A1')
+      # Is our target Large or bigger? If so, adjust accordingly
+      if out[targ.name].get('size',"M")[0] in "LHG":
+       targOffset = sizeOffset.get(out[targ.name].get('size',"M")[0])
+       TargX = ''.join(x for x in targPoint if x.isalpha())
+       TargY = int(''.join(y for y in targPoint if y.isdigit()))
+       TargX = alph[alph.index(TargX)+targOffset]
+       TargY += targOffset
+       targPoint = f"{TargX}{TargY}"
+      overlays.append(overlay.replace("{targ}", targPoint).replace("{aim}", aimPoint))
+     desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + f", linked to {gt(args.last('t')).name}")
+    else: 
+     # Otherwise, lets just display it once
+     overlays.append(overlay)
+     desc.append(overdesc)
+
 </drac2> 
 <drac2>
 if c:
