@@ -132,6 +132,7 @@ if c:
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
    out[target.name]=note
 </drac2>
+
 <drac2>
 # Lets back up our map each time we run it, why not
 # This will back the entire `out` dictionary containing everyones positions and states
@@ -145,6 +146,7 @@ if args.last('undo') and prevBack:
   out = prevBack
   desc.append("> **Reloaded backup from last time this user ran a map command. The state this erased has now been set as their new backup.**")
 </drac2>
+
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -471,6 +473,9 @@ elif not c or args.get('?') or args.get('help'):
 
 <drac2>
 # this is for debugging, only display in testing channels
-# if int(chanid()) in (712795723623694376, 720465301329805332) and overlays and finalMap:
-#  return f"""-f "Debug|{finalMap=} {newline} {overlays=} {newline} {debug=}" """
+if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+ return f"""-f "Debug|{finalMap=}
+ {overlays=}
+ {people=}
+ {debug=}" """
 </drac2>
