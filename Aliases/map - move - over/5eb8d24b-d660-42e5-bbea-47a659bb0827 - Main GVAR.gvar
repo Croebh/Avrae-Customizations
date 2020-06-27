@@ -133,6 +133,19 @@ if c:
    out[target.name]=note
 </drac2>
 <drac2>
+# Lets back up our map each time we run it, why not
+# This will back the entire `out` dictionary containing everyones positions and states
+# to a uvar named mapState, with the current channels id appended. I.e `mapState712795723623694376`
+# This way you won't accidentally overwrite your backup with the backup from another channel
+prevBack = load_json(get('mapState'+chanid())) if get('mapState'+chanid()) else None
+set_uvar("mapState"+chanid(), dump_json(out))
+# Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
+# and replace out out dict with it. We do this after we set the backup, so we can undo the undo
+if args.last('undo') and prevBack:
+  out = prevBack
+  desc.append("> **Reloaded backup from last time this user ran a map command. The state this erased has now been set as their new backup.**")
+</drac2>
+<drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  if args.last('t', name) and gt(args.last('t', name)):
