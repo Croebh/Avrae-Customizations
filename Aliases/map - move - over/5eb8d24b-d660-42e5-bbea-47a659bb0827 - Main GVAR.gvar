@@ -32,6 +32,9 @@ targAimTarget = ""
 aimStick = False
 targPoint = ""
 aim=""
+effect = None
+effectName = ""
+effectTarget =""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD = "\n", "{targ}", "{aim}"
 </drac2>
@@ -53,7 +56,10 @@ if args.last('spell'):
  for spell in spellOverlays:
   if args.last('spell').lower() in spell.lower():
    # If we find it, add the overlay to the args
-   args = argparse(["-over9", spellOverlays.get(spell)] + "@@@")
+   if typeof(spellOverlays.get(spell)) == "str":
+    args = argparse(["-over9", spellOverlays.get(spell)] + "@@@")
+   elif typeof(spellOverlays.get(spell)) == "SafeList":
+    args = argparse(["-over9"] + spellOverlays.get(spell) + "@@@")
    # We only care about the first result
    break
 </drac2>
@@ -142,6 +148,16 @@ if c:
    note=note.split(" | ")
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
    out[target.name]=note
+   # Check if we have any overlays attached to effects, and then if at effect exists
+   for overNum in [""]+[str(x) for x in range(1,11)]:
+    if out[target.name].get('effect'+overNum):
+     checkEffect, checkEffectTarget = out[target.name].get('effect'+overNum).split(' / ')
+     # If the effect (or the target it was on) are gone, remove the effect
+     if not gt(checkEffectTarget) or not gt(checkEffectTarget).get_effect(checkEffect):
+      _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+      _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+      _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+      desc.append(f"Overlay {overNum} removed from {target.name} because effect {checkEffect} no longer present on {checkEffectTarget}")
 </drac2>
 
 <drac2>
@@ -267,6 +283,7 @@ if c:
      overlay = args.last('over'+overNum).split(',')
      # First argument is always the shape
      oShape = overlay[0].lower()
+
      # Are we aiming at someone?
      if args.last('aim'+overNum):
       # Split our aim up, in case we have a |split
@@ -289,6 +306,16 @@ if c:
       if not aimPoint:
        aimPoint = aim[0]
        aimTarget = aim[0].upper()
+
+     # Are we attaching this to an effect?
+     if args.last('effect'+overNum):
+      # Split our effect up, in case we have a specified target
+      effectName, effectTarget = (args.last('effect'+overNum).split('|')+[targ.name])[:2]
+      effectTarget = gt(effectTarget)
+      # Do we have a proper target, and does that target have our effect
+      if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
+       effect = effectTarget.get_effect(effectName)
+       
      # Did our user try to have the location linked to a target, but failed to supply a target?
      if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
       overlay = None
@@ -341,6 +368,8 @@ if c:
         out[targ.name].update({"overlay"+overNum: overlay})
         if aimStick:
          out[targ.name].update({"aim"+overNum: aimTarget})
+        if effect:
+         out[effectTarget.name].update({f"effect{overNum}": f"{effect.name} / {effectTarget.name}"})
        else:
         # If so, and -aim, lets *not* attach it to the notes, and just display it once
         targPoint = out[targ.name].get('location','A1')
@@ -435,11 +464,12 @@ elif not c or args.get('?') or args.get('help'):
             `-over \"arrow,<color>,<start>,<end>\"` - Creates an arrow of a given color, starting and ending where you choose
             `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
 
-            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim` arg, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached at a time.
+            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached at a time.
 
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist` **Note:** This uses `-over9`, and as such, will replaced the ninth overlay if you have one already.
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
-            `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well."
+            `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
+            `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an effect on a target. When the effect or target are no longer present, the overlay will be removed."
 
             -f "_ _|All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
             For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
