@@ -5,6 +5,10 @@ tembed
 # These are replaced with proper values from the base alias
 args, defaults=argparse("@@@"),"&&&"
 mapsize=defaults.get("size","10x10") or "10x10"
+mapSplitX, mapSplitY = mapsize.lower().split('x')
+mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+mapsize = f"{mapSplitX}x{mapSplitY}"
 mapoptions=defaults.get("options","")
 mapbg=defaults.get("background","")
 mapinfo=""
@@ -81,6 +85,10 @@ if c:
   mapinfo=mapinfo.split(' ~ ')
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
+  mapSplitX, mapSplitY = mapsize.lower().split('x')
+  mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+  mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+  mapsize = f"{mapSplitX}x{mapSplitY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
 </drac2>
@@ -91,7 +99,10 @@ if c:
   # Note to self: Should probably validate these arguments later
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
-   mapsize = args.last('mapsize', mapsize)
+   mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
+   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+   mapsize = f"{mapSplitX}x{mapSplitY}" 
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
   if mapbg != args.last('mapbg', mapbg):
