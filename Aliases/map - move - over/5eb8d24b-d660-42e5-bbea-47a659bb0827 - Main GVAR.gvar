@@ -251,7 +251,7 @@ if c:
     if args.last('t') and gt(args.last('t')) and (args.last('over'+overNum) in ("none", "None")):
      _ = out[targ.name].pop('overlay'+overNum) if 'overlay'+overNum in out[targ.name] else None
      _ = out[targ.name].pop('aim'+overNum) if 'aim'+overNum in out[targ.name] else None
-     desc.append(f"Removed overlay linked to {targ.name}")
+     desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
     else: # Split the input by commas
      overlay = args.last('over'+overNum).split(',')
      # First argument is always the shape
@@ -278,8 +278,15 @@ if c:
       if not aimPoint:
        aimPoint = aim[0]
        aimTarget = aim[0].upper()
-
-     if oShape == "circle" and len(overlay)==4:
+     # Did our user try to have the location linked to a target, but failed to supply a target?
+     if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
+      overlay = None
+      desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
+     # Same for aiming it at something. If they failed to supply a -aim# 
+     elif "{aim}" in args.last('over'+overNum) and not args.last('aim'+overNum):
+      overlay = None
+      desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
+     elif oShape == "circle" and len(overlay)==4:
       # Circle takes four arguments, shape, size, color, and starting location
        oShape  = "c" 
        oSize, oColor, oLoc = overlay[1:]
