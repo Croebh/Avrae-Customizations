@@ -1,0 +1,16 @@
+embed 
+<drac2>
+gvar = load_json(get_gvar('61c8f0a8-2ba3-4add-bcf4-34667a52f9ce'))
+table=gvar.base
+typeRoll=vroll("1d6")
+encounterType = [table[x] for x in table if typeRoll.total<=int(x)] 
+table = gvar.hostile if typeRoll.total == 1 else gvar.natural if typeRoll.total == 6 else gvar.fellow
+encounterRoll=vroll("1d12")
+encounter=[table[x] for x in table if encounterRoll.total<=int(x)] 
+</drac2>
+ -title "Random Roadside Encounters" 
+ -desc "Tables from [This Blog](https://reddicediaries.com/dd-5e/random-roadside-encounters/)" 
+ -f "Type Roll|{{typeRoll}}"
+ -f "Encounter Type|{{encounterType[0]}}"
+ -f "Encounter Roll|{{encounterRoll}}"
+ -f "Encounter|{{encounter[0]}}"
