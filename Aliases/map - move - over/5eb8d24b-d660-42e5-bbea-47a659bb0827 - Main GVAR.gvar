@@ -56,8 +56,10 @@ if args.last('spell'):
  for spell in spellOverlays:
   if args.last('spell').lower() in spell.lower():
    # If we find it, add the overlay to the args
+   # If its a string, its just a `-over9`
    if typeof(spellOverlays.get(spell)) == "str":
     args = argparse(["-over9", spellOverlays.get(spell)] + "@@@")
+   # If its a list, its starting with a -over9 and then theres other stuff
    elif typeof(spellOverlays.get(spell)) == "SafeList":
     args = argparse(["-over9"] + spellOverlays.get(spell) + "@@@")
    # We only care about the first result
