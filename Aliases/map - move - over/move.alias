@@ -1,1 +1,1 @@
-{{args=&ARGS&}}{{args=['-t',name,'-move']+args if args else []}}{{defaults='{"size":"", "background":"", "options":""}' }}{{get_gvar("5eb8d24b-d660-42e5-bbea-47a659bb0827").replace('"@@@"',str(args)).replace('"&&&"', defaults)}}
+{{args=&ARGS&}}{{args=(['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else []}}{{defaults='{"size":"", "background":"", "options":""}' }}{{get_gvar("5eb8d24b-d660-42e5-bbea-47a659bb0827").replace('"@@@"',str(args)).replace('"&&&"', defaults)}}
