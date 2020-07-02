@@ -532,3 +532,5 @@ if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
  {people=}
  {debug=}" """
 </drac2>
+
+-color <color>
