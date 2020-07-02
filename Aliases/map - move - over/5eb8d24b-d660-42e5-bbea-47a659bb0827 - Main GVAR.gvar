@@ -182,8 +182,8 @@ if args.last('undo') and prevBack:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name) and gt(args.last('t', combat().me.name)):
-  targ=gt(args.last('t', combat().me.name))
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  targ=gt(args.last('t', combat().me.name if combat().me else None))
   # If they don't have a note/location set, add them to the list
   if not out.get(targ.name):
    out[targ.name] = {}
@@ -204,7 +204,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name) and gt(args.last('t', combat().me.name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
    color=args.last('color')[0].lower()
@@ -222,7 +222,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name) and gt(args.last('t', combat().me.name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -height arg, change their height
   if args.last('height'):
    height = args.last('height')
@@ -239,7 +239,7 @@ if c:
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
- if args.last('t', combat().me.name) and gt(args.last('t', combat().me.name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   if args.last('move'):
    prevLoc = out[targ.name].get('location') 
    # Did they have a previous location? If so, lets calculate distance and draw a line
