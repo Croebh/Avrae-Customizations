@@ -359,6 +359,36 @@
   },
   {
     "Class": "Warlock",
+    "subclass": "The Genie",
+    "counters": [
+      {
+        "name": "Genie's Vessel: Bottled Respite",
+        "level": 1,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      },
+      {
+        "name": "Elemental Gift",
+        "level": 6,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      },
+      {
+        "name": "Limited Wish",
+        "level": 14,
+        "value": 1,
+        "reset": "none",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Warlock",
     "subclass": "The Noble Genie",
     "counters": [
       {
@@ -474,9 +504,124 @@
     "subclass": "Armorer",
     "counters": []
   },
- {
-  "Class":"Wizard",
-  "subclass":"Scribe",
-  "counters":[{"name":"Awakened Spellbook","level":2,"value":1,"reset":"long","display":"bubble","classLevel":"WizardLevel"},{"name":"Manifest Mind","level":10,"value":"proficiencyBonus","reset":"long","display":"bubble","classLevel":"WizardLevel"},{"name":"One with the Word","level":14,"value":"proficiencyBonus","reset":"long","display":"bubble","classLevel":"WizardLevel"}]
- }
+  {
+    "Class": "Wizard",
+    "subclass": "Scribe",
+    "counters": [
+      {
+        "name": "Awakened Spellbook",
+        "level": 2,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WizardLevel"
+      },
+      {
+        "name": "Manifest Mind",
+        "level": 10,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WizardLevel"
+      },
+      {
+        "name": "One with the Word",
+        "level": 14,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WizardLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Fighter",
+    "subclass": "Psi Knight",
+    "counters": [
+      {
+        "name": "Psi Die",
+        "level": 3,
+        "value": [0,0,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5],
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "FighterLevel"
+      },
+      {
+        "name": "Psi Replenishment",
+        "level": 3,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "FighterLevel"
+      },
+      {
+        "name": "Bulwark of force",
+        "level": 15,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "FighterLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Sorcerer",
+    "subclass": "Psionic Soul",
+    "counters": [
+      {
+        "name": "Psi Die",
+        "level": 1,
+        "value": [2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5],
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "SorcererLevel"
+      },
+      {
+        "name": "Psi Replenishment",
+        "level": 3,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "SorcererLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Rogue",
+    "subclass": "(2)Soulknife",
+    "counters": [
+      {
+        "name": "Psi Die",
+        "level": 1,
+        "value": [2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,5,5,5,5],
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      },
+      {
+        "name": "Psi Replenishment",
+        "level": 3,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      },
+      {
+        "name": "Psionic Veil",
+        "level": 13,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      },
+      {
+        "name": "Rend Mind",
+        "level": 17,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      }
+    ]
+  }
 ]
