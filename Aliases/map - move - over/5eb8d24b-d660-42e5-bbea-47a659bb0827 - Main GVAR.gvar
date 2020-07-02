@@ -50,20 +50,23 @@ spellOverlays = defaultSpells.copy()
 spelllist = [f"**{spell}** - `{over}`" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
-# Do we have a -spell?
-if args.last('spell'):
- # Loop through our users spellOverlays, looking for that spell
- for spell in spellOverlays:
-  if args.last('spell').lower() in spell.lower():
-   # If we find it, add the overlay to the args
-   # If its a string, its just a `-over9`
-   if typeof(spellOverlays.get(spell)) == "str":
-    args = argparse(["-over9", spellOverlays.get(spell)] + "@@@")
-   # If its a list, its starting with a -over9 and then theres other stuff
-   elif typeof(spellOverlays.get(spell)) == "SafeList":
-    args = argparse(["-over9"] + spellOverlays.get(spell) + "@@@")
-   # We only care about the first result
-   break
+# Do we have a -spell#?
+for overNum in [""]+[str(x) for x in range(1,11)]:
+ if args.last('spell' + overNum):
+  # Loop through our users spellOverlays, looking for that spell
+  for spell in spellOverlays:
+   if args.last('spell' + overNum).lower() in spell.lower():
+    # If we find it, add the overlay to the args
+    # If its a string, its just a `-over9`
+    if typeof(spellOverlays.get(spell)) == "str":
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
+    # If its a list, its starting with a -over9 and then theres other stuff
+    elif typeof(spellOverlays.get(spell)) == "SafeList":
+     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
+     args = argparse(["-over" + overNum] + adjustedList + "@@@")
+    # We only care about the first result
+    debug = args
+    break
 </drac2>
 <drac2>
 # If we're in combat, check all the things
