@@ -63,7 +63,7 @@
 {{dc, save_type, adv, phrase, save_bonus, damage, half, avoid, hidden, effect, seffect, xroll = sum([int(get(i, i)) for i in dc.split('+')]), args.last('save','').lower() or args.last('s', 'dex').lower() , args.adv(boolwise = True), '*' + phrase + '*' if phrase else '', [vroll(save_bonus) for x in range(len(targets)) if save_bonus], vroll(damage, 1 + crit) if damage else None, 'half' in args, 'avoid' in args, 'h' in args, ([effect.split("|")[0]]+["|".join(effect.split("|")[1:4])]+effect.split("|")[4:] if "-attack" in effect and len(effect.split("|"))>3 else (effect.split('|')+['-1']*2)[:3]) if effect else 0, (seffect.split('|')+['-1']*2)[:3] if seffect else 0, vroll(xroll) if xroll else None}}
 
 {{damageOut = min(maxDamage, max(minDamage, damage.total)) if minDamage and maxDamage else min(maxDamage, damage.total) if maxDamage else max(minDamage, damage.total) if minDamage else damage.consolidated() if damage else ''}}
-{{damageOut = damage.consolidated() if damage and roll(damageOut)==damage.total else damageOut}}
+{{damageOut = damage.consolidated() if damage and roll(str(damageOut))==damage.total else damageOut}}
 
 {{maxes = {x[0].name : x[0].maxhp for x in targets} }}
 {{temps = {x[0].name : x[0].temphp for x in targets} }}
