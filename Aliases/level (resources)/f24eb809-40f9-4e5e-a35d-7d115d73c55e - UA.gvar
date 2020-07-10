@@ -1,20 +1,6 @@
 [
   {
     "Class": "Paladin",
-    "subclass": "Heroism",
-    "counters": [
-      {
-        "name": "Living Myth",
-        "level": 20,
-        "value": 1,
-        "reset": "long",
-        "display": "bubble",
-        "classLevel": "PaladinLevel"
-      }
-    ]
-  },
-  {
-    "Class": "Paladin",
     "subclass": "Watchers",
     "counters": [
       {
@@ -139,28 +125,6 @@
         "name": "Performance of Creation",
         "level": 14,
         "value": 1,
-        "reset": "long",
-        "display": "bubble",
-        "classLevel": "BardLevel"
-      }
-    ]
-  },
-  {
-    "Class": "Bard",
-    "subclass": "Eloquence",
-    "counters": [
-      {
-        "name": "Soothing Words",
-        "level": 3,
-        "value": "charismaMod",
-        "reset": "long",
-        "display": "bubble",
-        "classLevel": "BardLevel"
-      },
-      {
-        "name": "Infectious Inspiration",
-        "level": 14,
-        "value": "charismaMod",
         "reset": "long",
         "display": "bubble",
         "classLevel": "BardLevel"
