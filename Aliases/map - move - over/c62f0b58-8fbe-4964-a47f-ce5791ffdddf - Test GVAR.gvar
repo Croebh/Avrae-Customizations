@@ -37,6 +37,8 @@ effectName = ""
 effectTarget =""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD = "\n", "{targ}", "{aim}"
+# What characters do we need to strip from names?
+nameStrip = """'"()[]{}*?^%$#/-~"""
 </drac2>
 <drac2>
 # The default overlays, created by @Nerds and Dragons#2817 
@@ -50,20 +52,23 @@ spellOverlays = defaultSpells.copy()
 spelllist = [f"**{spell}** - `{over}`" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
-# Do we have a -spell?
-if args.last('spell'):
- # Loop through our users spellOverlays, looking for that spell
- for spell in spellOverlays:
-  if args.last('spell').lower() in spell.lower():
-   # If we find it, add the overlay to the args
-   # If its a string, its just a `-over9`
-   if typeof(spellOverlays.get(spell)) == "str":
-    args = argparse(["-over9", spellOverlays.get(spell)] + "@@@")
-   # If its a list, its starting with a -over9 and then theres other stuff
-   elif typeof(spellOverlays.get(spell)) == "SafeList":
-    args = argparse(["-over9"] + spellOverlays.get(spell) + "@@@")
-   # We only care about the first result
-   break
+# Do we have a -spell#?
+for overNum in [""]+[str(x) for x in range(1,11)]:
+ if args.last('spell' + overNum):
+  # Loop through our users spellOverlays, looking for that spell
+  for spell in spellOverlays:
+   if args.last('spell' + overNum).lower() in spell.lower():
+    # If we find it, add the overlay to the args
+    # If its a string, its just a `-over9`
+    if typeof(spellOverlays.get(spell)) == "str":
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
+    # If its a list, its starting with a -over9 and then theres other stuff
+    elif typeof(spellOverlays.get(spell)) == "SafeList":
+     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
+     args = argparse(["-over" + overNum] + adjustedList + "@@@")
+    # We only care about the first result
+    debug = args
+    break
 </drac2>
 <drac2>
 # If we're in combat, check all the things
@@ -179,8 +184,8 @@ if args.last('undo') and prevBack:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', name) and gt(args.last('t', name)):
-  targ=gt(args.last('t', name))
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  targ=gt(args.last('t', combat().me.name if combat().me else None))
   # If they don't have a note/location set, add them to the list
   if not out.get(targ.name):
    out[targ.name] = {}
@@ -201,7 +206,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', name) and gt(args.last('t', name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
    color=args.last('color')[0].lower()
@@ -219,7 +224,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', name) and gt(args.last('t', name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -height arg, change their height
   if args.last('height'):
    height = args.last('height')
@@ -236,7 +241,7 @@ if c:
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
- if args.last('t', name) and gt(args.last('t', name)):
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   if args.last('move'):
    prevLoc = out[targ.name].get('location') 
    # Did they have a previous location? If so, lets calculate distance and draw a line
@@ -395,7 +400,7 @@ if c:
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
  # Removes any quotes in names, as that breaks the map for that target apparently
- people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color','b' if '/' in gt(target).hp_str() else 'r')[0]}-{target.replace(' ','_').replace("'","").replace('"','')}"""for target in out if out[target].get('location')]
+ people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color','b' if '/' in gt(target).hp_str() else 'r')[0]}-{target.translate(str.maketrans(' ', '_', nameStrip))}"""for target in out if out[target].get('location')]
  for target in out:
   # Do they have a height set? If so, display it
   if out[target].get('height'):
@@ -442,8 +447,8 @@ if c:
   people=[]
  # Join everything together and display the map if we aren't displaying the help
  if not (args.get('?') or args.get('help') or args.get('spelllist')):
-  finalMap = f"""-image "{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}" """
-  return finalMap + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+  finalMap = f"""{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+  return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
 <drac2>
@@ -523,9 +528,11 @@ elif not c or args.get('?') or args.get('help'):
 
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
- return f"""-f "Debug|{finalMap=}
- {overlays=}
- {people=}
- {debug=}" """
+# if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+#  return f"""-f "Debug|{finalMap=}
+#  {overlays=}
+#  {people=}
+#  {debug=}" """
 </drac2>
+
+-color <color>
