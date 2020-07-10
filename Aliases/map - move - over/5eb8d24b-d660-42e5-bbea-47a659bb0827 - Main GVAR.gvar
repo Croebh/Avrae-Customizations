@@ -445,8 +445,8 @@ if c:
   people=[]
  # Join everything together and display the map if we aren't displaying the help
  if not (args.get('?') or args.get('help') or args.get('spelllist')):
-  finalMap = f"""-image "{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}" """
-  return finalMap + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+  finalMap = f"""{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+  return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
 <drac2>
@@ -526,11 +526,11 @@ elif not c or args.get('?') or args.get('help'):
 
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
- return f"""-f "Debug|{finalMap=}
- {overlays=}
- {people=}
- {debug=}" """
+# if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+#  return f"""-f "Debug|{finalMap=}
+#  {overlays=}
+#  {people=}
+#  {debug=}" """
 </drac2>
 
 -color <color>
