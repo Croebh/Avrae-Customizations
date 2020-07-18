@@ -370,7 +370,7 @@ if c:
         # Set the overlay for the map
         overlay = f"""*{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
         # Set the description (This is painfully long and I want to redo it)
-        overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc.upper()}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget.upper() or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
+        overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
         # If we made it this far, the overlay is valid, so we can break out of the loop
         overValid = True
         break
