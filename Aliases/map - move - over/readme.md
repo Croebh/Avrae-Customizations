@@ -19,3 +19,7 @@ You can also place overlays on the map, using the `-over` command. Theres suppor
 `!move` is a simple shortcut for `!map -t <name> -move`, so doing `!move B3` would move your currently active character to B3. The alias uses the argparse .last() method, so you can override the target with another `-t` (`!move B3 -t or1` for instance).
 
 [![Basic use of !move](https://cdn.discordapp.com/attachments/720465301329805332/733889999816359946/unknown.png)]
+
+## Credits
+
+Big thank you to `@Nerds and Dragons#2817` on the OTFBM dev server, who put together the default spell list gvar. Solid work, thanks!
