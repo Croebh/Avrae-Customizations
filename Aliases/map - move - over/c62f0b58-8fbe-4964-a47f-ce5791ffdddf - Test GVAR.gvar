@@ -1,25 +1,25 @@
 tembed 
 <drac2>
-# Set are base variables
-
 # These are replaced with proper values from the base alias
-args, defaults=argparse("@@@"),"&&&"
-mapsize=defaults.get("size","10x10") or "10x10"
+args, defaults = argparse("@@@"),"&&&"
+
+# Set are base variables
+mapsize = defaults.get("size","10x10") or "10x10"
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
-mapsize = f"{mapSplitX}x{mapSplitY}"
-mapoptions=defaults.get("options","")
-mapbg=defaults.get("background","")
-mapinfo=""
-mapattach=""
+mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+mapsize = f"{mapX}x{mapY}"
+mapoptions = defaults.get("options","")
+mapbg = defaults.get("background","")
+mapinfo = ""
+mapattach = ""
 map="http://otfbm.com/"
 out={}
-col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"),"TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
+col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
 COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
-c=combat()
-gt=c.get_combatant if c else None
+c = combat()
+gt = c.get_combatant if c else None
 debug = ""
 desc = []
 finalMap = ""
@@ -31,7 +31,7 @@ targAimPoint = ""
 targAimTarget = ""
 aimStick = False
 targPoint = ""
-aim=""
+aim = ""
 effect = None
 effectName = ""
 effectTarget =""
@@ -91,9 +91,9 @@ if c:
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
   mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-  mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
-  mapsize = f"{mapSplitX}x{mapSplitY}" 
+  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+  mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
 </drac2>
