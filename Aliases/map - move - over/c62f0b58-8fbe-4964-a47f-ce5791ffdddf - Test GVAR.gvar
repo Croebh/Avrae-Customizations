@@ -209,12 +209,20 @@ if c:
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
-   color=args.last('color')[0].lower()
+   color = args.last('color').lower().strip('~') + " "
+   color = color[:color.index(' ')]
+   debug += f"`{color=}` {color in col}"
    # Confirm that the given color is valid before updating
+   # Is it one of our preset colors?
    if color in col:
     out[targ.name].update({"color":f"{color} ({COL[color]})"})
     # Display the change in color
     desc.append(f"Changing color of {targ.name} to {COL[color]} ({color})")
+   # Or is it a hex code
+   elif len(color) in (3, 6) and not color.strip("abcdef1234567890"):
+    out[targ.name].update({"color":f"#{color.upper()}"})
+    # Display the change in color
+    desc.append(f"Changing color of {targ.name} to #{color.upper()}")
    # If the color is None, erase the color, setting them back to black
    elif args.last('color') in ("None","none"):
     _ = out[targ.name].pop('color')
@@ -322,7 +330,22 @@ if c:
       # Do we have a proper target, and does that target have our effect
       if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
        effect = effectTarget.get_effect(effectName)
-       
+     
+     # Our basic structure, pre laid out
+     currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
+
+     # This has all the information we need for our overlays
+     shapeDict = [{"type": "circle",    "name":"c",  "num": (3), "args": ("size", "color", "loc")},
+                  {"type": "circletop", "name":"ct", "num": (3), "args": ("size", "color", "loc")},
+                  {"type": "cone",      "name":"t",  "num": (4), "args": ("size", "color", "loc", "eloc")},
+                  {"type": "line",      "name":"l",  "num": (5), "args": ("size", "width", "color", "loc", "eloc")},
+                  {"type": "arrow",     "name":"a",  "num": (3), "args": ("color", "loc", "eloc")},
+                  {"type": "square",    "name":"s",  "num": (3,4), "args": ("size", "color", "loc", "eloc")},
+                  {"type": "squaretop", "name":"st", "num": (3,4), "args": ("size", "color", "loc", "eloc")}]
+     
+     # Is the overlay valid?
+     overValid = False
+
      # Did our user try to have the location linked to a target, but failed to supply a target?
      if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
       overlay = None
@@ -331,37 +354,36 @@ if c:
      elif "{aim}" in args.last('over'+overNum) and not args.last('aim'+overNum):
       overlay = None
       desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
-     elif oShape == "circle" and len(overlay)==4:
-      # Circle takes four arguments, shape, size, color, and starting location
-       oShape  = "c" 
-       oSize, oColor, oLoc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}"""
-       overdesc= f"Creating a {COL[oColor]} circle overlay, {oSize} ft. in diameter, positioned at {oLoc}"
-     elif (oShape == "triangle" or oShape == "cone") and len(overlay)==5:
-      # Cone takes five arguments, shape, size, color, starting location, and the location its aimed at
-       oShape  = "t" 
-       oSize, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} cone overlay, {oSize} ft. long, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
-     elif oShape == "line" and len(overlay)==6:
-      # Lines takes six arguments, shape, size, width, color, starting location, and the location its aimed at
-       oShape  = "l" 
-       oSize, oWidth, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize},{oWidth}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} line overlay, {oSize} ft. long, {oWidth} ft. wide, starting at {oLoc}, aimed at {aimTarget or oEloc}"
-     elif oShape == "arrow" and len(overlay)==4:
-      # Arrows takes four arguments, shape, color, starting location, and the location it ends at
-       oShape  = "a" 
-       oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} arrow overlay, starting at {oLoc}, ending at {aimTarget or oEloc}"
-     elif oShape == "square" and len(overlay)==5:
-      # Square takes five arguments, shape, size, color, starting location, and the location its aimed at
-       oShape  = "s" 
-       oSize, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} square overlay, {oSize} ft. wide, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
      else:
+      # Otherwise, lets loop through our possible overlays
+      for shape in shapeDict:
+       # Does it have a valid amount of arguments for the given shape?
+       if oShape == shape.type and len(overlay) in shape.num:
+        currentOver['shape'] = shape.name
+        # Iterate over the needed args
+        for index in range(len(overlay)):
+         # If its a color, we need to account for both preset colors and hex codes
+         if shape.args[index] == "color":
+          overlaycolor = overlay[index].lower().strip('~') + " "
+          overlaycolor = overlaycolor[:overlaycolor.index(' ')].strip()
+          # If this is in our preset colors, use that
+          if overlaycolor in col:
+           currentOver[shape.args[index]] += overlaycolor
+           currentOver['colorDesc'] += COL[overlaycolor]
+          # Otherwise, check if its a hex code, either 3 or 6 digits
+          elif len(overlaycolor) in (3, 6) and not overlaycolor.strip("abcdef1234567890"):
+           currentOver[shape.args[index]] += f"~{overlaycolor}"
+           currentOver['colorDesc'] += f"#{overlaycolor.upper()} colored"
+         else:
+          currentOver[shape.args[index]] += overlay[index]
+        # Set the overlay for the map
+        overlay = f"""*{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        # Set the description (This is painfully long and I want to redo it)
+        overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc.upper()}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget.upper() or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
+        # If we made it this far, the overlay is valid, so we can break out of the loop
+        overValid = True
+        break
+     if not overValid:
       overlay = None
      # If, after all the parsing above, we managed to get a proper overlay, continue
      if overlay:
@@ -399,9 +421,17 @@ if c:
 <drac2>
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
- # Removes any quotes in names, as that breaks the map for that target apparently
- people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color','b' if '/' in gt(target).hp_str() else 'r')[0]}-{target.translate(str.maketrans(' ', '_', nameStrip))}"""for target in out if out[target].get('location')]
+ people = []
  for target in out:
+  tLocation = out[target].get('location')
+  tSize = out[target].get('size','M')[0].upper()
+  tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
+  tColor = tColor[:tColor.index(" ")].strip('#')
+  # Account for hex colors
+  if len(tColor) in (3, 6):
+   tColor = f"~{tColor}".upper()
+  tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  people.append(f"{tLocation}{tSize}{tColor}-{tName}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
@@ -517,7 +547,8 @@ elif not c or args.get('?') or args.get('help'):
 
             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
 
- help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
+ help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
+            You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
             -f "Valid Map Options (For `-mapoptions`)|`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`1`,`2`,`3` - Different zoom options|inline" 
             -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
