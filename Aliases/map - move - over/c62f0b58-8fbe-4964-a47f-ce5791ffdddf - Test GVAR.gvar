@@ -325,14 +325,14 @@ if c:
      # Our basic structure, pre laid out
      currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
 
-     # This has all the information we need for our overlays
-     shapeDict = [{"type": "circle",    "name":"c",  "num": (3), "args": ("size", "color", "loc")},
-                  {"type": "circletop", "name":"ct", "num": (3), "args": ("size", "color", "loc")},
-                  {"type": "cone",      "name":"t",  "num": (4), "args": ("size", "color", "loc", "eloc")},
-                  {"type": "line",      "name":"l",  "num": (5), "args": ("size", "width", "color", "loc", "eloc")},
-                  {"type": "arrow",     "name":"a",  "num": (3), "args": ("color", "loc", "eloc")},
-                  {"type": "square",    "name":"s",  "num": (3,4), "args": ("size", "color", "loc", "eloc")},
-                  {"type": "squaretop", "name":"st", "num": (3,4), "args": ("size", "color", "loc", "eloc")}]
+     # This has all the information we need for our overlay[
+     shapeDict = [{"type": "circle",    "name":"c",  "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circletop", "name":"ct", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "cone",      "name":"t",  "num": [4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "line",      "name":"l",  "num": [5], "args": ("size", "width", "color", "loc", "eloc")},
+                  {"type": "arrow",     "name":"a",  "num": [3], "args": ("color", "loc", "eloc")},
+                  {"type": "square",    "name":"s",  "num": [3,4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "squaretop", "name":"st", "num": [3,4], "args": ("size", "color", "loc", "eloc")}]
      
      # Is the overlay valid?
      overValid = False
@@ -486,15 +486,17 @@ elif not c or args.get('?') or args.get('help'):
  if args.get('overlay'):
   help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
             -desc "**__Overlay Arguments__**
-            `-over \"circle,<diameter>,<color>,<center>\"` - Creates a circle of a given diameter and color, at the chosen location
+            `-over \"circle,<radius>,<color>,<center>\"` - Creates a circle of a given radius and color, centered at the chosen location
+            `-over \"circletop,<radius>,<color>,<center>\"` - Same as circle, but you provide the top left coordinate instead of the center
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length, width, and color, starting and aiming where you choose
             `-over \"arrow,<color>,<start>,<end>\"` - Creates an arrow of a given color, starting and ending where you choose
-            `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
+            `-over \"square,<size>,<color>,<center>[,end]\"` - Creates a square of a given size and color, starting and,if you provide an end location, aiming where you choose. Pivot point is the center
+            `-over \"squaretop,<size>,<color>,<center>[,end]\"` - Same as square, but the pivot point is the top left corner
 
-            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached at a time.
+            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect`/`-spell` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached atno a time."
 
-            `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist` **Note:** This uses `-over9`, and as such, will replaced the ninth overlay if you have one already.
+            -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`.
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
             `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
             `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an effect on a target. When the effect or target are no longer present, the overlay will be removed."
