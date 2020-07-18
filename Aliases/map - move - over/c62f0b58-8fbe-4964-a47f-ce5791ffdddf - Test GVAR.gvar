@@ -15,8 +15,8 @@ mapinfo=""
 mapattach=""
 map="http://otfbm.com/"
 out={}
-col,siz,alph="grbypcd","TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
-COL,SIZ = {"g":"Forest Green", "r":"Firebrick Red", "b":"Corn Flower Blue", "y":"Gold/Yellow", "p":"Dark Violet", "c":"Deep Sky Blue", "d":"Dark Golden Rod"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"),"TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
 c=combat()
 gt=c.get_combatant if c else None
@@ -81,14 +81,6 @@ if c:
    if attack.name == 'map':
     mapattach=combatant
     mapinfo=attack.automation[0].text
-
-  # Set every combatant to a random location and size.
-  # Doesn't respect the size of the map (currently)
-  if args.last('rand'):
-   note=f"""Location: {alph[randint(26)]}{randint(20)+1}"""
-   note+=f""" | Color: {col[randint(7)]}"""
-   note+=f""" | Size: {siz[randint(6)]}"""
-   combatant.set_note(note)
 </drac2>
 <drac2>
 if c:
@@ -296,9 +288,8 @@ if c:
      desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
     else: # Split the input by commas
      overlay = args.last('over'+overNum).split(',')
-     # First argument is always the shape
-     oShape = overlay[0].lower()
-
+     # First argument is always the shape, so lets pop it out
+     oShape = overlay.pop(0).lower()
      # Are we aiming at someone?
      if args.last('aim'+overNum):
       # Split our aim up, in case we have a |split
@@ -559,11 +550,10 @@ elif not c or args.get('?') or args.get('help'):
 
 <drac2>
 # this is for debugging, only display in testing channels
-# if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
-#  return f"""-f "Debug|{finalMap=}
-#  {overlays=}
-#  {people=}
-#  {debug=}" """
+if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+ return f"""-f "Debug (Only appears in this channel)|```{overlays=}
+ {people=}
+ {debug=}```" """
 </drac2>
 
 -color <color>
