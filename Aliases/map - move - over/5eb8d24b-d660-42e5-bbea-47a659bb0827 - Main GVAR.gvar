@@ -1,25 +1,25 @@
 tembed 
 <drac2>
-# Set are base variables
-
 # These are replaced with proper values from the base alias
-args, defaults=argparse("@@@"),"&&&"
-mapsize=defaults.get("size","10x10") or "10x10"
+args, defaults = argparse("@@@"),"&&&"
+
+# Set are base variables
+mapsize = defaults.get("size","10x10") or "10x10"
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
-mapsize = f"{mapSplitX}x{mapSplitY}"
-mapoptions=defaults.get("options","")
-mapbg=defaults.get("background","")
-mapinfo=""
-mapattach=""
+mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+mapsize = f"{mapX}x{mapY}"
+mapoptions = defaults.get("options","")
+mapbg = defaults.get("background","")
+mapinfo = ""
+mapattach = ""
 map="http://otfbm.com/"
 out={}
-col,siz,alph="grbypcd","TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
-COL,SIZ = {"g":"Forest Green", "r":"Firebrick Red", "b":"Corn Flower Blue", "y":"Gold/Yellow", "p":"Dark Violet", "c":"Deep Sky Blue", "d":"Dark Golden Rod"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
-c=combat()
-gt=c.get_combatant if c else None
+c = combat()
+gt = c.get_combatant if c else None
 debug = ""
 desc = []
 finalMap = ""
@@ -31,7 +31,7 @@ targAimPoint = ""
 targAimTarget = ""
 aimStick = False
 targPoint = ""
-aim=""
+aim = ""
 effect = None
 effectName = ""
 effectTarget =""
@@ -81,14 +81,6 @@ if c:
    if attack.name == 'map':
     mapattach=combatant
     mapinfo=attack.automation[0].text
-
-  # Set every combatant to a random location and size.
-  # Doesn't respect the size of the map (currently)
-  if args.last('rand'):
-   note=f"""Location: {alph[randint(26)]}{randint(20)+1}"""
-   note+=f""" | Color: {col[randint(7)]}"""
-   note+=f""" | Size: {siz[randint(6)]}"""
-   combatant.set_note(note)
 </drac2>
 <drac2>
 if c:
@@ -99,9 +91,9 @@ if c:
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
   mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-  mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
-  mapsize = f"{mapSplitX}x{mapSplitY}" 
+  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
+  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+  mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
 </drac2>
@@ -209,12 +201,20 @@ if c:
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
-   color=args.last('color')[0].lower()
+   color = args.last('color').lower().strip('~') + " "
+   color = color[:color.index(' ')]
+   debug += f"`{color=}` {color in col}"
    # Confirm that the given color is valid before updating
+   # Is it one of our preset colors?
    if color in col:
     out[targ.name].update({"color":f"{color} ({COL[color]})"})
     # Display the change in color
     desc.append(f"Changing color of {targ.name} to {COL[color]} ({color})")
+   # Or is it a hex code
+   elif len(color) in (3, 6) and not color.strip("abcdef1234567890"):
+    out[targ.name].update({"color":f"#{color.upper()}"})
+    # Display the change in color
+    desc.append(f"Changing color of {targ.name} to #{color.upper()}")
    # If the color is None, erase the color, setting them back to black
    elif args.last('color') in ("None","none"):
     _ = out[targ.name].pop('color')
@@ -288,9 +288,8 @@ if c:
      desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
     else: # Split the input by commas
      overlay = args.last('over'+overNum).split(',')
-     # First argument is always the shape
-     oShape = overlay[0].lower()
-
+     # First argument is always the shape, so lets pop it out
+     oShape = overlay.pop(0).lower()
      # Are we aiming at someone?
      if args.last('aim'+overNum):
       # Split our aim up, in case we have a |split
@@ -322,7 +321,22 @@ if c:
       # Do we have a proper target, and does that target have our effect
       if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
        effect = effectTarget.get_effect(effectName)
-       
+     
+     # Our basic structure, pre laid out
+     currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
+
+     # This has all the information we need for our overlay[
+     shapeDict = [{"type": "circle",    "name":"c",  "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circletop", "name":"ct", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "cone",      "name":"t",  "num": [4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "line",      "name":"l",  "num": [5], "args": ("size", "width", "color", "loc", "eloc")},
+                  {"type": "arrow",     "name":"a",  "num": [3], "args": ("color", "loc", "eloc")},
+                  {"type": "square",    "name":"s",  "num": [3,4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "squaretop", "name":"st", "num": [3,4], "args": ("size", "color", "loc", "eloc")}]
+     
+     # Is the overlay valid?
+     overValid = False
+
      # Did our user try to have the location linked to a target, but failed to supply a target?
      if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
       overlay = None
@@ -331,37 +345,36 @@ if c:
      elif "{aim}" in args.last('over'+overNum) and not args.last('aim'+overNum):
       overlay = None
       desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
-     elif oShape == "circle" and len(overlay)==4:
-      # Circle takes four arguments, shape, size, color, and starting location
-       oShape  = "c" 
-       oSize, oColor, oLoc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}"""
-       overdesc= f"Creating a {COL[oColor]} circle overlay, {oSize} ft. in diameter, positioned at {oLoc}"
-     elif (oShape == "triangle" or oShape == "cone") and len(overlay)==5:
-      # Cone takes five arguments, shape, size, color, starting location, and the location its aimed at
-       oShape  = "t" 
-       oSize, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} cone overlay, {oSize} ft. long, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
-     elif oShape == "line" and len(overlay)==6:
-      # Lines takes six arguments, shape, size, width, color, starting location, and the location its aimed at
-       oShape  = "l" 
-       oSize, oWidth, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize},{oWidth}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} line overlay, {oSize} ft. long, {oWidth} ft. wide, starting at {oLoc}, aimed at {aimTarget or oEloc}"
-     elif oShape == "arrow" and len(overlay)==4:
-      # Arrows takes four arguments, shape, color, starting location, and the location it ends at
-       oShape  = "a" 
-       oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} arrow overlay, starting at {oLoc}, ending at {aimTarget or oEloc}"
-     elif oShape == "square" and len(overlay)==5:
-      # Square takes five arguments, shape, size, color, starting location, and the location its aimed at
-       oShape  = "s" 
-       oSize, oColor, oLoc, oEloc = overlay[1:]
-       overlay = f"""*{oShape}{oSize}{oColor}{oLoc}{oEloc}"""
-       overdesc= f"Creating a {COL[oColor]} square overlay, {oSize} ft. wide, positioned at {oLoc}, aimed at {aimTarget or oEloc}"
      else:
+      # Otherwise, lets loop through our possible overlays
+      for shape in shapeDict:
+       # Does it have a valid amount of arguments for the given shape?
+       if oShape == shape.type and len(overlay) in shape.num:
+        currentOver['shape'] = shape.name
+        # Iterate over the needed args
+        for index in range(len(overlay)):
+         # If its a color, we need to account for both preset colors and hex codes
+         if shape.args[index] == "color":
+          overlaycolor = overlay[index].lower().strip('~') + " "
+          overlaycolor = overlaycolor[:overlaycolor.index(' ')].strip()
+          # If this is in our preset colors, use that
+          if overlaycolor in col:
+           currentOver[shape.args[index]] += overlaycolor
+           currentOver['colorDesc'] += COL[overlaycolor]
+          # Otherwise, check if its a hex code, either 3 or 6 digits
+          elif len(overlaycolor) in (3, 6) and not overlaycolor.strip("abcdef1234567890"):
+           currentOver[shape.args[index]] += f"~{overlaycolor}"
+           currentOver['colorDesc'] += f"#{overlaycolor.upper()} colored"
+         else:
+          currentOver[shape.args[index]] += overlay[index]
+        # Set the overlay for the map
+        overlay = f"""*{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        # Set the description (This is painfully long and I want to redo it)
+        overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc.upper()}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget.upper() or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
+        # If we made it this far, the overlay is valid, so we can break out of the loop
+        overValid = True
+        break
+     if not overValid:
       overlay = None
      # If, after all the parsing above, we managed to get a proper overlay, continue
      if overlay:
@@ -399,9 +412,17 @@ if c:
 <drac2>
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
- # Removes any quotes in names, as that breaks the map for that target apparently
- people=[f"""{out[target].get('location')}{out[target].get('size','M')[0]}{out[target].get('color','b' if '/' in gt(target).hp_str() else 'r')[0]}-{target.translate(str.maketrans(' ', '_', nameStrip))}"""for target in out if out[target].get('location')]
+ people = []
  for target in out:
+  tLocation = out[target].get('location')
+  tSize = out[target].get('size','M')[0].upper()
+  tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
+  tColor = tColor[:tColor.index(" ")].strip('#')
+  # Account for hex colors
+  if len(tColor) in (3, 6):
+   tColor = f"~{tColor}".upper()
+  tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  people.append(f"{tLocation}{tSize}{tColor}-{tName}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
@@ -465,15 +486,17 @@ elif not c or args.get('?') or args.get('help'):
  if args.get('overlay'):
   help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
             -desc "**__Overlay Arguments__**
-            `-over \"circle,<diameter>,<color>,<center>\"` - Creates a circle of a given diameter and color, at the chosen location
+            `-over \"circle,<radius>,<color>,<center>\"` - Creates a circle of a given radius and color, centered at the chosen location
+            `-over \"circletop,<radius>,<color>,<center>\"` - Same as circle, but you provide the top left coordinate instead of the center
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length, width, and color, starting and aiming where you choose
             `-over \"arrow,<color>,<start>,<end>\"` - Creates an arrow of a given color, starting and ending where you choose
-            `-over \"square,<size>,<color>,<center>,<end>\"` - Creates a square of a given size and color, starting and aiming where you choose
+            `-over \"square,<size>,<color>,<center>[,end]\"` - Creates a square of a given size and color, starting and,if you provide an end location, aiming where you choose. Pivot point is the center
+            `-over \"squaretop,<size>,<color>,<center>[,end]\"` - Same as square, but the pivot point is the top left corner
 
-            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached at a time.
+            You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect`/`-spell` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached atno a time."
 
-            `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist` **Note:** This uses `-over9`, and as such, will replaced the ninth overlay if you have one already.
+            -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`.
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
             `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
             `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an effect on a target. When the effect or target are no longer present, the overlay will be removed."
@@ -517,7 +540,8 @@ elif not c or args.get('?') or args.get('help'):
 
             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
 
- help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}|inline"
+ help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
+            You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline"
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
             -f "Valid Map Options (For `-mapoptions`)|`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`1`,`2`,`3` - Different zoom options|inline" 
             -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
@@ -528,11 +552,10 @@ elif not c or args.get('?') or args.get('help'):
 
 <drac2>
 # this is for debugging, only display in testing channels
-# if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
-#  return f"""-f "Debug|{finalMap=}
-#  {overlays=}
-#  {people=}
-#  {debug=}" """
+if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+ return f"""-f "Debug (Only appears in this channel)|```{overlays=}
+ {people=}
+ {debug=}```" """
 </drac2>
 
 -color <color>
