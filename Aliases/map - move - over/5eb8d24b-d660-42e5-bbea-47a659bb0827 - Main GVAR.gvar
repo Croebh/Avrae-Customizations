@@ -405,7 +405,7 @@ if c:
        desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + f", linked to {gt(args.last('t')).name}")
       else: 
        # Otherwise, lets just display it once
-       overlays.append(overlay)
+       overlays.append(overlay.replace("{aim}", aimPoint))
        desc.append(overdesc)
 
 </drac2>
