@@ -36,7 +36,7 @@ effect = None
 effectName = ""
 effectTarget =""
 # F-Strings like to yell at me for \'s
-newline, targD, aimD = "\n", "{targ}", "{aim}"
+newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
 nameStrip = r"""'"()[]{}*?^%$#/-~“”‘’"""
 </drac2>
@@ -49,7 +49,7 @@ spellOverlays = defaultSpells.copy()
 [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
 # Iterate over the spell dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
-spelllist = [f"**{spell}** - `{over}`" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
+spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
