@@ -67,7 +67,6 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
      adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
      args = argparse(["-over" + overNum] + adjustedList + "@@@")
     # We only care about the first result
-    debug = args
     break
 </drac2>
 <drac2>
@@ -518,7 +517,6 @@ elif not c or args.get('?') or args.get('help'):
 
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
-            `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
             `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
 
@@ -528,7 +526,8 @@ elif not c or args.get('?') or args.get('help'):
             `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description."
             
-            -f "_ _|**__Map Arguments__** - Requires the map info to be set with `-mapattach`
+            -f "_ _|**__Map Arguments__**
+            `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
@@ -545,10 +544,12 @@ elif not c or args.get('?') or args.get('help'):
             -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
             -f "Valid Map Options (For `-mapoptions`)|`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`1`,`2`,`3` - Different zoom options|inline" 
             -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
+ if not combat():
+  help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
  return help.replace(" "*11,"")
 </drac2>
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if not c or args.get('spelllist') else "" }}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist') else "" }}"
 
 <drac2>
 # this is for debugging, only display in testing channels
