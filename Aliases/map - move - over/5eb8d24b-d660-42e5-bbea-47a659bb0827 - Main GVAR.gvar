@@ -6,8 +6,8 @@ args, defaults = argparse("@@@"),"&&&"
 # Set are base variables
 mapsize = defaults.get("size","10x10") or "10x10"
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52), 1)
+mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52), 1)
 mapsize = f"{mapX}x{mapY}"
 mapoptions = defaults.get("options","")
 mapbg = defaults.get("background","")
