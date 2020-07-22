@@ -241,7 +241,7 @@ if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  if args.last('move'):
+  if args.last('move') and args.last('move') is not True:
    prevLoc = out[targ.name].get('location') 
    # Did they have a previous location? If so, lets calculate distance and draw a line
    if prevLoc:
