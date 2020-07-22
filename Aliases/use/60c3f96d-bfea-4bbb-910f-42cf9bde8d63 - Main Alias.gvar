@@ -98,7 +98,7 @@
 
 {{damageStr = f"""{damage} {f"({f'min: {minDamage}' if minDamage is not None else ''}{', ' if minDamage is not None and maxDamage is not None else ''}{f'max: {maxDamage}' if maxDamage is not None else ''})" if maxDamage or minDamage else ''}{f' -> `{damageOut}` ' if roll(f"{damageOut}")!=damage.total else ''}""" if damage else ''}}
 
-{{meta = f'''{(f"**Damage:** {'Hidden' * hidden or damageStr}" + N if damage else "") + (f"""**Max HP:** {'Hidden' * hidden or f'{maxhp}'}""" + N if maxhp else "") + (f"""**Temp HP:** {'Hidden' * hidden or f'{temphp}'}""" + N if temphp else "") + (f"**DC**: {'Hidden' * hidden or dc}" + N if not 'pass' in args and not 'fail' in args else '')}{f'**Roll:** {xroll}' + N if xroll else ''}{f'**{ndesc}:** {n}' + N if n else ''}''' if not (out or help or not any([not 'pass' in args and not 'fail' in args, damage, maxhp, xroll, temphp])) else 0}}
+{{meta = f'''{(f"**Damage:** {'Hidden' * hidden or damageStr}" + N if damage else "") + (f"""**Max HP:** {'Hidden' * hidden or f'{maxhp}'}""" + N if maxhp else "") + (f"""**Temp HP:** {'Hidden' * hidden or f'{temphp}'}""" + N if temphp else "") + (f"**DC**: {'Hidden' * hidden or dc}{N}{save_type.upper()} save" + N if not 'pass' in args and not 'fail' in args else '')}{f'**Roll:** {xroll}' + N if xroll else ''}{f'**{ndesc}:** {n}' + N if n else ''}''' if not (out or help or not any([not 'pass' in args and not 'fail' in args, damage, maxhp, xroll, temphp])) else 0}}
 
 {{not meta or f'-f "Meta|{meta}"'}}
 
