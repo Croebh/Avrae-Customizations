@@ -264,7 +264,10 @@ if c:
     else:
      distance = deltaY*5
     # Grab the targets new color if changed, old color if set, or default to dark violet
-    colr = args.last('color', out[targ.name].get('color','p'))[0]
+    colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
+    colr = colr[:colr.index(" ")]
+    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+      colr = f"~{colr}"
     # Add the line to the overlay list
     overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
     # Display the change in location
