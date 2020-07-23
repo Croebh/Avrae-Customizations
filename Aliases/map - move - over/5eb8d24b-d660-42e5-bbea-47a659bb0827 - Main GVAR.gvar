@@ -38,7 +38,7 @@ effectTarget =""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
-nameStrip = r"""'"()[]{}*?^%$#/-~“”‘’"""
+nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
 </drac2>
 <drac2>
 # The default overlays, created by @Nerds and Dragons#2817 
