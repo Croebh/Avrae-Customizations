@@ -241,37 +241,43 @@ if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  if args.last('move') and args.last('move') is not True:
+  if args.last('move') and args.last('move') not in (True, 't', '-t'):
    prevLoc = out[targ.name].get('location') 
+   # Fix bad locations?
+   if prevLoc == "TRUE":
+    _ = out[targ.name].pop('location')
+    prevLoc = None
    # Did they have a previous location? If so, lets calculate distance and draw a line
-   if prevLoc:
+   if prevLoc and prevloc.lower() != args.last("move"):
     # Split previous location from XY to X and Y
     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
-    prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
-    # Same as new location
-    newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
-    newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
-    # Calculate the delta for X and Y between the two
-    deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
-    # Throw them in the pot with some pythag
-    distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-    # Otherwise, average the deltas
-    deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-    if deltaX and deltaY:
-     distance = round(((deltaX+deltaY)/2)+0.000000000000001)*5
-    elif deltaX:
-     distance = deltaX*5
-    else:
-     distance = deltaY*5
-    # Grab the targets new color if changed, old color if set, or default to dark violet
-    colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
-    colr = colr[:colr.index(" ")]
-    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
-      colr = f"~{colr}"
-    # Add the line to the overlay list
-    overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-    # Display the change in location
-    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+    prevLocY = ''.join(y for y in prevLoc if y.isdigit())
+    if prevLocY and prevLocX:
+      prevLocY = int(prevLocY)
+      # Same as new location
+      newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
+      newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
+      # Calculate the delta for X and Y between the two
+      deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
+      # Throw them in the pot with some pythag
+      distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+      # Otherwise, average the deltas
+      deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+      if deltaX and deltaY:
+       distance = round(((deltaX+deltaY)/2)+0.000000000000001)*5
+      elif deltaX:
+       distance = deltaX*5
+      else:
+       distance = deltaY*5
+      # Grab the targets new color if changed, old color if set, or default to dark violet
+      colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
+      colr = colr[:colr.index(" ")]
+      if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+        colr = f"~{colr}"
+      # Add the line to the overlay list
+      overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+      # Display the change in location
+      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
