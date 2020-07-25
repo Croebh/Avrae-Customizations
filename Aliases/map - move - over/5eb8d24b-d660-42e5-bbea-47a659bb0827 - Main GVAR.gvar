@@ -35,6 +35,7 @@ aim = ""
 effect = None
 effectName = ""
 effectTarget =""
+prevloc = ""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
@@ -423,6 +424,14 @@ if c:
  people = []
  for target in out:
   tLocation = out[target].get('location')
+  # Check to see if the target is out of bouncds
+  if tLocation:
+    tLocX = ''.join(x for x in tLocation if x.isalpha()).upper()
+    tLocX = alph.index(tLocX) + 1
+    tLocY = int(''.join(y for y in tLocation if y.isdigit()))
+    # If they are, don't try to display their location
+    if (tLocX > mapX) or (tLocY > mapY) or (tLocX == 0 or tLocY == 0):
+      tLocation = None
   tSize = out[target].get('size','M')[0].upper()
   tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
   tColor = tColor[:tColor.index(" ")].strip('#')
@@ -430,7 +439,9 @@ if c:
   if len(tColor) in (3, 6):
    tColor = f"~{tColor}".upper()
   tName = target.translate(str.maketrans(' ', '_', nameStrip))
-  people.append(f"{tLocation}{tSize}{tColor}-{tName}")
+  # Only display if they have a location
+  if tLocation:
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
