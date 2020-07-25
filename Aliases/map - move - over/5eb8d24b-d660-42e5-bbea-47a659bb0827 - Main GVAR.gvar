@@ -264,12 +264,7 @@ if c:
       distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
       # Otherwise, average the deltas
       deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-      if deltaX and deltaY:
-       distance = max(deltaX, deltaY)*5
-      elif deltaX:
-       distance = deltaX*5
-      else:
-       distance = deltaY*5
+      distance = max(deltaX, deltaY)*5
       # Grab the targets new color if changed, old color if set, or default to dark violet
       colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
       colr = colr[:colr.index(" ")]
