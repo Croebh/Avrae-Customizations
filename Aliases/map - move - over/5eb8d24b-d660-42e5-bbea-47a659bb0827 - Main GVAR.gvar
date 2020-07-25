@@ -265,7 +265,7 @@ if c:
       # Otherwise, average the deltas
       deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
       if deltaX and deltaY:
-       distance = round(((deltaX+deltaY)/2)+0.000000000000001)*5
+       distance = max(deltaX, deltaY)*5
       elif deltaX:
        distance = deltaX*5
       else:
