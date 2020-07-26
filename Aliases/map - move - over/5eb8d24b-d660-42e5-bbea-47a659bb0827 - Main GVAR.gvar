@@ -301,8 +301,8 @@ if c:
       aim = (args.last('aim'+overNum).split('|')+[""])[:2]
       aimStick = aim[1].lower() == "stick"
       # Account for the user putting |stick on the wrong arg. Won't advertise this, as its unintended.
-      if overlay.endswith("|stick"):
-        overlay.replace("|stick", "")
+      if overlay[-1].endswith("|stick"):
+        overlay[-1] = overlay[-1].replace("|stick", "")
         aimStick = True
       # If the target is, well, a target, grab its location
       for target in out:
