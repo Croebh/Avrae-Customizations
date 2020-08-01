@@ -377,7 +377,7 @@ if c:
          else:
           currentOver[shape.args[index]] += overlay[index]
         # Set the overlay for the map
-        overlay = f"""*{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        overlay = f"""{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
         # Set the description (This is painfully long and I want to redo it)
         overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
         # If we made it this far, the overlay is valid, so we can break out of the loop
@@ -475,7 +475,7 @@ if c:
        if not targAimPoint:
         targAimPoint = out[target].get('aim'+overNum).upper()
      # Add each targets overlay to the overlays list
-     overlays.append(out[target].get('overlay'+overNum).replace("{targ}", targPoint).replace("{aim}", targAimPoint))
+     overlays.append(out[target].get('overlay'+overNum).replace("{targ}", targPoint).replace("{aim}", targAimPoint).strip("*"))
  # Reconvert all of our map information back into the readable note format
  dataout={x:' | '.join([f"{item[0].title()}: {item[1]}"for item in out[x].items()])for x in out}
  # Then set everyones note again. Kinda a chainsaw instead of a scalpal situation here.
@@ -486,6 +486,7 @@ if c:
   [i.set_note(None)for i in combat().combatants]
   people=[]
  # Join everything together and display the map if we aren't displaying the help
+ overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not (args.get('?') or args.get('help') or args.get('spelllist')):
   finalMap = f"""{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
   return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
