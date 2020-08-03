@@ -550,7 +550,7 @@ elif not c or args.get('?') or args.get('help'):
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
-            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px.
+            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px, with a maximum file size of 1MB.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
             Settings can be viewed by running `!i aoo <mapattachee> map`"
 
