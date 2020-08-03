@@ -42,7 +42,7 @@
       "finesse": true,
       "class": "Simple",
       "type": "Melee",
-      "desc": "Close-quarters, finesse, light, thrown (range 20/60)"
+      "desc": "Finesse, light, thrown (range 20/60)"
     },
     {
       "name": "Greatclub",
@@ -100,7 +100,7 @@
       "finesse": true,
       "class": "Simple",
       "type": "Melee",
-      "desc": "Finesse, light"
+      "desc": "Light"
     },
     {
       "name": "Spear",
@@ -117,8 +117,7 @@
       "damage": "piercing",
       "class": "Simple",
       "type": "Ranged",
-      "desc": "Ammunition (range 80/320), loading, special, two-handed",
-      "special": "**Special.** Being prone does not impose disadvantage on attacks made with this weapon."
+      "desc": "Ammunition (range 80/320), loading, two-handed"
     },
     {
       "name": "Dart",
@@ -304,8 +303,7 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 25/100), loading, special",
-      "special": "**Special.** Being prone does not impose disadvantage on attacks made with this weapon."
+      "desc": "Ammunition (range 25/100), loading"
     },
     {
       "name": "Hand Crossbow",
@@ -313,8 +311,7 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 30/120), light, loading, special",
-      "special": "**Special.** Being prone does not impose disadvantage on attacks made with this weapon."
+      "desc": "Ammunition (range 30/120), light, loading"
     },
     {
       "name": "Heavy Crossbow",
@@ -322,8 +319,7 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 100/400), heavy, loading, special, two-handed",
-      "special": "**Special.** Being prone does not impose disadvantage on attacks made with this weapon."
+      "desc": "Ammunition (range 100/400), heavy, loading, two-handed"
     },
     {
       "name": "Longbow",
