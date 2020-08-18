@@ -232,7 +232,7 @@ if c:
    if height in ("None","none","0"):
     prevHeight = out[targ.name].pop('height')
     if prevHeight:
-     desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} everyone.")
+     desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
    else:
     # Otherwise, set that targets height
     out[targ.name].update({'height':height})
