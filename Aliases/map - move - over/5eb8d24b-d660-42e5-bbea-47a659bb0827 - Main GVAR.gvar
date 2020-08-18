@@ -447,6 +447,8 @@ if c:
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
   # Do they have overlays?
   for overNum in [""]+[str(x) for x in range(1,11)]:
+    # Ensure we're not grabbing the previous overlays aim point
+    targAimPoint = ""
     if out[target].get('overlay'+overNum):
      targPoint = out[target].get('location','A1')
      # Is our target Large or bigger? If so, adjust accordingly
@@ -528,7 +530,7 @@ elif not c or args.get('?') or args.get('help'):
 
             If your `-aim` or `-t` is a Large or bigger monster, the alias will do its best to adjust for the size difference."
 
-            -f "Add your own overlays/spells| You can create a uvar (or cvar) named `mapOverlays` containing a list of gvars you or other created in order to add to or change the spells available in `-spell`. The format would be something like `[\"b5a2df67-58c9-4f1d-a240-8fc72a139953\", \"b5a2df67-58c9-4f1d-a240-8fc72a139953\"]`" """.replace(" "*11,"")
+            -f "Add your own overlays/spells| You can create a uvar (or cvar) named `mapOverlays` containing a list of gvars you or other created in order to add to or change the spells available in `-spell`. The format would be something like `[\\\"b5a2df67-58c9-4f1d-a240-8fc72a139953\\\", \\\"d456fdfa-a292-42a1-ab00-b884e79b702f\\\"]`" """.replace(" "*11,"")
  else:
   help = f"""-title "Dude, where did I park my Tarrasque?"
             -desc "`!map` - View the map
