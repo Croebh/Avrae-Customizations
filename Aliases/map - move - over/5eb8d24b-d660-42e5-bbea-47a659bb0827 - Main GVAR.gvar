@@ -6,16 +6,17 @@ args, defaults = argparse("@@@"),"&&&"
 # Set are base variables
 mapsize = defaults.get("size","10x10") or "10x10"
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52), 1)
-mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52), 1)
+mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99), 1)
+mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99), 1)
 mapsize = f"{mapX}x{mapY}"
 mapoptions = defaults.get("options","")
 mapbg = defaults.get("background","")
+mapview = defaults.get("mapview","")
 mapinfo = ""
 mapattach = ""
 map="http://otfbm.io/"
 out={}
-col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","BB","CC","DD","EE","FF","GG","HH","II","JJ","KK","LL","MM","NN","OO","PP","QQ","RR","SS","TT","UU","VV","WW","XX","YY","ZZ")
+col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ","CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CN","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ","DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ","EA","EB","EC","ED","EE","EF","EG","EH","EI","EJ","EK","EL","EM","EN","EO","EP","EQ","ER","ES","ET","EU","EV","EW","EX","EY","EZ","FA","FB","FC","FD","FE","FF","FG","FH","FI","FJ","FK","FL","FM","FN","FO","FP","FQ","FR","FS","FT","FU","FV","FW","FX","FY","FZ")
 COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
 c = combat()
@@ -91,22 +92,28 @@ if c:
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
   mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
+  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
   mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
+  # if there is a reset in the arguments, reset to normal mapview
+  # else get mapview from info
+  if args.last('reset'):
+   mapview = ""
+  else:
+   mapview=mapinfo.get('view')
 </drac2>
 <drac2>
 if c:
- # If theres a -mapsize, -mapbg, -mapoptions, or -mapattach arg, process that and add/replace the effect
- if args.last('mapsize') or args.last('mapbg') or args.last('mapoptions') or args.last('mapattach'):
+ # If theres a -mapsize, -mapbg, -mapoptions, -mapview, -mapattach or reset arg, process that and add/replace the effect
+ if args.last('mapsize') or args.last('mapbg') or args.last('mapoptions') or args.last('mapview') or args.last('mapattach') or args.last('reset'):
   # Note to self: Should probably validate these arguments later
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
-   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 52) 
-   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 52)
+   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
+   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
    mapsize = f"{mapSplitX}x{mapSplitY}" 
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
@@ -117,6 +124,10 @@ if c:
   # If the new mapoptions are different from the old ones, update and display
    mapoptions = args.last('mapoptions', mapoptions)
    desc.append(f"Map options changed to `{mapoptions}`")   
+  if mapview != args.last('mapview', mapview) and not args.last('reset'):
+  # If the new mapview are different from the old ones, update and display
+   mapview = args.last('mapview', mapview)
+   desc.append(f"Map view changed to `{mapview}`")   
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach') and gt(args.last('mapattach')):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
@@ -128,7 +139,7 @@ if c:
   if mapattach and mapattach.get_effect('map'):
    mapattach.remove_effect('map')
   # Format everything appropriately
-  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}""".strip(" ~")
+  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ View: {mapview}" if mapview else ""}""".strip(" ~")
   # If mapattach exists, apply the new effect, and display
   if mapattach:
    mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
@@ -242,43 +253,81 @@ if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  if args.last('move') and args.last('move') not in (True, 't', '-t'):
+  if args.last('goto') or args.last('move'):
+   newLoc = ""
    prevLoc = out[targ.name].get('location') 
    # Fix bad locations?
    if prevLoc == "TRUE":
     _ = out[targ.name].pop('location')
     prevLoc = None
-   # Did they have a previous location? If so, lets calculate distance and draw a line
-   if prevLoc and prevloc.lower() != args.last("move"):
+   if prevLoc:
     # Split previous location from XY to X and Y
     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
-    prevLocY = ''.join(y for y in prevLoc if y.isdigit())
-    if prevLocY and prevLocX:
-      prevLocY = int(prevLocY)
-      # Same as new location
-      newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
-      newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
-      # Calculate the delta for X and Y between the two
-      deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
-      # Throw them in the pot with some pythag
-      distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-      # We want the positive delta (wish we had abs(), sigh)
-      deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-      # Doing 5ft diag's, the distance is just the higher delta
-      distance = max(deltaX, deltaY)*5
-      # Grab the targets new color if changed, old color if set, or default to dark violet
-      colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
-      colr = colr[:colr.index(" ")]
-      if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
-        colr = f"~{colr}"
-      # Add the line to the overlay list
-      overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-      # Display the change in location
-      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+    prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
+   if args.last('goto') and args.last('goto') not in (True, 't', '-t'):
+    newLocX = ''.join(x.upper() for x in args.last('goto') if x.isalpha())
+    newLocY = int(''.join(y for y in args.last('goto') if y.isdigit()))
+    newLoc = f"{newLocX}{newLocY}"
+   elif args.last('move') and args.last('move') not in (True, 't', '-t') and prevLoc:
+    pos = 0
+    moveStr = args.last('move')
+    moveList = []
+    for i in range(len(moveStr)):
+     if i > pos and moveStr[pos].isdigit() != moveStr[i].isdigit():
+      moveList.append(moveStr[pos:i])
+      pos = i
+    moveList.append(moveStr[pos:i+1])
+    moveEast = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "e" in moveList[x+1].lower()])//5
+    moveWest = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "w" in moveList[x+1].lower()])//5
+    moveNorth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "n" in moveList[x+1].lower()])//5
+    moveSouth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "s" in moveList[x+1].lower()])//5
+    newLocX = alph[alph.index(prevLocX)+moveEast-moveWest]
+    newLocY = prevLocY+moveSouth-moveNorth
+    newLoc = f"{newLocX}{newLocY}"
+   # Did they have a previous location? If so, lets calculate distance and draw a line
+   if prevLoc and prevLocX and prevLocY and newLoc and prevLoc != newLoc:
+    # Grab the targets new color if changed, old color if set, or default to dark violet
+    colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
+    colr = colr[:colr.index(" ")]
+    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+     colr = f"~{colr}"
+    if get('movementSteps') and args.last('move'):
+     distance = 0
+     distanceT = 0
+     for x in range(len(moveList)):
+      if moveList[x].isdigit():
+       # Calculate steplocations
+       moveEast = int(moveList[x])//5 if "e" in moveList[x+1].lower() else 0
+       moveWest = int(moveList[x])//5 if "w" in moveList[x+1].lower() else 0
+       moveNorth = int(moveList[x])//5 if "n" in moveList[x+1].lower() else 0
+       moveSouth = int(moveList[x])//5 if "s" in moveList[x+1].lower() else 0
+       # Calculate steplocations
+       deltaX, deltaY = moveEast - moveWest, moveSouth - moveNorth
+       newLocX, newLocY = alph[alph.index(prevLocX) + deltaX] , prevLocY + deltaY
+       # Throw them in the pot with some pythag
+       stepDistance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+       distance += int(moveList[x])
+       distanceT += stepDistance
+       # Add the line to the overlay list
+       overlays.append(f"*a{stepDistance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+       prevLocX, prevLocY = newLocX, newLocY
+    else:
+     # Calculate the delta for X and Y between the two
+     deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), prevLocY-newLocY
+     # Throw them in the pot with some pythag
+     distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+     # We want the positive delta (wish we had abs(), sigh)
+     deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+     # Doing 5ft diag's, the distance is just the higher delta
+     distance = max(deltaX, deltaY)*5
+     # Add the line to the overlay list
+     overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+    # Display the change in location
+    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {newLoc} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
    else:
     # Display the change in location
-    desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
-   out[targ.name].update({"location":args.last('move').upper()})
+    desc.insert(0, f"Moving {targ.name} to {newLoc}.")
+   out[targ.name].update({"location":newLoc})
 </drac2>
 <drac2>
 # Overlay stuff
@@ -490,7 +539,7 @@ if c:
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not (args.get('?') or args.get('help') or args.get('spelllist')):
-  finalMap = f"""{map}{mapsize}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+  finalMap = f"""{map}{mapsize}/{f"{mapview}/"if mapview else""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
   return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
@@ -536,7 +585,10 @@ elif not c or args.get('?') or args.get('help'):
             -desc "`!map` - View the map
             `!map [args]` - Edit the map, its combatants, or its overlays
 
-            `!move [location]` - The `!move` alias allows you to quickly move your currently active character around. For example: `!move B3` would move your active character to B3
+            `!move [direction]` - The `!move` alias allows you to quickly move your currently active character around. For example: `!move 10sw5w` would move your active character from your current location to the location that is 10 feet to the south-west and 5 feet to the west
+             Movent distance is calculated between old and new location, if you want to calculate by movement steps, for example `!move 10sw10w5n` meaning 25 movment instead of 20 for 15w and 5 sw, run `!uvar movementSteps true`. To revert back, use `!uvar delete movementSteps`.
+
+            `!goto [location]` - The `!goto` alias allows you to quickly move your currently active character around. For example: `!goto B3` would move your active character to B3
 
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
@@ -544,7 +596,8 @@ elif not c or args.get('?') or args.get('help'):
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
 
             **__Target Arguments__** - Defaults to your currently active character. Requires a `-t` target if `-over` is used
-            `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
+            `-goto [location]` - Sets the `-t` targets location on the map. For example `-goto G3`.
+			`-move [direction]` - modifies the `-t` targets location based on its current location on the map. For example `-move 10se5s`.
             `-color [color]` - Sets the `-t` targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
             `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description."
@@ -554,12 +607,13 @@ elif not c or args.get('?') or args.get('help'):
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px, with a maximum file size of 1MB.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
+			`-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`
             Settings can be viewed by running `!i aoo <mapattachee> map`"
 
             -f "_ _|If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
 
             Every time you run a `!map` command, it will save a backup uvar `mapState#####` where the #### is your channel ID. You can revert to this state with `!map undo`. Use this in emergencies, as it may be an old back up. If you use it, and its worse somehow, running `!map undo` a second time will revert it back to where it was before you ran it originally.
-
+            
             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
 
  help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
