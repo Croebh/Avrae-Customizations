@@ -6,8 +6,9 @@ args, defaults = argparse("@@@"),"&&&"
 # Set are base variables
 mapsize = defaults.get("size","10x10") or "10x10"
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99), 1)
-mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99), 1)
+maxSize = 99
+mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize), 1)
+mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize), 1)
 mapsize = f"{mapX}x{mapY}"
 mapoptions = defaults.get("options","")
 mapbg = defaults.get("background","")
@@ -16,7 +17,8 @@ mapinfo = ""
 mapattach = ""
 map="http://otfbm.io/"
 out={}
-col,siz,alph=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG", ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ","CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CN","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ","DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ","EA","EB","EC","ED","EE","EF","EG","EH","EI","EJ","EK","EL","EM","EN","EO","EP","EQ","ER","ES","ET","EU","EV","EW","EX","EY","EZ","FA","FB","FC","FD","FE","FF","FG","FH","FI","FJ","FK","FL","FM","FN","FO","FP","FQ","FR","FS","FT","FU","FV","FW","FX","FY","FZ")
+alph = ("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA","AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU","AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BN","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ","CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CN","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ","DA","DB","DC","DD","DE","DF","DG","DH","DI","DJ","DK","DL","DM","DN","DO","DP","DQ","DR","DS","DT","DU","DV","DW","DX","DY","DZ","EA","EB","EC","ED","EE","EF","EG","EH","EI","EJ","EK","EL","EM","EN","EO","EP","EQ","ER","ES","ET","EU","EV","EW","EX","EY","EZ","FA","FB","FC","FD","FE","FF","FG","FH","FI","FJ","FK","FL","FM","FN","FO","FP","FQ","FR","FS","FT","FU","FV","FW","FX","FY","FZ")
+col,siz = ("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG" 
 COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
 c = combat()
@@ -92,8 +94,8 @@ if c:
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
   mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
-  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
+  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
+  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
   mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
@@ -112,8 +114,8 @@ if c:
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
-   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
-   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
+   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
+   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
    mapsize = f"{mapSplitX}x{mapSplitY}" 
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
@@ -272,15 +274,19 @@ if c:
     pos = 0
     moveStr = args.last('move')
     moveList = []
+    # alphanuemricle splitting the movestring into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
     for i in range(len(moveStr)):
      if i > pos and moveStr[pos].isdigit() != moveStr[i].isdigit():
       moveList.append(moveStr[pos:i])
       pos = i
     moveList.append(moveStr[pos:i+1])
+    # calculating the distances moved in each direction
     moveEast = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "e" in moveList[x+1].lower()])//5
     moveWest = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "w" in moveList[x+1].lower()])//5
     moveNorth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "n" in moveList[x+1].lower()])//5
     moveSouth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "s" in moveList[x+1].lower()])//5
+    # getting the new location by applying the distances to the old location
     newLocX = alph[alph.index(prevLocX)+moveEast-moveWest]
     newLocY = prevLocY+moveSouth-moveNorth
     newLoc = f"{newLocX}{newLocY}"
@@ -294,20 +300,23 @@ if c:
     if get('movementSteps') and args.last('move'):
      distance = 0
      distanceT = 0
+     # draw arrows for each movement step
      for x in range(len(moveList)):
       if moveList[x].isdigit():
-       # Calculate steplocations
+       # get the location for each step and their distances
        moveEast = int(moveList[x])//5 if "e" in moveList[x+1].lower() else 0
        moveWest = int(moveList[x])//5 if "w" in moveList[x+1].lower() else 0
        moveNorth = int(moveList[x])//5 if "n" in moveList[x+1].lower() else 0
        moveSouth = int(moveList[x])//5 if "s" in moveList[x+1].lower() else 0
-       # Calculate steplocations
        deltaX, deltaY = moveEast - moveWest, moveSouth - moveNorth
        newLocX, newLocY = alph[alph.index(prevLocX) + deltaX] , prevLocY + deltaY
-       # Throw them in the pot with some pythag
+       # distance for line drawing
        stepDistance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-       distance += int(moveList[x])
+       # distance for all steps
+       # true distance is a bit strange then the argument assumes 5 ft diags, but eh should be fine
        distanceT += stepDistance
+       # with 5ft diag's, the distance is just the movement step distance
+       distance += int(moveList[x])
        # Add the line to the overlay list
        overlays.append(f"*a{stepDistance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
        prevLocX, prevLocY = newLocX, newLocY
