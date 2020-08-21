@@ -128,7 +128,49 @@ if c:
    desc.append(f"Map options changed to `{mapoptions}`")   
   if mapview != args.last('mapview', mapview) and not args.last('reset'):
   # If the new mapview are different from the old ones, update and display
-   mapview = args.last('mapview', mapview)
+   if args.last('shift') or args.last('expand') or args.last('reduce'):
+    # if the view gets shifted, expanded or reduced check if there is an old view to shift, expand or reduce
+    if mapinfo and mapinfo.get('view'):
+     mapview = mapinfo.get('view')
+     viewAnchor, viewSize = mapview.split(':')
+     viewX, viewY = viewSize.lower().split('x')
+     viewAnchorX = ''.join(x.upper() for x in viewAnchor if x.isalpha())
+     viewAnchorY = int(''.join(y for y in viewAnchor if y.isdigit()))
+    else:
+     # if there isn't an old view take the mapsize instead
+     viewAnchorX, viewAnchorY = 'A', 1
+     viewX, viewY = mapsize.lower().split('x')
+    pos = 0
+    viewChangeStr = args.last('mapview')
+    viewChangeList = []
+    # alphanuemricle splitting the viewChangeStr into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
+    for i in range(len(viewChangeStr)):
+     if i > pos and viewChangeStr[pos].isdigit() != viewChangeStr[i].isdigit():
+      viewChangeList.append(viewChangeStr[pos:i])
+      pos = i
+    viewChangeList.append(viewChangeStr[pos:i+1])
+    # calculating the changes in each direction
+    viewChangeEast = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "e" in viewChangeList[x+1].lower()])//5
+    viewChangeWest = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "w" in viewChangeList[x+1].lower()])//5
+    viewChangeNorth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "n" in viewChangeList[x+1].lower()])//5
+    viewChangeSouth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "s" in viewChangeList[x+1].lower()])//5
+    if args.last('shift'):
+     viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeEast - viewChangeWest]
+     viewAnchorY = viewAnchorY + viewChangeSouth - viewChangeNorth
+    elif args.last('expand'):
+     viewAnchorX = alph[alph.index(viewAnchorX) - viewChangeWest]
+     viewAnchorY = viewAnchorY - viewChangeNorth
+     viewX = int(viewX) + viewChangeEast + viewChangeWest
+     viewY = int(viewY) + viewChangeSouth + viewChangeNorth
+    elif args.last('reduce'):
+     viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeWest]
+     viewAnchorY = viewAnchorY + viewChangeNorth
+     viewX = int(viewX) - viewChangeEast - viewChangeWest
+     viewY = int(viewY) - viewChangeSouth - viewChangeNorth
+    mapview = f"{viewAnchorX}{viewAnchorY}:{viewX}x{viewY}"
+   else:
+    mapview = args.last('mapview', mapview)
    desc.append(f"Map view changed to `{mapview}`")   
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach') and gt(args.last('mapattach')):
@@ -264,7 +306,7 @@ if c:
     prevLoc = None
    if prevLoc:
     # Split previous location from XY to X and Y
-    prevLocX = ''.join(x for x in prevLoc if x.isalpha())
+    prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
     prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
    if args.last('goto') and args.last('goto') not in (True, 't', '-t'):
     newLocX = ''.join(x.upper() for x in args.last('goto') if x.isalpha())
@@ -616,7 +658,8 @@ elif not c or args.get('?') or args.get('help'):
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
             `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px, with a maximum file size of 1MB.
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
-			`-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`
+			`-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see. For example: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`
+            `[shift|expand|reduce]` together with `-mapview` for a more seemles view shifting use for example `-mapview 10n10nw shift` shifts the mapview from its current setting 10 feet north and 10 feet north west.
             Settings can be viewed by running `!i aoo <mapattachee> map`"
 
             -f "_ _|If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
