@@ -151,10 +151,18 @@ if c:
       pos = i
     viewChangeList.append(viewChangeStr[pos:i+1])
     # calculating the changes in each direction
-    viewChangeEast = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "e" in viewChangeList[x+1].lower()])//5
-    viewChangeWest = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "w" in viewChangeList[x+1].lower()])//5
-    viewChangeNorth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "n" in viewChangeList[x+1].lower()])//5
-    viewChangeSouth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "s" in viewChangeList[x+1].lower()])//5
+    if len(viewChangeList) == 1:
+     # if only direction is given, go from current view to be modified by half
+     viewChangeEast = int(viewX)//2 if "e" in viewChangeList[0] else 0
+     viewChangeWest = int(viewX)//2 if "w" in viewChangeList[0] else 0
+     viewChangeNorth = int(viewY)//2 if "n" in viewChangeList[0] else 0
+     viewChangeSouth = int(viewY)//2 if "s" in viewChangeList[0] else 0
+    else:
+     # else summarise the given changes.
+     viewChangeEast = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "e" in viewChangeList[x+1].lower()])//5
+     viewChangeWest = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "w" in viewChangeList[x+1].lower()])//5
+     viewChangeNorth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "n" in viewChangeList[x+1].lower()])//5
+     viewChangeSouth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "s" in viewChangeList[x+1].lower()])//5
     if args.last('shift'):
      viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeEast - viewChangeWest]
      viewAnchorY = viewAnchorY + viewChangeSouth - viewChangeNorth
@@ -660,6 +668,7 @@ elif not c or args.get('?') or args.get('help'):
             `-mapoptions [options]` - Sets map options. Available options can be seen below.
 			`-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see. For example: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`
             `[shift|expand|reduce]` together with `-mapview` for a more seemles view shifting use for example `-mapview 10n10nw shift` shifts the mapview from its current setting 10 feet north and 10 feet north west.
+            Directions, no values `-mapview e shift`: curent view, shifts, reduces, expands by half.
             Settings can be viewed by running `!i aoo <mapattachee> map`"
 
             -f "_ _|If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
