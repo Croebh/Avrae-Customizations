@@ -444,7 +444,7 @@ if c:
     people.append(f"{tLocation}{tSize}{tColor}-{tName}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
-   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} everyone.")
+   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
   # Do they have overlays?
   for overNum in [""]+[str(x) for x in range(1,11)]:
     # Ensure we're not grabbing the previous overlays aim point
