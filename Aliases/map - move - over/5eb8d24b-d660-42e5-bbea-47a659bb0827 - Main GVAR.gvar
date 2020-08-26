@@ -491,14 +491,6 @@ if c:
  people = []
  for target in out:
   tLocation = out[target].get('location')
-  # Check to see if the target is out of bounds
-  if tLocation:
-    tLocX = ''.join(x for x in tLocation if x.isalpha()).upper()
-    tLocX = alph.index(tLocX) + 1
-    tLocY = int(''.join(y for y in tLocation if y.isdigit()))
-    # If they are, don't try to display their location
-    if (tLocX > mapX) or (tLocY > mapY) or (tLocX == 0 or tLocY == 0):
-      tLocation = None
   tSize = out[target].get('size','M')[0].upper()
   tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
   tColor = tColor[:tColor.index(" ")].strip('#')
