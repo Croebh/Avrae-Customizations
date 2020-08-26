@@ -58,8 +58,7 @@ defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
 spellOverlays = defaultSpells.copy()
 # Grab the user selected spells, and update the main dict
 # This allows the user to replace/update items in the original dict
-userOverlays = load_json(get('mapOverlays','{}'))
-spellOverlays.update(userOverlays)
+[spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
 # Iterate over the spell dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
 spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
@@ -177,13 +176,14 @@ if c:
   # Reset mapview back to original set grid size
   if args.last('reset'):
    originGrid = load_json(get('mapSize'+chanid()))  if get('mapSize'+chanid()) else None
-   maplocation = ""
-   mapsize = originGrid
-   mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
-   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
-   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
-   mapsize = f"{mapSplitX}x{mapSplitY}"
-   desc.append(f"Reloaded original Grid Size: `{mapsize}`")
+   if originGrid:
+    maplocation = ""
+    mapsize = originGrid
+    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
+    mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, 99) 
+    mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, 99)
+    mapsize = f"{mapSplitX}x{mapSplitY}"
+    desc.append(f"Reloaded original Grid Size: `{mapsize}`")
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach') and gt(args.last('mapattach')):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
