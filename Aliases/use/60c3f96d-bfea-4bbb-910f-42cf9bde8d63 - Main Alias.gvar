@@ -34,6 +34,15 @@
 {{ignore = 'i' in args}}
 
 {{ccnum, cc = (args.last('ccnum', 1, int)), args.last('cc')}}
+
+<drac2>
+if cc and not cc_exists(cc) and get("name"):
+ for counter in get_raw().consumables.custom:
+  if cc.lower() in counter.lower():
+    cc = counter
+    break
+</drac2>
+
 {{'' if ignore or out or not ccnum or not cc or get_cc(cc) >= (ccnum) else err(f'You don\'t have enough uses of "{cc}" remaining to do that.')}}
 {{ccout = out or ignore or not cc or not get_cc(cc) >= (ccnum) or mod_cc(cc, -1 * ccnum, 1) or f' -f "{cc} {f"({-1 * ccnum:+})" if ccnum else ""}|{cc_str(cc)}"'}}
 
