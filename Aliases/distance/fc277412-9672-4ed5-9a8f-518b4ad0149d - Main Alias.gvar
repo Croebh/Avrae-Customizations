@@ -1,0 +1,32 @@
+tembed
+<drac2>
+args = @ARGS@
+maxSize = 99
+baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alph = []
+for index in range(maxSize):
+  letter = ""
+  if index // 26:
+    letter = baseAlph[(index // 26) - 1]
+  letter += baseAlph[index % 26]
+  alph.append(letter)
+not args or (len(args) in [1, 2, 3]) or err('Invalid arguments. Run `!distance` with no arguments to see help.')
+prevLoc = args[0] if len(args) > 1 else "A1" if args else ""
+newLoc = args[1] if len(args) > 1 else args[0] if args else ""
+height = int(args[2] if len(args) > 2 else "0")//5
+if prevLoc and prevLoc and args:
+  prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
+  prevLocY = ''.join(y for y in prevLoc if y.isdigit())
+  prevLocY = int(prevLocY)
+  newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())
+  newLocY = int(''.join(y for y in newLoc if y.isdigit()))
+  deltaX, deltaY = alph.index(newLocX)-alph.index(prevLocX), -1*(int(newLocY)-int(prevLocY))
+  distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+  deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+  distance = max(deltaX, deltaY, height)*5
+if args: 
+  return f""" -f "({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> ({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. " """
+return f""" -desc "`!distance [x1y1] [x2y2] [z]`\n\nShows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.\n\nIf only `x1y1` is provided, it assumes origin is `A1`.\nIf `z` is provided, it accounts for vertical height." """
+</drac2>
+-title "Cartesian Coordinate Distance"
+-footer "!distance [x1y1] [x2y2] [z] | Example: !distance A3 G15"
