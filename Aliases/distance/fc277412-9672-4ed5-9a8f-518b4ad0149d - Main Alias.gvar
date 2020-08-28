@@ -10,10 +10,16 @@ for index in range(maxSize):
     letter = baseAlph[(index // 26) - 1]
   letter += baseAlph[index % 26]
   alph.append(letter)
+cardinal = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW","W", "WNW", "NW", "NNW"]
+tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.1051],[7,0.1228],[8,0.1405],[9,0.1584],[10,0.1763],[11,0.1944],[12,0.2126],[13,0.2309],[14,0.2493],[15,0.2679],[16,0.2867],[17,0.3057],[18,0.3249],[19,0.3443],[20,0.3640],[21,0.3839],[22,0.4040],[23,0.4245],[24,0.4452],[25,0.4663],[26,0.4877],[27,0.5095],[28,0.5317],[29,0.5543],[30,0.5774],[31,0.6009],[32,0.6249],[33,0.6494],[34,0.6745],[35,0.7002],[36,0.7265],[37,0.7536],[38,0.7813],[39,0.8098],[40,0.8391],[41,0.8693],[42,0.9004],[43,0.9325],[44,0.9657],[45,1.0000],[46,1.0355],[47,1.0724],[48,1.1106],[49,1.1504],[50,1.1918],[51,1.2349],[52,1.2799],[53,1.3270],[54,1.3764],[55,1.4281],[56,1.4826],[57,1.5399],[58,1.6003],[59,1.6643],[60,1.7321],[61,1.8040],[62,1.8807],[63,1.9626],[64,2.0503],[65,2.1445],[66,2.2460],[67,2.3559],[68,2.4751],[69,2.6051],[70,2.7475],[71,2.9042],[72,3.0777],[73,3.2709],[74,3.4874],[75,3.7321],[76,4.0108],[77,4.3315],[78,4.7046],[79,5.1446],[80,5.6713],[81,6.3138],[82,7.1154],[83,8.1443],[84,9.5144],[85,11.4301],[86,14.3007],[87,19.0811],[88,28.6363],[89,57.2900]]
+
 not args or (len(args) in [1, 2, 3]) or err('Invalid arguments. Run `!distance` with no arguments to see help.')
+
 prevLoc = args[0] if len(args) > 1 else "A1" if args else ""
 newLoc = args[1] if len(args) > 1 else args[0] if args else ""
 height = int(args[2] if len(args) > 2 else "0")//5
+</drac2>
+<drac2>
 if prevLoc and prevLoc and args:
   prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
   prevLocY = ''.join(y for y in prevLoc if y.isdigit())
@@ -22,11 +28,24 @@ if prevLoc and prevLoc and args:
   newLocY = int(''.join(y for y in newLoc if y.isdigit()))
   deltaX, deltaY = alph.index(newLocX)-alph.index(prevLocX), -1*(int(newLocY)-int(prevLocY))
   distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-  deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-  distance = max(deltaX, deltaY, height)*5
+  absDeltaX, absDeltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+  distance = max(absDeltaX, absDeltaY, height)*5
+  quad=0 if deltaX>=0 and deltaY>=0 else 1 if deltaX>=0 and deltaY<=0 else 2 if deltaX<=0 and deltaY<=0 else 3
+  if deltaY and deltaX:
+    degree = ([i[0] for i in tan if i[1]>=(absDeltaX)/(absDeltaY)][0])
+    degree = (180 - degree) if quad == 1 else (180 + degree) if quad == 2 else (360 - degree) if quad == 3 else degree
+  else:
+    degree = 0 if deltaY > 0 else 180 if deltaY < 0 else 90 if deltaX > 0 else 270
+
+
+  card = cardinal[floor((degree)//22.5)%16]
+</drac2>
+<drac2>
+
 if args: 
-  return f""" -f "({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> ({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. " """
+  return f""" -f "({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> ({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. {card} (~{degree}°)" """
 return f""" -desc "`!distance [x1y1] [x2y2] [z]`\n\nShows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.\n\nIf only `x1y1` is provided, it assumes origin is `A1`.\nIf `z` is provided, it accounts for vertical height." """
 </drac2>
+
 -title "Cartesian Coordinate Distance"
 -footer "!distance [x1y1] [x2y2] [z] | Example: !distance A3 G15"
