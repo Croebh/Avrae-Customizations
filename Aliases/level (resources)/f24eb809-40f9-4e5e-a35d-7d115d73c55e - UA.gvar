@@ -119,6 +119,20 @@
   },
   {
     "Class": "Bard",
+    "subclass": "Sprits",
+    "counters": [
+      {
+        "name": "Spirit Session",
+        "level": 6,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "BardLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Bard",
     "subclass": "Creation",
     "counters": [
       {
@@ -406,6 +420,36 @@
         "level": 10,
         "value": 1,
         "reset": "short",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Warlock",
+    "subclass": "The Undead",
+    "counters": [
+      {
+        "name": "Form of Dread",
+        "level": 1,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      },
+      {
+        "name": "Mortal Husk",
+        "level": 10,
+        "value": 1,
+        "reset": "none",
+        "display": "bubble",
+        "classLevel": "WarlockLevel"
+      },
+      {
+        "name": "Spirit Projection",
+        "level": 10,
+        "value": 1,
+        "reset": "long",
         "display": "bubble",
         "classLevel": "WarlockLevel"
       }
