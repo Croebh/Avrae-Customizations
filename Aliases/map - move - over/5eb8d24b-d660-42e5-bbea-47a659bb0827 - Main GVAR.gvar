@@ -258,10 +258,51 @@ if c:
     desc.append(f"Changing size of {targ.name} to {SIZ[size]} ({size})")
    # If the size is None, erase the size, setting them back to Medium
    elif args.last('size') in (None,"None","none"):
-    _ = out[targ.name].pop('size')
+    if 'size' in out[targ.name]:
+     _ = out[targ.name].pop('size')
     # Display the change in size
     desc.append(f"Resetting size of {targ.name} to Medium (M)")
 </drac2>
+
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  targ=gt(args.last('t', combat().me.name if combat().me else None))
+  # If they don't have a note/location set, add them to the list
+  if not out.get(targ.name):
+   out[targ.name] = {}
+  # If there is a -note arg, change their note
+  if args.last("note"):
+   newNote=args.last("note")
+   if args.last("note") in (None, "None", "none", True):
+    if 'note' in out[targ.name]:
+     _ = out[targ.name].pop('note')
+    # Display the change in the note
+    desc.append(f"Removing the note on {targ.name}.")
+   else:
+    out[targ.name].update({"note":f"{newNote}"})
+    # Display the change in size
+    desc.append(f"Setting note of {targ.name} to {newNote}")
+   # If the note is None, erase the note
+</drac2>
+
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  targ=gt(args.last('t', combat().me.name if combat().me else None))
+  # If they don't have a note/location set, add them to the list
+  if not out.get(targ.name):
+   out[targ.name] = {}
+  # If there is a -status arg, display all recorded map info on the target
+  if args.last("status"):
+   desc.append(f"**Status of {targ.name}**")
+   for info in out[targ.name]:
+    desc.append(f"{info.title()}: `{out[targ.name][info]}`")
+   desc.append("")
+</drac2>
+
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -617,7 +658,9 @@ elif not c or args.get('?') or args.get('help'):
             `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the `-t` targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
             `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
-            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description."
+            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description.
+            `-note [note]` - Sets a generic note on the target
+            `status` - Views all details on the target"
             
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
