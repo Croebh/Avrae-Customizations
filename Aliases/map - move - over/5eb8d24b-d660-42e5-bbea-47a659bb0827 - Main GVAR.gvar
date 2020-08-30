@@ -629,8 +629,6 @@ elif not c or args.get('?') or args.get('help'):
 
             Settings can be viewed by running `!i aoo <mapattachee> map`"
 
-            -f "_ _|If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command."
-
             -f "_ _|`-silent` - If used as last argument, all map settings will update but will not load the image.
 
             If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
