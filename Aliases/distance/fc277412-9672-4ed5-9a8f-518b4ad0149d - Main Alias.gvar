@@ -1,5 +1,7 @@
 tembed
 <drac2>
+c = combat()
+fName = sName = ""
 args = @ARGS@
 maxSize = 99
 baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -15,14 +17,48 @@ tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.10
 
 not args or (len(args) in [1, 2, 3]) or err('Invalid arguments. Run `!distance` with no arguments to see help.')
 
+height = int(args[2] if len(args) > 2 else "0")
+
 prevLoc = args[0] if len(args) > 1 else "A1" if args else ""
-newLoc = args[1] if len(args) > 1 else args[0] if args else ""
-height = int(args[2] if len(args) > 2 else "0")//5
+if c and (firstTarget := c.get_combatant(prevLoc)):
+  if (note := firstTarget.note) and 'Location: ' in note:
+    note=note.split(" | ")
+    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+    prevLoc = note['location']
+    height -= int(note.get('height', "0"))
+    fName = firstTarget.name + " "
+  else:
+    prevLoc = None
+
 </drac2>
 <drac2>
-if prevLoc and prevLoc and args:
+newLoc = args[1] if len(args) > 1 else args[0] if args else ""
+if c and (secondTarget := c.get_combatant(newLoc)):
+  if (note := secondTarget.note) and 'Location: ' in note:
+    note=note.split(" | ")
+    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+    newLoc = note['location']
+    height += int(note.get('height', "0"))
+    sName = secondTarget.name + " "
+    if sName and len(args) == 1:
+      firstTarget = c.me or c.current
+      if (note := firstTarget.note) and 'Location: ' in note:
+        note=note.split(" | ")
+        note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+        prevLoc = note['location']
+        height -= int(note.get('height', "0"))
+        fName = firstTarget.name + " "
+  else: 
+    newLoc = None
+
+height = height//5
+
+</drac2>
+<drac2>
+if prevLoc and newLoc and args:
   prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
   prevLocY = ''.join(y for y in prevLoc if y.isdigit())
+  
   prevLocY = int(prevLocY)
   newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())
   newLocY = int(''.join(y for y in newLoc if y.isdigit()))
@@ -42,9 +78,18 @@ if prevLoc and prevLoc and args:
 </drac2>
 <drac2>
 
-if args: 
-  return f""" -f "({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> ({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. {card} (~{degree}°)" """
-return f""" -desc "`!distance [x1y1] [x2y2] [z]`\n\nShows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.\n\nIf only `x1y1` is provided, it assumes origin is `A1`.\nIf `z` is provided, it accounts for vertical height." """
+if prevLoc and newLoc and args: 
+  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. {card} (~{degree}°)" """
+return f""" -desc "`!distance [x1y1] [x2y2] [z]`
+
+Shows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.
+
+If only `x1y1` is provided, it assumes origin is `A1`.
+If `z` is provided, it accounts for vertical height." 
+-f "`!map` Support|If you have your initiative set up with the `!map` alias, you can target combatants using this alias instead of just raw coordinates.
+`!distance [target|x1y1] [target2|x2y2] [z]` - If only one argument is provided, and it is a combatant, it will attempt to grab the location of either the users active character in initiative, or whoevers turn it is in init. You can intermix coordinates and targets
+`!distance OR1 B2` would calculate the distance between `OR2`, a combatant, and `B2`, the coordinate.
+`!distance Valgim` would show the distance between your character (or whoevers turn it is) and that of the combatant named Valgim" """
 </drac2>
 
 -title "Cartesian Coordinate Distance"
