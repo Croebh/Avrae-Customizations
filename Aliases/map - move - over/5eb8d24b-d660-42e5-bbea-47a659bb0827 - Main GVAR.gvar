@@ -60,8 +60,10 @@ spellOverlays = defaultSpells.copy()
 # Grab the user selected spells, and update the main dict
 # This allows the user to replace/update items in the original dict
 userOverlays = load_json(get('mapOverlays','{}'))
-spellOverlays.update(userOverlays)
-# Iterate over the spell dict, making it a little easier to read.
+if typeof(userOverlays) == 'dict':
+ spellOverlays.update(userOverlays)
+else:
+ [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]# Iterate over the spell dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
 spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
