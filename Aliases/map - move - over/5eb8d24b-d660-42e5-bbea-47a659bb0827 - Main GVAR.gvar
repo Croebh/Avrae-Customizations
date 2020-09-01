@@ -380,6 +380,7 @@ if c:
     desc.append(f"Setting note of {targ.name} to {newNote}")	
    # If the note is None, erase the note	
 </drac2>	
+
 <drac2>	
 if c:	
  # If there is a -t argument given, and that target exists as a combatant, modify that target	
