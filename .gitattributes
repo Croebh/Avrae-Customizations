@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.gvar linguist-language=python
+*.alias linguist-language=python
+*.snippet linguist-language=python
