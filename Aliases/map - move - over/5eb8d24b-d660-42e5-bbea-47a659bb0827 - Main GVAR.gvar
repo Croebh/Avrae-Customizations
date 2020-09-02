@@ -746,6 +746,38 @@ if c:
        desc.append(overdesc)
 
 </drac2>
+
+<drac2>
+if args.last('tokenimport'):
+ tokenimport = args.last('tokenimport').encode()
+
+ b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+ ascii_bin_str = ""
+ tokenoutput = ""
+
+ for c in tokenimport:
+     ascii_bin_str += f'{c:08b}'  # construct a binary-representation string
+
+ numChunks = int(len(ascii_bin_str) / 6)  # how many 6
+ for i in range(numChunks):
+     chunk = ascii_bin_str[i * 6: (i + 1) * 6]
+     tokenoutput += b64_index[int(chunk, base=2)]
+
+ leftoverBits = len(ascii_bin_str) % 6  # since the input was a multiple of 8, this must be 2 or 4
+ if leftoverBits > 0:
+     leftover = ascii_bin_str[leftoverBits * -1:]
+     if leftoverBits == 2:
+         tokenoutput += b64_index[int(leftover+('0' * 4), base=2)]
+         tokenoutput += ('=' * 2)
+     elif leftoverBits == 4:
+         tokenoutput += b64_index[int(leftover+('0' * 2), base=2)]
+         tokenoutput += '='
+
+ desc.append(f"Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`")
+</drac2>
+
+
 <drac2>
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
@@ -945,7 +977,8 @@ elif not c or args.get('?') or args.get('help'):
             **__Target Arguments__** - Uses the `-t` target, then defaults to your currently active character, then whoevers turn it is. 
             `-move [location]` - Sets the targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
-            `-token [shortcode]` - Sets the image for the token based on the shortcode provided by `!tokenimport`
+            `-token [shortcode]` - Sets the image for the token based on the shortcode provided by `-tokenimport`
+            `-tokenimport [url]` - Given a url to an image, provides a link to a shortcode for `-token`
             `-size [size]` - Sets the targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the targets height. The map itself will look the same, but their height will be listed above in the description.
             `-note [note]` - Sets a generic note on the target  
