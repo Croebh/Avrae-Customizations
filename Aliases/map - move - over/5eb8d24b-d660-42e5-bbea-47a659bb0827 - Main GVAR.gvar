@@ -47,7 +47,7 @@ aim = ""
 effect = None
 effectName = ""
 effectTarget =""
-prevloc = ""
+prevLoc = ""
 # F-Strings like to yell at me for \'s
 newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
@@ -403,20 +403,49 @@ if c:
     desc.append(f"Setting note of {targ.name} to {newNote}")	
    # If the note is None, erase the note	
 </drac2>	
-<drac2>	
-if c:	
- # If there is a -t argument given, and that target exists as a combatant, modify that target	
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):	
-  targ=gt(args.last('t', combat().me.name if combat().me else None))	
-  # If they don't have a note/location set, add them to the list	
-  if not out.get(targ.name):	
-   out[targ.name] = {}	
-  # If there is a -status arg, display all recorded map info on the target	
-  if args.last("status"):	
-   desc.append(f"**Status of {targ.name}**")	
-   for info in out[targ.name]:	
-    desc.append(f"{info.title()}: `{out[targ.name][info]}`")	
-   desc.append("")	
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last("status"):
+  if args.last('t') and gt(args.last('t')):
+   targ = gt(args.last('t'))
+   # If there is a -status arg, display all recorded map info on the target
+   desc.append(f"**Status of {targ.name}**")
+   if out.get(targ.name):
+    for info in out[targ.name]:
+     desc.append(f"{info.title()}: `{out[targ.name][info]}`")
+   else:
+    desc.append("No information has been set yet.")
+  else:
+   if mapattach:
+    desc.append(f"**Map settings (attached to {mapattach.name})**")
+   for info in mapinfo:
+    desc.append(f"{info.title()}: `{mapinfo[info]}`")
+    if info == "options":
+     options = mapinfo[info]
+     if 'd' in options:
+      desc.append(f" - Dark Mode")
+     if 'n' in options:
+      desc.append(f" - Grid Hidden")
+     if 'e' in options:
+      desc.append(f" - Disable Border Opacity")
+     if 'c' in options:
+      gsize = ""
+      for char in options[options.index('c')+1:]:
+       if char.isdigit():
+        gsize += char
+       else:
+        break
+      desc.append(f" - Grid size adjusted to {gsize} px")
+     if 'o' in options:
+      offset = ""
+      for char in options[options.index('o')+1:]:
+       if char.isdigit() or char == ":":
+        offset += char
+       else:
+        break
+      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
+  desc.append("")
 </drac2>
 <drac2>
 if c:
@@ -465,14 +494,13 @@ if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE"):
-   prevLoc = out[targ.name].get('location') 
+  if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE") and (args.last('move')[0].isalpha() and args.last('move')[-1].isdigit()): 
    # Fix bad locations?
    if prevLoc == "TRUE":
     _ = out[targ.name].pop('location')
     prevLoc = None
    # Did they have a previous location? If so, lets calculate distance and draw a line
-   if prevLoc and prevloc.lower() != args.last("move"):
+   if prevLoc and prevLoc.lower() != args.last("move"):
     # Split previous location from XY to X and Y
     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
     prevLocY = ''.join(y for y in prevLoc if y.isdigit())
@@ -714,6 +742,11 @@ if c:
 </drac2>
 
 <drac2>
+colorhelp = f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
+                  You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
+sizehelp = f"""-f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline" """
+
+
 # Are we trying to display the spelllist?
 if args.get('spelllist'):
  # Only grab the page selected, default to first
@@ -760,7 +793,59 @@ elif not c or args.get('?') or args.get('help'):
             If you have a valid `-aim`, it will only display the overlay once, because it doesn't track who you aimed, unless you used `-aim [target]|stick`
             To remove a linked overlay, run `-over none` with a `-t` selector.
 
-            If your `-aim` or `-t` is a Large or bigger monster, the alias will do its best to adjust for the size difference." """.replace(" "*11,"")
+            If your `-aim` or `-t` is a Large or bigger monster, the alias will do its best to adjust for the size difference.
+
+            **Custom Spell Overlays**
+            `-newspell <overlay/spell name>:<overlay>` -  Allows you to save custom spell overlays to your `mapOverlays` uvar. Example - `!map -newspell Explosion:circle,30,r,{aimD}`
+            `-deletespell <spellname>` - Allows you to delete a created spell overlay."             
+            
+
+
+            """.replace(" "*11,"")
+ elif args.get('map') or args.get('options') or args.get('dm') or args.get('manage'):
+
+  help = f"""-title "Wait, were we in the dungeon or the pub?" 
+            -desc "`-mapattach <target>` - Anchors the map to a target in the initiative order to allow changes to the map to be saved. Use a dedicated target, instead of a player or a monster, to prevent the map from vanishing when a player exits combat or a monster is killed. Without `-mapattach`, every time you run `!map` the previous changes or settings are lost and the map will revert to its default."
+            
+            -f "_ _|**__Map Arguments__**
+            `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
+            `-mapsize [size]` - Sets the size of the map. For example: 20x20
+            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB.
+            `-mapoptions [options]` - Sets map options. Available options can be seen below.
+
+            `-walls <code>` - Allows you to create your own map with walls/doors
+            `-savewallsmap <map name>` - Saves your map you created using walls/doors  
+            `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
+            `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
+
+            -f "_ _|Settings can be viewed by running `!map status`
+
+            If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
+            
+            Every time you run a `!map` command, it will save a backup uvar `mapState#####` where the #### is your channel ID. You can revert to this state with `!map undo`. Use this in emergencies, as it may be an old back up. If you use it, and its worse somehow, running `!map undo` a second time will revert it back."
+
+            -f "_ _|**__Preset Arguments__**
+            **Mapview Presets**
+            `-newview <presetname>,<mapview preset>` - Allows you to create a preset for -mapview that is saved in your `mapPresets` uvar. Example: `!map -newview Ambush,d5:8x8`
+            `-deleteview <presetname>` - Allows you to delete an already created `-mapview` preset.
+            `-viewload <presetname>` - Loads a created preset for `-mapview`
+            `!map viewlist` - Allows you to see all your saved -mapview presets
+
+            **Map BG Presets**
+            `-newmapbg <mapname>:<url>,<mapsize>,<mapoptions>` - Allows you to create a map bg preset that is saved to your `mapBackgrounds` uvar to be called up using `-mapload`. Example - `!map -newmapbg Forest:https://i.imgur.com/MlhcGVE.jpg,26x14,hd`
+            `-deletemapbg <mapname>` - Allows you to delete a created map preset."
+
+            -f "Valid Map Options (For `-mapoptions`)|
+            `1` to `3` - Different zoom options, accepts fractions (`1.5` or `2.7` are both valid)
+            `d` - Dark mode
+            ~~`h` - Grid at half transparancy~~ (Currently on by default, soon to be replaced)
+            `n` - Grid hidden
+            `e` - Disable border opacity
+            `c<value>` - Set the gridsize in pixels (Default is 40)
+            `o<value>:<value>` - Set the background image offset in pixels
+            If you are setting the zoom level, you have to set it as the first option.
+            Example: `-mapoptions 2hdc80`"
+  """
  else:
   help = f"""-title "Dude, where did I park my Tarrasque?"
             -desc "`!map` - View the map
@@ -770,57 +855,22 @@ elif not c or args.get('?') or args.get('help'):
 
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
-            `-over <overlay>` - Creates an overlay on the map. Options for these are described in `!map help overlay`
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
 
-            **__Target Arguments__** - Defaults to your currently active character. Requires a `-t` target if `-over` is used
-            `-move [location]` - Sets the `-t` targets location on the map. For example `-move G3`.
-            `-color [color]` - Sets the `-t` targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
-            `-size [size]` - Sets the `-t` targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
-            `-height [#]` - Sets the `-t` targets height. The map itself will look the same, but their height will be listed above in the description.
-            `-note [note]` - Sets a generic note on the target	
-            `status` - Views all details on the target"
-            
-            -f "_ _|**__Map Arguments__**
-            `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
-            `-mapsize [size]` - Sets the size of the map. For example: 20x20
-            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB.
-            `-mapoptions [options]` - Sets map options. Available options can be seen below.
-            `-walls <code>` - Allows you to create your own map with walls/doors
-            `-savewallsmap <map name>` - Saves your map you created using walls/doors  
-            `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
-            `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
+            **__Target Arguments__** - Uses the `-t` target, then defaults to your currently active character, then whoevers turn it is. 
+            `-move [location]` - Sets the targets location on the map. For example `-move G3`.
+            `-color [color]` - Sets the targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
+            `-size [size]` - Sets the targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
+            `-height [#]` - Sets the targets height. The map itself will look the same, but their height will be listed above in the description.
+            `-note [note]` - Sets a generic note on the target  
 
-            -f "_ _|**__Preset Arguments__**
-            **Mapview Presets**
-            `-newview <presetname>,<mapview preset>` - Allows you to create a preset for -mapview that is saved in your `mapPresets` uvar. Example: `!map -newview Ambush,d5:8x8`
-            `-deleteview <presetname>` - Allows you to delete an already created `-mapview` preset.
-            `-viewload <presetname>` - Loads a created preset for `-mapview`
-            `!map viewlist` - Allows you to see all your saved -mapview presets"
-
-            -f "**Map BG Presets**
-            `-newmapbg <mapname>:<url>,<mapsize>,<mapoptions>` - Allows you to create a map bg preset that is saved to your `mapBackgrounds` uvar to be called up using `-mapload`. Example - `!map -newmapbg Forest:https://i.imgur.com/MlhcGVE.jpg,26x14,hd`
-            `-deletemapbg <mapname>` - Allows you to delete a created map preset.
-            
-            **Custom Spell Overlays**
-            `-newspell <overlay/spell name>:<overlay>` -  Allows you to save custom spell overlays to your `mapOverlays` uvar. Example - `!map -newspell Explosion:circle,30,r,{aim}`
-            `-deletespell <spellname>` - Allows you to delete a created spell overlay."
-
-            -f "_ _|Settings can be viewed by running `!i aoo <mapattachee> map`"
+            `status` - Views all details on the target. If no `-t` target exists, shows details about the map itself."
 
             -f "_ _|`-silent` - If used as last argument, all map settings will update but will not load the image.
 
-            If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
-            
-            Every time you run a `!map` command, it will save a backup uvar `mapState#####` where the #### is your channel ID. You can revert to this state with `!map undo`. Use this in emergencies, as it may be an old back up. If you use it, and its worse somehow, running `!map undo` a second time will revert it back.
+            The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """ + colorhelp + sizehelp
 
-            The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """
-
- help += f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
-            You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline"
-            -f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline"
-            -f "Valid Map Options (For `-mapoptions`)|`1`,`2`,`3` - Different zoom options|inline{newline}`d` - Dark mode{newline}`h` - Grid at half transparancy{newline}`n` - Grid hidden{newline}`e` - Disable border opacity{newline}`c<value>` - Set the grid scale in pixels (Default is 40){newline}`o<value>:<value>` - Set the background image offset in pixels{newline}If you are setting the zoom level, you have to set it as the first option.{newline}Example: `-mapoptions 2hdc80`" 
-            -f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
+ help += f"""-f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
  if not combat():
   help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
