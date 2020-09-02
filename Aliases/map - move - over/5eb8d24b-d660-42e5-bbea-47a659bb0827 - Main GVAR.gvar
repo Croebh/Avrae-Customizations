@@ -187,7 +187,45 @@ if c:
     desc.append(f"Map options reset")
    else:
     mapoptions = args.last('mapoptions', mapoptions)
-    desc.append(f"Map options changed to `{mapoptions}`")  
+    desc.append(f"Map options changed to `{mapoptions}`")
+    if mapoptions[0].isdigit():
+     zoom = ""
+     for char in mapoptions:
+      if char.isdigit() or char == ".":
+       zoom += char
+      else:
+       break
+     desc.append(f" - Zoom set to {zoom}x")
+    if 'd' in mapoptions:
+     desc.append(f" - Dark Mode")
+    if 'n' in mapoptions:
+     desc.append(f" - Grid Hidden")
+    if 'e' in mapoptions:
+     desc.append(f" - Disable Border Opacity")
+    if 'c' in mapoptions:
+     gsize = ""
+     for char in mapoptions[mapoptions.index('c')+1:]:
+      if char.isdigit():
+       gsize += char
+      else:
+       break
+     desc.append(f" - Grid size adjusted to {gsize} px")
+    if 'h' in mapoptions:
+     gtrans = ""
+     for char in mapoptions[mapoptions.index('h')+1:]:
+      if char.isdigit():
+       gtrans += char
+      else:
+       break
+     desc.append(f" - Grid transparancy adjusted to {gtrans}%")
+    if 'o' in mapoptions:
+     offset = ""
+     for char in mapoptions[mapoptions.index('o')+1:]:
+      if char.isdigit() or char == ":":
+       offset += char
+      else:
+       break
+     desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
   if mapview != args.last('mapview', mapview):
   # If the new mapview are different from the old one, update and display
    mapview = args.last('mapview', mapview)
