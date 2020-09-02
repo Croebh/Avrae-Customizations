@@ -92,40 +92,25 @@ mapBG = presetMaps.copy()
 userMaps = load_json(get('mapBackgrounds','{}'))
 # Grab the user selected map, and update the main dict
 # This allows the user to replace/update items in the original dict
-[mapBG.update(userMaps)]
+mapBG.update(userMaps)
 # Iterate over the map dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
 maplist = [f"""**{maps}**""" for maps, over in mapBG.items() if args.last('search','').lower() in maps.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
 mapPagin = [maplist[i:i+20] for i in range(0, len(maplist), 20)]
 # Do we have a -mapload?
-for overNum in [""]+[str(x) for x in range(1,11)]:
- if args.last('mapload' + overNum):
-  # Loop through our users mapBackgrounds, looking for that map
-  for maps in mapBG:
-   if args.last('mapload' + overNum).lower() in maps.lower():
-    # If we find it, add the map to the args
-    foundMapload = "Did not find map"
-    argMapload = args.last("mapload").lower() 
-    for searchMapload in userMaps:
-     if argMapload in searchMapload.lower():
-      foundMapload = userMaps.get(searchMapload)
-      break
-    if typeof(foundMapload) == 'str':
-     args = argparse(["-walls",  foundMapload] + "@@@")
-    #elif typeof(mapBG.get(maps)) == "str":
-     #args = argparse(["-mapbg" + overNum, mapBG.get(maps)] + "@@@")
-    elif typeof(mapBG.get(maps)) == "SafeList":
-     getBG = [f"{mapBG.get(maps)[0]}"]
-     getSize = ""
-     getOptions = ""
-     if len(mapBG.get(maps)) > 1:
-      getSize = [f"{mapBG.get(maps)[1]}"]
-     if len(mapBG.get(maps)) > 2:
-      getOptions = [f"{mapBG.get(maps)[2]}"]
-     args = argparse(["-mapbg" + overNum] + getBG + (["-mapsize" + overNum] + getSize if getSize else []) + (["-mapoptions" + overNum] + getOptions if getOptions else []) + "@@@")
-    # We only care about the first result
-    break
+if args.last('mapload'):
+ # Loop through our users mapBackgrounds, looking for that map
+ for maps in mapBG:
+  if args.last('mapload').lower() in maps.lower():
+   # If we find it, add the map to the args
+   foundMapload = mapBG[maps]
+   if typeof(foundMapload) == 'str':
+    args = argparse(["-walls",  foundMapload] + "@@@")
+   elif typeof(foundMapload) == "SafeList":
+    getBG, getSize, getOptions = (foundMapload + ["", ""])[:3]
+    args = argparse(["-mapbg", getBG]   + (["-mapsize"  , getSize] if getSize else []) + (["-mapoptions", getOptions]  if getOptions else []) + "@@@")
+   break
 </drac2>
 <drac2>
 # Pulling up viewlist to view all created -mapview presets 
