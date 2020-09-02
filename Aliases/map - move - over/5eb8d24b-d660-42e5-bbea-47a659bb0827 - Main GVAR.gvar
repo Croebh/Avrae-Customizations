@@ -7,8 +7,8 @@ args, defaults = argparse("@@@"),"&&&"
 mapsize = defaults.get("size","10x10") or "10x10"
 maxSize = 99
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize), 1)
-mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize), 1)
+mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
+mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
 mapsize = f"{mapX}x{mapY}"
 mapoptions = defaults.get("options","")
 mapbg = defaults.get("background","")
@@ -158,9 +158,13 @@ if c:
     mapsize=mapLocSize[1]
   else:
     maplocation=""
-  mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
-  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+  if mapsize[0].isdigit():
+   mapSplitX, mapSplitY = mapsize.lower().split('x')
+   mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+   mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+  else:
+   mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+   mapY = int(''.join(y for y in mapsize if y.isdigit()))
   mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
@@ -173,8 +177,8 @@ if c:
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
-   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
-   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
    mapsize = f"{mapSplitX}x{mapSplitY}" 
    maplocation = ""
    set_uvar("mapSize"+chanid(), dump_json(mapsize))
@@ -271,8 +275,8 @@ if args.last('viewload'):
  maplocation = foundViewload.split(':')[0] + ":"
  mapsize = foundViewload.split(':')[1]
  mapSplitX, mapSplitY = mapsize.lower().split('x')
- mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
- mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+ mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+ mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
  mapsize = f"{mapSplitX}x{mapSplitY}"
  desc.append(f"Map view changed to `{foundViewload}`")
 </drac2>
