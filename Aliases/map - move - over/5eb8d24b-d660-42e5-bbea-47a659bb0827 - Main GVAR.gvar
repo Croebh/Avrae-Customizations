@@ -439,6 +439,14 @@ if c:
     desc.append(f"{info.title()}: `{mapinfo[info]}`")
     if info == "options":
      options = mapinfo[info]
+     if options[0].isdigit():
+      zoom = ""
+      for char in options:
+       if char.isdigit() or char == ".":
+        zoom += char
+       else:
+        break
+      desc.append(f" - Zoom set to {zoom}x")
      if 'd' in options:
       desc.append(f" - Dark Mode")
      if 'n' in options:
@@ -453,6 +461,14 @@ if c:
        else:
         break
       desc.append(f" - Grid size adjusted to {gsize} px")
+     if 'h' in options:
+      gtrans = ""
+      for char in options[options.index('h')+1:]:
+       if char.isdigit():
+        gtrans += char
+       else:
+        break
+      desc.append(f" - Grid transparancy adjusted to {gtrans}%")
      if 'o' in options:
       offset = ""
       for char in options[options.index('o')+1:]:
