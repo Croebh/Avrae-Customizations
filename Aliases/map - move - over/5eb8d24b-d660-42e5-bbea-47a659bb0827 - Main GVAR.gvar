@@ -785,10 +785,10 @@ if c:
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not (args.get('?') or args.get('help') or args.get('spelllist') or args.get('maplist')):
   if args.last('silent'):
-   finalMap = f"""{map}{maplocation}{mapsize}/{walls}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+   finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
   else:
-   finalMap = f"""{map}{maplocation}{mapsize}/{walls}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+   finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
@@ -797,6 +797,8 @@ colorhelp = f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in CO
                   You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
 sizehelp = f"""-f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline" """
 
+otherhelps = f""" -f "> For help on setting up the map, see `!map help manage`
+> For help regarding overlays and spells, see `!map help overlay`" """
 
 # Are we trying to display the spelllist?
 if args.get('spelllist'):
@@ -861,10 +863,11 @@ elif not c or args.get('?') or args.get('help'):
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
-            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB.
-            `-mapoptions [options]` - Sets map options. Available options can be seen below.
+            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB. `-mapbg none` will remove the current background.
+            `-mapoptions [options]` - Sets map options. Available options can be seen below."
 
-            `-walls <code>` - Allows you to create your own map with walls/doors
+            -f "_ _|
+            `-walls <code>` - Allows you to create your own map with walls/doors. Information on this code can be found [here](http://docs.otfbm.com/#/wallsanddoors)
             `-savewallsmap <map name>` - Saves your map you created using walls/doors  
             `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
             `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
@@ -889,7 +892,7 @@ elif not c or args.get('?') or args.get('help'):
             -f "Valid Map Options (For `-mapoptions`)|
             `1` to `3` - Different zoom options, accepts fractions (`1.5` or `2.7` are both valid)
             `d` - Dark mode
-            ~~`h` - Grid at half transparancy~~ (Currently on by default, soon to be replaced)
+            `h%` - Grid transparancy. `h10` would set it to 10% transparancy, `h90` would be 90%
             `n` - Grid hidden
             `e` - Disable border opacity
             `c<value>` - Set the gridsize in pixels (Default is 40)
@@ -904,6 +907,8 @@ elif not c or args.get('?') or args.get('help'):
 
             `!move [location]` - The `!move` alias allows you to quickly move your currently active character around. For example: `!move B3` would move your active character to B3
 
+            Information on setting options such as the size and background of your map can be found in `!map help manage`
+
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
@@ -911,6 +916,7 @@ elif not c or args.get('?') or args.get('help'):
             **__Target Arguments__** - Uses the `-t` target, then defaults to your currently active character, then whoevers turn it is. 
             `-move [location]` - Sets the targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
+            `-token [shortcode]` - Sets the image for the token based on the shortcode provided by `!tokenimport`
             `-size [size]` - Sets the targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the targets height. The map itself will look the same, but their height will be listed above in the description.
             `-note [note]` - Sets a generic note on the target  
@@ -921,7 +927,7 @@ elif not c or args.get('?') or args.get('help'):
 
             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """ + colorhelp + sizehelp
 
- help += f"""-f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
+ help += f"""-f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """ + otherhelps
  if not combat():
   help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
@@ -930,7 +936,7 @@ elif not c or args.get('?') or args.get('help'):
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagein)} | -page # to change page" if len(presetPagein)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
  {people=}
  {debug=}```" """
