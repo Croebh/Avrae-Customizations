@@ -28,7 +28,7 @@ for index in range(maxSize):
   letter += baseAlph[index % 26]
   alph.append(letter)
 col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG"
-COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
 c = combat()
 gt = c.get_combatant if c else None
