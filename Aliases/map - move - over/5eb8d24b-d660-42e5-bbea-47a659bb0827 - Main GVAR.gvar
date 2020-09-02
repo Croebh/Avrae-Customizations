@@ -185,12 +185,20 @@ if c:
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
   if mapbg != args.last('mapbg', mapbg):
-   mapbg = args.last('mapbg', mapbg)
-   desc.append(f"Map background changed to `{mapbg}`")
+   if args.last('mapbg') in ('none', 'None'):
+    mapbg = ""
+    desc.append(f"Map background removed")
+   else:
+    mapbg = args.last('mapbg', mapbg)
+    desc.append(f"Map background changed to `{mapbg}`")
   if mapoptions != args.last('mapoptions', mapoptions):
   # If the new mapoptions are different from the old ones, update and display
-   mapoptions = args.last('mapoptions', mapoptions)
-   desc.append(f"Map options changed to `{mapoptions}`")  
+   if args.last('mapoptions') in ('none', 'None', True, 'true', 'True', None):
+    mapoptions = ""
+    desc.append(f"Map options reset")
+   else:
+    mapoptions = args.last('mapoptions', mapoptions)
+    desc.append(f"Map options changed to `{mapoptions}`")  
   if mapview != args.last('mapview', mapview):
   # If the new mapview are different from the old one, update and display
    mapview = args.last('mapview', mapview)
@@ -210,8 +218,12 @@ if c:
     desc.append(f"Reloaded original Grid Size: `{mapsize}`")
   #If there is a -wall
   if args.last('walls'):
-   walls = args.last('walls')
-   desc.append(f"Walls added {walls}")
+   if args.last('walls') in ('none', 'None', True, 'true', 'True'):
+    walls = ""
+    desc.append(f"Walls reset")
+   else:
+    walls = args.last('walls')
+    desc.append(f"Walls added {walls}")
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach') and gt(args.last('mapattach')):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
@@ -380,33 +392,33 @@ if c:
     desc.append(f"Changing size of {targ.name} to {SIZ[size]} ({size})")
    # If the size is None, erase the size, setting them back to Medium
    elif args.last('size') in (None,"None","none"):
-    if 'size' in out[targ.name]:	
+    if 'size' in out[targ.name]:
      _ = out[targ.name].pop('size')
     # Display the change in size
     desc.append(f"Resetting size of {targ.name} to Medium (M)")
 </drac2>
-<drac2>	
-if c:	
- # If there is a -t argument given, and that target exists as a combatant, modify that target	
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):	
-  targ=gt(args.last('t', combat().me.name if combat().me else None))	
-  # If they don't have a note/location set, add them to the list	
-  if not out.get(targ.name):	
-   out[targ.name] = {}	
-  # If there is a -note arg, change their note	
-  if args.last("note"):	
-   newNote=args.last("note")	
-   if args.last("note") in (None, "None", "none", True):	
-    if 'note' in out[targ.name]:	
-     _ = out[targ.name].pop('note')	
-    # Display the change in the note	
-    desc.append(f"Removing the note on {targ.name}.")	
-   else:	
-    out[targ.name].update({"note":f"{newNote}"})	
-    # Display the change in size	
-    desc.append(f"Setting note of {targ.name} to {newNote}")	
-   # If the note is None, erase the note	
-</drac2>	
+<drac2> 
+if c: 
+ # If there is a -t argument given, and that target exists as a combatant, modify that target 
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):  
+  targ=gt(args.last('t', combat().me.name if combat().me else None))  
+  # If they don't have a note/location set, add them to the list  
+  if not out.get(targ.name):  
+   out[targ.name] = {}  
+  # If there is a -note arg, change their note  
+  if args.last("note"): 
+   newNote=args.last("note")  
+   if args.last("note") in (None, "None", "none", True):  
+    if 'note' in out[targ.name]:  
+     _ = out[targ.name].pop('note') 
+    # Display the change in the note  
+    desc.append(f"Removing the note on {targ.name}.") 
+   else:  
+    out[targ.name].update({"note":f"{newNote}"})  
+    # Display the change in size  
+    desc.append(f"Setting note of {targ.name} to {newNote}")  
+   # If the note is None, erase the note  
+</drac2>  
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
