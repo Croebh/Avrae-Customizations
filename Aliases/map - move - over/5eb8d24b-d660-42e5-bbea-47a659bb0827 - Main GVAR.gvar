@@ -899,7 +899,9 @@ elif not c or args.get('?') or args.get('help'):
             `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
             `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
 
-            -f "_ _|Settings can be viewed by running `!map status`
+            -f "_ _|`clear` - This will clear notes from every combatant, removing all tokens and overlays.
+             
+            Settings can be viewed by running `!map status`
 
             If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
             
