@@ -524,8 +524,26 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  # If there is a -token arg, change their token shortcode
+  if args.last('token'):
+   token = args.last('token')
+   # If the token is none or 0, remove token from the target
+   if token in ("None", "none", True, 'True', 'true'):
+    prevToken = out[targ.name].pop('token')
+    if prevToken:
+     desc.append(f"{targ.name} is no longer using token {prevToken}.")
+   else:
+    # Otherwise, set that targets token
+    out[targ.name].update({'token':token})
+    desc.append(f"{targ.name} is now using the shorcode `{token}` as a token.")
+</drac2>
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  prevLoc = out[targ.name].get('location')
   if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE") and (args.last('move')[0].isalpha() and args.last('move')[-1].isdigit()): 
    # Fix bad locations?
    if prevLoc == "TRUE":
@@ -710,13 +728,14 @@ if c:
   tSize = out[target].get('size','M')[0].upper()
   tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
   tColor = tColor[:tColor.index(" ")].strip('#')
+  tToken = out[target].get('token')
   # Account for hex colors
   if len(tColor) in (3, 6):
    tColor = f"~{tColor}".upper()
   tName = target.translate(str.maketrans(' ', '_', nameStrip))
   # Only display if they have a location
   if tLocation:
-    people.append(f"{tLocation}{tSize}{tColor}-{tName}")
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
