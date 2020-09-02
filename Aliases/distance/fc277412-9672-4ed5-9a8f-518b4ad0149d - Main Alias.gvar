@@ -66,6 +66,8 @@ if prevLoc and newLoc and args:
   distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
   absDeltaX, absDeltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
   distance = max(absDeltaX, absDeltaY, height)*5
+  distanceT = round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),2)
+  distanceT = (round(sqrt((distanceT*distanceT) + (height*height)),2))*5 if height else distanceT*5
   quad=0 if deltaX>=0 and deltaY>=0 else 1 if deltaX>=0 and deltaY<=0 else 2 if deltaX<=0 and deltaY<=0 else 3
   if deltaY and deltaX:
     degree = ([i[0] for i in tan if i[1]>=(absDeltaX)/(absDeltaY)][0])
@@ -79,7 +81,7 @@ if prevLoc and newLoc and args:
 <drac2>
 
 if prevLoc and newLoc and args: 
-  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{distance} ft. {card} (~{degree}°)" """
+  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{f'~{distanceT}' if get('trueDistance') else distance} ft. {card} (~{degree}°)" """
 return f""" -desc "`!distance [x1y1] [x2y2] [z]`
 
 Shows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.
@@ -89,7 +91,9 @@ If `z` is provided, it accounts for vertical height."
 -f "`!map` Support|If you have your initiative set up with the `!map` alias, you can target combatants using this alias instead of just raw coordinates.
 `!distance [target|x1y1] [target2|x2y2] [z]` - If only one argument is provided, and it is a combatant, it will attempt to grab the location of either the users active character in initiative, or whoevers turn it is in init. You can intermix coordinates and targets
 `!distance OR1 B2` would calculate the distance between `OR2`, a combatant, and `B2`, the coordinate.
-`!distance Valgim` would show the distance between your character (or whoevers turn it is) and that of the combatant named Valgim" """
+`!distance Valgim` would show the distance between your character (or whoevers turn it is) and that of the combatant named Valgim"
+
+-f "The alias calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`." """
 </drac2>
 
 -title "Cartesian Coordinate Distance"
