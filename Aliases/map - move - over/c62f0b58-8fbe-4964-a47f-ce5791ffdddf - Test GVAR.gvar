@@ -7,8 +7,8 @@ args, defaults = argparse("@@@"),"&&&"
 mapsize = defaults.get("size","10x10") or "10x10"
 maxSize = 99
 mapSplitX, mapSplitY = mapsize.lower().split('x')
-mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize), 1)
-mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize), 1)
+mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
+mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
 mapsize = f"{mapX}x{mapY}"
 mapoptions = defaults.get("options","")
 mapbg = defaults.get("background","")
@@ -28,7 +28,7 @@ for index in range(maxSize):
   letter += baseAlph[index % 26]
   alph.append(letter)
 col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG"
-COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 overlays=[]
 c = combat()
 gt = c.get_combatant if c else None
@@ -158,9 +158,13 @@ if c:
     mapsize=mapLocSize[1]
   else:
     maplocation=""
-  mapSplitX, mapSplitY = mapsize.lower().split('x')
-  mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
-  mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+  if mapsize[0].isdigit():
+   mapSplitX, mapSplitY = mapsize.lower().split('x')
+   mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+   mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+  else:
+   mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+   mapY = int(''.join(y for y in mapsize if y.isdigit()))
   mapsize = f"{mapX}x{mapY}" 
   mapbg=mapinfo.get('background')
   mapoptions=mapinfo.get('options')
@@ -173,20 +177,28 @@ if c:
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
-   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
-   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+   mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+   mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
    mapsize = f"{mapSplitX}x{mapSplitY}" 
    maplocation = ""
    set_uvar("mapSize"+chanid(), dump_json(mapsize))
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
   if mapbg != args.last('mapbg', mapbg):
-   mapbg = args.last('mapbg', mapbg)
-   desc.append(f"Map background changed to `{mapbg}`")
+   if args.last('mapbg') in ('none', 'None'):
+    mapbg = ""
+    desc.append(f"Map background removed")
+   else:
+    mapbg = args.last('mapbg', mapbg)
+    desc.append(f"Map background changed to `{mapbg}`")
   if mapoptions != args.last('mapoptions', mapoptions):
   # If the new mapoptions are different from the old ones, update and display
-   mapoptions = args.last('mapoptions', mapoptions)
-   desc.append(f"Map options changed to `{mapoptions}`")  
+   if args.last('mapoptions') in ('none', 'None', True, 'true', 'True', None):
+    mapoptions = ""
+    desc.append(f"Map options reset")
+   else:
+    mapoptions = args.last('mapoptions', mapoptions)
+    desc.append(f"Map options changed to `{mapoptions}`")  
   if mapview != args.last('mapview', mapview):
   # If the new mapview are different from the old one, update and display
    mapview = args.last('mapview', mapview)
@@ -206,8 +218,12 @@ if c:
     desc.append(f"Reloaded original Grid Size: `{mapsize}`")
   #If there is a -wall
   if args.last('walls'):
-   walls = args.last('walls')
-   desc.append(f"Walls added {walls}")
+   if args.last('walls') in ('none', 'None', True, 'true', 'True'):
+    walls = ""
+    desc.append(f"Walls reset")
+   else:
+    walls = args.last('walls')
+    desc.append(f"Walls added {walls}")
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach') and gt(args.last('mapattach')):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
@@ -271,8 +287,8 @@ if args.last('viewload'):
  maplocation = foundViewload.split(':')[0] + ":"
  mapsize = foundViewload.split(':')[1]
  mapSplitX, mapSplitY = mapsize.lower().split('x')
- mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 10, maxSize) 
- mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 10, maxSize)
+ mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+ mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
  mapsize = f"{mapSplitX}x{mapSplitY}"
  desc.append(f"Map view changed to `{foundViewload}`")
 </drac2>
@@ -376,7 +392,7 @@ if c:
     desc.append(f"Changing size of {targ.name} to {SIZ[size]} ({size})")
    # If the size is None, erase the size, setting them back to Medium
    elif args.last('size') in (None,"None","none"):
-    if 'size' in out[targ.name]: 
+    if 'size' in out[targ.name]:  
      _ = out[targ.name].pop('size')
     # Display the change in size
     desc.append(f"Resetting size of {targ.name} to Medium (M)")
@@ -384,25 +400,25 @@ if c:
 <drac2> 
 if c: 
  # If there is a -t argument given, and that target exists as a combatant, modify that target 
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)): 
-  targ=gt(args.last('t', combat().me.name if combat().me else None)) 
-  # If they don't have a note/location set, add them to the list 
-  if not out.get(targ.name): 
-   out[targ.name] = {} 
-  # If there is a -note arg, change their note 
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):  
+  targ=gt(args.last('t', combat().me.name if combat().me else None))  
+  # If they don't have a note/location set, add them to the list  
+  if not out.get(targ.name):  
+   out[targ.name] = {}  
+  # If there is a -note arg, change their note  
   if args.last("note"): 
-   newNote=args.last("note") 
-   if args.last("note") in (None, "None", "none", True): 
-    if 'note' in out[targ.name]: 
+   newNote=args.last("note")  
+   if args.last("note") in (None, "None", "none", True):  
+    if 'note' in out[targ.name]:  
      _ = out[targ.name].pop('note') 
-    # Display the change in the note 
+    # Display the change in the note  
     desc.append(f"Removing the note on {targ.name}.") 
-   else: 
-    out[targ.name].update({"note":f"{newNote}"}) 
-    # Display the change in size 
-    desc.append(f"Setting note of {targ.name} to {newNote}") 
-   # If the note is None, erase the note 
-</drac2> 
+   else:  
+    out[targ.name].update({"note":f"{newNote}"})  
+    # Display the change in size  
+    desc.append(f"Setting note of {targ.name} to {newNote}")  
+   # If the note is None, erase the note  
+</drac2>  
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -423,6 +439,14 @@ if c:
     desc.append(f"{info.title()}: `{mapinfo[info]}`")
     if info == "options":
      options = mapinfo[info]
+     if options[0].isdigit():
+      zoom = ""
+      for char in options:
+       if char.isdigit() or char == ".":
+        zoom += char
+       else:
+        break
+      desc.append(f" - Zoom set to {zoom}x")
      if 'd' in options:
       desc.append(f" - Dark Mode")
      if 'n' in options:
@@ -437,6 +461,14 @@ if c:
        else:
         break
       desc.append(f" - Grid size adjusted to {gsize} px")
+     if 'h' in options:
+      gtrans = ""
+      for char in options[options.index('h')+1:]:
+       if char.isdigit():
+        gtrans += char
+       else:
+        break
+      desc.append(f" - Grid transparancy adjusted to {gtrans}%")
      if 'o' in options:
       offset = ""
       for char in options[options.index('o')+1:]:
@@ -492,8 +524,26 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  # If there is a -token arg, change their token shortcode
+  if args.last('token'):
+   token = args.last('token')
+   # If the token is none or 0, remove token from the target
+   if token in ("None", "none", True, 'True', 'true'):
+    prevToken = out[targ.name].pop('token')
+    if prevToken:
+     desc.append(f"{targ.name} is no longer using token {prevToken}.")
+   else:
+    # Otherwise, set that targets token
+    out[targ.name].update({'token':token})
+    desc.append(f"{targ.name} is now using the shorcode `{token}` as a token.")
+</drac2>
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  prevLoc = out[targ.name].get('location')
   if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE") and (args.last('move')[0].isalpha() and args.last('move')[-1].isdigit()): 
    # Fix bad locations?
    if prevLoc == "TRUE":
@@ -678,13 +728,14 @@ if c:
   tSize = out[target].get('size','M')[0].upper()
   tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
   tColor = tColor[:tColor.index(" ")].strip('#')
+  tToken = out[target].get('token')
   # Account for hex colors
   if len(tColor) in (3, 6):
    tColor = f"~{tColor}".upper()
   tName = target.translate(str.maketrans(' ', '_', nameStrip))
   # Only display if they have a location
   if tLocation:
-    people.append(f"{tLocation}{tSize}{tColor}-{tName}")
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
   # Do they have a height set? If so, display it
   if out[target].get('height'):
    desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
@@ -734,10 +785,10 @@ if c:
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not (args.get('?') or args.get('help') or args.get('spelllist') or args.get('maplist')):
   if args.last('silent'):
-   finalMap = f"""{map}{maplocation}{mapsize}/{walls}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+   finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
   else:
-   finalMap = f"""{map}{maplocation}{mapsize}/{walls}/{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+   finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
@@ -746,6 +797,8 @@ colorhelp = f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in CO
                   You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
 sizehelp = f"""-f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline" """
 
+otherhelps = f""" -f "> For help on setting up the map, see `!map help manage`
+> For help regarding overlays and spells, see `!map help overlay`" """
 
 # Are we trying to display the spelllist?
 if args.get('spelllist'):
@@ -810,10 +863,11 @@ elif not c or args.get('?') or args.get('help'):
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
             `-mapsize [size]` - Sets the size of the map. For example: 20x20
-            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB.
-            `-mapoptions [options]` - Sets map options. Available options can be seen below.
+            `-mapbg [url]` - Sets a url to serve as the background. Maps are expected to have a grid scale of 40 px by default but can be changed in map options, with a maximum file size of 1MB. `-mapbg none` will remove the current background.
+            `-mapoptions [options]` - Sets map options. Available options can be seen below."
 
-            `-walls <code>` - Allows you to create your own map with walls/doors
+            -f "_ _|
+            `-walls <code>` - Allows you to create your own map with walls/doors. Information on this code can be found [here](http://docs.otfbm.com/#/wallsanddoors)
             `-savewallsmap <map name>` - Saves your map you created using walls/doors  
             `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
             `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
@@ -838,7 +892,7 @@ elif not c or args.get('?') or args.get('help'):
             -f "Valid Map Options (For `-mapoptions`)|
             `1` to `3` - Different zoom options, accepts fractions (`1.5` or `2.7` are both valid)
             `d` - Dark mode
-            ~~`h` - Grid at half transparancy~~ (Currently on by default, soon to be replaced)
+            `h%` - Grid transparancy. `h10` would set it to 10% transparancy, `h90` would be 90%
             `n` - Grid hidden
             `e` - Disable border opacity
             `c<value>` - Set the gridsize in pixels (Default is 40)
@@ -853,6 +907,8 @@ elif not c or args.get('?') or args.get('help'):
 
             `!move [location]` - The `!move` alias allows you to quickly move your currently active character around. For example: `!move B3` would move your active character to B3
 
+            Information on setting options such as the size and background of your map can be found in `!map help manage`
+
             **__Main Arguments__**
             `-t <target>` - Select a target for adjusting location, color and size.
             `-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. More details found in `!map help overlay`
@@ -860,6 +916,7 @@ elif not c or args.get('?') or args.get('help'):
             **__Target Arguments__** - Uses the `-t` target, then defaults to your currently active character, then whoevers turn it is. 
             `-move [location]` - Sets the targets location on the map. For example `-move G3`.
             `-color [color]` - Sets the targets color on the map. `-color none` will reset it to to black. Valid arguments can be seen in the fields below.
+            `-token [shortcode]` - Sets the image for the token based on the shortcode provided by `!tokenimport`
             `-size [size]` - Sets the targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the targets height. The map itself will look the same, but their height will be listed above in the description.
             `-note [note]` - Sets a generic note on the target  
@@ -870,7 +927,7 @@ elif not c or args.get('?') or args.get('help'):
 
             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. " """ + colorhelp + sizehelp
 
- help += f"""-f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """
+ help += f"""-f "OTFBM Help|Additional reading on OTFBM website and functionality can be found [here](http://docs.otfbm.com/)" """ + otherhelps
  if not combat():
   help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
@@ -879,7 +936,7 @@ elif not c or args.get('?') or args.get('help'):
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagein)} | -page # to change page" if len(presetPagein)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332) and finalMap:
+if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
  {people=}
  {debug=}```" """
