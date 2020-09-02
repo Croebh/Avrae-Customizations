@@ -56,12 +56,12 @@ height = height//5
 </drac2>
 <drac2>
 if prevLoc and newLoc and args:
-  prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
+  prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha()) or 'A'
   prevLocY = ''.join(y for y in prevLoc if y.isdigit())
   
-  prevLocY = int(prevLocY)
-  newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())
-  newLocY = int(''.join(y for y in newLoc if y.isdigit()))
+  prevLocY = int(prevLocY or 0)
+  newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())or 'A'
+  newLocY = int(''.join(y for y in newLoc if y.isdigit()) or 0)
   deltaX, deltaY = alph.index(newLocX)-alph.index(prevLocX), -1*(int(newLocY)-int(prevLocY))
   distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
   absDeltaX, absDeltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
