@@ -240,7 +240,15 @@ if c:
    mapview = args.last('mapview', mapview)
    maplocation = args.last('mapview').split(':')[0] + ":"
    mapsize = args.last('mapview').split(':')[1]
-   desc.append(f"Map view changed to `{mapview}`")
+   if mapsize[0].isdigit():
+    mapSplitX, mapSplitY = mapsize.lower().split('x')
+    mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
+    mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+   else:
+    mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+    mapY = int(''.join(y for y in mapsize if y.isdigit()))
+   mapsize = f"{mapX}x{mapY}"
+   desc.append(f"Map view changed to `{mapview if f'{maplocation}:{mapsize}'==mapview else f'{mapview} ({mapsize})'}`")
   # Reset mapview back to original set grid size
   if args.last('reset'):
    originGrid = load_json(get('mapSize'+chanid()))  if get('mapSize'+chanid()) else None
