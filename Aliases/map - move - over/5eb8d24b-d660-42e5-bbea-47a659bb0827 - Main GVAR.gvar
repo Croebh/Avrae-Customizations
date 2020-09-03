@@ -245,8 +245,12 @@ if c:
     mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
     mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
    else:
+    locX = alph.index(''.join(x.upper() for x in maplocation if x.isalpha()))
+    locY = int(''.join(y for y in maplocation if y.isdigit()))
     mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
     mapY = int(''.join(y for y in mapsize if y.isdigit()))
+    mapX = mapX - locX + 1
+    mapY = mapY - locY + 1
    mapsize = f"{mapX}x{mapY}"
    desc.append(f"Map view changed to `{mapview if f'{maplocation}:{mapsize}'==mapview else f'{mapview} ({mapsize})'}`")
   # Reset mapview back to original set grid size
@@ -915,7 +919,7 @@ elif not c or args.get('?') or args.get('help'):
             -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`.
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
             `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
-            `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an effect on a target. When the effect or target are no longer present, the overlay will be removed."
+            `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an init effect on a target. When the effect or target are no longer present, the overlay will be removed. See `!help init effect` for details on creating them."
 
             -f "_ _|All of these overlays are displayed just once, unless there is a `-t` arg provided, in which case it will added to the targets notes. You can have the targets location be linked to the location of the overlay by using `{targD}`. 
             For example `-over circle,30,b,{targD} -t OR1` would cause it to be positioned on top of OR1, regardless of where they move. 
@@ -927,10 +931,7 @@ elif not c or args.get('?') or args.get('help'):
             **Custom Spell Overlays**
             `-newspell <overlay/spell name>:<overlay>` -  Allows you to save custom spell overlays to your `mapOverlays` uvar. Example - `!map -newspell Explosion:circle,30,r,{aimD}`
             `-deletespell <spellname>` - Allows you to delete a created spell overlay."             
-            
-
-
-            """.replace(" "*11,"")
+            """.replace(" "*11,"") + colorhelp
  elif args.get('map') or args.get('options') or args.get('dm') or args.get('manage'):
 
   help = f"""-title "Wait, were we in the dungeon or the pub?" 
@@ -946,7 +947,8 @@ elif not c or args.get('?') or args.get('help'):
             `-walls <code>` - Allows you to create your own map with walls/doors. Information on this code can be found [here](http://docs.otfbm.com/#/wallsanddoors)
             `-savewallsmap <map name>` - Saves your map you created using walls/doors  
             `-mapload <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
-            `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15` To return back to default set grid size: `!map reset`"
+            `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15`. To return back to default set grid size: `!map reset`
+            `-mapview <location>:<location>` - You can also use relative coordinates, such as `-mapview A3:K12` instead of `-mapview A3:11x10`"
 
             -f "_ _|`clear` - This will clear notes from every combatant, removing all tokens and overlays.
 
