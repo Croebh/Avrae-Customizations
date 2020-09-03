@@ -863,7 +863,7 @@ if c:
   people=[]
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not (args.get('?') or args.get('help') or args.get('spelllist') or args.get('maplist')):
+ if not (args.get('?') or args.get('help') or args.get('spelllist') or args.get('spellbook') or args.get('maplist')):
   if args.last('silent'):
    finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
@@ -887,7 +887,7 @@ otherhelps = f""" -f "> For help on setting up the map, see `!map help manage`
 > For help regarding overlays and spells, see `!map help overlay`" """
 
 # Are we trying to display the spelllist?
-if args.get('spelllist'):
+if args.get('spelllist') or args.get('spellbook'):
  # Only grab the page selected, default to first
  spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
  # Add some pizazz
@@ -909,7 +909,7 @@ elif args.get('viewlist'):
                         -f "Add your own `-mapview` presets| You can create your own presets by running the command `-newview <presetname>,<mapview preset>`"  """
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
 elif not c or args.get('?') or args.get('help'):
- if args.get('overlay'):
+ if args.get('overlay') or args.get('over') or args.get('overlays'):
   help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
             -desc "**__Overlay Arguments__**
             `-over \"circle,<radius>,<color>,<center>\"` - Creates a circle of a given radius in ft and color, centered at the chosen location
@@ -922,7 +922,7 @@ elif not c or args.get('?') or args.get('help'):
 
             You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect`/`-spell` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached atno a time."
 
-            -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spelllist`.
+            -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spellbook`.
             `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
             `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
             `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an init effect on a target. When the effect or target are no longer present, the overlay will be removed. See `!help init effect` for details on creating them."
@@ -1020,7 +1020,7 @@ elif not c or args.get('?') or args.get('help'):
 
  return help.replace(" "*11,"")
 </drac2>
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagein)} | -page # to change page" if len(presetPagein)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if  or args.get('spellbook') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagein)} | -page # to change page" if len(presetPagein)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
 <drac2>
 # this is for debugging, only display in testing channels
 if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
