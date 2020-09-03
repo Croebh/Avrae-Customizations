@@ -907,7 +907,7 @@ elif not c or args.get('?') or args.get('help'):
   help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
             -desc "**__Overlay Arguments__**
             `-over \"circle,<radius>,<color>,<center>\"` - Creates a circle of a given radius in ft and color, centered at the chosen location
-            `-over \"circletop,<radius>,<color>,<center>\"` - Same as circle, but you provide the top left coordinate instead of the center
+            `-over \"circletop,<radius>,<color>,<topleft>\"` - Same as circle, but you provide the top left coordinate instead of the center
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size in ft and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length in ft, width in ft, and color, starting and aiming where you choose
             `-over \"arrow,<color>,<start>,<end>\"` - Creates an arrow of a given color, starting and ending where you choose
@@ -967,7 +967,7 @@ elif not c or args.get('?') or args.get('help'):
 
             **Map BG Presets**
             `-newmapbg <mapname>:<url>,<mapsize>,<mapoptions>` - Allows you to create a map bg preset that is saved to your `mapBackgrounds` uvar to be called up using `-mapload`. Example - `!map -newmapbg Forest:https://i.imgur.com/MlhcGVE.jpg,26x14,hd`
-            `-deletemapbg <mapname>` - Allows you to delete a created map preset."
+            `-deletemapbg <mapname>` - Allows you to delete a created map preset. This also allows you to delete saved walls"
 
             -f "Valid Map Options (For `-mapoptions`)|
             `1` to `3` - Different zoom options, accepts fractions (`1.5` or `2.7` are both valid)
