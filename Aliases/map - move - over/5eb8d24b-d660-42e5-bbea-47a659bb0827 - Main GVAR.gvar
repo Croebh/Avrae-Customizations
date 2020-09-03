@@ -873,9 +873,15 @@ if c:
 </drac2>
 
 <drac2>
-colorhelp = f"""-f "Valid Colors|{newline.join([f"`{x[0]}` - {x[1]}" for x in COL.items()])}
+
+colorSplit = [list(COL.items())[i:i+2] for i in range(0, len(COL), 2)]
+colorOut = []
+for color1, color2 in colorSplit:
+  colorOut.append(f"""{color1[0]:<3}- {color1[1]:<6} | {color2[0]:<3}- {color2[1]:<6}""")
+
+colorhelp = f"""-f "Valid Colors|```{newline.join(colorOut)}```
                   You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
-sizehelp = f"""-f "Valid Sizes|{newline.join([f"`{x[0]}` - {x[1]}" for x in SIZ.items()])}|inline" """
+sizehelp = f"""-f "Valid Sizes|```{newline.join([f"{x[0]} - {x[1]}" for x in SIZ.items()])}```|inline" """
 
 otherhelps = f""" -f "> For help on setting up the map, see `!map help manage`
 > For help regarding overlays and spells, see `!map help overlay`" """
