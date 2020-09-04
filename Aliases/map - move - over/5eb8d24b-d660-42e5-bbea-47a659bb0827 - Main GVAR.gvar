@@ -69,6 +69,8 @@ spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, ov
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
+</drac2>
+<drac2>
 for overNum in [""]+[str(x) for x in range(1,11)]:
  if args.last('spell' + overNum):
   # Loop through our users spellOverlays, looking for that spell
@@ -80,16 +82,7 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
      args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
     # If its a list, its starting with a -over9 and then theres other stuff
     elif typeof(spellOverlays.get(spell)) == "SafeList":
-     adjustedList = []
-     spellNum = 1
-     for spellArg in spellOverlays.get(spell):
-      if spellArg.startswith('-') and spellArg != "-t":
-       adjustedList.append(f"{spellArg.strip('0123456789')}{spellNum}")
-       spellNum += 1
-      else:
-       adjustedList.append(spellArg)
-     #adjustedList = [f"{x.strip('0123456789')}{overNum}"  else x for x in spellOverlays.get(spell)]
-     #set_cvar('test', adjustedList)
+     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
      args = argparse(["-over" + overNum] + adjustedList + "@@@")
     # We only care about the first result
     break
