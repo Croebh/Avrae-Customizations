@@ -70,6 +70,18 @@ spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, ov
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
 </drac2>
+<drac2> # L318
+#This allows the user to load a preset into -mapview
+if args.last('viewload'):
+ userPresets=load_json(get('mapPresets', '{}'))
+ argsViewload = args.last("viewload").lower()
+ for searchViewload in userPresets:
+  if argsViewload in searchViewload.lower():
+   foundViewload = userPresets.get(searchViewload)
+   args = argparse(["-mapview", foundViewload] + args)
+   desc.append(f"Loaded view `{searchViewload}`.")
+   break
+</drac2>
 <drac2>
 for overNum in [""]+[str(x) for x in range(1,11)]:
  if args.last('spell' + overNum):
@@ -315,24 +327,7 @@ if args.last('newview') or args.last('deleteview'):
    set_uvar("mapPresets",dump_json(userPresets))
    desc.append(f"Removed Preset `{searchDeleteView.upper()}`")
 </drac2>
-<drac2>
-#This allows the user to load a preset into -mapview
-if args.last('viewload'):
- userPresets=load_json(get('mapPresets', '{}'))
- foundViewload = "Did not find that preset"
- argsViewload = args.last("viewload").lower()
- for searchViewload in userPresets:
-  if argsViewload in searchViewload.lower():
-   foundViewload = userPresets.get(searchViewload)
-   break
- maplocation = foundViewload.split(':')[0] + ":"
- mapsize = foundViewload.split(':')[1]
- mapSplitX, mapSplitY = mapsize.lower().split('x')
- mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
- mapSplitY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
- mapsize = f"{mapSplitX}x{mapSplitY}"
- desc.append(f"Map view changed to `{foundViewload}`")
-</drac2>
+
 <drac2>
 #This allows the user to create custom mapbg presets and save them to their mapBackgrounds uvar to be loaded using -mapload
 if args.last('newmapbg') or args.last('deletemapbg'):
