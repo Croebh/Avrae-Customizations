@@ -400,7 +400,8 @@ if c:
       _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
       _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
       _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
-      desc.append(f"Overlay {overNum} removed from {target.name} because effect {checkEffect} no longer present on {checkEffectTarget}")
+      desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
+      desc.append("")
   elif target.note:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
