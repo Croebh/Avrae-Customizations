@@ -386,7 +386,7 @@ if c:
  # Read each combatants notes for their information
  for target in combat().combatants:
   # If they have a note, perse it into a dict
-  if target.note:
+  if target.note and ':' in target.note:
    note=target.note
    note=note.split(" | ")
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
@@ -401,6 +401,10 @@ if c:
       _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
       _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
       desc.append(f"Overlay {overNum} removed from {target.name} because effect {checkEffect} no longer present on {checkEffectTarget}")
+  elif target.note:
+    note=target.note
+    desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
+    out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
 </drac2>
 <drac2>
 # Lets back up our map each time we run it, why not
