@@ -120,7 +120,7 @@ userPresets = load_json(get('mapPresets','{}'))
 # Only select the ones they are searching for, if they are searching
 viewlist = [f"""**{presets}** - `{str(over).replace('"',quote)}`""" for presets, over in userPresets.items() if args.last('search','').lower() in presets.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
-presetPagein = [viewlist[i:i+20] for i in range(0, len(viewlist), 20)]
+presetPagin = [viewlist[i:i+20] for i in range(0, len(viewlist), 20)]
 </drac2>
 <drac2>
 # If we're in combat, check all the things
@@ -859,7 +859,7 @@ if c:
   people=[]
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist')):
+ if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist')):
   if args.last('silent'):
    finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
@@ -885,7 +885,10 @@ otherhelps = f""" -f "> For help on setting up the map, see `!map help manage`
 # Are we trying to display the spelllist?
 if args.get('spelllist') or args.get('spellbook'):
  # Only grab the page selected, default to first
- spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
+ if spellPagin:
+  spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
+ else:
+  spellPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return spellPage + f"""-title "Wait, how do you Spell that again?"
                         -f "Add your own overlays/spells| You can add your own overlays/spells by running the command `-newspell <overlay/spell name>:<overlay>`"
@@ -893,13 +896,19 @@ if args.get('spelllist') or args.get('spellbook'):
 # Are we trying to display the maplist?
 elif args.get('maplist') or args.get('bglist') or args.get('backgroundlist'):
  # Only grab the page selected, default to first
- mapPage = f"""-desc "{newline.join(mapPagin[ min(len(mapPagin),args.last('page', 1, int)-1)] )}" """
+ if mapPagin:
+  mapPage = f"""-desc "{newline.join(mapPagin[ min(len(mapPagin),args.last('page', 1, int)-1)] )}" """
+ else:
+  mapPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return mapPage + f"""-title "Where are we at on the map?"
                         -f "Add your own maps| You can add your own maps by running the command `-newmapbg <mapname>:<url>,<map size>,<map options>`"  """
 elif args.get('viewlist'):
      # Only grab the page selected, default to first
- presetPage = f"""-desc "{newline.join(presetPagein[ min(len(presetPagein),args.last('page', 1, int)-1)] )}" """
+ if presetPagin:
+  presetPage = f"""-desc "{newline.join(presetPagin[ min(len(presetPagin),args.last('page', 1, int)-1)] )}" """
+ else:
+  presetPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return presetPage + f"""-title "Say hello to my little preset"
                         -f "Add your own `-mapview` presets| You can create your own presets by running the command `-newview <presetname>,<mapview preset>`"  """
@@ -1016,7 +1025,7 @@ elif not c or args.get('?') or args.get('help'):
 
  return help.replace(" "*11,"")
 </drac2>
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist')  or args.get('spellbook') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagein)} | -page # to change page" if len(presetPagein)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{(f" | Page {args.last('page',1)} / {len(spellPagin)} | -page # to change page" if len(spellPagin)>1 else "")+" | -search [name] to search" if args.get('spelllist')  or args.get('spellbook') else "" }}{{(f" | Page {args.last('page',1)} / {len(mapPagin)} | -page # to change page" if len(mapPagin)>1 else "")+" | -search [name] to search" if args.get('maplist') else "" }}{{(f" | Page {args.last('page',1)} / {len(presetPagin)} | -page # to change page" if len(presetPagin)>1 else "")+" | -search [name] to search" if args.get('viewlist') else "" }}"
 <drac2>
 # this is for debugging, only display in testing channels
 if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
