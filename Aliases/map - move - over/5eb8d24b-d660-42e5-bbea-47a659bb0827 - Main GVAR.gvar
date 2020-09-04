@@ -532,7 +532,6 @@ if c:
   if args.last('color'):
    color = args.last('color').lower().strip('~') + " "
    color = color[:color.index(' ')]
-   debug += f"`{color=}` {color in col}"
    # Confirm that the given color is valid before updating
    # Is it one of our preset colors?
    if color in col:
@@ -860,7 +859,7 @@ if c:
   people=[]
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not (args.get('?') or args.get('help') or args.get('spelllist') or args.get('spellbook') or args.get('maplist')):
+ if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist')):
   if args.last('silent'):
    finalMap = f"""{map}{maplocation}{mapsize}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
    return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
@@ -892,7 +891,7 @@ if args.get('spelllist') or args.get('spellbook'):
                         -f "Add your own overlays/spells| You can add your own overlays/spells by running the command `-newspell <overlay/spell name>:<overlay>`"
                         -f "`{targD}` and `{aimD}`| These will be replaced by the `-t` target and `-aim` target respectively."  """
 # Are we trying to display the maplist?
-elif args.get('maplist'):
+elif args.get('maplist') or args.get('bglist') or args.get('backgroundlist'):
  # Only grab the page selected, default to first
  mapPage = f"""-desc "{newline.join(mapPagin[ min(len(mapPagin),args.last('page', 1, int)-1)] )}" """
  # Add some pizazz
