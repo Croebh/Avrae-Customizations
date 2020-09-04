@@ -613,7 +613,7 @@ if c:
       # Doing 5ft diag's, the distance is just the higher delta
       distance = max(deltaX, deltaY)*5
       # Grab the targets new color if changed, old color if set, or default to dark violet
-      colr = (args.last('color', out[targ.name].get('color','p')) + " ").strip("#~").lower()
+      colr = (args.last('color', out[targ.name].get('color','w')) + " ").strip("#~").lower()
       colr = colr[:colr.index(" ")]
       if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
         colr = f"~{colr}"
