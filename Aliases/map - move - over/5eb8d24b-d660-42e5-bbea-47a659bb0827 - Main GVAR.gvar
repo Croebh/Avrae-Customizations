@@ -762,7 +762,41 @@ if c:
        # Otherwise, lets just display it once
        overlays.append(overlay.replace("{aim}", aimPoint))
        desc.append(overdesc)
+</drac2>
 
+<drac2>
+if c:
+ for aimNum in [""]+[str(x) for x in range(1,11)]:
+  # Is the user trying to change a -aim? 
+  # Make sure they don't have a `-over`
+  if args.last('aim'+aimNum) and not args.last('over'+aimNum):
+   # Also make sure there is a valid target
+   if (curTarg := args.last('t', combat().me.name if combat().me else None)) and (curTarg := gt(curTarg)):
+    # And that target has an overlay, and an existing aim point
+    if out[curTarg.name].get('overlay'+aimNum) and out[curTarg.name].get('aim'+aimNum):
+     # If they used |stick, remove it, as its implied at this point
+     aim = args.last('aim'+aimNum).split('|')[0]
+     # If the aim target is, well, a target, grab its location     
+     for target in out:
+      if aim.lower() in target.lower():
+       aimPoint = out[target]['location']
+       # Is our aim target larger than medium? If so, we need to offset to adjust
+       if out[target].get('size',"M")[0] in "LHG":
+        aimOffset = sizeOffset.get(out[target].get('size',"M")[0])
+        aimTargX = ''.join(x for x in aimPoint if x.isalpha())
+        aimTargY = int(''.join(y for y in aimPoint if y.isdigit()))
+        aimTargX = alph[alph.index(aimTargX)+aimOffset]
+        aimTargY += aimOffset
+        aimPoint = f"{aimTargX}{aimTargY}"
+       aimTarget = target
+     # If its not a target, use coordinates
+     if not aimPoint:
+      aimPoint = aim
+      aimTarget = aim.upper()
+     # Notify the user as to what happened
+     desc.append(f"""Aim point for Overlay {aimNum} on {curTarg.name} changed from {out[curTarg.name].get('aim'+aimNum)} to {aimTarget}.""")
+     # Update the aim target
+     out[curTarg.name].update({"aim"+aimNum: aimTarget})
 </drac2>
 
 <drac2>
@@ -929,7 +963,7 @@ elif not c or args.get('?') or args.get('help'):
             You can attach or display more than one overlay at a time by appending a number to the end of the `-over`/`-aim`/`-effect`/`-spell` args, for example `-over1` or `-aim9`. There is currently support for `-over` through till `-over9`, allowing 10 to be attached atno a time."
 
             -f "_ _|`-spell <spell>` - Grabs a 'spell' from your `mapOverlays` uvar, and adds it as an overlay. Many/most of the default ones contain `{targD}` or `{aimD}` to position and aim them. You can see a list of available overlays with `!map spellbook`.
-            `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them.
+            `-aim [target]` - Allows you to aim an overlay at a target. Use `{aimD}` in the `-over` command in order grab it. Works on both locations (A3) and targets (OR3). If a `-t` is provided as well, it won't attach the overlay to them. Can be used to move an existing aimed overlay.
             `-aim [target]|stick` - Same as above, but it *will* attach the overlay to a `-t` if provided, and will attach the `-aim` info as well.
             `-effect \"<effect>[|effectTarget]\"` - Allows you to 'connect' an overlay to an init effect on a target. When the effect or target are no longer present, the overlay will be removed. See `!help init effect` for details on creating them."
 
