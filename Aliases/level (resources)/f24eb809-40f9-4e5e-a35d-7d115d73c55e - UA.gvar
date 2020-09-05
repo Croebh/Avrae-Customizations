@@ -14,6 +14,28 @@
     ]
   },
   {
+    "Class": "Paladin",
+    "subclass": "Glory",
+    "counters": [
+      {
+        "name": "Glorious Defense",
+        "level": 15,
+        "value": "charismaMod",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "PaladinLevel"
+      },
+      {
+        "name": "Living Legend",
+        "level": 20,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "PaladinLevel"
+      }
+    ]
+  },
+  {
     "Class": "Barbarian",
     "subclass": "Wild Soul",
     "counters": [
