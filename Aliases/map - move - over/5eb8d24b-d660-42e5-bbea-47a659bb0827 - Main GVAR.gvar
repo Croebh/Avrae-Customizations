@@ -401,7 +401,7 @@ if c:
 # This way you won't accidentally overwrite your backup with the backup from another channel
 
 mapStates = load_json(get('mapStates','{}'))
-prevback = load_json(get('mapState'+chanid(), mapStates.get(chanid()))) 
+prevback = mapStates.get(chanid())
 mapStates.update({chanid(): out})
 set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
