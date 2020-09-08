@@ -171,7 +171,7 @@ if c:
   mapoptions=mapinfo.get('options')
   walls=mapinfo.get('walls')
   if mapinfo.get('view'):
-   mapviewlocation, mapviewsize = mapinfo.get('view').split(':')
+   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
 </drac2>
 <drac2>
 if c:
@@ -242,7 +242,7 @@ if c:
      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
   if mapview != args.last('mapview', mapview):
    # Do they want to reset the map view?
-   if args.last('mapview').lower() == 'reset':
+   if args.last('mapview').lower() in ('reset', 'none'):
     mapviewlocation = mapviewsize = ""
     desc.append(f"""Map view reset to default `{mapsize}`.""")
    else:
@@ -282,7 +282,7 @@ if c:
   if mapattach and mapattach.get_effect('map'):
    mapattach.remove_effect('map')
   # Format everything appropriately
-  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ Walls: {walls}" if walls else""}{f" ~ View: {mapviewlocation}:{mapviewsize}"}""".strip(" ~")
+  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ Walls: {walls}" if walls else""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapview else ''}""".strip(" ~")
   # If mapattach exists, apply the new effect, and display
   if mapattach:
    mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
@@ -893,12 +893,8 @@ if c:
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist')):
-  if args.last('silent'):
-   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
-   return f"""-f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
-  else:
-   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
-   return f"""-image "{finalMap}" -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f"{walls}/" if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+  return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
 <drac2>
