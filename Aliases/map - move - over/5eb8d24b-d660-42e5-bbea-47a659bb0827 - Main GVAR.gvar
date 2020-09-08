@@ -214,6 +214,8 @@ if c:
      desc.append(f" - Grid Hidden")
     if 'e' in mapoptions:
      desc.append(f" - Disable Border Opacity")
+    if 'f' in mapoptions:
+     desc.append(f" - Using alternative token font")
     if 'c' in mapoptions:
      gsize = ""
      for char in mapoptions[mapoptions.index('c')+1:]:
@@ -324,16 +326,16 @@ if args.last('newview') or args.last('deleteview'):
 #This allows the user to create custom mapbg presets and save them to their mapBackgrounds uvar to be loaded using -mapload
 if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or args.last('deletemap'):
  #First option is to create mapbg preset
- if args.last('newmapbg'):
+ if args.last('newmapbg') or args.last('savemap'):
   userMaps = load_json(get('mapBackgrounds','{}'))
-  for addMapbg in (args.get('newmapbg') or args.last('savemap')):
+  for addMapbg in (args.get('newmapbg') or args.get('savemap')):
    if ":" in addMapbg:
      userMaps.update({addMapbg.split(":")[0]:addMapbg.split(":", 1)[1].split(',')})
    else:
      err("You must separate the map name from the map info with a : and url, size and options with a comma when adding `-savemap` entries.")
    set_uvar("mapBackgrounds",dump_json(userMaps))
    desc.append(f"Created the mapbg `{addMapbg.split(':')[0]}`")
- #Second option is to delete an already created map
+ #Second option is to delete an already created map!map
  if args.last('deletemapbg') or args.last('deletemap'):
   foundDeletemapbg = "Did not find that map"
   argDeletemapbg = (args.last("deletemapbg") or args.last('deletemap')).lower()
@@ -406,6 +408,7 @@ mapStates.update({chanid(): out})
 set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
+delete_uvar("mapSize"+chanid())
 
 # Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
 # and replace out out dict with it. We do this after we set the backup, so we can undo the undo
@@ -492,6 +495,8 @@ if c:
       desc.append(f" - Grid Hidden")
      if 'e' in options:
       desc.append(f" - Disable Border Opacity")
+     if 'f' in mapoptions:
+      desc.append(f" - Using alternative token font")
      if 'c' in options:
       gsize = ""
       for char in options[options.index('c')+1:]:
@@ -932,7 +937,7 @@ elif args.get('maplist') or args.get('bglist') or args.get('backgroundlist'):
  return mapPage + f"""-title "Where are we at on the map?"
                         -f "Add your own maps| You can add your own maps by running the command `-savemap <mapname>:<url>,<map size>,<map options>`"  """
 elif args.get('viewlist'):
-     # Only grab the page selected, default to first
+ # Only grab the page selected, default to first
  if presetPagin:
   presetPage = f"""-desc "{newline.join(presetPagin[ min(len(presetPagin),args.last('page', 1, int)-1)] )}" """
  else:
@@ -995,7 +1000,7 @@ elif not c or args.get('?') or args.get('help'):
 
             If these settings are run when they aren't attached to a `-mapattach` target (either when running the `-mapsize` or previously), then the change is temporary, and will be switched back to your default the next time you run the `!map` command.
             
-            Every time you run a `!map` command, it will save a backup uvar `mapState#####` where the #### is your channel ID. You can revert to this state with `!map undo`. Use this in emergencies, as it may be an old back up. If you use it, and its worse somehow, running `!map undo` a second time will revert it back."
+            Every time you run a `!map` command, it will save to a backup uvar `mapStates` where the channel ID is a key inside it. You can revert to this state with `!map undo`. Use this in emergencies, as it may be an old back up. If you use it, and its worse somehow, running `!map undo` a second time will revert it back."
 
             -f "_ _|**__Preset Arguments__**
             **Mapview Presets**
@@ -1014,6 +1019,7 @@ elif not c or args.get('?') or args.get('help'):
             `h%` - Grid transparancy. `h10` would set it to 10% transparancy, `h90` would be 90%
             `n` - Grid hidden
             `e` - Disable border opacity
+            `f` - Use alternative token font
             `c<value>` - Set the gridsize in pixels (Default is 40)
             `o<value>:<value>` - Set the background image offset in pixels
             If you are setting the zoom level, you have to set it as the first option.
