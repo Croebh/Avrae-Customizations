@@ -975,7 +975,7 @@ elif not c or args.get('?') or args.get('help'):
  elif args.get('map') or args.get('options') or args.get('dm') or args.get('manage'):
 
   help = f"""-title "Wait, were we in the dungeon or the pub?" 
-            -desc "`-mapattach <target>` - Anchors the map to a target in the initiative order to allow changes to the map to be saved. Use a dedicated target, instead of a player or a monster, to prevent the map from vanishing when a player exits combat or a monster is killed. Without `-mapattach`, every time you run `!map` the previous changes or settings are lost and the map will revert to its default."
+            -desc "`-mapattach <target>` - Anchors the map to a target in the initiative order to allow changes to the map to be saved. Use a dedicated target, such as a player or a `!init add` placeholder, not a monster, to prevent the map from vanishing when a monster is killed. Without `-mapattach`, every time you run `!map` the previous changes or settings are lost and the map will revert to its default."
             
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
