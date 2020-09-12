@@ -85,22 +85,22 @@ if args.last('viewload') or args.last('loadview'):
    break
 </drac2>
 <drac2>
-for overNum in [""]+[str(x) for x in range(1,11)]:	
- if args.last('spell' + overNum):	
-  # Loop through our users spellOverlays, looking for that spell	
-  for spell in spellOverlays:	
-   if args.last('spell' + overNum).lower() in spell.lower():	
-    # If we find it, add the overlay to the args	
-    # If its a string, its just a `-over9`	
-    if typeof(spellOverlays.get(spell)) == "str":	
-     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")	
-    # If its a list, its starting with a -over9 and then theres other stuff	
-    elif typeof(spellOverlays.get(spell)) == "SafeList":	
-     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]	
-     args = argparse(["-over" + overNum] + adjustedList + "@@@")	
-    # We only care about the first result	
-    break	
-</drac2>	
+for overNum in [""]+[str(x) for x in range(1,11)]:
+ if args.last('spell' + overNum):
+  # Loop through our users spellOverlays, looking for that spell
+  for spell in spellOverlays:
+   if args.last('spell' + overNum).lower() in spell.lower():
+    # If we find it, add the overlay to the args
+    # If its a string, its just a `-over9`
+    if typeof(spellOverlays.get(spell)) == "str":
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
+    # If its a list, its starting with a -over9 and then theres other stuff
+    elif typeof(spellOverlays.get(spell)) == "SafeList":
+     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
+     args = argparse(["-over" + overNum] + adjustedList + "@@@")
+    # We only care about the first result
+    break
+</drac2>
 <drac2>
 # The default map bg's, created by @Nerds and Dragons#2817 
 presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
@@ -191,7 +191,7 @@ if c:
   objects = mapinfo.get('objects')
   objects = objects.split('/') if objects else []
   if mapinfo.get('view'):
-   mapviewlocation, mapviewsize = mapinfo.get('view').split(':')
+   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
 </drac2>
 <drac2>
 if c:
@@ -460,6 +460,7 @@ set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
 delete_uvar("mapSize"+chanid())
+
 # Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
 # and replace out out dict with it. We do this after we set the backup, so we can undo the undo
 if args.last('undo') and prevBack:
@@ -545,7 +546,7 @@ if c:
       desc.append(f" - Grid Hidden")
      if 'e' in options:
       desc.append(f" - Disable Border Opacity")
-     if 'f' in mapoptions:	
+     if 'f' in mapoptions:
       desc.append(f" - Using alternative token font")
      if 'c' in options:
       gsize = ""
