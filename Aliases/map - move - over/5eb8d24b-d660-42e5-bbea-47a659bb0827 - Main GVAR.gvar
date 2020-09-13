@@ -372,28 +372,34 @@ if args.last('saveview') or args.last('deleteview'):
 #This allows the user to create custom mapbg presets and save them to their mapBackgrounds uvar to be loaded using -mapload
 if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or args.last('deletemap'):
  #First option is to create mapbg preset
+ userMaps = load_json(get('mapBackgrounds','{}'))
  if args.last('newmapbg') or args.last('savemap'):
-  userMaps = load_json(get('mapBackgrounds','{}'))
-  for addMapbg in (args.get('newmapbg') or args.get('savemap')):
-   if ":" in addMapbg:
-     userMaps.update({addMapbg.split(":")[0]:addMapbg.split(":", 1)[1].split(',')})
-     desc.append(f"Created the mapbg `{addMapbg.split(':')[0].upper()}`")
-   else:
-    err("You must separate the map name from the map info with a : and url, size and options with a comma when adding `-savemap` entries.")
-   set_uvar("mapBackgrounds",dump_json(userMaps))
-   desc.append(f"Created the mapbg `{addMapbg.split(':')[0]}`")
+  mapName = (args.last('savemap') or args.last('newmapbg')).lower()
+  mapBGState = {}
+  formedMap = {mapName:mapBGState}
+  for key, value in mapinfo.items():
+   if value:
+    if mapinfo.get('mapbg')!= None:
+     mapBGState["mapbg"] = mapinfo.get('background')
+    mapBGState["mapsize"] = mapsize
+    if mapinfo.get('mapoptions')!= None:
+     mapBGState["mapoptions"] = mapinfo.get('options')
+    if mapinfo.get('walls')!= None:
+     mapBGState["walls"] = mapinfo.get('walls').split(', ')
+    if mapinfo.get('objects')!= None:
+     mapBGState["objects"] = mapinfo.get('objects').split('/')
+  userMaps.update(formedMap)
+  set_uvar("mapBackgrounds",dump_json(userMaps))
+  desc.append(f"Created the mapbg `{mapName}`")
  #Second option is to delete an already created map
  if args.last('deletemapbg') or args.last('deletemap'):
-  foundDeletemapbg = "Did not find that map"
-  argDeletemapbg = (args.last("deletemapbg") or args.last('deletemap')).lower()
-  for searchDeletemapbg in userMaps:
-   if argDeletemapbg in searchDeletemapbg.lower():
-    foundDeletemapbg = userMaps.pop(searchDeletemapbg)
+  argDeletemap = (args.last("deletemapbg") or args.last('deletemap')).lower()
+  for searchMap in userMaps:
+   if argDeletemap in searchMap.lower():
+    userMaps.pop(searchMap)
     break
-   else:
-    err("Did not find the map you are trying to delete.")
   set_uvar("mapBackgrounds",dump_json(userMaps))
-  desc.append(f"Removed Map BG `{searchDeletemapbg}`")
+  desc.append(f"Removed Map BG `{argDeletemap}`")
 </drac2>
 <drac2>
 #Here we allow the user to save spell overlays in their mapOverlays uvar
