@@ -85,49 +85,22 @@ if args.last('viewload') or args.last('loadview'):
    break
 </drac2>
 <drac2>
-for overNum in [""]+[str(x) for x in range(1,11)]:
- if args.last('spell' + overNum):
-  # Loop through our users spellOverlays, looking for that spell
-  for spell in spellOverlays:
-   if args.last('spell' + overNum).lower() in spell.lower():
-    # If we find it, add the overlay to the args
-    # If its a string, its just a `-over9`
-    if typeof(spellOverlays.get(spell)) == "str":
-     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
-    # If its a list, its starting with a -over9 and then theres other stuff
-    elif typeof(spellOverlays.get(spell)) == "SafeList":
-     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
-     args = argparse(["-over" + overNum] + adjustedList + "@@@")
-    # We only care about the first result
-    break
-</drac2>
-<drac2>
-# The default map bg's, created by @Nerds and Dragons#2817 
-presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
-mapBG = presetMaps.copy()
-userMaps = load_json(get('mapBackgrounds','{}'))
-# Grab the user selected map, and update the main dict
-# This allows the user to replace/update items in the original dict
-mapBG.update(userMaps)
-# Iterate over the map dict, making it a little easier to read.
-# Only select the ones they are searching for, if they are searching
-maplist = [f"""**{maps}**""" for maps, over in mapBG.items() if args.last('search','').lower() in maps.lower()]
-# Split the list into groups of 20, to ensure it stays a reasonable size
-mapPagin = [maplist[i:i+20] for i in range(0, len(maplist), 20)]
-# Do we have a -loadmap?
-if args.last('mapload') or args.last('loadmap'):
- # Loop through our users mapBackgrounds, looking for that map
- for maps in mapBG:
-  if (args.last('mapload') or args.last('loadmap')).lower() in maps.lower():
-   # If we find it, add the map to the args
-   foundMapload = mapBG[maps]
-   if typeof(foundMapload) == 'str':
-    args = argparse(["-walls",  foundMapload] + "@@@")
-   elif typeof(foundMapload) == "SafeList":
-    getBG, getSize, getOptions = (foundMapload + ["", ""])[:3]
-    args = argparse(["-mapbg", getBG]   + (["-mapsize"  , getSize] if getSize else []) + (["-mapoptions", getOptions]  if getOptions else []) + "@@@")
-   break
-</drac2>
+for overNum in [""]+[str(x) for x in range(1,11)]:	
+ if args.last('spell' + overNum):	
+  # Loop through our users spellOverlays, looking for that spell	
+  for spell in spellOverlays:	
+   if args.last('spell' + overNum).lower() in spell.lower():	
+    # If we find it, add the overlay to the args	
+    # If its a string, its just a `-over9`	
+    if typeof(spellOverlays.get(spell)) == "str":	
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")	
+    # If its a list, its starting with a -over9 and then theres other stuff	
+    elif typeof(spellOverlays.get(spell)) == "SafeList":	
+     adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]	
+     args = argparse(["-over" + overNum] + adjustedList + "@@@")	
+    # We only care about the first result	
+    break	
+</drac2>	
 <drac2>
 # Pulling up viewlist to view all created -mapview presets 
 userPresets = load_json(get('mapPresets','{}'))
@@ -191,7 +164,7 @@ if c:
   objects = mapinfo.get('objects')
   objects = objects.split('/') if objects else []
   if mapinfo.get('view'):
-   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
+   mapviewlocation, mapviewsize = mapinfo.get('view').split(':')
 </drac2>
 <drac2>
 if c:
@@ -369,6 +342,48 @@ if args.last('saveview') or args.last('deleteview'):
    desc.append(f"Removed Preset `{searchDeleteView.upper()}`")
 </drac2>
 <drac2>
+# The default map bg's, created by @Nerds and Dragons#2817 
+presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
+mapBG = presetMaps.copy()
+userMaps = load_json(get('mapBackgrounds','{}'))
+# Grab the user selected map, and update the main dict
+# This allows the user to replace/update items in the original dict
+mapBG.update(userMaps)
+# Iterate over the map dict, making it a little easier to read.
+# Only select the ones they are searching for, if they are searching
+maplist = [f"""**{maps}**""" for maps, over in mapBG.items() if args.last('search','').lower() in maps.lower()]
+# Split the list into groups of 20, to ensure it stays a reasonable size
+mapPagin = [maplist[i:i+20] for i in range(0, len(maplist), 20)]
+# Do we have a -loadmap?
+if args.last('mapload') or args.last('loadmap'):
+ # Loop through our users mapBackgrounds, looking for that map
+ argLoadmap = (args.last('loadmap')or args.last('mapload')).lower()
+ for maps in mapBG:
+  if argLoadmap in maps.lower():
+   foundMap = mapBG.get(maps)
+   if 'mapbg' in foundMap:
+    mapbg = foundMap.get('mapbg')
+   if 'mapsize' in foundMap:
+    mapsize = foundMap.get('mapsize')
+   if 'mapoptions' in foundMap:
+    mapoptions = foundMap.get('mapoptions')
+   if 'walls' in foundMap:
+    walls = foundMap.get('walls')
+   if 'objects' in foundMap:
+    objects = foundMap.get('objects')
+   if typeof(foundMap) == 'SafeList':
+   	mapbg = foundMap[0]
+   	mapsize = foundMap[1]
+   	mapoptions = foundMap[2]
+   	objects = []
+   	walls = []
+   desc.append(f"Loaded the map {maps}")
+   neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}""".strip(" ~")
+   if mapattach:
+    mapattach.add_effect('map', f"""-attack "||{neweffect}" """) 
+   break
+</drac2>
+<drac2>
 #This allows the user to create custom mapbg presets and save them to their mapBackgrounds uvar to be loaded using -mapload
 if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or args.last('deletemap'):
  #First option is to create mapbg preset
@@ -379,10 +394,10 @@ if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or 
   formedMap = {mapName:mapBGState}
   for key, value in mapinfo.items():
    if value:
-    if mapinfo.get('mapbg')!= None:
+    if mapinfo.get('background')!= None:
      mapBGState["mapbg"] = mapinfo.get('background')
     mapBGState["mapsize"] = mapsize
-    if mapinfo.get('mapoptions')!= None:
+    if mapinfo.get('options')!= None:
      mapBGState["mapoptions"] = mapinfo.get('options')
     if mapinfo.get('walls')!= None:
      mapBGState["walls"] = mapinfo.get('walls').split(', ')
@@ -390,7 +405,7 @@ if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or 
      mapBGState["objects"] = mapinfo.get('objects').split('/')
   userMaps.update(formedMap)
   set_uvar("mapBackgrounds",dump_json(userMaps))
-  desc.append(f"Created the mapbg `{mapName}`")
+  desc.append(f"Created the map `{mapName}`")
  #Second option is to delete an already created map
  if args.last('deletemapbg') or args.last('deletemap'):
   argDeletemap = (args.last("deletemapbg") or args.last('deletemap')).lower()
@@ -466,7 +481,6 @@ set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
 delete_uvar("mapSize"+chanid())
-
 # Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
 # and replace out out dict with it. We do this after we set the backup, so we can undo the undo
 if args.last('undo') and prevBack:
@@ -552,7 +566,7 @@ if c:
       desc.append(f" - Grid Hidden")
      if 'e' in options:
       desc.append(f" - Disable Border Opacity")
-     if 'f' in mapoptions:
+     if 'f' in mapoptions:	
       desc.append(f" - Using alternative token font")
      if 'c' in options:
       gsize = ""
@@ -1024,7 +1038,7 @@ elif args.get('maplist') or args.get('bglist') or args.get('backgroundlist'):
   mapPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return mapPage + f"""-title "Where are we at on the map?"
-                        -f "Add your own maps| You can add your own maps by running the command `-savemap <mapname>:<url>,<map size>,<map options>`"  """
+                        -f "Add your own maps| You can add your own maps by running the command `-savemap <mapname>`"  """
 elif args.get('viewlist'):
      # Only grab the page selected, default to first
  if presetPagin:
@@ -1097,6 +1111,7 @@ elif not c or args.get('?') or args.get('help'):
             `-deletewalls <code>` - Allows you to delete an individual wall
             `-object <location>:<object>` - Adds an object to the map. Some objects can be placed over multiple squares. `!map objectlist` to view available objects.
             `-deleteobject <location>:<object>` - Deletes the specified object from the map"
+            
             -f "_ _|
             `-loadmap <mapname>` - Loads a 'map' from either the preset list or your `mapBackgrounds` uvar, and adds it to `-mapattach`. You can see a list of available maps with `!map maplist`
             `-mapview <location>:<gridsize>` - To view a portion of the background image set the Top-Left corner location and the size of the map you want to see: `!map -mapview c3:15x15`. To return back to default set grid size: `!map -mapview reset`
@@ -1118,7 +1133,7 @@ elif not c or args.get('?') or args.get('help'):
             `!map viewlist` - Allows you to see all your saved `-mapview` presets
 
             **Map BG Presets**
-            `-savemap <mapname>:<url>,<mapsize>,<mapoptions>` - Allows you to create a map bg preset that is saved to your `mapBackgrounds` uvar to be called up using `-loadmap`. Example - `!map -savemap Forest:https://i.imgur.com/MlhcGVE.jpg,26x14,hd`
+            `-savemap <mapname>` - Allows you to create a map bg preset that is saved to your `mapBackgrounds` uvar to be called up using `-loadmap`.
             `-deletemap <mapname>` - Allows you to delete a created map preset. This also allows you to delete saved walls"
 
             -f "Valid Map Options (For `-mapoptions`)|
