@@ -215,7 +215,7 @@ if c:
     if 'e' in mapoptions:
      desc.append(f" - Disable Border Opacity")
     if 'f' in mapoptions:
-     desc.append(f" - Using alternative token font")
+     desc.append(f" - Using alternative grid/token font")
     if 'c' in mapoptions:
      gsize = ""
      for char in mapoptions[mapoptions.index('c')+1:]:
@@ -282,7 +282,8 @@ if c:
   if mapattach and mapattach.get_effect('map'):
    mapattach.remove_effect('map')
   # Format everything appropriately
-  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ Walls: {walls}" if walls else""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapview else ''}""".strip(" ~")
+  setMapView = f"{mapviewlocation}:{mapviewsize}"
+  neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ Walls: {walls}" if walls else""}{f" ~ View: {setMapView}" if setMapView.strip(':') else ''}""".strip(" ~")
   # If mapattach exists, apply the new effect, and display
   if mapattach:
    mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
@@ -403,7 +404,7 @@ if c:
 # This way you won't accidentally overwrite your backup with the backup from another channel
 
 mapStates = load_json(get('mapStates','{}'))
-prevback = mapStates.get(chanid())
+prevBack = mapStates.get(chanid())
 mapStates.update({chanid(): out})
 set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
@@ -496,7 +497,7 @@ if c:
      if 'e' in options:
       desc.append(f" - Disable Border Opacity")
      if 'f' in mapoptions:
-      desc.append(f" - Using alternative token font")
+      desc.append(f" - Using alternative grid/token font")
      if 'c' in options:
       gsize = ""
       for char in options[options.index('c')+1:]:
@@ -679,13 +680,14 @@ if c:
      currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
 
      # This has all the information we need for our overlay[
-     shapeDict = [{"type": "circle",    "name":"c",  "num": [3], "args": ("size", "color", "loc")},
-                  {"type": "circletop", "name":"ct", "num": [3], "args": ("size", "color", "loc")},
-                  {"type": "cone",      "name":"t",  "num": [4], "args": ("size", "color", "loc", "eloc")},
-                  {"type": "line",      "name":"l",  "num": [5], "args": ("size", "width", "color", "loc", "eloc")},
-                  {"type": "arrow",     "name":"a",  "num": [3], "args": ("color", "loc", "eloc")},
-                  {"type": "square",    "name":"s",  "num": [3,4], "args": ("size", "color", "loc", "eloc")},
-                  {"type": "squaretop", "name":"st", "num": [3,4], "args": ("size", "color", "loc", "eloc")}]
+     shapeDict = [{"type": "circle",       "name":"c",  "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circletop",    "name":"ct", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circlecorner", "name":"co", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "cone",         "name":"t",  "num": [4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "line",         "name":"l",  "num": [5], "args": ("size", "width", "color", "loc", "eloc")},
+                  {"type": "arrow",        "name":"a",  "num": [3], "args": ("color", "loc", "eloc")},
+                  {"type": "square",       "name":"s",  "num": [3,4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "squaretop",    "name":"st", "num": [3,4], "args": ("size", "color", "loc", "eloc")}]
      
      # Is the overlay valid?
      overValid = False
@@ -947,6 +949,7 @@ elif not c or args.get('?') or args.get('help'):
   help = f"""-title "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!"
             -desc "**__Overlay Arguments__**
             `-over \"circle,<radius>,<color>,<center>\"` - Creates a circle of a given radius in ft and color, centered at the chosen location
+            `-over \"circlecorner,<radius>,<color>,<topleftcorner>\"` - Same as circle, but the circle is centred on the top left corner of the cell
             `-over \"circletop,<radius>,<color>,<topleft>\"` - Same as circle, but you provide the top left coordinate instead of the center
             `-over \"cone,<size>,<color>,<start>,<end>\"` - Creates a cone/triangle of a given size in ft and color, starting and aiming where you choose
             `-over \"line,<length>,<width>,<color>,<start>,<end>\"` - Creates a line of a given length in ft, width in ft, and color, starting and aiming where you choose
@@ -1015,7 +1018,7 @@ elif not c or args.get('?') or args.get('help'):
             `h%` - Grid transparancy. `h10` would set it to 10% transparancy, `h90` would be 90%
             `n` - Grid hidden
             `e` - Disable border opacity
-            `f` - Use alternative token font
+            `f` - Use alternative grid/token font
             `c<value>` - Set the gridsize in pixels (Default is 40)
             `o<value>:<value>` - Set the background image offset in pixels
             If you are setting the zoom level, you have to set it as the first option.
