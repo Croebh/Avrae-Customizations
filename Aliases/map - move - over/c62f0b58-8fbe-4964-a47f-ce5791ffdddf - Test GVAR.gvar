@@ -478,7 +478,7 @@ if args.last('newspell') or args.last('savespell') or args.last('deletespell'):
    if ":" in addNewspell:
     userOverlays.update({addNewspell.split(":")[0]:addNewspell.split(":")[1]})
    else:
-     err("You must separate the key and value with a colon when adding `-savespell` entries.")
+     desc.append("You must separate the key and value with a colon when adding `-savespell` entries.")
   set_uvar("mapOverlays",dump_json(userOverlays))
   desc.append(f"Created the overlay preset `{addNewspell.split(':')[0].upper()}`")
  #second option is to delete an already created spell/overlay
@@ -730,7 +730,7 @@ if args.last('savetoken') or args.last('deletetoken'):
    if ":" in addNewToken:
     userTokens.update({addNewToken.split(":")[0]:addNewToken.split(":")[1]})
    else:
-    err("You must separate the key and value with a colon when adding `-savetoken` entries.")
+    desc.append("You must separate the key and value with a colon when adding `-savetoken` entries.")
   set_uvar("mapTokens",dump_json(userTokens).lower())
   desc.append(f"Created the Token `{addNewToken.split(':')[0].upper()}`")
  if args.last('deletetoken'):
