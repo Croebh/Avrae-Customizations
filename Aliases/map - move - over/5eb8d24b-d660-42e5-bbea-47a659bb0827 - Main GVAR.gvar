@@ -290,7 +290,15 @@ if c:
    desc.append(f"Map settings attached to `{mapattach.name}`")
   # Otherwise, show that it was changed, but not saved
   else:
-   desc.append("Map settings changed, but no map attach target was found. Settings not saved.")
+   # Look for a combatant named DM or Map, auto attach
+   for maptarg in ("map", "dm"):
+     if c.get_combatant(maptarg):
+       mapattach = c.get_combatant(maptarg)
+       mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
+       desc.append(f"""Autoattached map settings to {mapattach.name}""")
+       break
+   else:
+    desc.append("Map settings changed, but no map attach target was found. Settings not saved.")
 </drac2>
 <drac2>
 #To save the current created map that uses walls and doors
