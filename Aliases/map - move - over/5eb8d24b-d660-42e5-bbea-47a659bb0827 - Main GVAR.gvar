@@ -603,7 +603,7 @@ if c:
     _ = out[targ.name].pop('location')
     prevLoc = None
    # Did they have a previous location? If so, lets calculate distance and draw a line
-   if prevLoc and prevLoc.lower() != args.last("move").lower():
+   if prevLoc and prevLoc.lower() != args.last("move", "").lower():
     # Split previous location from XY to X and Y
     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
     prevLocY = ''.join(y for y in prevLoc if y.isdigit())
@@ -629,7 +629,7 @@ if c:
       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
       # Display the change in location
       desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
-   elif prevLoc.lower() != args.last("move").lower():
+   else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
    out[targ.name].update({"location":args.last('move').upper()})
@@ -671,7 +671,7 @@ if c:
        overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
        # Display the change in location
        desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
-    elif prevLoc.lower() != mMove.lower():
+    else:
      # Display the change in location
      desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
     out[mTarg.name].update({"location":mMove.upper()})
