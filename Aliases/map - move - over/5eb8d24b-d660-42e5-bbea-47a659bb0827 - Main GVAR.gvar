@@ -634,6 +634,47 @@ if c:
    out[targ.name].update({"location":args.last('move').upper()})
 </drac2>
 <drac2>
+if c:
+ for massTarg in args.get('t'):
+  mTarg, mMove = (massTarg.split('|') + [""])[:2]
+  if mMove and (mTarg := gt(mTarg)):
+   # If they don't have a note/location set, add them to the list  
+   if not out.get(mTarg.name):  
+    out[mTarg.name] = {}  
+   prevLoc = out[mTarg.name].get('location')
+   # Did they have a previous location? If so, lets calculate distance and draw a line
+   if prevLoc and prevLoc.lower() != mMove:
+    # Split previous location from XY to X and Y
+    prevLocX = ''.join(x for x in prevLoc if x.isalpha())
+    prevLocY = ''.join(y for y in prevLoc if y.isdigit())
+    if prevLocY and prevLocX:
+      prevLocY = int(prevLocY)
+      # Same as new location
+      newLocX = ''.join(x.upper() for x in mMove if x.isalpha())
+      newLocY = int(''.join(y for y in mMove if y.isdigit()))
+      # Calculate the delta for X and Y between the two
+      deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
+      # Throw them in the pot with some pythag
+      distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+      # We want the positive delta (wish we had abs(), sigh)
+      deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+      # Doing 5ft diag's, the distance is just the higher delta
+      distance = max(deltaX, deltaY)*5
+      # Grab the targets new color if changed, old color if set, or default to dark violet
+      colr = (args.last('color', out[mTarg.name].get('color','w')) + " ").strip("#~").lower()
+      colr = colr[:colr.index(" ")]
+      if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+        colr = f"~{colr}"
+      # Add the line to the overlay list
+      overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+      # Display the change in location
+      desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+   else:
+    # Display the change in location
+    desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
+   out[mTarg.name].update({"location":mMove.upper()})
+</drac2>
+<drac2>
 # Overlay stuff
 if c:
   for overNum in [""]+[str(x) for x in range(1,11)]:
