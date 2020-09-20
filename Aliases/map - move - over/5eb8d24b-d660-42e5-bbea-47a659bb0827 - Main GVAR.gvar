@@ -637,7 +637,7 @@ if c:
 <drac2>
 if c:
  for massTarg in args.get('t'):
-  mTarg, mMove, mSize, mColor = (massTarg.split('|') + ["","",""])[:4]
+  mTarg, mMove, mSize, mColor, mToken = (massTarg.split('|') + ["","","",""])[:5]
   if (mTarg := gt(mTarg)):
    # If they don't have a note/location set, add them to the list  
    if not out.get(mTarg.name):  
@@ -696,6 +696,10 @@ if c:
      out[mTarg.name].update({"color":f"#{color.upper()}"})
      # Display the change in color
      desc.append(f"Changing color of {mTarg.name} to #{color.upper()}")
+   if mToken:
+    token = mToken
+    out[targ.name].update({'token':token})
+    desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
 </drac2>
 <drac2>
 # Overlay stuff
@@ -1050,7 +1054,9 @@ elif not c or args.get('?') or args.get('help'):
  elif args.get('map') or args.get('options') or args.get('dm') or args.get('manage'):
 
   help = f"""-title "Wait, were we in the dungeon or the pub?" 
-            -desc "`-mapattach <target>` - Anchors the map to a target in the initiative order to allow changes to the map to be saved. Use a dedicated target, such as a player or a `!init add` placeholder, not a monster, to prevent the map from vanishing when a monster is killed. Without `-mapattach`, every time you run `!map` the previous changes or settings are lost and the map will revert to its default."
+            -desc "`-mapattach <target>` - Anchors the map to a target in the initiative order to allow changes to the map to be saved. Use a dedicated target, such as a player or a `!init add` placeholder, not a monster, to prevent the map from vanishing when a monster is killed. Without `-mapattach`, every time you run `!map` the previous changes or settings are lost and the map will revert to its default.
+
+            The alias will attempt to find a combatant named `DM` or `Map`, and autoattach settings to them if another mapattach is not declared/existing."
             
             -f "_ _|**__Map Arguments__**
             `-mapattach <target>` - Gives a target an effect that contains map information such as size and background
@@ -1116,7 +1122,9 @@ elif not c or args.get('?') or args.get('help'):
             `-tokenimport [url]` - Given a url to an image, provides a link to a shortcode for `-token`
             `-size [size]` - Sets the targets size on the map. `-size none` will reset it back to medium. Valid arguments can be seen in the fields below. 
             `-height [#]` - Sets the targets height. The map itself will look the same, but their height will be listed above in the description.
-            `-note [note]` - Sets a generic note on the target  
+            `-note [note]` - Sets a generic note on the target 
+
+            `-t <target>|[location]|[size]|[color]|[token]` - Allows mass moving/editing targets. You can have many of these in one command, and if you don't want to set a particular arg, leave it blank. `-t WO1||Large` would set it to large, without changing its color or location or token.
 
             `status` - Views all details on the target. If no `-t` target exists, shows details about the map itself."
 
