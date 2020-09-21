@@ -1033,6 +1033,15 @@ if c:
     token = mToken
     out[targ.name].update({'token':token})
     desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
+   if args.last('loadtoken'):
+    userPresets=load_json(get('mapTokens', '{}'))
+    argsTokenload = args.last('loadtoken').lower()
+    for searchTokenload in userPresets:
+     if argsTokenload in searchTokenload.lower():
+      foundTokenload = userPresets.get(searchTokenload)
+      desc.append(f"Loaded token `{searchTokenload}`.")
+      break
+    out[mTarg.name].update({'token':foundTokenload}) 
 </drac2>
 
 
