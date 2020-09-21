@@ -1249,16 +1249,16 @@ elif not c or args.get('?') or args.get('help'):
              -desc "Wait, were we in the dungeon or the pub?
 
              **__Allow the Map Settings to Save__**
-             The map attaches these settings automatically to any combatant in the initiative order that's named `DM`, `Map`, or `Lair`. Attaching a map allows every change that's made to it to be saved. We recommend adding a dedicated combatant for this, instead of a player or a monster, to prevent the map from vanishing when a player exits combat, or a monster is killed. Regardless, you can manually attach the map to any other combatant by running `-mapattach <target>`.
+             The map attaches these settings automatically to any combatant in the initiative order that's named `DM`, `Map`, or `Lair`. Attaching a map allows every change that's made to it to be saved. We recommend adding a dedicated combatant for this, instead of a player or a monster, to prevent the map from vanishing when a player exits combat, or a monster is killed. Regardless, you can manually attach the map to any other combatant by running `-attach <target>`.
 
-             If these settings are run when they aren't attached to a `-mapattach` target, then the change will be temporary, and will be switched back to your default the next time you run the `!map` command.
+             If these settings are run when they aren't attached to a `-attach` target, then the change will be temporary, and will be switched back to your default the next time you run the `!map` command.
 
              You can view the current map settings by running `!map status`
 
              **__Map Size and Background Image__**
              `-mapsize <size>` - Sets the size of the map. Example: `-mapsize 20x20`
-             `-mapbg <url>` - Imports an image to use as background. Use `-mapoptions c` / `o`, see below, to scale / offset the image to match the grid.
-             `-mapbg none` - Removes the background.
+             `-bg <url>` - Imports an image to use as background. Use `-options c` / `o`, see below, to scale / offset the image to match the grid.
+             `-bg none` - Removes the background.
 
              **__Ready-Made Maps__**
              `!map maplist` - Lists all ready-made maps.
@@ -1267,9 +1267,9 @@ elif not c or args.get('?') or args.get('help'):
              `-deletemap <name>` - Deletes a saved map."
 
              -f "_ _|**__Map views__**
-             `-mapview <coordinate>:<coordinate>` - Focuses on a portion of the map. Example: `-mapview A3:K12`
-             `-mapview <coordinate>:<gridsize>` - Focuses on a portion of the map, but with a specified size instead of an end location. Example: `-mapview A3:4x10`
-             `-mapview reset` - Returns to full view.
+             `-view <coordinate>:<coordinate>` - Focuses on a portion of the map. Example: `-view A3:K12`
+             `-view <coordinate>:<gridsize>` - Focuses on a portion of the map, but with a specified size instead of an end location. Example: `-view A3:4x10`
+             `-view reset` - Returns to full view.
 
              **__Saving, loading and deleting views__**
              `!map viewlist` - Lists all saved views.
@@ -1278,25 +1278,27 @@ elif not c or args.get('?') or args.get('help'):
              `-deleteview <name>` - Deletes a saved view."
 
              -f "_ _|**__Interface Options__**
-             `-mapoptions [args]` - Changes visual options using the following arguments:
-             `<#>` - Different zoom options, accepts fractions. Example: `-mapoptions 1.5`
+             `-options [args]` - Changes visual options using the following arguments:
+             `<#>` - Different zoom options, accepts fractions. Example: `-options 1.5`
              `d` - Dark mode
-             `h<#>` - Sets the grid's transparancy, range 1-99. Example: `-mapoptions h10` would set it to 10%.
+             `h<#>` - Sets the grid's transparancy, range 1-99. Example: `-options h10` would set it to 10%.
              `n` - Hides the grid.
              `e` - Everything outside the map's edges becomes invisible.
              `f` - Use alternative grid/token font
              `c<#>` - Sets the grid's unit size (in px). Default: 60.
-             `o<#>:<#>` - Offsets the background image (in px). Example: `-mapoptions o20:40` would offset it 20px down and 40px to the right.
-             Run `-mapoptions` without a specific argument to revert its change. With no arguments it'll reset every change. 
-             You can set multiple settings at a time. If you do, zoom should be your first option, if you're setting it. Example: `-mapoptions 2n` would set zoom to 2 and hide the grid."
+             `o<#>:<#>` - Offsets the background image (in px). Example: `-options o20:40` would offset it 20px down and 40px to the right.
+             Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change. 
+             You can set multiple settings at a time. If you do, zoom should be your first option, if you're setting it. Example: `-options 2n` would set zoom to 2 and hide the grid."
 
              -f "_ _|**__Backup / Restore__**
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
   """
  elif any(args.last(potentialArg) for potentialArg in ('walls', 'wall', 'door', 'doors', 'object', 'objects')):
   help = f"""-title "Map: Walls, Doors and Objects"
-             -desc "> “OH YEAAAHH”
-             - Kool-Aid Man
+             -desc "**__Allow the Walls and Objects to Save__**
+             The map attaches these walls and objects automatically to any combatant in the initiative order that's named `DM`, `Map`, or `Lair`. Attaching a map allows every change that's made to it to be saved. We recommend adding a dedicated combatant for this, instead of a player or a monster, to prevent the map from vanishing when a player exits combat, or a monster is killed. Regardless, you can manually attach the map to any other combatant by running `-attach <target>`.
+
+             If these walls and objects are run when they aren't attached to a `-attach` target, then the change will be temporary, and will be removed the next time you run the `!map` command.
 
              **__Walls and Doors__**
              Check our [Walls and Doors Guide](http://docs.otfbm.com/#/wallsanddoors) for detailed explanations of the commands below.
