@@ -75,7 +75,7 @@ for spell, over in spellOverlays.items():
   if typeof(over) == 'str':
    over = [over]
   overDesc = []
-  if any("{targ}" in item for item in over):
+  if any("{targ}" in item for item in over) or argparse(over).last('effect'):
    overDesc.append("requires `-t`")
   if any("{aim}" in item for item in over):
    if overDesc:
@@ -83,7 +83,7 @@ for spell, over in spellOverlays.items():
    else:
     overDesc.append("requires `-aim`")
   if argparse(over).last('effect'):
-   overDesc.append(f"attaches to effect `{argparse(over).last('effect')}`")
+   overDesc.append(f"attaches to init effect `{argparse(over).last('effect')}`")
   spelllist.append(f"""**{spell}** - {', '.join(overDesc)}""".strip(',- '))
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
