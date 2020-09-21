@@ -568,9 +568,9 @@ if c:
    # If the height is none or 0, remove height from the target
    if height in ("None","none","0"):
     if 'height' in out[targ.name]:
-      prevHeight = out[targ.name].pop('height')
-      if prevHeight:
-       desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
+     prevHeight = out[targ.name].pop('height')
+     if prevHeight:
+      desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
    else:
     # Otherwise, set that targets height
     out[targ.name].update({'height':height})
