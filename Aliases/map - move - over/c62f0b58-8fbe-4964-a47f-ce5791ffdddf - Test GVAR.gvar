@@ -118,47 +118,6 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
     # We only care about the first result
     break
 </drac2>
-<drac2>
-# The default map bg's, created by @Nerds and Dragons#2817 
-presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
-mapBG = presetMaps.copy()
-userMaps = load_json(get('mapBackgrounds','{}'))
-# Grab the user selected map, and update the main dict
-# This allows the user to replace/update items in the original dict
-mapBG.update(userMaps)
-# Iterate over the map dict, making it a little easier to read.
-# Only select the ones they are searching for, if they are searching
-maplist = [f"""**{maps}**""" for maps, over in mapBG.items() if args.last('search','').lower() in maps.lower()]
-# Split the list into groups of 20, to ensure it stays a reasonable size
-mapPagin = [maplist[i:i+20] for i in range(0, len(maplist), 20)]
-# Do we have a -loadmap?
-if args.last('mapload') or args.last('loadmap'):
- # Loop through our users mapBackgrounds, looking for that map
- for maps in mapBG:
-  if (args.last('mapload') or args.last('loadmap')).lower() in maps.lower():
-   # If we find it, add the map to the args
-   foundMapload = mapBG[maps]
-   if typeof(foundMapload) == 'str':
-    args = argparse(["-walls",  foundMapload] + "@@@")
-   elif typeof(foundMapload) == "SafeList":
-    getBG, getSize, getOptions = (foundMapload + ["", ""])[:3]
-    args = argparse(["-mapbg", getBG]   + (["-mapsize"  , getSize] if getSize else []) + (["-mapoptions", getOptions]  if getOptions else []) + "@@@")
-   break
-</drac2>
-<drac2>
-# Pulling up viewlist to view all created -mapview presets 
-userPresets = load_json(get('mapPresets','{}'))
-# Only select the ones they are searching for, if they are searching
-viewlist = [f"""**{presets}** - `{str(over).replace('"',quote)}`""" for presets, over in userPresets.items() if args.last('search','').lower() in presets.lower()]
-# Split the list into groups of 20, to ensure it stays a reasonable size
-presetPagin = [viewlist[i:i+20] for i in range(0, len(viewlist), 20)]
-</drac2>
-
-<drac2>
-# Pulling up objectlist to view all created -object presets 
-objectlist = [f"""**{objects}**""" for objects, over in presetObjects.items() if args.last('search','').lower() in objects.lower()]
-objectPagin = [objectlist[i:i+20] for i in range(0, len(objectlist), 20)]
-</drac2>
 
 <drac2>
 # Pulling up tokenlist to view all created tokens 
@@ -410,9 +369,33 @@ userMaps = load_json(get('mapBackgrounds','{}'))
 mapBG.update(userMaps)
 # Iterate over the map dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
-maplist = [f"""**{maps}**""" for maps, over in mapBG.items() if args.last('search','').lower() in maps.lower()]
-# Split the list into groups of 20, to ensure it stays a reasonable size
-mapPagin = [maplist[i:i+20] for i in range(0, len(maplist), 20)]
+maplist = []
+for maps, info in mapBG.items():
+ if args.last('search', '').lower() in maps.lower():
+  infoDesc = []
+  if typeof(info) == 'SafeList':
+   info = {"mapbg": info[0], "mapsize": info[1] if len(info)>1 else None, "mapoptions": info[2] if len(info)>2 else None}
+  elif typeof(info) == 'str':
+   info = {"walls": info}
+  if info.get('mapbg'):
+   infoDesc.append(f"Background ([Link]({info.get('mapbg')}))")
+  if info.get('mapsize'):
+   infoDesc.append(f"{info.get('mapsize')}")
+  if info.get('mapoptions'):
+   infoDesc.append(f"Options (`{info.get('mapoptions')}`)")
+  if info.get("walls"):
+   if len(info.get("walls")) > 1:
+    infoDesc.append(f"Walls ({len(info.get('walls'))})")
+   else:
+    infoDesc.append("Walls")
+  if info.get("objects"):
+   if len(info.get("objects")) > 1:
+    infoDesc.append(f"Objects ({len(info.get('objects'))})")
+   else:
+    infoDesc.append("Objects")
+  maplist.append(f"""**{maps}** - {', '.join(infoDesc)}""".strip(",- "))
+# Split the list into groups of 15, to ensure it stays a reasonable size (used to be 20, then I added stuff)
+mapPagin = [maplist[i:i+15] for i in range(0, len(maplist), 15)]
 # Do we have a -loadmap?
 if args.last('mapload') or args.last('loadmap'):
  # Loop through our users mapBackgrounds, looking for that map
