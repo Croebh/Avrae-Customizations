@@ -589,68 +589,6 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last("status"):
-  if args.last('t') and gt(args.last('t')):
-   targ = gt(args.last('t'))
-   # If there is a -status arg, display all recorded map info on the target
-   desc.append(f"**Status of {targ.name}**")
-   if out.get(targ.name):
-    for info in out[targ.name]:
-     desc.append(f"{info.title()}: `{out[targ.name][info]}`")
-   else:
-    desc.append("No information has been set yet.")
-  else:
-   if mapattach:
-    desc.append(f"**Map settings (attached to {mapattach.name})**")
-   for info in mapinfo:
-    desc.append(f"{info.title()}: `{mapinfo[info]}`")
-    if info == "options":
-     options = mapinfo[info]
-     if options[0].isdigit():
-      zoom = ""
-      for char in options:
-       if char.isdigit() or char == ".":
-        zoom += char
-       else:
-        break
-      desc.append(f" - Zoom set to {zoom}x")
-     if 'd' in options:
-      desc.append(f" - Dark Mode")
-     if 'n' in options:
-      desc.append(f" - Grid Hidden")
-     if 'e' in options:
-      desc.append(f" - Disable Border Opacity")
-     if 'f' in mapoptions:
-      desc.append(f" - Using alternative grid/token font")
-     if 'c' in options:
-      gsize = ""
-      for char in options[options.index('c')+1:]:
-       if char.isdigit():
-        gsize += char
-       else:
-        break
-      desc.append(f" - Grid size adjusted to {gsize} px")
-     if 'h' in options:
-      gtrans = ""
-      for char in options[options.index('h')+1:]:
-       if char.isdigit():
-        gtrans += char
-       else:
-        break
-      desc.append(f" - Grid transparancy adjusted to {gtrans}%")
-     if 'o' in options:
-      offset = ""
-      for char in options[options.index('o')+1:]:
-       if char.isdigit() or char == ":":
-        offset += char
-       else:
-        break
-      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
-  desc.append("")
-</drac2>
-<drac2>
-if c:
- # If there is a -t argument given, and that target exists as a combatant, modify that target
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
@@ -682,9 +620,10 @@ if c:
    height = args.last('height')
    # If the height is none or 0, remove height from the target
    if height in ("None","none","0"):
-    prevHeight = out[targ.name].pop('height')
-    if prevHeight:
-     desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
+    if 'height' in out[targ.name]:
+     prevHeight = out[targ.name].pop('height')
+     if prevHeight:
+      desc.append(f"{targ.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
    else:
     # Otherwise, set that targets height
     out[targ.name].update({'height':height})
@@ -692,16 +631,17 @@ if c:
 
 <drac2> 
 #This allows the user to load a token to a -t
-if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
- if args.last('loadtoken'):
-  userPresets=load_json(get('mapTokens', '{}'))
-  argsTokenload = args.last('loadtoken').lower()
-  for searchTokenload in userPresets:
-   if argsTokenload in searchTokenload.lower():
-    foundTokenload = userPresets.get(searchTokenload)
-    desc.append(f"Loaded token `{searchTokenload}`.")
-    break
-  out[targ.name].update({'token':foundTokenload})
+if c:
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  if args.last('loadtoken'):
+   userPresets=load_json(get('mapTokens', '{}'))
+   argsTokenload = args.last('loadtoken').lower()
+   for searchTokenload in userPresets:
+    if argsTokenload in searchTokenload.lower():
+     foundTokenload = userPresets.get(searchTokenload)
+     desc.append(f"Loaded token `{searchTokenload}`.")
+     break
+   out[targ.name].update({'token':foundTokenload})
 </drac2>
 
 <drac2>
@@ -720,26 +660,6 @@ if c:
     # Otherwise, set that targets token
     out[targ.name].update({'token':token})
     desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
-</drac2>
-
-<drac2>
-#Load user saved token list
-if args.last('savetoken') or args.last('deletetoken'):
- if args.last('savetoken'):
-  userTokens = load_json(get('mapTokens','{}'))
-  for addNewToken in args.get('savetoken'):
-   if ":" in addNewToken:
-    userTokens.update({addNewToken.split(":")[0]:addNewToken.split(":")[1]})
-   else:
-    desc.append("You must separate the key and value with a colon when adding `-savetoken` entries.")
-  set_uvar("mapTokens",dump_json(userTokens).lower())
-  desc.append(f"Created the Token `{addNewToken.split(':')[0].upper()}`")
- if args.last('deletetoken'):
-  userTokens = load_json(get('mapTokens','{}'))
-  argToken = args.last("deletetoken").lower()
-  userTokens.pop(argToken)
-  set_uvar("mapTokens",dump_json(userTokens).lower())
-  desc.append(f"Removed Token `{argToken.upper()}`")
 </drac2>
 
 <drac2>
@@ -785,73 +705,8 @@ if c:
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
    out[targ.name].update({"location":args.last('move').upper()})
 </drac2>
-<drac2>
-if c:
- for massTarg in args.get('t'):
-  mTarg, mMove, mSize, mColor, mToken = (massTarg.split('|') + ["","","",""])[:5]
-  if (mTarg := gt(mTarg)):
-   # If they don't have a note/location set, add them to the list  
-   if not out.get(mTarg.name):  
-    out[mTarg.name] = {}  
-   if mMove:
-    prevLoc = out[mTarg.name].get('location')
-    # Did they have a previous location? If so, lets calculate distance and draw a line
-    if prevLoc and prevLoc.lower() != mMove.lower():
-     # Split previous location from XY to X and Y
-     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
-     prevLocY = ''.join(y for y in prevLoc if y.isdigit())
-     if prevLocY and prevLocX:
-       prevLocY = int(prevLocY)
-       # Same as new location
-       newLocX = ''.join(x.upper() for x in mMove if x.isalpha())
-       newLocY = int(''.join(y for y in mMove if y.isdigit()))
-       # Calculate the delta for X and Y between the two
-       deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
-       # Throw them in the pot with some pythag
-       distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-       # We want the positive delta (wish we had abs(), sigh)
-       deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-       # Doing 5ft diag's, the distance is just the higher delta
-       distance = max(deltaX, deltaY)*5
-       # Grab the targets new color if changed, old color if set, or default to dark violet
-       colr = (args.last('color', out[mTarg.name].get('color','w')) + " ").strip("#~").lower()
-       colr = colr[:colr.index(" ")]
-       if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
-         colr = f"~{colr}"
-       # Add the line to the overlay list
-       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-       # Display the change in location
-       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
-    else:
-     # Display the change in location
-     desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
-    out[mTarg.name].update({"location":mMove.upper()})
-   if mSize:
-    size=mSize[0].upper()
-    # Confirm that the given size is valid before updating
-    if size in siz:
-     out[mTarg.name].update({"size":f"{size} ({SIZ[size]})"})
-     # Display the change in size
-     desc.append(f"Changing size of {mTarg.name} to {SIZ[size]} ({size})")
-   if mColor:
-    color = mColor.lower().strip('~') + " "
-    color = color[:color.index(' ')]
-    # Confirm that the given color is valid before updating
-    # Is it one of our preset colors?
-    if color in col:
-     out[mTarg.name].update({"color":f"{color} ({COL[color]})"})
-     # Display the change in color
-     desc.append(f"Changing color of {mTarg.name} to {COL[color]} ({color})")
-    # Or is it a hex code
-    elif len(color) in (3, 6) and not color.strip("abcdef1234567890"):
-     out[mTarg.name].update({"color":f"#{color.upper()}"})
-     # Display the change in color
-     desc.append(f"Changing color of {mTarg.name} to #{color.upper()}")
-   if mToken:
-    token = mToken
-    out[targ.name].update({'token':token})
-    desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
-</drac2>
+
+
 <drac2>
 # Overlay stuff
 if c:
@@ -1025,6 +880,159 @@ if c:
      # Update the aim target
      out[curTarg.name].update({"aim"+aimNum: aimTarget})
 </drac2>
+
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last("status"):
+  if args.last('t') and gt(args.last('t')):
+   targ = gt(args.last('t'))
+   # If there is a -status arg, display all recorded map info on the target
+   desc.append(f"**Status of {targ.name}**")
+   if out.get(targ.name):
+    for info in out[targ.name]:
+     desc.append(f"{info.title()}: `{out[targ.name][info]}`")
+   else:
+    desc.append("No information has been set yet.")
+  else:
+   if mapattach:
+    desc.append(f"**Map settings (attached to {mapattach.name})**")
+   for info in mapinfo:
+    desc.append(f"{info.title()}: `{mapinfo[info]}`")
+    if info == "options":
+     options = mapinfo[info]
+     if options[0].isdigit():
+      zoom = ""
+      for char in options:
+       if char.isdigit() or char == ".":
+        zoom += char
+       else:
+        break
+      desc.append(f" - Zoom set to {zoom}x")
+     if 'd' in options:
+      desc.append(f" - Dark Mode")
+     if 'n' in options:
+      desc.append(f" - Grid Hidden")
+     if 'e' in options:
+      desc.append(f" - Disable Border Opacity")
+     if 'f' in mapoptions:
+      desc.append(f" - Using alternative grid/token font")
+     if 'c' in options:
+      gsize = ""
+      for char in options[options.index('c')+1:]:
+       if char.isdigit():
+        gsize += char
+       else:
+        break
+      desc.append(f" - Grid size adjusted to {gsize} px")
+     if 'h' in options:
+      gtrans = ""
+      for char in options[options.index('h')+1:]:
+       if char.isdigit():
+        gtrans += char
+       else:
+        break
+      desc.append(f" - Grid transparancy adjusted to {gtrans}%")
+     if 'o' in options:
+      offset = ""
+      for char in options[options.index('o')+1:]:
+       if char.isdigit() or char == ":":
+        offset += char
+       else:
+        break
+      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
+  desc.append("")
+</drac2>
+
+<drac2>
+#Load user saved token list
+if args.last('savetoken') or args.last('deletetoken'):
+ if args.last('savetoken'):
+  userTokens = load_json(get('mapTokens','{}'))
+  for addNewToken in args.get('savetoken'):
+   if ":" in addNewToken:
+    userTokens.update({addNewToken.split(":")[0]:addNewToken.split(":")[1]})
+   else:
+    desc.append("You must separate the key and value with a colon when adding `-savetoken` entries.")
+  set_uvar("mapTokens",dump_json(userTokens).lower())
+  desc.append(f"Created the Token `{addNewToken.split(':')[0].upper()}`")
+ if args.last('deletetoken'):
+  userTokens = load_json(get('mapTokens','{}'))
+  argToken = args.last("deletetoken").lower()
+  userTokens.pop(argToken)
+  set_uvar("mapTokens",dump_json(userTokens).lower())
+  desc.append(f"Removed Token `{argToken.upper()}`")
+</drac2>
+
+<drac2>
+if c:
+ for massTarg in args.get('t'):
+  mTarg, mMove, mSize, mColor, mToken = (massTarg.split('|') + ["","","",""])[:5]
+  if (mTarg := gt(mTarg)):
+   # If they don't have a note/location set, add them to the list  
+   if not out.get(mTarg.name):  
+    out[mTarg.name] = {}  
+   if mMove:
+    prevLoc = out[mTarg.name].get('location')
+    # Did they have a previous location? If so, lets calculate distance and draw a line
+    if prevLoc and prevLoc.lower() != mMove.lower():
+     # Split previous location from XY to X and Y
+     prevLocX = ''.join(x for x in prevLoc if x.isalpha())
+     prevLocY = ''.join(y for y in prevLoc if y.isdigit())
+     if prevLocY and prevLocX:
+       prevLocY = int(prevLocY)
+       # Same as new location
+       newLocX = ''.join(x.upper() for x in mMove if x.isalpha())
+       newLocY = int(''.join(y for y in mMove if y.isdigit()))
+       # Calculate the delta for X and Y between the two
+       deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
+       # Throw them in the pot with some pythag
+       distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+       # We want the positive delta (wish we had abs(), sigh)
+       deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+       # Doing 5ft diag's, the distance is just the higher delta
+       distance = max(deltaX, deltaY)*5
+       # Grab the targets new color if changed, old color if set, or default to dark violet
+       colr = (args.last('color', out[mTarg.name].get('color','w')) + " ").strip("#~").lower()
+       colr = colr[:colr.index(" ")]
+       if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+         colr = f"~{colr}"
+       # Add the line to the overlay list
+       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+       # Display the change in location
+       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+    else:
+     # Display the change in location
+     desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
+    out[mTarg.name].update({"location":mMove.upper()})
+   if mSize:
+    size=mSize[0].upper()
+    # Confirm that the given size is valid before updating
+    if size in siz:
+     out[mTarg.name].update({"size":f"{size} ({SIZ[size]})"})
+     # Display the change in size
+     desc.append(f"Changing size of {mTarg.name} to {SIZ[size]} ({size})")
+   if mColor:
+    color = mColor.lower().strip('~') + " "
+    color = color[:color.index(' ')]
+    # Confirm that the given color is valid before updating
+    # Is it one of our preset colors?
+    if color in col:
+     out[mTarg.name].update({"color":f"{color} ({COL[color]})"})
+     # Display the change in color
+     desc.append(f"Changing color of {mTarg.name} to {COL[color]} ({color})")
+    # Or is it a hex code
+    elif len(color) in (3, 6) and not color.strip("abcdef1234567890"):
+     out[mTarg.name].update({"color":f"#{color.upper()}"})
+     # Display the change in color
+     desc.append(f"Changing color of {mTarg.name} to #{color.upper()}")
+   if mToken:
+    token = mToken
+    out[targ.name].update({'token':token})
+    desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
+</drac2>
+
+
 
 <drac2>
 if args.last('tokenimport'):
