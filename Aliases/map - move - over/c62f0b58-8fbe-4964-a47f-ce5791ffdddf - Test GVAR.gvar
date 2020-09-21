@@ -469,7 +469,7 @@ if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or 
 </drac2>
 <drac2>
 #Here we allow the user to save spell overlays in their mapOverlays uvar
-if any(potentialArg for potentialArg in ('newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay') if args.last(potentialArg)):
+if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay')):
  #First option is to create spell overlay
  if args.last('newspell') or args.last('savespell') or args.last('saveoverlay'):
   userOverlays = load_json(get('mapOverlays','{}'))
@@ -482,7 +482,6 @@ if any(potentialArg for potentialArg in ('newspell', 'saveoverlay', 'savespell',
   desc.append(f"Created the overlay preset `{addNewspell.split(':')[0].upper()}`")
  #second option is to delete an already created spell/overlay
  if args.last('deletespell') or args.last('deleteoverlay'):
-  foundDeletespell = "Did not find that spell/overlay"
   argDeletespell = (args.last("deletespell") or args.last('deleteoverlay')).lower()
   for searchDeletespell in userOverlays:
    if argDeletespell in searchDeletespell.lower():
@@ -898,7 +897,11 @@ if c:
    if mapattach:
     desc.append(f"**Map settings (attached to {mapattach.name})**")
    for info in mapinfo:
-    desc.append(f"{info.title()}: `{mapinfo[info]}`")
+    if info == "objects":
+     objList = [f"{[objL[0] for objL in presetObjects.items() if obj[obj.index('$'):] in objL[1]][0]} at {obj[:obj.index('$')].upper()}" for obj in mapinfo[info].split("/")]
+     desc.append(f"Objects: {' / '.join(objList) if len(objList) <= 10 else len(objList)}")
+    else:
+     desc.append(f"{info.title()}: `{mapinfo[info]}`")
     if info == "options":
      options = mapinfo[info]
      if options[0].isdigit():
