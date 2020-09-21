@@ -179,7 +179,7 @@ if c:
 <drac2>
 if c:
  # If theres a -mapsize, -mapbg, -mapoptions, -mapview, or -mapattach arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'mapoptions', 'mapview', 'mapattach', 'wals', 'deletewall', 'object', 'deleteobject', 'loadmap')):
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap')):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
@@ -188,20 +188,20 @@ if c:
    mapsize = f"{mapSplitX}x{mapSplitY}" 
    desc.append(f"Map size changed to `{mapsize}`")
   # If the new mapbg is different from the old one, update and display
-  if mapbg != args.last('mapbg', mapbg):
-   if args.last('mapbg') in ('none', 'None'):
+  if mapbg != args.last('mapbg', args.last('bg', mapbg)):
+   if args.last('mapbg', args.last('bg')) in ('none', 'None', 'reset'):
     mapbg = ""
     desc.append(f"Map background removed")
    else:
-    mapbg = args.last('mapbg', mapbg)
+    mapbg = args.last('mapbg', args.last('bg', mapbg))
     desc.append(f"Map background changed to `{mapbg}`")
-  if mapoptions != args.last('mapoptions', mapoptions):
+  if mapoptions != args.last('mapoptions', args.last('options', mapoptions)):
   # If the new mapoptions are different from the old ones, update and display
-   if args.last('mapoptions') in ('none', 'None', True, 'true', 'True', None):
+   if args.last('mapoptions', args.last('options')) in ('none', 'None', True, 'true', 'True', None):
     mapoptions = ""
     desc.append(f"Map options reset")
    else:
-    mapoptions = args.last('mapoptions', mapoptions)
+    mapoptions = args.last('mapoptions', args.last('options', mapoptions))
     desc.append(f"Map options changed to `{mapoptions}`")
     if mapoptions[0].isdigit():
      zoom = ""
@@ -243,16 +243,16 @@ if c:
       else:
        break
      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
-  if mapview != args.last('mapview', mapview):
+  if mapview != args.last('mapview', args.last('view', mapview)):
    # Do they want to reset the map view?
-   if args.last('mapview').lower() in ('reset', 'none'):
+   if args.last('mapview', args.last('view')).lower() in ('reset', 'none'):
     mapviewlocation = mapviewsize = ""
     desc.append(f"""Map view reset to default `{mapsize}`.""")
    else:
     # If the new mapview are different from the old one, update and display
-    mapview = args.last('mapview', mapview)
-    mapviewlocation = args.last('mapview').split(':')[0]
-    mapviewsize = args.last('mapview').split(':')[1]
+    mapview = args.last('mapview', args.last('view', mapview))
+    mapviewlocation = mapview.split(':')[0]
+    mapviewsize = mapview.split(':')[1]
     if mapviewsize[0].isdigit():
      mapSplitX, mapSplitY = mapviewsize.lower().split('x')
      mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize) 
@@ -310,12 +310,12 @@ if c:
    objects.remove(loadedObject)
    desc.append(f"Object `{object}:{loadedObject}` was removed") 
   # If there is a -mapattach, and its a valid target in init
-  if args.last('mapattach') and gt(args.last('mapattach')):
+  if args.last('mapattach', args.last('attach')) and gt(args.last('mapattach', args.last('attach'))):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
-   if typeof(mapattach)=="SimpleCombatant" and gt(args.last('mapattach')).name != mapattach.name:
+   if typeof(mapattach)=="SimpleCombatant" and gt(args.last('mapattach', args.last('attach'))).name != mapattach.name:
     mapattach.remove_effect('map')
    # Then, set the new mapattach
-   mapattach = gt(args.last('mapattach'))
+   mapattach = gt(args.last('mapattach', args.last('attach')))
   # If theres mapattach set, and they currently have a map effect, remove it
   if mapattach and mapattach.get_effect('map'):
    mapattach.remove_effect('map')
@@ -1279,9 +1279,9 @@ elif not c or args.get('?') or args.get('help'):
 
              -f "_ _|**__Interface Options__**
              `-mapoptions [args]` - Changes visual options using the following arguments:
-             `<#>` - Different zoom options, accepts fractions. Example: `-mapotions 1.5`
+             `<#>` - Different zoom options, accepts fractions. Example: `-mapoptions 1.5`
              `d` - Dark mode
-             `h<#>` - Sets the grid's transparancy, range 1-99. Example: `-mapotions h10` would set it to 10%.
+             `h<#>` - Sets the grid's transparancy, range 1-99. Example: `-mapoptions h10` would set it to 10%.
              `n` - Hides the grid.
              `e` - Everything outside the map's edges becomes invisible.
              `f` - Use alternative grid/token font
