@@ -1330,7 +1330,7 @@ elif not c or args.get('?') or args.get('help'):
  else:
   help = f"""-title "Dude, where did I park my Tarrasque?"
              -desc "**__First time using this alias?__**
-             Check our [Getting Started Guide](http://docs.otfbm.com/) to learn how to set up your first map.
+             Check our [Getting Started Guide](http://docs.otfbm.com/#/guides_getting_started) to learn how to set up your first map.
 
              **__Basic commands__**
              `!map` - Shows the map.
