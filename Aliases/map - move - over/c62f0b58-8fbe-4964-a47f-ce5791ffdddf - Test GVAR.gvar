@@ -66,9 +66,25 @@ userOverlays = load_json(get('mapOverlays','{}'))
 if typeof(userOverlays) == 'SafeDict':
  spellOverlays.update(userOverlays)
 else:
- [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]# Iterate over the spell dict, making it a little easier to read.
+ [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
+ # Iterate over the spell dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
-spelllist = [f"""**{spell}** - `{str(over).replace('"',quote)}`""" for spell, over in spellOverlays.items() if args.last('search','').lower() in spell.lower()]
+spelllist = []
+for spell, over in spellOverlays.items():
+ if args.last('search', '').lower() in spell.lower():
+  if typeof(over) == 'str':
+   over = [over]
+  overDesc = []
+  if any("{targ}" in item for item in over):
+   overDesc.append("requires `-t`")
+  if any("{aim}" in item for item in over):
+   if overDesc:
+    overDesc.append("`-aim`")
+   else:
+    overDesc.append("requires `-aim`")
+  if argparse(over).last('effect'):
+   overDesc.append(f"attaches to effect `{argparse(over).last('effect')}`")
+  spelllist.append(f"""**{spell}** - {', '.join(overDesc)}""".strip(',- '))
 # Split the list into groups of 20, to ensure it stays a reasonable size
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
