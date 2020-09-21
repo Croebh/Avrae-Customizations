@@ -179,7 +179,7 @@ if c:
 <drac2>
 if c:
  # If theres a -mapsize, -mapbg, -mapoptions, -mapview, or -mapattach arg, process that and add/replace the effect
- if any(thisArg for thisArg in ('mapsize', 'mapbg', 'mapoptions', 'mapview', 'mapattach', 'walls', 'deletewalls', 'object', 'deleteobject') if args.last(thisArg)):
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'mapoptions', 'mapview', 'mapattach', 'wals', 'deletewall', 'object', 'deleteobject', 'loadmap')):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
@@ -267,16 +267,16 @@ if c:
     mapviewsize = f"{mapX}x{mapY}"
     desc.append(f"Map view changed to `{mapview if f'{mapviewlocation}:{mapsize}'==mapview else f'{mapview} ({mapviewsize})'}`")
   #If there is a -wall
-  if args.last('walls'):
-   if args.last('walls') in ('none', 'None', True, 'true', 'True'):
+  if args.last('wall'):
+   if args.last('wall') in ('none', 'None', True, 'true', 'True'):
     walls = []
     desc.append(f"Walls reset")
    else:
-    inputtedWalls = args.last('walls')
+    inputtedWalls = args.last('wall')
     walls.append(inputtedWalls)
     desc.append(f"Walls added `{inputtedWalls}`")
-  if args.last('deletewalls'):
-   inputtedWalls = args.last('deletewalls')
+  if args.last('deletewall'):
+   inputtedWalls = args.last('deletewall')
    walls.remove(inputtedWalls)
    desc.append(f"Walls removed `{inputtedWalls}`")
   #If there is a -object call
@@ -1214,7 +1214,7 @@ elif not c or args.get('?') or args.get('help'):
             `-over squaretop,<size>,<color>,<topleft>,<end>` - Draws a square from a top left coordinate, but when aimed the pivot point is the top left corner.
 
             **__Other commands__**
-            `-over [args] -t <target>` - Overlays last until the next `!map` command. Attach them to a target to keep them visible.
+            `-over [args] -t <target>` - Your overlay keeps disappearing? Without a `-t`, an overlay defaults to showing only once. This means the next time you run `!map` it won't be there. Target a combatant to stick an overlay to it and it'll remain visible until removed.
             `-over none -t <target>` - Removes an overlay attached to a target.
             `-saveoverlay <name>:<overlay>` - Saves a overlay, in the `spellbook`(see bellow), for quick access. Example: `-saveoverlay Explosion:circle,30,r,J5`
             `-deleteoverlay <name>` - Deletes a saved overlay.            
@@ -1293,8 +1293,8 @@ elif not c or args.get('?') or args.get('help'):
              Check our [Walls and Doors Guide](http://docs.otfbm.com/#/wallsanddoors) for detailed explanations of the commands below.
 
              __Walls__
-             `-walls _<coordinate><coordinate>` - Draws a wall directly onto the grid, between two coordinates. Example: `-walls _B3J3_B6J6` would draw a line from B3 to J3, and another from B6 to J6. Walls can be added one at a time, or multiple at a time with multiple `-walls`.
-             `-deletewalls <code>` - Allows you to delete an individual wall
+             `-wall <coordinate><coordinate>` - Draws a wall directly onto the grid, between two coordinates. Example: `-wall B3J3_B6J6` would draw a line from B3 to J3, and another from B6 to J6. Walls can be added one at a time, or multiple at a time with multiple `-wall`.
+             `-deletewall <code>` - Allows you to delete an individual wall
 
              __Doors__
              You can add doors to walls with following arguments:
@@ -1302,7 +1302,7 @@ elif not c or args.get('?') or args.get('help'):
              `-d` - Closed Door.
              `-b` - Double Door.
              `-s` - Secret Door.
-             Put one of these arguments between two coordinates that make a wall to draw a door in the middle. Example: `-walls _B3-oD3` would draw an open door between B3 and D3.
+             Put one of these arguments between two coordinates that make a wall to draw a door in the middle. Example: `-wall B3-oD3` would draw an open door between B3 and D3.
 
              **__Objects__**
              `-object <location>:<object>` - Adds an object to the map. Some objects can be placed over multiple squares, to do so add a second coordinate after the first. Example: `-object A1B4:trap` would expand an trap object from A1 to B4. Objects can be added one at a time, or multiple at a time with multiple `-object`.
@@ -1376,7 +1376,7 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
  paginFooter += " | -search [name] to search"
 </drac2>
 
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}}"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.0"
 <drac2>
 # this is for debugging, only display in testing channels
 if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
