@@ -1,7 +1,7 @@
 tembed 
 <drac2>
 # These are replaced with proper values from the base alias
-args, defaults = argparse("@@@"),"&&&"
+args, defaults = argparse(&ARGS&),"&&&"
 # Set are base variables
 if typeof(defaults) == "str":
   defaults = {}
@@ -1439,7 +1439,7 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
  paginFooter += " | -search [name] to search"
 </drac2>
 
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.01"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.01w"
 <drac2>
 # this is for debugging, only display in testing channels
 if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap and args.last('debug'):

@@ -2,8 +2,9 @@ tembed
 <drac2>
 # These are replaced with proper values from the base alias
 args, defaults = argparse("@@@"),"&&&"
-
 # Set are base variables
+if typeof(defaults) == "str":
+  defaults = {}
 mapsize = defaults.get("size", "10x10") or "10x10"
 maxSize = 99
 mapSplitX, mapSplitY = mapsize.lower().split('x')
@@ -144,7 +145,7 @@ if c:
   for attack in combatant.attacks:
    if attack.name == 'map':
     mapattach=combatant
-    mapinfo=attack.automation[0].text
+    mapinfo=attack.raw.automation[0].text
 </drac2>
 
 <drac2>
@@ -1438,7 +1439,7 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
  paginFooter += " | -search [name] to search"
 </drac2>
 
--footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.0"
+-footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.01"
 <drac2>
 # this is for debugging, only display in testing channels
 if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap and args.last('debug'):
