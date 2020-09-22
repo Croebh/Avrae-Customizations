@@ -1171,7 +1171,10 @@ helpindex = f"""
 `!map help <walls|doors|objects>` - Walls, Doors and Objects
 
 **Additional help**
-Check our [Documentation website](http://docs.otfbm.com/) to find every command and argument explained in detail and with practical examples."
+Check our [Documentation website](http://docs.otfbm.com/) to find every command and argument explained in detail and with practical examples.
+
+**Support Us**
+You can support OTFBM on [Patreon](https://www.patreon.com/otfbm) and this alias at [Ko-Fi](https://ko-fi.com/croebh)"
 """
 colorhelp = f"""-f "Valid Colors|```{newline.join(colorOut)}```You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
 sizehelp = f"""-f "Valid Sizes|```{newline.join([f"{x[0]} - {x[1]}" for x in SIZ.items()])}```|inline" """
@@ -1401,11 +1404,11 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.0"
 <drac2>
 # this is for debugging, only display in testing channels
-# if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
-#  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
-#  {people=}
-#  {debug=}
-#  {objects=}
-#  {walls=}```" """
+if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap and args.last('debug'):
+ return f"""-f "Debug (Only appears in this channel)|```{overlays=}
+ {people=}
+ {debug=}
+ {objects=}
+ {walls=}```" """
 </drac2>
 -color <color>
