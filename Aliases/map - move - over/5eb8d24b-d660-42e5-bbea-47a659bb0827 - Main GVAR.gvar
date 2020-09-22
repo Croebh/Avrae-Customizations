@@ -271,7 +271,7 @@ if c:
   if args.last('wall'):
    if args.last('wall') in ('none', 'None', True, 'true', 'True'):
     walls = []
-    desc.append(f"Wall reset")
+    desc.append(f"Walls reset.")
    else:
     inputtedWalls = args.last('wall')
     walls.append(inputtedWalls)
@@ -280,7 +280,7 @@ if c:
    inputtedWalls = args.last('deletewall')
    remWalls = [wall for wall in walls if inputtedWalls.lower() != wall.lower()]
    if len(walls) != len(remWalls):
-    desc.append(f"Walls removed: `{inputtedWalls}`")
+    desc.append(f"Wall removed: `{inputtedWalls}`")
     walls = remWalls
    else:
     desc.append(f"Could not find wall: `{inputtedWalls}`")
