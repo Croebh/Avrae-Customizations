@@ -29,7 +29,7 @@ for index in range(maxSize):
     letter = baseAlph[(index // 26) - 1]
   letter += baseAlph[index % 26]
   alph.append(letter)
-col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o"), "TSMLHG"
+col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o","pk"), "TSMLHG"
 COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Statue": "$S", "Open Pit": "$O", "Covered Pit": "$o"}
 overlays=[]
@@ -721,11 +721,21 @@ if c:
      overlay = args.last('over'+overNum).split(',')
      # First argument is always the shape, so lets pop it out
      oShape = overlay.pop(0).lower()
+
+     # Are we attaching this to an effect?
+     if args.last('effect'+overNum):
+      # Split our effect up, in case we have a specified target
+      effectName, effectTarget = (args.last('effect'+overNum).split('|')+[targ.name])[:2]
+      effectTarget = gt(effectTarget)
+      # Do we have a proper target, and does that target have our effect
+      if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
+       effect = effectTarget.get_effect(effectName)
+
      # Are we aiming at someone?
      if args.last('aim'+overNum):
       # Split our aim up, in case we have a |split
       aim = (args.last('aim'+overNum).split('|')+[""])[:2]
-      aimStick = aim[1].lower() == "stick"
+      aimStick = (aim[1].lower() == "stick") or effect
       # Account for the user putting |stick on the wrong arg. Won't advertise this, as its unintended.
       if overlay[-1].endswith("|stick"):
         overlay[-1] = overlay[-1].replace("|stick", "")
@@ -747,15 +757,6 @@ if c:
       if not aimPoint:
        aimPoint = aim[0]
        aimTarget = aim[0].upper()
-
-     # Are we attaching this to an effect?
-     if args.last('effect'+overNum):
-      # Split our effect up, in case we have a specified target
-      effectName, effectTarget = (args.last('effect'+overNum).split('|')+[targ.name])[:2]
-      effectTarget = gt(effectTarget)
-      # Do we have a proper target, and does that target have our effect
-      if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
-       effect = effectTarget.get_effect(effectName)
      
      # Our basic structure, pre laid out
      currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
@@ -800,13 +801,20 @@ if c:
           # Otherwise, check if its a hex code, either 3 or 6 digits
           elif len(overlaycolor) in (3, 6) and not overlaycolor.strip("abcdef1234567890"):
            currentOver[shape.args[index]] += f"~{overlaycolor}"
-           currentOver['colorDesc'] += f"#{overlaycolor.upper()} colored"
+           currentOver['colorDesc'] += f"#{overlaycolor.upper()}"
          else:
           currentOver[shape.args[index]] += overlay[index]
         # Set the overlay for the map
         overlay = f"""{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
-        # Set the description (This is painfully long and I want to redo it)
-        overdesc = f"""Creating a {currentOver.colorDesc} {shape.type} overlay{f", {currentOver.size} ft. " + ("radius" if shape.type in "circletop" else "long" if shape.type in "coneline" else "wide") if shape.type != "arrow" else ""}{f", positioned {'from the top left at' if shape.type == 'circletop' else 'at'} {currentOver.loc}" if shape.type not in ('line', 'arrow') else (f", {currentOver.width} ft. wide" if shape.type == "line" else "") + f", starting at {currentOver.loc}"}{f", {'aimed' if shape.type == 'arrow' else 'aimed'} at {aimTarget or currentOver.eloc.upper()}" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}"""
+        # Set the description
+        overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Overlay {overNum}**
+                       - Color: `{currentOver.colorDesc}`
+                       {f"- Size: `{currentOver.size} ft. " + ("radius`" if shape.type in "circletop" else "long`" if shape.type in "coneline" else "wide`") if shape.type != "arrow" else ""}
+                       {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
+                       {f"- Width: `{currentOver.width.strip(', ')} ft.`" if shape.type == "line" else ""}
+                       {f"- Aim: `{aimTarget or currentOver.eloc.upper()}`" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}
+                       {f"- Effect: `{effect.name}` on `{effectTarget.name}`" if effect else ""}"""
+        overdesc = '\n'.join([i.strip() for i in overdesc.split('\n') if i.strip()])
         # If we made it this far, the overlay is valid, so we can break out of the loop
         overValid = True
         break
@@ -819,13 +827,13 @@ if c:
        overdesc = overdesc.replace('{aim}',aimPoint)
       # Are we attaching this overlay to a target?
       if args.last('t') and gt(args.last('t')):
-       if not aimPoint or (aimPoint and aimStick):
+       if not aimPoint or (aimPoint and aimStick) or effect:
         # If so, and no -aim (or -aim but also stick), lets attach it to the notes
         out[targ.name].update({"overlay"+overNum: overlay})
         if aimStick:
          out[targ.name].update({"aim"+overNum: aimTarget})
         if effect:
-         out[effectTarget.name].update({f"effect{overNum}": f"{effect.name} / {effectTarget.name}"})
+         out[targ.name].update({f"effect{overNum}": f"{effect.name} / {effectTarget.name}"})
        else:
         # If so, and -aim, lets *not* attach it to the notes, and just display it once
         targPoint = out[targ.name].get('location','A1')
@@ -838,7 +846,7 @@ if c:
          TargY += targOffset
          targPoint = f"{TargX}{TargY}"
         overlays.append(overlay.replace("{targ}", targPoint).replace("{aim}", aimPoint))
-       desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + f", linked to {gt(args.last('t')).name}")
+       desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + newline + f"- Attached: `{targ.name}`")
       else: 
        # Otherwise, lets just display it once
        overlays.append(overlay.replace("{aim}", aimPoint))
@@ -890,7 +898,10 @@ if c:
    desc.append(f"**Status of {targ.name}**")
    if out.get(targ.name):
     for info in out[targ.name]:
-     desc.append(f"{info.title()}: `{out[targ.name][info]}`")
+     if info in ('aim', 'effect'):
+      desc.append(f"- {info.title()}: `{out[targ.name][info]}`".replace(" / ", "` on target `"))
+     else:
+      desc.append(f"{info.title()}: `{out[targ.name][info]}`")
    else:
     desc.append("No information has been set yet.")
   else:
@@ -1390,11 +1401,11 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.0"
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
- return f"""-f "Debug (Only appears in this channel)|```{overlays=}
- {people=}
- {debug=}
- {objects=}
- {walls=}```" """
+# if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap:
+#  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
+#  {people=}
+#  {debug=}
+#  {objects=}
+#  {walls=}```" """
 </drac2>
 -color <color>
