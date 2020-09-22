@@ -1382,7 +1382,7 @@ elif not c or args.get('?') or args.get('help'):
  if not combat():
   help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
- return help.replace(" "*11,"")
+ return '\n'.join([i.lstrip() for i in help.split('\n')])
 </drac2>
 
 <drac2>
