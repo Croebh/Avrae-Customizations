@@ -356,7 +356,7 @@ if args.last('newview') or args.last('saveview') or args.last('deleteview'):
    for searchDeleteView in args.get('deleteview'):
     userPresets.pop(searchDeleteView)
    set_uvar("mapPresets",dump_json(userPresets))
-   desc.append(f"Removed Preset `{searchDeleteView.upper()}`")
+   desc.append(f"Removed Preset `{searchDeleteView}`")
 </drac2>
 
 <drac2>
@@ -427,7 +427,58 @@ if args.last('mapload') or args.last('loadmap'):
     mapoptions = foundMap[2] if len(foundMap)>2 else ""
     objects = []
     walls = []
-   desc.append(f"Loaded the map {maps}")
+   desc.append(f"Loaded the map: `{maps}`")
+   if not args.last('silent'):
+    if mapbg:
+     desc.append(f"- Background: `{mapbg}`")
+    if mapsize:
+     desc.append(f"- Size: `{mapsize}`")
+    if mapoptions:
+     desc.append(f"- Options: `{mapoptions}`")
+     if mapoptions[0].isdigit():
+      zoom = ""
+      for char in mapoptions:
+       if char.isdigit() or char == ".":
+        zoom += char
+       else:
+        break
+      desc.append(f" -- Zoom set to {zoom}x")
+     if 'd' in mapoptions:
+      desc.append(f" -- Dark Mode")
+     if 'n' in mapoptions:
+      desc.append(f" -- Grid Hidden")
+     if 'e' in mapoptions:
+      desc.append(f" -- Disable Border Opacity")
+     if 'f' in mapoptions:
+      desc.append(f" -- Using alternative grid/token font")
+     if 'c' in mapoptions:
+      gsize = ""
+      for char in mapoptions[mapoptions.index('c')+1:]:
+       if char.isdigit():
+        gsize += char
+       else:
+        break
+      desc.append(f" -- Grid size adjusted to {gsize} px")
+     if 'h' in mapoptions:
+      gtrans = ""
+      for char in mapoptions[mapoptions.index('h')+1:]:
+       if char.isdigit():
+        gtrans += char
+       else:
+        break
+      desc.append(f" -- Grid transparancy adjusted to {gtrans}%")
+     if 'o' in mapoptions:
+      offset = ""
+      for char in mapoptions[mapoptions.index('o')+1:]:
+       if char.isdigit() or char == ":":
+        offset += char
+       else:
+        break
+      desc.append(f" -- Background Offset adjusted by {offset.replace(':', 'x')} px")
+    if walls:
+     desc.append(f"- Walls: `{', '.join(walls)}`")
+    if objects:
+     desc.append(f"- Objects: `{', '.join(objects)}`")
    neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}""".strip(" ~")
    if mapattach:
     mapattach.add_effect('map', f"""-attack "||{neweffect}" """) 
@@ -479,7 +530,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
    else:
      desc.append("You must separate the key and value with a colon when adding `-saveoverlay` entries.")
   set_uvar("mapOverlays",dump_json(userOverlays))
-  desc.append(f"Created the overlay preset `{addNewspell.split(':')[0].upper()}`")
+  desc.append(f"Created the overlay preset `{addNewspell.split(':')[0]}`")
  #second option is to delete an already created spell/overlay
  if args.last('deletespell') or args.last('deleteoverlay'):
   argDeletespell = (args.last("deletespell") or args.last('deleteoverlay')).lower()
@@ -490,7 +541,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
    else:
     desc.append("Did not find the spell you were looking for.")
   set_uvar("mapOverlays",dump_json(userOverlays))
-  desc.append(f"Removed Overlay `{searchDeletespell.upper()}`")
+  desc.append(f"Removed Overlay `{searchDeletespell}`")
 </drac2>
 
 <drac2>
@@ -628,21 +679,6 @@ if c:
     out[targ.name].update({'height':height})
 </drac2>
 
-<drac2> 
-#This allows the user to load a token to a -t
-if c:
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  if args.last('loadtoken'):
-   userPresets=load_json(get('mapTokens', '{}'))
-   argsTokenload = args.last('loadtoken').lower()
-   for searchTokenload in userPresets:
-    if argsTokenload in searchTokenload.lower():
-     foundTokenload = userPresets.get(searchTokenload)
-     desc.append(f"Loaded token `{searchTokenload}`.")
-     break
-   out[targ.name].update({'token':foundTokenload})
-</drac2>
-
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -702,7 +738,7 @@ if c:
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
-   out[targ.name].update({"location":args.last('move').upper()})
+   out[targ.name].update({"location": args.last('move').upper()})
 </drac2>
 
 
@@ -810,7 +846,7 @@ if c:
         overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Overlay {overNum}**
                        - Color: `{currentOver.colorDesc}`
                        {f"- Size: `{currentOver.size} ft. " + ("radius`" if shape.type in "circletop" else "long`" if shape.type in "coneline" else "wide`") if shape.type != "arrow" else ""}
-                       {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
+                       {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Starting' if shape.type == 'cone' else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
                        {f"- Width: `{currentOver.width.strip(', ')} ft.`" if shape.type == "line" else ""}
                        {f"- Aim: `{aimTarget or currentOver.eloc.upper()}`" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}
                        {f"- Effect: `{effect.name}` on `{effectTarget.name}`" if effect else ""}"""
@@ -929,7 +965,7 @@ if c:
       desc.append(f" - Grid Hidden")
      if 'e' in options:
       desc.append(f" - Disable Border Opacity")
-     if 'f' in mapoptions:
+     if 'f' in options:
       desc.append(f" - Using alternative grid/token font")
      if 'c' in options:
       gsize = ""
@@ -969,13 +1005,13 @@ if args.last('savetoken') or args.last('deletetoken'):
    else:
     desc.append("You must separate the key and value with a colon when adding `-savetoken` entries.")
   set_uvar("mapTokens",dump_json(userTokens).lower())
-  desc.append(f"Created the Token `{addNewToken.split(':')[0].upper()}`")
+  desc.append(f"Created the Token `{addNewToken.split(':')[0]}`")
  if args.last('deletetoken'):
   userTokens = load_json(get('mapTokens','{}'))
   argToken = args.last("deletetoken").lower()
   userTokens.pop(argToken)
   set_uvar("mapTokens",dump_json(userTokens).lower())
-  desc.append(f"Removed Token `{argToken.upper()}`")
+  desc.append(f"Removed Token `{argToken}`")
 </drac2>
 
 <drac2>
@@ -1044,7 +1080,7 @@ if c:
     token = mToken
     out[targ.name].update({'token':token})
     desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
-   if args.last('loadtoken'):
+   if args.last('loadtoken') and massTarg:
     userPresets=load_json(get('mapTokens', '{}'))
     argsTokenload = args.last('loadtoken').lower()
     for searchTokenload in userPresets:
@@ -1150,6 +1186,7 @@ if c:
  if args.last('clear'):
   [i.set_note(None)for i in combat().combatants]
   people=[]
+  overlays=[]
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist')):
