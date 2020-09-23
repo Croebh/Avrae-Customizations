@@ -570,6 +570,17 @@ if c:
       _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
       desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
       desc.append("")
+    # # If the overlay was -aim'd at a target, and if that aim target exists still
+    # if out[target.name].get('aim'+overNum):
+    #  aimTarget = out[target.name].get('aim'+overNum)
+    #  aimTargetX = ''.join([i for i in aimTarget if i.isalpha()])
+    #  aimTargetY = int(''.join([i for i in aimTarget if i.isdigit()]) or -1)
+    #  if not (aimTargetX.upper() in alph[:mapX+2] and 0 < aimTargetY <= mapY and not gt(aimTarget)):
+    #   _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+    #   _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+    #   _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+    #   desc.append(f"""Overlay {overNum} removed from `{target.name}` because aim target `{aimTarget}` no longer present.""")
+    #   desc.append("")
   elif target.note:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
