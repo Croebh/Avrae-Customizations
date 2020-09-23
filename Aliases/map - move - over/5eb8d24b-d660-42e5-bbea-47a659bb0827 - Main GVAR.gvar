@@ -135,6 +135,24 @@ viewlist = [f"""**{presets}** - `{str(over).replace('"',quote)}`""" for presets,
 # Split the list into groups of 20, to ensure it stays a reasonable size
 presetPagin = [viewlist[i:i+20] for i in range(0, len(viewlist), 20)]
 </drac2>
+
+<drac2>
+#Pulling up battlelist to view all created battles
+userBattles = load_json(get('mapBattles', "{}"))
+battlelist = []
+for battles, info in userBattles.items():
+ if args.last('search', '').lower() in battles.lower():
+  indivBattles = dict(list(info.items())[1:])
+  indivCombatant = []
+  for combatant in indivBattles:
+   if combatant != "mapattach":
+    overs = len([i for i in indivBattles[combatant] if i.startswith('overlay')])
+    indivCombatant.append(f"""{combatant}{f" ({overs} Overlay{'s' if overs>1 else ''})" if overs else ""}""")
+  battlelist.append(f"""**{battles.title()}** - Combatants: {', '.join(indivCombatant)}""".strip(",- "))
+# Split the list into groups of 15, to ensure it stays a reasonable size (used to be 20, then I added stuff)
+battlePagin = [battlelist[i:i+15] for i in range(0, len(battlelist), 15)]
+</drac2>
+
 <drac2>
 # If we're in combat, check all the things
 if c:
@@ -1128,6 +1146,65 @@ if args.last('tokenimport'):
  desc.append(f"Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`")
 </drac2>
 
+<drac2>
+if args.last('savebattle') or args.last('deletebattle') or args.last('loadbattle'):
+ userBattles = load_json(get('mapBattles', "{}")) 
+ if args.last('savebattle'):
+  argsBattle = args.last('savebattle')
+  mapBGState = {}
+  for key, value in mapinfo.items():
+   if value:
+    if mapinfo.get('background')!= None:
+     mapBGState["mapbg"] = mapinfo.get('background')
+    mapBGState["mapsize"] = mapsize
+    if mapinfo.get('options')!= None:
+     mapBGState["mapoptions"] = mapinfo.get('options')
+    if mapinfo.get('walls')!= None:
+     mapBGState["walls"] = mapinfo.get('walls').split(', ')
+    if mapinfo.get('objects')!= None:
+     mapBGState["objects"] = mapinfo.get('objects').split('/')
+    break 
+  savedBGState = {"mapattach":mapBGState}
+  savedBGState.update(out)
+  savedBattle = {argsBattle:savedBGState}
+  userBattles.update(savedBattle)
+  set_uvar("mapBattles",dump_json(userBattles))
+  desc.append(f"Saved the battle `{argsBattle.title()}`")
+ if args.last('deletebattle'):
+  argsBattle = args.last('deletebattle')
+  for searchBattle in userBattles:
+   if argsBattle in searchBattle.lower():
+    userBattles.pop(searchBattle)
+    set_uvar("mapBattles",dump_json(userBattles))
+    desc.append(f"Deleted the battle `{searchBattle.title()}`")
+    break
+ if args.last('loadbattle'):
+  argsBattle = args.last('loadbattle')
+  foundBattle = ""
+  for searchBattle in userBattles:
+   if argsBattle in searchBattle.lower():
+    foundBattle = userBattles[searchBattle]
+    for i in foundBattle:
+     if i not in ("mapattach"):
+      foundCombatants = dict(list(foundBattle.items())[1:])
+      if all([combat().get_combatant(i) for i in foundCombatants.keys()]):
+       out = dict(list(foundBattle.items())[1:])
+       foundMapload = foundBattle["mapattach"]
+       mapbg = foundMapload["mapbg"]
+       mapsize = foundMapload["mapsize"]
+       mapoptions = foundMapload["mapoptions"]
+       walls = foundMapload["walls"]
+       objects = foundMapload["objects"]
+       setMapview = f"{mapviewlocation}:{mapviewsize}"
+       neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {setMapview}" if setMapview else ""}""".strip(" ~")
+       if mapattach:
+        mapattach.add_effect('map', f"""-attack "||{neweffect}" """) 
+       desc.append(f"Loaded the battle `{argsBattle.title()}`")
+       break  
+      else:
+       desc.append(f"You need to add your combatants to combat first to load their info")
+       break    
+</drac2>
 
 <drac2>
 if c:
@@ -1260,6 +1337,14 @@ elif args.get('tokenlist'):
   tokenPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return tokenPage + f"""-title "Token for your thoughts"  """
+elif args.get('battlelist'):
+     # Only grab the page selected, default to first
+ if battlePagin:
+  battlePage = f"""-desc "{newline.join(battlePagin[ min(len(battlePagin),args.last('page', 1, int)-1)] )}" """
+ else:
+  battlePage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
+ # Add some pizazz
+ return battlePage + f"""-title "Knowing is half the battle"  """ 
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
 elif not c or args.get('?') or args.get('help'):
  if any(args.last(potentialArg) for potentialArg in ('overlay', 'over', 'overlays', 'spell', 'spells')):
