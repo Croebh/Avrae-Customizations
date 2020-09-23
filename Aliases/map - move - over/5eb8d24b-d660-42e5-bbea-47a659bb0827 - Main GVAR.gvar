@@ -1083,8 +1083,8 @@ if c:
      desc.append(f"Changing color of {mTarg.name} to #{color.upper()}")
    if mToken:
     token = mToken
-    out[targ.name].update({'token':token})
-    desc.append(f"{targ.name} is now using the shortcode `{token}` as a token.")
+    out[mTarg.name].update({'token':token})
+    desc.append(f"{mTarg.name} is now using the shortcode `{token}` as a token.")
    if args.last('loadtoken') and massTarg:
     userPresets=load_json(get('mapTokens', '{}'))
     argsTokenload = args.last('loadtoken').lower()
