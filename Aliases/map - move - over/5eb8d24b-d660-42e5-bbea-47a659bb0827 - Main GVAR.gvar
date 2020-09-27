@@ -1190,11 +1190,15 @@ if args.last('savebattle') or args.last('deletebattle') or args.last('loadbattle
       if all([combat().get_combatant(i) for i in foundCombatants.keys()]):
        out = dict(list(foundBattle.items())[1:])
        foundMapload = foundBattle["mapattach"]
-       mapbg = foundMapload["mapbg"]
+       if "mapbg" in foundMapload:
+        mapbg = foundMapload["mapbg"]
        mapsize = foundMapload["mapsize"]
-       mapoptions = foundMapload["mapoptions"]
-       walls = foundMapload["walls"]
-       objects = foundMapload["objects"]
+       if "mapoptions" in foundMapload:
+        mapoptions = foundMapload["mapoptions"]
+       if "walls" in foundMapload:
+        walls = foundMapload["walls"]
+       if "objects" in foundMapload:
+        objects = foundMapload["objects"]
        setMapview = f"{mapviewlocation}:{mapviewsize}"
        neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {setMapview}" if setMapview else ""}""".strip(" ~")
        if mapattach:
