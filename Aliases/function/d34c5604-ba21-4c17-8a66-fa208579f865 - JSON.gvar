@@ -252,7 +252,7 @@
         "syntax": "set_cvar('potato', 'fifteen')"
     },
     {
-        "name": "`  set_cvar_nx(name, value)`",
+        "name": "`set_cvar_nx(name, value)`",
         "desc": "Sets a cvar to a new value, only if it doesn't already exist.",
         "args": "`name` - *str* - The name of the cvar to create.\n`value` - *str* - The new value of the cvar.",
         "returns": "`None`",
