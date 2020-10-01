@@ -1,18 +1,42 @@
 tembed 
 <drac2>
 args = argparse("@@@")
-resists = ["bludgeoning", "piercing", "slashing"]
-if (get("l3totem","").lower() == "bear" and 
-  load_json(get("subclass","{}")).get('BarbarianLevel',"").lower() == "totem"):
-  resists += ["acid","cold","fire","force","lightning","necrotic","poison","radiant","thunder"]
-i = args.last("i")
 c = combat()
-cc = "Rages" if cc_exists("Rages") else "Rage"
 lvl = int(get("BarbarianLevel",0))
-r = args.last("t") if "t" in args else name
-C = c.get_combatant(r) if c else""
-v = (cc_exists(cc) and get_cc(cc)>0)or i or lvl>=20
-tname = C.name if C else r
+desc = []
+
+wildshape = args.last("wildshape")
+ignore = args.last("i")
+
+
+counter = "Rages" if cc_exists("Rages") else "Rage"
+
+target = args.last("t")
+
+if c:
+  if target and (target := c.get_combatant(target)):
+    if target.level:
+      lvl = target.level
+
+  
+valid = (cc_exists(counter) and get_cc(counter)) or ignore or lvl>=20 or target
+
+
+# Base Resistances
+resists = ["bludgeoning", "piercing", "slashing"]
+
+# If user uses `bear`, but no target, set their cvar for further uses
+if args.last('bear'):
+  if not args.last('t')
+    set_cvar('l3totem', 'Bear')
+    desc.append("Set your Level 3 Totem to Bear for future rages.")
+  desc.append("Applying Bear totem resistances.")
+
+if get("l3totem","").lower() == "bear" or args.last('bear'):
+  resists += ["acid","cold","fire","force","lightning","necrotic","poison","radiant","thunder"]
+
+
+
 </drac2>
 -title "{{f'{tname} {"Rages" if v else "tries to Rage"}!'}}" 
 -desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if cc_exists(cc) else "You do not have this ability"}}" {{mod_cc(cc,-1) if v and not i and lvl<20 else ""}} 
