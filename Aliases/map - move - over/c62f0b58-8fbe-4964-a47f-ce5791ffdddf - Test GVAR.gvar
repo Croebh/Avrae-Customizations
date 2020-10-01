@@ -1,5 +1,6 @@
 tembed 
 <drac2>
+testVersion = True
 # These are replaced with proper values from the base alias
 args, defaults = argparse("@@@"),"&&&"
 # Set are base variables
@@ -264,24 +265,20 @@ if args.last('mapload') or args.last('loadmap'):
  for maps in mapBG:
   if argLoadmap in maps.lower():
    foundMap = mapBG.get(maps)
+   mapbg = ""
+   mapoptions = ""
+   walls = []
+   objects = []
    if 'mapbg' in foundMap:
     mapbg = foundMap.get('mapbg')
-   else:
-    mapbg = ""
    if 'mapsize' in foundMap:
     mapsize = foundMap.get('mapsize')
    if 'mapoptions' in foundMap:
     mapoptions = foundMap.get('mapoptions')
-   else:
-    mapoptions = ""
    if 'walls' in foundMap:
     walls = foundMap.get('walls')
-   else:
-    walls = []
    if 'objects' in foundMap:
     objects = foundMap.get('objects')
-   else:
-    objects = []
    if typeof(foundMap) == 'SafeList':
     mapbg = foundMap[0]
     mapsize = foundMap[1] if len(foundMap)>1 else ""
@@ -1291,7 +1288,7 @@ if c:
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist")):
-  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{'/'.join(people+overlays)}{f"?bg={mapbg}" if mapbg else ""}"""
+  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects).replace("$T", "$tr").replace("$P", "$pr").replace("$p", "$ps").replace("$S", "$ss").replace("$O", "$po").replace("$o", "$pc")}/' if objects else ""}{'/'.join(people+overlays)}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bg={mapbg}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
