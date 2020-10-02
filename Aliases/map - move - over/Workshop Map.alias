@@ -2,7 +2,7 @@ embed
 <drac2>
 testVersion = False
 args = "@@@" if typeof("@@@") == "SafeList" else &ARGS&
-defaults = "&&&" if typof("&&&") == "SafeDict" else None
+defaults = "&&&" if typeof("&&&") == "SafeDict" else None
 
 # Comment the first line for `!map`, second line for `!move`
 # args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
@@ -41,7 +41,7 @@ presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Sta
 overlays=[]
 c = combat()
 gt = c.get_combatant if c else None
-debug = ""
+debug = []
 desc = []
 finalMap = ""
 sizeOffset = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
@@ -965,12 +965,12 @@ if c:
     token = mToken
     out[mTarg.name].update({'token':token})
     desc.append(f"{mTarg.name} is now using the shortcode `{token}` as a token.")
-   if args.last('loadtoken') and massTarg:
+   if args.last('loadtoken'):
     foundTokenload = None
     argsTokenload = args.last('loadtoken').lower()
-    for searchTokenload in userPresets:
+    for searchTokenload in userTokens:
      if argsTokenload in searchTokenload.lower():
-      foundTokenload = userPresets.get(searchTokenload)
+      foundTokenload = userTokens.get(searchTokenload)
       desc.append(f"Loaded token `{searchTokenload}`.")
       out[mTarg.name].update({'token':foundTokenload}) 
       break
@@ -1568,7 +1568,7 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.1"
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap and args.last('debug'):
+if args.last('debug'):
  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
  {people=}
  {debug=}

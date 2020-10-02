@@ -125,3 +125,6 @@ if cc and not cc_exists(cc) and get("name"):
 {{slotout}}
 {{ccout}}
 {{itemout}}
+
+-f "**__Important Note__**|This version is outdated. 
+Please use the [workshop version](https://avrae.io/dashboard/workshop/5f6a4623f4c89c324d6a5cd3)."
