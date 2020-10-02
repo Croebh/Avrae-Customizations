@@ -2401,7 +2401,15 @@
  },
  "character().mod_cc(name, val: int, strict=False)": {
   "desc": "Modifies the value of a custom counter. Equivalent to set_cc(name, get_cc(name) + value, strict).",
-  "url": "aliasing.api.character.AliasCharacter.mod_cc"
+  "url": "aliasing.api.character.AliasCharacter.mod_cc",
+  "returns": {
+   "type": "int",
+   "desc": "The cc's new value."
+  },
+  "raises": {
+   "name": "ConsumableException",
+   "desc": "If the counter does not exist."
+  }
  },
  "character().modify_hp(amount, ignore_temp=False, overflow=True)": {
   "desc": "Modifies the creature’s remaining HP by a given amount.",

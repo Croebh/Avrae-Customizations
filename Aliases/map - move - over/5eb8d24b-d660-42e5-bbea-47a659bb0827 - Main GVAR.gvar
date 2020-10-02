@@ -1,8 +1,13 @@
 tembed 
 <drac2>
 testVersion = False
-# These are replaced with proper values from the base alias
-args, defaults = argparse("@@@"),"&&&"
+args = "@@@"
+defaults = "&&&"
+
+# Comment the first line for `!map`, second line for `!move`
+# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
+args = argparse(args)
+
 # Set are base variables
 if typeof(defaults) == "str":
   defaults = {}
@@ -64,7 +69,9 @@ defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
 spellOverlays = defaultSpells.copy()
 # Grab the user selected spells, and update the main dict
 # This allows the user to replace/update items in the original dict
-userOverlays = load_json(get('mapOverlays','{}'))
+userOverlays    = load_json(get('mapOverlays','{}'))
+serverOverlays = load_json(get_svar('mapOverlays') or '{}')
+spellOverlays.update(serverOverlays)
 if typeof(userOverlays) == 'SafeDict':
  spellOverlays.update(userOverlays)
 else:
@@ -92,9 +99,12 @@ spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
 </drac2>
 <drac2> # L318
+serverPresets=load_json(get_svar('mapPresets') or '{}')
+userPresets=load_json(get('mapPresets', '{}'))
+serverPresets.update(userPresets)
+userPresets = serverPresets
 #This allows the user to load a preset into -mapview
 if args.last('viewload') or args.last('loadview'):
- userPresets=load_json(get('mapPresets', '{}'))
  argsViewload = (args.last("viewload") or args.last('loadview')).lower()
  for searchViewload in userPresets:
   if argsViewload in searchViewload.lower():
@@ -122,15 +132,17 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
 </drac2>
 
 <drac2>
-# Pulling up tokenlist to view all created tokens 
+# Pulling up tokenlist to view all created tokens
+serverTokens = load_json(get_svar('mapTokens') or '{}')
 userTokens = load_json(get('mapTokens','{}'))
+serverTokens.update(userTokens)
+userTokens = serverTokens
 tokenlist = [f"""**{tokens}** - `{str(over).replace('"',quote)}`""" for tokens, over in userTokens.items() if args.last('search','').lower() in tokens.lower()]
 tokenPagin = [tokenlist[i:i+20] for i in range(0, len(tokenlist), 20)]
 </drac2>
 
 <drac2>
 # Pulling up viewlist to view all created -mapview presets 
-userPresets = load_json(get('mapPresets','{}'))
 # Only select the ones they are searching for, if they are searching
 viewlist = [f"""**{presets}** - `{str(over).replace('"',quote)}`""" for presets, over in userPresets.items() if args.last('search','').lower() in presets.lower()]
 # Split the list into groups of 20, to ensure it stays a reasonable size
@@ -139,7 +151,10 @@ presetPagin = [viewlist[i:i+20] for i in range(0, len(viewlist), 20)]
 
 <drac2>
 #Pulling up battlelist to view all created battles
+serverBattles = load_json(get_svar('mapBattles') or '{}')
 userBattles = load_json(get('mapBattles', "{}"))
+serverBattles.update(userBattles)
+userBattles = serverBattles
 battlelist = []
 for battle, info in userBattles.items():
  if args.last('search', '').lower() in battle.lower():
@@ -201,7 +216,6 @@ if c:
 #This allows the user to save -mapview presets to their mapPresets uvar to be called using -loadview
 if args.last('newview') or args.last('saveview') or args.last('deleteview'):
   #First option is to create the preset
-  userPresets=load_json(get("mapPresets", "{}"))
   if args.last('newview') or args.last('saveview'):
    for addNewview in (args.get('newview') or args.get('saveview')):
     if "," in addNewview:
@@ -223,8 +237,10 @@ if args.last('newview') or args.last('saveview') or args.last('deleteview'):
 presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
 mapBG = presetMaps.copy()
 userMaps = load_json(get('mapBackgrounds','{}'))
+serverMaps = load_json(get('mapBackgrounds') or '{}')
 # Grab the user selected map, and update the main dict
 # This allows the user to replace/update items in the original dict
+mapBG.update(serverMaps)
 mapBG.update(userMaps)
 # Iterate over the map dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
@@ -351,7 +367,6 @@ if args.last('mapload') or args.last('loadmap'):
 #This allows the user to create custom mapbg presets and save them to their mapBackgrounds uvar to be loaded using -mapload
 if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or args.last('deletemap'):
  #First option is to create mapbg preset
- userMaps = load_json(get('mapBackgrounds','{}'))
  if args.last('newmapbg') or args.last('savemap'):
   mapName = (args.last('savemap') or args.last('newmapbg')).lower()
   mapBGState = {}
@@ -607,7 +622,7 @@ if c:
       # Add the line to the overlay list
       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
       # Display the change in location
-      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
@@ -871,7 +886,6 @@ if c:
 #Load user saved token list
 if args.last('savetoken') or args.last('deletetoken'):
  if args.last('savetoken'):
-  userTokens = load_json(get('mapTokens','{}'))
   for addNewToken in args.get('savetoken'):
    if ":" in addNewToken:
     userTokens.update({addNewToken.split(":")[0]:addNewToken.split(":")[1]})
@@ -880,7 +894,6 @@ if args.last('savetoken') or args.last('deletetoken'):
   set_uvar("mapTokens",dump_json(userTokens).lower())
   desc.append(f"Created the Token `{addNewToken.split(':')[0]}`")
  if args.last('deletetoken'):
-  userTokens = load_json(get('mapTokens','{}'))
   argToken = args.last("deletetoken").lower()
   userTokens.pop(argToken)
   set_uvar("mapTokens",dump_json(userTokens).lower())
@@ -923,7 +936,7 @@ if c:
        # Add the line to the overlay list
        overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
        # Display the change in location
-       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
+       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
     else:
      # Display the change in location
      desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
@@ -954,7 +967,6 @@ if c:
     out[mTarg.name].update({'token':token})
     desc.append(f"{mTarg.name} is now using the shortcode `{token}` as a token.")
    if args.last('loadtoken') and massTarg:
-    userPresets=load_json(get('mapTokens', '{}'))
     argsTokenload = args.last('loadtoken').lower()
     for searchTokenload in userPresets:
      if argsTokenload in searchTokenload.lower():
@@ -1292,7 +1304,7 @@ if c:
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist")):
-  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{'/'.join(people+overlays)}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bgbg={mapbg}" if mapbg else ""}"""
+  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{'/'.join(people+overlays)}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bg={mapbg}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
@@ -1446,7 +1458,7 @@ elif not c or args.get('?') or args.get('help'):
 
              -f "_ _|**__Interface Options__**
              `-options [args]` - Changes visual options using the following arguments:
-             `<#>` - Different zoom options, accepts fractions. Example: `-options 1.5`
+             `z<#>` - Changes the map's resolution, range 1-3, accepts fractions. The higher the value the larger the map will be, allowing to zoom in without loosing image quality. Example: `-options z1.5`
              `d` - Dark mode
              `h<#>` - Sets the grid's transparancy, range 1-99. Example: `-options h10` would set it to 10%.
              `n` - Hides the grid.
@@ -1455,7 +1467,7 @@ elif not c or args.get('?') or args.get('help'):
              `c<#>` - Sets the grid's unit size (in px). Default: 60.
              `o<#>:<#>` - Offsets the background image (in px). Example: `-options o20:40` would offset it 20px down and 40px to the right.
              Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change. 
-             You can set multiple settings at a time. If you do, zoom should be your first option, if you're setting it. Example: `-options 2n` would set zoom to 2 and hide the grid."
+             You can set multiple settings at a time. If you do, zoom should be your first option, if you're setting it. Example: `-options z2n` would set zoom to 2 and hide the grid."
 
              -f "_ _|**__Backup / Restore__**
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
@@ -1532,7 +1544,7 @@ elif not c or args.get('?') or args.get('help'):
              `-loadtoken <tokenName>` - Allows you to load a saved token to a target. Example: `!map -t go1 -loadtoken goblin`
 
              **__Additional Information__**
-             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`." """ + colorhelp + sizehelp
+             The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """ + colorhelp + sizehelp
 
  help += helpindex
  if not combat():
@@ -1553,7 +1565,8 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
   paginFooter = paginFooter.replace("####", str(len(presetPagin))) if len(presetPagin) > 1 else ""
  paginFooter += " | -search [name] to search"
 </drac2>
-
+-f "**__Important Note__**|This version is outdated. 
+Please use the [workshop version](https://avrae.io/dashboard/workshop/5f6a4623f4c89c324d6a5cd3)."
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.1"
 <drac2>
 # this is for debugging, only display in testing channels
