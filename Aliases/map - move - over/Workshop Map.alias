@@ -1419,7 +1419,7 @@ elif not c or args.get('?') or args.get('help'):
             Note: `-over2`/`-spell2` will be linked to `-aim2` and `-effect2`, and so on, for each overlay."                       
             """.replace(" "*11,"") + colorhelp
  elif any(args.last(potentialArg) for potentialArg in ('map', 'manage', 'options', 'dm', 'gm')):
-  help = f"""-title "Maps: Visual Options" 
+  help =  """-title "Maps: Visual Options" 
              -desc "Wait, were we in the dungeon or the pub?
 
              **__Allow the Map Settings to Save__**
@@ -1472,6 +1472,12 @@ elif not c or args.get('?') or args.get('help'):
 
              -f "_ _|**__Backup / Restore__**
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
+
+             -f "_ _|**__Server Settings__**
+             To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
+             `!svar mapDefaults \{\{"size":"", "background":"", "options":""\}\}`
+             
+             You can also copy your `mapOverlays`, `mapPresets`, `mapTokens`, `mapBattles`, `trueDistance` uvars into svars, and they'll be set/available for the whole server."
   """
  elif any(args.last(potentialArg) for potentialArg in ('walls', 'wall', 'door', 'doors', 'object', 'objects')):
   help = f"""-title "Map: Walls, Doors and Objects"

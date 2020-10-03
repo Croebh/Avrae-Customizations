@@ -64,7 +64,8 @@ Arguments marked with **†** allow for variable evaluation via `{}`
 -f "_ _|__**Resources**__
 You can have gvars full of `!use` cvars, so you can potentially have one for all of the Paladin features, and subscribe to that instead of having personal cvars. Of course, personal cvars of the same name would have priority, in case you wanted to add additional pizzaz.
 
-The cvar resources should contain a list of gvars, for example:
-> `!cvar resources [\"2a2deaec-180c-4d03-818c-879e465f1c0a\"]`
+The uvar `resources` should contain a list of gvars, for example:
+> `!uvar resources [\"2a2deaec-180c-4d03-818c-879e465f1c0a\"]`
+You can also set a svar named `useResources` to have a server set as well.
 
 Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`.
