@@ -236,7 +236,7 @@ if args.last('newview') or args.last('saveview') or args.last('deleteview'):
 presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
 mapBG = presetMaps.copy()
 userMaps = load_json(get('mapBackgrounds','{}'))
-serverMaps = load_json(get('mapBackgrounds') or '{}')
+serverMaps = load_json(get_svar('mapBackgrounds') or '{}')
 # Grab the user selected map, and update the main dict
 # This allows the user to replace/update items in the original dict
 mapBG.update(serverMaps)
@@ -1170,16 +1170,17 @@ if c:
    desc.append(f"Saved the battle `{argsBattle}`")
   if args.last('deletebattle'):
    inputtedBattle = args.last('deletebattle')
+   foundBattle = None
    for battle in userBattles:
     if inputtedBattle in battle.lower():
      foundBattle = userBattles.pop(battle)
      set_uvar("mapBattles", dump_json(userBattles))
      desc.append(f"Deleted the battle `{inputtedBattle}`")
      break
-    else:
-     desc.append(f"Did not find the battle you were looking for")
+   if not foundBattle:
+    desc.append(f"Did not find the battle you were looking for")
   if args.last('loadbattle'):
-   argsBattle = args.last('loadbattle')
+   argsBattle = args.last('loadbattle').lower()
    foundBattle = ""
    for searchBattle in userBattles:
     if argsBattle in searchBattle.lower():

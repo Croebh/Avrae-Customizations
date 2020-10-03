@@ -237,7 +237,7 @@ if args.last('newview') or args.last('saveview') or args.last('deleteview'):
 presetMaps = load_json(get_gvar("a891401d-cdf2-44b2-b63b-bd86387c2659"))
 mapBG = presetMaps.copy()
 userMaps = load_json(get('mapBackgrounds','{}'))
-serverMaps = load_json(get('mapBackgrounds') or '{}')
+serverMaps = load_json(get_svar('mapBackgrounds') or '{}')
 # Grab the user selected map, and update the main dict
 # This allows the user to replace/update items in the original dict
 mapBG.update(serverMaps)
