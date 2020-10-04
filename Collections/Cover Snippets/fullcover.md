@@ -1,0 +1,1 @@
+This snippet causes the attack to miss, and displays a helpful note as to why.

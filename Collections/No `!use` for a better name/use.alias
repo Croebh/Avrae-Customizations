@@ -1,16 +1,156 @@
+embed
 {{c = []}}
+{{a= &ARGS&}}
 {{args, init = argparse(a), combat()}}
 
 {{silverServers = servid() in ["502231291152957450"]}}
 
-{{gvar, help_text, min_help_text = load_json(get_gvar("e5add2ac-61fd-40da-8362-dbdcfab38359")), get_gvar('1f58cef3-bb05-498d-9623-c70c62502396'), get_gvar('ba1ac753-8707-480f-b933-89ba6e5cb0cf')}}
+<drac2>
+gvar = {
+  "DF": "!use [args] | !use ? | v%s | Developed by @Croebh#5603\" -thumb ",
+    "e": "**Effect:** ",
+    "F": "!use [args] | !use ? | v%s\" -thumb ",
+    "I": "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png",
+    "K": "Make a %s Save!",
+    "L": "+ ",
+    "M": [
+        "**DEX Save:** ",
+        "**STR Save:** ",
+        "**CON Save:** ",
+        "**WIS Save:** ",
+        "**INT Save:** ",
+        "**CHA Save:** "
+    ],
+    "s": [
+        "Success!",
+        "Failure!"
+    ],
+    "t": "U 2 Can Save!",
+    "T": [
+        "dex",
+        "str",
+        "con",
+        "wis",
+        "int",
+        "cha"
+    ],
+    "V": 4.2
+}
+
+help_text = """**`!use [args]`**
+
+Rolls saves for combatants in init. Pulls their save bonuses and relevant effects from the combat.
+
+
+**__Valid Arguments__**
+
+Arguments marked with **†** allow for variable evaluation via `{}`
+
+`-save [str|dex|con|wis|cha|int]` - Sets the save to be rolled (Default: Dexterity)
+`-dc [#]` - Sets the DC (Default: 10). **†**
+`-h` - Hides the DC and Damage
+
+`-t \\\"[target]\\\"` - Sets targets for the save. You can chain multiple targets or do a single target. If you pass no targets, it will roll the save for your active character. `{name}` is replaced with your characters name.
+`-t \\\"[target]|[args]\\\"` - Sets a target, and also allows for specific args to apply to them. (e.g, `-t \\\"OR1|pass\\\"` to force `OR1` to succeed.)
+`adv/dis` - Causes the save or saves to be rolled at dis/advantage. (`adv/dis` cancels `dis/adv` in the cvar, double up to apply instead.)
+`-b [conditional bonus]` - Adds (or subtracts) a bonus to the saves (accepts dice). **†**
+
+`pass` - Automatically succeed on the save.
+`fail` - Automatically fail the save.
+
+`-d [damage]` - Sets damage to be dealt on a fail. **†**
+`-d "[damage]|[minimum]|[maximum]"` - Sets damage to be dealt on a fail, with a set maximum and or minimum damage. If no minimum, leave blank (`-d 1d10||1`). **†**
+`crit` - Doubles the dice in `-d`
+`half` - Halves the `-d` damage on a successful save.
+`avoid` - Halves the `-d` damage on a failed save, and zeroes it out on a success.
+`-effect \\\"[name]|[effects]|[duration]\\\"` - Adds an effect to the target. If no duration is given, defaults to infinite. **†**
+`-max [#]` - Modifies the max health of those who fail the save. `{damage}` will be replaced by the total damage. **†**
+`-thp [#]` - Sets the temporary hit points of those who fail the save. **†**
+"
+
+-f "_ _|`-seffect "[name]|[effects]|[duration]"` - Adds an effect to the user. If no duration is given, defaults to infinite. If `[effects]` contains the tag `parent`, any effects made by `-effect` will use this as its parent. If `[effects]` contains `separate`, it will make an individual effect on the user for each target that fails, either replacing `[tname]` in the effect name with the targets name, or appending it.  **†**
+`-user [name]` - Sets the 'user' of the ability, for `-seffect`. If no `-user` is given, defaults to your currently active character.
+"
+
+-f "_ _|`-cc \\\"[cc name]\\\"` - Uses a single use of a counter. Errors if no uses remaining.
+`-ccnum [#]` - Changes the amount of uses `-cc` uses/regains.
+`-slot [#]` - Uses a single use of a spell slot. Errors if none remaining.
+`-slotnum [#]` - Changes the amount of slots `-slot` uses.
+`-item \\\"[container]|[item]\\\"` - Removes a single item from the appropriate container. Requires setup via the `!bag` alias.
+`-itemqty [#]` - Changes the amount of items `-item` removes/adds.
+`-i` - Sets `-ccnum` `-slotnum` and `-itemqty` to 0.
+"
+
+-f "_ _|`-title \\\"[title]\\\"` - Replaces the title. `[name]` and `[sname]`  will be replaced automatically. **†**
+`-phrase \\\"[flavor text]\\\"` - Adds flavor text to the save. **†**
+`-desc \\\"[descriptive text]\\\"` - Adds a field for rules text and such. **†**
+`-thumb [url]` - Adds a thumbnail image.
+`-roll [dice]` - Rolls additional dice, just for display. **†**
+`-n #` - A set number, such as damage taken or a minimum total. Can be called with `{n}` **†**
+`-ndesc "[desc]"` - The description text used when `-n` is displayed in the meta field. Default is `Number`. **†**
+
+`-cvar [cvar]` - Load a set of args from a cvar or uvar. Will attempt to load the first argument as a cvar (e.g, `dborn` in `!use dborn -t or1`)
+`-out [cvar]` - Will output a code block for creating a cvar with the given arguments. Does **Not** create the cvar/uvar.
+"
+
+-f "_ _|
+**__Special Cvars__**
+
+`{scale}` - Is replaced with cantrip scaling by default (1 till 5, then 2 till 11, etc). This scale can be overriden in a cvar loaded with `-cvar`, as follows: `{\\\"scale\\\": \\\"{'1':10, '5':20, '11':30, '17':40}\\\"}`
+`{spellDC}` - Is replaced with your sheets Spell DC.
+`{spellAB}` - Is replaced with your sheets Spell Attack Bonus."
+
+-f "_ _|__**Resources**__
+You can have gvars full of `!use` cvars, so you can potentially have one for all of the Paladin features, and subscribe to that instead of having personal cvars. Of course, personal cvars of the same name would have priority, in case you wanted to add additional pizzaz.
+
+The cvar resources should contain a list of gvars, for example:
+> `!cvar resources [\\\"2a2deaec-180c-4d03-818c-879e465f1c0a\\\"]`
+You can also set a svar named `useResources` to have a server set as well.
+
+Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`."""
+
+min_help_text = """**`!use [args]`**
+
+Rolls saves for combatants in init. Pulls their save bonuses and relevant effects from the combat. 
+
+
+**__Valid Arguments__**
+
+Arguments marked with **†** allow for variable evaluation via `{}`
+
+`-save [str|dex|con|wis|cha|int]` - Sets the save to be rolled (Default: Dexterity)
+`-dc [#]` - Sets the DC (Default: 10). **†**
+`-h` - Hides the DC and Damage
+
+`-t \\\"[target]\\\"` - Sets targets for the save. You can chain multiple targets or do a single target. If you pass no targets, it will roll the save for your active character.
+`adv/dis` - Causes the save or saves to be rolled at dis/advantage. (`adv/dis` cancels `dis/adv` in the cvar, double up to apply instead.)
+`-b [conditional bonus]` - Adds (or subtracts) a bonus to the saves (accepts dice). **†**
+
+`pass` - Automatically succeed on the save.
+`fail` - Automatically fail the save.
+
+`-d [damage]` - Sets damage to be dealt on a fail. **†**
+`crit` - Doubles the dice in `-d`
+`-effect \\\"[name]|[effects]|[duration]\\\"` - Adds an effect to the target. If no duration is given, defaults to infinite. **†**
+`-max [#]` - Modifies the max health of those who fail the save. **†**
+"
+
+-f "_ _|`-title \\\"[title]\\\"` - Replaces the title. `[name]` and `[sname]`  will be replaced automatically. **†**
+`-phrase \\\"[flavor text]\\\"` - Adds flavor text to the save. **†**
+`-desc \\\"[descriptive text]\\\"` - Adds a field for rules text and such. **†**
+`-thumb [url]` - Adds a thumbnail image.
+`-roll [dice]` - Rolls additional dice, just for display. **†**
+
+> Use `!use ?` to view the full listing of arguments."""
+</drac2>
+
 {{stats, N = ["dexterity", "strength", "constitution", "wisdom", "intelligence", "charisma"], '\n'}}
 {{help = not a or ('?' in args or 'help' in args)}}
 {{out = args.last('out')}}
 
 {{cvar, cgvar = args.last('cvar') or (a[0] if a else '{}'), {} }}
 
-{{_ = [cgvar.update(load_json(get_gvar(x))) for x in load_json(get('resources','[]')) if get_gvar(x)]}}
+{{_ = [cgvar.update(load_json(get_gvar(x))) for x in load_json(get_svar('useResources') or '[]') + load_json(get('resources','[]')) if get_gvar(x)]}}
 
 {{_ = help or out or [([[c.extend([f"-{x[0]}", str(i)]) for i in x[1]] if typeof(x[1])=='list' else c.append(f"-{x[0]}"), c.append(str(x[1]))]) for x in (load_json(get(cvar, '{}')) or cgvar.get(cvar, '{}')).items()] if get(cvar) or cgvar.get(cvar) else ''}}
 {{args = argparse(c + a)}}
@@ -125,6 +265,3 @@ if cc and not cc_exists(cc) and get("name"):
 {{slotout}}
 {{ccout}}
 {{itemout}}
-
--f "**__Important Note__**|This version is outdated. 
-Please use the [workshop version](https://avrae.io/dashboard/workshop/5f7691af90e415e96a23c5e8). This version will not be updated at all any more, all future updates will only be made on the workshop version. At some point, the gvar this one relies upon may be deleted."

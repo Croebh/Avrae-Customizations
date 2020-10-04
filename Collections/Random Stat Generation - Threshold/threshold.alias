@@ -1,0 +1,48 @@
+embed 
+<drac2>
+defaults = (get_svar("threshold") or "").split()
+args = argparse(defaults+&ARGS&)
+
+help = not args or "?" in args or "help" in args
+
+Min = args.last("min", type_ = int)
+Max = args.last("max", type_ = int)
+dice = args.last("dice", "4d6kh3", str)
+rr = args.last("rr", 1, int)
+tries = args.last("tries", 10, int)
+under = [x.split('|') for x in args.get("under", [], str)]
+over = [x.split('|') for x in args.get("over", [], str)]
+straight = 'straight' in args
+stats = ["STR","DEX","CON","INT","WIS","CHA"]
+helptxt = f"""**Threshold Statrolls**
+
+Allows for rolling character stats while imposing a set of rules on the outcome.
+
+**__Valid Arguments__**
+
+`-dice <dice>` - The dice to be rolled for each stat. Default: `4d6kh3`
+`-rr <#>` - The number of sets to be displayed. Default: 1
+`-tries <#>` - The number of attempts it will try to find sets matching the rules.
+`straight` - Will assign stats to each score.
+
+`-min <#>` - The minimum total of the combined rolls.
+`-max <#>` - The maximum total of the combined rolls.
+
+`-over <#|amount>` - Requires `amount` of rolls that are above `#`. Can be repeated (i.e. `-over 14|2 -over 16|1` for requiring atleast 2 stats over 14 and 1 over 16).
+`-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
+
+Servers can set a default set of args by setting an svar named `threshold`:
+Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
+
+"""
+</drac2>
+
+{{a=[y for x in range(tries) if set('y',[vroll(dice) for i in range(6)]) or (all([sum([1 for i in y if i.total<int(x[0])])>=int(x[1]) for x in under]) and all([sum([1 for i in y if i.total>int(x[0])])>=int(x[1]) for x in over]) and (sum([i.total for i in y])<=Max if Max else 1) and (sum([i.total for i in y])>=Min if Min else 1)) ] if not help else ""}}
+
+{{help or (' '.join([f'-f "Stats {f"#{x+1}" if len(a[:rr])>1 else ""}|' + '\n'.join([(f"**{stats[i]}:** "*straight)+str(a[x][i]) for i in range(len(a[x]))])+f"\n-----\nTotal =  `{sum([i.total for i in a[x]])}`"+'"' for x in range(len(a[:rr]))]) if len(a)>=rr else err('Not enough sets following the given rules. Try again, or increase the number of attempts using `-tries #`.'))}}
+
+-title "{{"Ugh, randchar spam" if help else "Generating random stats:"}}"
+
+{{f'-desc "{helptxt}"' if help else '-desc "Ruling: '+((f"Minimum total of {Min}, " if Min else "")+(f"Maximum total of {Max}, " if Max else "")+(', '.join([f"Atleast {x[1]} over {x[0]}" for x in over]) if over else "")+', '+(', '.join([f"Atleast {x[1]} under {x[0]}" for x in under]) if under else "")).strip(' ,')+'"' if Min or Max or over or under else ""}}
+
+-footer "!threshold help"

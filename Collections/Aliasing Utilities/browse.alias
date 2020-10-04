@@ -1,4 +1,8 @@
+embed
+
 <drac2>
+query    = &ARGS& or ['']
+maxWidth = int(get('width',75))
 gSource  = query[0] if get_gvar(query[0]) else ""
 gvar     = get_gvar(gSource) if gSource else ""
 help     = query[0].lower() in ['help', '?']
@@ -304,5 +308,3 @@ out = ("\n".join([x for x in display]) if display else str(current)).replace('"'
 -desc "{{helpDesc if help else out if len(out)<2000 else f"{out[:2000]}... [truncated due to length]"}}"
 {{f""" -f "[Dashboard Link](https://avrae.io/dashboard/gvars?lookup={gSource})" """ if gvar else ""}}
 -footer "{{'' if help else f"{ctx.prefix}browse ?"}}"
--f "**__Important Note__**|This version is outdated. 
-Please use the [workshop version](https://avrae.io/dashboard/workshop/5f6bf59f647bb0a416316ca6). This version will not be updated at all any more, all future updates will only be made on the workshop version. At some point, the gvar this one relies upon may be deleted."

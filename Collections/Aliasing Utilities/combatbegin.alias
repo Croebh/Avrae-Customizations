@@ -1,0 +1,5 @@
+multiline {{c = combat()}}
+{{"!i begin\n" if not c else ""}}{{"!i join -p 40\n" if not (c and c.me) else ''}}!i madd orc -n 4 -group Orc -p 3
+!i madd wolf -n 4 -group Wolf -p 2
+!i madd goblin -n 2 -p 1
+{{f'!i goto {name}' if c and c.current else '!i n'}}

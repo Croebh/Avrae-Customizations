@@ -1,7 +1,0 @@
-embed
-{{c,lv,g,cl,n="&1&".lower(),0 if "&2&" in "cantrips" else int("&2&") if "&2&".isdigit() else '',load_json(get_gvar("2451bbe4-7faa-4814-b224-b8c50efcbdd1")),["qqq","bard","cleric","druid","paladin","ranger","sorcerer","warlock","wizard"],"\n"}}{{i=[cl.index(i) for i in cl if c in i]}}{{i=i[0] if i else ''}} -title "{{str(lv)+'st'*(lv==1)+'nd'*(lv==2)+'rd'*(lv==3)+'th'*(lv>3)+' Level ' if lv and i else ''}}{{cl[i].title() if i and str(lv).isdigit() else 'Spell List Lookup'}} {{'Spells' if lv and i else 'Cantrips' if lv==0 else ''}}" 
-{{X=n.join([x for x in g[lv] if c in x.lower() and (not "(UA)" in x if get("NOU") else 1)]) if i and str(lv).isdigit() else ''}}
--desc "{{(X[:len(X)-X[::-1].find(n)] if len(X)>1980 else X) if X else 'You need to enter a spellcasting class as the first argument and a spell level as the second one. E.g. `!spelllist cleric 2`'}}"
-{{f'-f "{X[len(X)-X[::-1].find(n):]}"' if len(X)>1980 else ""}}
--footer '{{'Delete the NOU cvar/uvar if you want to display UA material.' if get('NOU') else 'Make a nonblank cvar or uvar named "NOU" to have the alias not display UA material.'}}. 
-This alias is outdated. '

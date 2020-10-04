@@ -1,0 +1,31 @@
+echo <drac2>
+a = '&*&'
+arg = a.encode()
+
+b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+ascii_bin_str = ""
+output = ""
+
+for c in arg:
+    ascii_bin_str += f'{c:08b}'  # construct a binary-representation string
+
+numChunks = int(len(ascii_bin_str) / 6)  # how many 6
+for i in range(numChunks):
+    chunk = ascii_bin_str[i * 6: (i + 1) * 6]
+    output += b64_index[int(chunk, base=2)]
+
+leftoverBits = len(ascii_bin_str) % 6  # since the input was a multiple of 8, this must be 2 or 4
+if leftoverBits > 0:
+    leftover = ascii_bin_str[leftoverBits * -1:]
+    if leftoverBits == 2:
+        output += b64_index[int(leftover+('0' * 4), base=2)]
+        output += ('=' * 2)
+    elif leftoverBits == 4:
+        output += b64_index[int(leftover+('0' * 2), base=2)]
+        output += '='
+if arg:
+  return f'https://token.otfbm.io/meta/{output}'
+else:
+  return f'No token link provided. Please use `!tokenimport [URL]` to generate a short code for `!map`'
+</drac2>

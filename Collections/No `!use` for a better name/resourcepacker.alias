@@ -1,0 +1,1 @@
+{{'gvar create' if &ARGS& else 'embed -title "`!use` Resource Packer" -desc "Used for packing cvars into a gvar for `!use`\n\n`!resourcepacker [cvar1 cvar2 cvar3....cvar#]`"'}} {{dump_json({x:load_json(get(x)) for x in &ARGS&})}}

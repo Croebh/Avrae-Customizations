@@ -1,16 +1,15 @@
-tembed 
+embed 
 <drac2>
 testVersion = False
-args = "@@@"
-defaults = "&&&"
+args = "@@@" if typeof("@@@") == "SafeList" else &ARGS&
+defaults = "&&&" if typeof("&&&") == "SafeDict" else None
 
 # Comment the first line for `!map`, second line for `!move`
 # args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
 args = argparse(args)
 
 # Set are base variables
-if typeof(defaults) == "str":
-  defaults = {}
+defaults = load_json(get_svar("mapDefaults") or "{}") or defaults or {}
 mapsize = defaults.get("size", "10x10") or "10x10"
 maxSize = 99
 mapSplitX, mapSplitY = mapsize.lower().split('x')
@@ -42,7 +41,7 @@ presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Sta
 overlays=[]
 c = combat()
 gt = c.get_combatant if c else None
-debug = ""
+debug = []
 desc = []
 finalMap = ""
 sizeOffset = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
@@ -966,14 +965,15 @@ if c:
     token = mToken
     out[mTarg.name].update({'token':token})
     desc.append(f"{mTarg.name} is now using the shortcode `{token}` as a token.")
-   if args.last('loadtoken') and massTarg:
+   if args.last('loadtoken'):
+    foundTokenload = None
     argsTokenload = args.last('loadtoken').lower()
-    for searchTokenload in userPresets:
+    for searchTokenload in userTokens:
      if argsTokenload in searchTokenload.lower():
-      foundTokenload = userPresets.get(searchTokenload)
+      foundTokenload = userTokens.get(searchTokenload)
       desc.append(f"Loaded token `{searchTokenload}`.")
+      out[mTarg.name].update({'token':foundTokenload}) 
       break
-    out[mTarg.name].update({'token':foundTokenload}) 
 </drac2>
 
 
@@ -1170,16 +1170,17 @@ if c:
    desc.append(f"Saved the battle `{argsBattle}`")
   if args.last('deletebattle'):
    inputtedBattle = args.last('deletebattle')
+   foundBattle = None
    for battle in userBattles:
     if inputtedBattle in battle.lower():
      foundBattle = userBattles.pop(battle)
      set_uvar("mapBattles", dump_json(userBattles))
      desc.append(f"Deleted the battle `{inputtedBattle}`")
      break
-    else:
-     desc.append(f"Did not find the battle you were looking for")
+   if not foundBattle:
+    desc.append(f"Did not find the battle you were looking for")
   if args.last('loadbattle'):
-   argsBattle = args.last('loadbattle')
+   argsBattle = args.last('loadbattle').lower()
    foundBattle = ""
    for searchBattle in userBattles:
     if argsBattle in searchBattle.lower():
@@ -1418,7 +1419,7 @@ elif not c or args.get('?') or args.get('help'):
             Note: `-over2`/`-spell2` will be linked to `-aim2` and `-effect2`, and so on, for each overlay."                       
             """.replace(" "*11,"") + colorhelp
  elif any(args.last(potentialArg) for potentialArg in ('map', 'manage', 'options', 'dm', 'gm')):
-  help = f"""-title "Maps: Visual Options" 
+  help =  """-title "Maps: Visual Options" 
              -desc "Wait, were we in the dungeon or the pub?
 
              **__Allow the Map Settings to Save__**
@@ -1471,6 +1472,12 @@ elif not c or args.get('?') or args.get('help'):
 
              -f "_ _|**__Backup / Restore__**
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
+
+             -f "_ _|**__Server Settings__**
+             To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
+             `!svar mapDefaults {\\\"size\\\":\\\"\\\", \\\"background\\\":\\\"\\\", \\\"options\\\":\\\"\\\"}`
+             
+             You can also copy your `mapOverlays`, `mapPresets`, `mapTokens`, `mapBattles`, `trueDistance` uvars into svars, and they'll be set/available for the whole server."
   """
  elif any(args.last(potentialArg) for potentialArg in ('walls', 'wall', 'door', 'doors', 'object', 'objects')):
   help = f"""-title "Map: Walls, Doors and Objects"
@@ -1565,12 +1572,10 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
   paginFooter = paginFooter.replace("####", str(len(presetPagin))) if len(presetPagin) > 1 else ""
  paginFooter += " | -search [name] to search"
 </drac2>
--f "**__Important Note__**|This version is outdated. 
-Please use the [workshop version](https://avrae.io/dashboard/workshop/5f6a4623f4c89c324d6a5cd3). This version will not be updated at all any more, all future updates will only be made on the workshop version. At some point, the gvar this one relies upon may be deleted."
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.1"
 <drac2>
 # this is for debugging, only display in testing channels
-if int(chanid()) in (712795723623694376, 720465301329805332, 746474041577308301) and finalMap and args.last('debug'):
+if args.last('debug'):
  return f"""-f "Debug (Only appears in this channel)|```{overlays=}
  {people=}
  {debug=}

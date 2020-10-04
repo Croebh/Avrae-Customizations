@@ -1,0 +1,22 @@
+embed <drac2>
+gvar = load_json(get_gvar('2c232804-aac9-4195-a5d9-d35f7315f6c4'))
+defaults = load_json(get_svar("mitableDefault") or "[]") # format in a list, e.g. ["a","2","b","1d4","d","f"] rolls 2 items on A, 1d4 on B, and 1 each on D and F.
+args = [f'{"" if x.isdigit() or "-" in x or ("d" in x and roll(x)) else "-"}{x.lower() if "d" in x and roll(x) else x.upper()}' for x in (&ARGS& or defaults)]
+calls = {x:argparse(args).last(x,0) for x in "ABCDEFGHI" if argparse(args).get(x)}
+calls.update({x:calls[x] if calls[x].isdigit() or "d" in calls[x] else "1" for x in calls})
+outText = f'''-title "Rolling for {(", " if len(calls)>2 else " ").join([f'{"and " if len(calls)>1 and x==list(calls.keys())[-1] else ""}{calls[x]} Item{"s" if calls[x]!="1" else ""} on Table {x}' for x in calls if calls[x]])}'''
+for x in calls:
+ numberRoll = vroll(calls[x])
+ outText += f'" -f "Table {x}: {calls[x] if calls[x].isdigit() else numberRoll} Roll{"s" if numberRoll.total>1 else ""}|'
+ for y in range(numberRoll.total):
+  itemRoll = vroll("1d100")
+  outText += ('\n' if y else '')+f'{f"**{y+1}.** " if numberRoll.total>1 else ""}1d100 = `{str(itemRoll.total):0>2}` - '
+  for z in gvar.magicItems[x]:
+   if z.min<=itemRoll.total<z.max:
+    outText += z.name
+    break
+if outText=='''-title "Rolling for ''':
+ outText += '''Magic Items on the DMG Tables" -desc "`!mitable [A-I] [#|dice]` -  String things together like `!mitable A 4 D 1d4 I 2` to roll on multiple tables at once. If you don't specify a number or dice the alias assumes 1 item, e.g. `!mitable a b c` rolls 1 item from each table. You can also set the `defaults` within the alias so it will automatically roll on preset tables when you call `!mitable` with no arguments.'''
+outText += f'" -footer "{gvar.footer.replace("for magic item table","supports multiple tables")}"'
+return outText
+</drac2>

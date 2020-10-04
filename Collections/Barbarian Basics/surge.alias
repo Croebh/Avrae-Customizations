@@ -1,0 +1,10 @@
+embed {{effects = load_json(get_gvar('6868352f-8236-47e5-8d17-fe49394f878f'))}}
+{{rolll = vroll('1d8')}}
+{{effect = effects[rolll.total-1]}}
+-f "Roll|{{rolll}}"
+-f "Effect|{{effect.replace('saving throw', f'saving throw (DC {constitutionMod+proficiencyBonus+8})')}}"
+-title "<name>'s rage activates a Wild Surge!"
+
+{{c = combat()}}
+
+{{(c.me.add_effect('Wild Surge (Teleport)','',-1) if rolll.total == 2 else c.me.add_effect('Wild Surge (Shroud)', f"-ac +2 -attack '|{constitutionMod-int(c.me.get_effect('Rage').effect.d)}[force]|Whenever a creature within 10 feet of you hits you with an attack, that creature takes force damage equal to your Constitution modifier.'", -1) if rolll.total == 4 else c.me.add_effect('Wild Surge (Difficult Terrain)','',-1) if rolll.total == 5 else c.me.add_effect('Wild Surge (Shadow Weapon)','',-1) if rolll.total == 7 else '') or (f'-f "{name}|**Effect:** {c.me.get_effect("Surge")}"' if rolll.total in [2, 4, 5, 7] else '') if c and c.me else ''}}

@@ -1,0 +1,1 @@
+Wild Magic table for Path of the Wild Magic Barbarian

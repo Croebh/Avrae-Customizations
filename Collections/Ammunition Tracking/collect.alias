@@ -1,0 +1,12 @@
+embed {{c=[x for x in get_raw().consumables.get('custom',{})]}}{{c.sort()}}
+{{U,u=[x for x in c if "Used " in x],[x for x in c if cc_exists(f"Used {x}")]}}
+{{A=[[u[i],U[i]] for i in range(len(u))]}}
+{{[(i.append(vroll(f"{get_cc(i[0])}"+(f"+({max(0,get_cc(i[1]))}/2)" if get_cc(i[1]) else ""))),i.append(get_cc(i[1]))) for i in A]}}
+{{[(set_cc(i[0],i[2].total),set_cc(i[1],0)) for i in A]}}
+{{'\n'.join([(f'-f "{i[1]}|{i[3]}"' if i[3] else '')+ f' -f "{i[0]}|{i[2] if i[3] else i[2].total}"' for i in A])}}
+{{v=any([i[3] for i in A])}}
+-title "<name> {{"collects" if v else "attempted to collect"}} their ammunition!"
+-desc "{{"At the end of the battle, you can recover half your expended ammunition by taking a minute to search the battlefield." if v else "You do not have any expended ammunition to recover."}}"
+-footer "Weapons | PHB 146"
+-color <color>
+-thumb <image>

@@ -1,0 +1,38 @@
+embed
+<drac2>
+surgeTable = [
+ {"name": "Vampiric Burst", "effect": [], "desc": "Each creature of your choice that you acn see within 30 feet of you must succeed on a Constitution saving throw or take 1d12 necrotic damage. You also gain temporary hit points equal to 1d12 plus your barbarian level.", "use": "vamp"},
+ {"name": "Wild Teleportation", "effect": ["Wild Surge - Teleport", ""], "desc": "You teleport up to 30 feet to an unoccupied space you can see. Until your rage ends, you can use this effect again on each of your turns as a bonus action."},
+ {"name": "Explosive Fey", "effect": ["Wild Surge - Exploding Flumphs", ""], "desc": "An intangible spirit, which looks like a flumph or a pixie (your choice), appears within 5 feet of one creature of your choice that you can see within 30 feet of you. At the end fo the current turn, the spirit explodes, and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 1d6 force damage. Until your rage ends you can use this effect again, summoning another spirit, on each of your turns as a bonus action.", "use": "explode"},
+ {"name": "Light Burst", "effect": ["Wild Surge - Light Beam", ""], "desc": "A bolt of light shoots from you chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.", "use": "burst"},
+ {"name": "Retribution", "effect": ["Wild Surge - Thorns", "-attack '|1d6 [force]|Whenever a creature hits you with an attack roll before your rage ends, that creature takes 1d6 force damage, as magic lashes out in retribution'"], "desc": "Whenever a creature hits you with an attack roll before your rage ends, that creature takes 1d6 force damage, as magic lashes out in retribution"},
+ {"name": "Protective Shroud", "effect": ["Wild Surge - Shroud", "-ac +1"], "desc": "Until your rage ends, you are surrounded by multicolored protective lights; you gain a +1 bonus to AC, and while within 10 feet of you, your allies gain the same bonus.", "use": "shroud"},
+ {"name": "Wild Growth", "effect": ["Wild Surge - Difficult Terrain", ""], "desc": "Flowers and vines temporarily grow around you; until your rage ends, the ground wthin 15 feet of you is difficult terrain for your enemies."},
+ {"name": "Wild Weapon", "effect": ["Wild Surge - Force Weapon", ""], "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon's damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."}
+]
+
+surgeRoll = vroll("1d8")
+surge = surgeTable[surgeRoll.total - 1]
+
+c = combat()
+out = []
+
+if c and (me := c.me) and (rageEffect := c.me.get_effect('Rage')):
+ out.append(f""" -f "Surge Roll|{surgeRoll}" """)
+ out.append(f""" -f "{surge.name}|{surge.desc}" """)
+ if (surgeEffect := surge.get('effect')):
+  me.add_effect(surgeEffect[0], surgeEffect[1], parent=rageEffect)
+  surgeEffect = me.get_effect(surgeEffect[0])
+  out.append(f""" -f "{name}|{surgeEffect}" """)
+ if (use := surge.get('use')):
+  out.append(f""" -f "Usage|`!use {use} -t <targ>`" """)
+ if surge.name == "Vampiric Burst":
+  tempRoll = vroll(f'1d12+{BarbarianLevel}')
+  me.set_temp_hp(tempRoll.total)
+  out.append(f""" -f "Vampiric Health|{tempRoll}" """)
+ out.append('-title "Wild Magic Surge - Rage Edition"')
+ out.append(f'-footer "{me}"')
+ out.append(f'-desc "The magical energy rolling inside you sometimes erupts from you. When you enter your rage, roll on the Wild Magic table to determine the magical effect produced.\n\nIf the effect requires a saving throw, the DC equals {constitutionMod+8+proficiencyBonus}."')
+ return '\n'.join(out)
+return f""" -desc "Bruh, you even raging?" """
+</drac2>

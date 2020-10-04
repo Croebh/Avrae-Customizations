@@ -1,0 +1,18 @@
+embed -title "!use Code Renamer"
+{{args,combined,source,n,escQ=&ARGS&,{},load_json(get("resources","{}")),'\n','\\"'}}
+{{combined.update(load_json(get_svar('useResources') or '{}'))}}
+{{combiner=[combined.update(load_json(get_gvar(x))) for x in source]}}
+{{valid=args and args[0] in combined and len(args)>1 and len(args[1])>1 and args[1][0].isalpha() and all([x.isalnum() or x=="_" for x in args[1]])}}
+<drac2>
+names,nameList,nLIndex=['`'+x+'`' for x in combined],[[]],0
+for x in names:
+ if len(', '.join(nameList[nLIndex]+[x]))>1024:
+  nameList[nLIndex].append('"')
+  nameList.append([])
+  nLIndex+=1
+ nameList[nLIndex].append(x)
+Names=' '.join([f'-f "Codes From Your Available Resources{" (continued)" if nameList.index(x) else ""}|{", ".join(x) or "*No `resources` found*"} ' for x in nameList])
+</drac2>
+-desc "{{(set_cvar(args[1],dump_json(combined[args[0]])) or f'''Setting `{args[1]}` to: {"`"*3}py\n{dump_json(combined[args[0]]).replace('"',escQ)}{"`"*3}''') if valid else (f'''I couldn't find `{args[0]}` in your available use codes to make a shortcut for.''' if len(args)>1 and not args[0] in combined else f'''I'm sorry, {name}. I'm afraid I can't let you do that. `{args[1]}` is not a valid identifier. Cvar names can only contain a-z, A-Z, 0-9, _, and can't start with a number.''' if len(args)>1 else f'''This alias is for copying `!use` codes out of your available `resources` so that you can make your own custom names for them instead of having to use the full given name. It falls on you to make sure you're not doubling up on anything or naming anything a name already used by something else. To \\"rename\\" a code, use `!usenamer <code> <desired_name>`. Remember that cvar names must be identifiers (only contain a-z, A-Z, 0-9, _, and not start with a number).''')+'" '+Names}}"
+-color <color>
+-thumb <image>

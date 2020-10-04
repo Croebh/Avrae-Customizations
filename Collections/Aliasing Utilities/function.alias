@@ -1,0 +1,76 @@
+embed
+-title "Function Lookup"
+-color 0000FF
+<drac2>
+gvar = load_json(get_gvar('a04a004a-7f56-4e65-a195-3d71b73e2499'))
+newline = "\n"
+searchTerm = "&*&"
+searchTerms = &ARGS&
+searchResults = []
+out = []
+
+# If we have a search term
+if searchTerm:
+    # Loop through our gvar
+    for func in gvar:
+        # Is it an exact match?
+        if searchTerm.lower() == func.lower():
+            searchResults = [func]
+            break
+        # Or does it fuzzy match all our terms
+        elif searchTerm.lower() in func.lower() or all([term.lower() in func.lower() for term in searchTerms]):
+            searchResults.append(func)
+else:
+    # I guess we'll display the basic help, then
+    return f""" -desc "`{ctx.prefix}function [search]` to look up a function.\nIf multiple similar, aim for an exact match." """
+    
+if len(searchResults) == 1:
+    # We found it, bois!
+    func = searchResults[0]
+    funcInfo = gvar[func]
+    # If we have parameters, lets show them *off*
+    if (params := funcInfo.get("param")):
+        paramOut = [f"""**{param.name}** (*{'* or *'.join(param.type) if len(param.type)<=2 else '*, *'.join(param.type[:-1]) + f'*, or *{param.type[-1]}'}*) - {param.desc}""" for param in params]
+        out.append(f""" -f "Paramaters|{newline.join(paramOut)}" """)
+    # Same for any return
+    if (returns := funcInfo.get("returns")):
+        out.append(f""" -f "Returns|**{returns.type}**{f" - {returns.desc}" if returns.get('desc') else ''}" """)
+    # Same for any type
+    if (type_ := funcInfo.get("type")):
+        out.append(f""" -f "Type|**{type_.name}**{f" - {type_.desc}" if type_.get('desc') else ''}" """)
+    # Same for any raise
+    if (raises := funcInfo.get("raises")):
+        out.append(f""" -f "Raises|**{raises.name}**{f" - {raises.desc}" if raises.get('desc') else ''}" """)
+    # And for syntax
+    if (syntax := funcInfo.get("syntax")):
+        out.append(f""" -f "Syntax|```py
+{syntax}
+```" """)
+    # Do we have an example alias?
+    if (alias := funcInfo.get('alias')):
+        out.append(f""" -f "Example Alias|You may be interested in looking into `!{alias}` on the Avrae Dev Server for a demonstration of this function/method." """)
+    # Is this deprecated?
+    if (deprecated := funcInfo.get("deprecated")):
+        out.append(f""" -f "**Deprecated**|This function was deprecated in version {deprecated.version}.
+        Use `{deprecated.replacement}` instead."
+        -color FF0000 
+        -thumb https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Stop_hand.svg/1024px-Stop_hand.svg.png """)
+    out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`" 
+    -desc "{funcInfo.desc}" 
+    -f "[Link](https://avrae.readthedocs.io/en/latest/aliasing/api.html#{funcInfo.url})" """)
+    return newline.join(out)
+else:
+    # I guess we didn't find what we're looking for
+    searchResults = [f"`{result}`" for result in searchResults]
+    out = f""" -title "List of functions/methods containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found)"  """
+    if len(searchResults):
+        # We found possibilities, bois!
+        out += f""" -desc "{newline.join(searchResults)}" """
+    else:
+        # We aint find shit, bois :-(
+        out += """ -desc "*No Results Found*" """
+    return out + " -color 00FF00"
+</drac2>
+
+-f "ReadTheDocs|A full list of Functions can be found at [avrae.readthedocs.io](https://avrae.readthedocs.io/en/latest/aliasing/api.html)"
+-footer "All of these functions require being wrapped in double curly brackets, and will only function inside snippets, aliases, and the `{{ctx.prefix}}test` or `{{ctx.prefix}}tembed` commands."

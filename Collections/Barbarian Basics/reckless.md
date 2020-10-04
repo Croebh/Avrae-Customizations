@@ -1,0 +1,1 @@
+Gives your character advantage on the attack, as well as adding an effect reminding others that you attacked recklessly.

@@ -2,7 +2,7 @@ tembed
 <drac2>
 c = combat()
 fName = sName = ""
-args = @ARGS@
+args = &ARGS&
 maxSize = 99
 baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 alph = []
@@ -81,7 +81,7 @@ if prevLoc and newLoc and args:
 <drac2>
 
 if prevLoc and newLoc and args: 
-  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{f'~{distanceT}' if get('trueDistance') else distance} ft. {card} (~{degree}°)" """
+  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft. {card} (~{degree}°)" """
 return f""" -desc "`!distance [x1y1] [x2y2] [z]`
 
 Shows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.
@@ -93,10 +93,8 @@ If `z` is provided, it accounts for vertical height."
 `!distance OR1 B2` would calculate the distance between `OR2`, a combatant, and `B2`, the coordinate.
 `!distance Valgim` would show the distance between your character (or whoevers turn it is) and that of the combatant named Valgim"
 
--f "The alias calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`." """
+-f "The alias calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """
 </drac2>
 
 -title "Cartesian Coordinate Distance"
 -footer "!distance [x1y1] [x2y2] [z] | Example: !distance A3 G15"
--f "**__Important Note__**|This version is outdated. 
-Please use the [workshop version](https://avrae.io/dashboard/workshop/5f6a4623f4c89c324d6a5cd3). This version will not be updated at all any more, all future updates will only be made on the workshop version. At some point, the gvar this one relies upon may be deleted."

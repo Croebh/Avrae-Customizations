@@ -1,0 +1,9 @@
+{{c = 'Arrows'}}
+{{C, arrowF = 'Used ' + c, get('arrowF', 0) + 1}}
+{{create_cc_nx(C, 0)}}
+{{(create_cc_nx(c, 0), set_cc(c, 20)) if not cc_exists(c) else ''}}
+{{v = get_cc(c) > 0}}
+{{miss = get('miss', 0) + (not v)}}
+{{(mod_cc(c, -1), mod_cc(C, 1)) if v else f'miss{miss}'}}
+{{f'-phrase "{"Using an arrow" if arrowF == 1 else "...and another one"} ({get_cc(c)} remaining)"'}}
+{{'' if arrowF > 1 else '-f "Ammunition|You can use a weapon that has the ammunition property to make a ranged attack only if you have ammunition to fire from the weapon. (PHB 146)"'}}

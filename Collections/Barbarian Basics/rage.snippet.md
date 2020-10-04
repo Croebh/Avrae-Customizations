@@ -1,0 +1,1 @@
+Applies the rage damage bonus to your attack.

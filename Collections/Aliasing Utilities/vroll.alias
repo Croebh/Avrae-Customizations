@@ -1,0 +1,19 @@
+embed {{a=&ARGS&}}
+{{x,y,z=(a[0] if a else "2d20kh1"),int(a[1]) if len(a)>1 and a[1].strip('+-').isdigit() else 1,int(a[2]) if len(a)>2 and a[2].strip('+-').isdigit() else 0}}
+{{result=vroll(x,y,z)}}{{raw=str(result.raw)}}
+{{y,z=f", multiply={y}" if y!=1 else "", f", add={z}" if z!=0 else ""}}
+-title 'Format - vroll(dice[, multiply=1, add=0])'
+-f "Example - vroll({{x}}{{y}}{{z}})|**dice** - *str* = A string of the dice you'd like to roll ({{x}})
+**multiply** *(optional)* - *int* = How much to multiply the dice by (2 for a crit, etc) {{f"({y.strip(', ')})" if y else ""}}
+**add** *(optional)* - *int* = How many dice to add to the roll (3 would turn 3d8 to 6d8) {{f"({z.strip(', ')})" if z else ""}}"
+-f "vroll('{{x}}'{{y}}{{z}}) - *SimpleRollResult*|{{result}}|inline"
+-f "vroll('{{x}}'{{y}}{{z}}).dice - *str*|{{result.dice}}|inline"
+-f "vroll('{{x}}'{{y}}{{z}}).total - *int*|{{result.total}}|inline"
+-f "vroll('{{x}}'{{y}}{{z}}).result - *RollResult*|{{result.result}}|inline"
+{{f'''-f "vroll('{x}'{y}{z}).consolidated() - *str*|{result.consolidated()}|inline"''' if result.consolidated()!=str(result.total) else ""}}
+{{f'-f "vroll(\'{x}\'{y}{z}).result.crit - *int*|{result.result.crit} - *(0 - NONE, 1 - CRIT, 2 - FAIL)*"' if "d20" in x else ''}}
+
+-f "vroll('{{x}}'{{y}}{{z}}).raw - *Expression*|{{'`'*3}}py
+{{raw if len(raw)<1024 else raw[:1000]+'...'}}
+{{'`'*3}}"
+-footer "For assistance with scripting"

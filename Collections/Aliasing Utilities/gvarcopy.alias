@@ -1,0 +1,1 @@
+gvar create {{get_gvar("&1&") if len("&1&")==36 and all([x in "abcdef1234567890-" for x in "&1&"]) else err("That is an improperly formated gvar address. Try again.") if "&*&" else err("You must provide a properly formated gvar address to copy.")}}

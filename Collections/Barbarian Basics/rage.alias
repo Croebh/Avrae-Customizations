@@ -1,0 +1,18 @@
+embed {{args,ff=argparse(&ARGS&),"Fanatical Focus"}}
+<drac2>
+# Are we applying the -d?
+dmg = not (args.last('dex') or args.last('nodmg'))
+</drac2>
+{{i,c,cc,lvl,r,b=args.get("i"),combat(),"Rages" if cc_exists("Rages") else "Rage",int(get("BarbarianLevel",0)), args.last("t") if "t" in args else name,["acid","bludgeoning","cold","fire","force","lightning","necrotic","piercing","poison","radiant","slashing","thunder"] if "bear"==get("l3totem","").lower() else ["bludgeoning","piercing","slashing"]}}
+{{C,v=c.get_combatant(r) if c else"",(cc_exists(cc) and get_cc(cc)>0)or i or lvl>=20}}
+{{tname = C.name if C else r}} 
+-title "{{f'{tname} {"Rages" if v else "tries to Rage"}!'}}" 
+-desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if cc_exists(cc) else f"""You do not have this ability {'(Missing a **c**ustom **c**ounter named `Rage`. See `!help cc create` for how to make one manually, or run the `!level` alias as a barbarian and it will make one for you.)' if lvl else ''}"""}}" {{mod_cc(cc,-1) if v and not i and lvl<20 else ""}} 
+-f "Rages{{f" (-1)" if v and not i and lvl<20 else ""}}|{{"Unlimited"if lvl>=20 else cc_str(cc) if cc_exists(cc) else"*None*"}}" 
+-footer "Barbarian | PHB 48" -color <color> 
+{{mod_cc(ff,1) if cc_exists(ff) else ""}}
+{{f"-f '{ff}|{cc_str(ff)}'" if cc_exists(ff) else ""}}
+{{t=C.resists.immune if C else ""}}
+{{T=["-resist "+x for x in b if x not in t]}}
+{{C.add_effect('Rage',f'{f"-d {2+(lvl>8)+(lvl>15)}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10) if v and C else ""}}
+{{f'-f "Effect|{C.get_effect("Rage")}"' if v and C else ""}}

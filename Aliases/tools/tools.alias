@@ -1,8 +1,0 @@
-embed {{q,g,url,l,L='\n',load_json(get_gvar('de8232d5-0170-4c66-b144-a4a81950b393')),"https://5etools.com/","\(",'\)'}}{{n=" ".join(&ARGS&).lower() if &ARGS& else ''}}
-{{s=[i for i in g if i.name.lower()==n or all([(x in i.name.lower() or x in i.type.lower() or x in i.source.lower()) for x in n.split(' ')])]}}
-{{s=[x for x in g] if not n else [x for x in s]}}
-{{raw=q.join([f"[{x.name}]({url}{x.url.replace('(',l).replace(')',L)}) - {x.source} ({x.type})" for x in s])}}
-{{l=0}}
-{{raw="\n".join([set("l",l+len(x)) or x+str(set("l",0) or "\" -f \"" if l>900 else "") for x in raw.split("\n")]) if len(raw)>1024 else raw}}
--title "5etools Lookup"
-{{f'-f "List of Items containing `{n}`|{raw if s else "No Matches Found"}"' if n else '-desc "`!5etools [search]` to look up an item.\nIf multiple similar, aim for an exact match."'}} -t 15
