@@ -1,0 +1,13 @@
+{{args = &ARGS&}}{{'cast' if args else 'embed'}}
+{{spells, spellgvar = [], load_json(get_gvar('310e8e2a-3330-4ccb-8739-e5ed3614c16b'))}}
+{{spell_name = args[0] if args else ''}}"{{spell_name}}"
+{{_ = [[spells.append({'name':spell.name, 'level':spell.level}) for spell in spellgvar if spell.level == level] for level in range(10)]}}
+{{spell_level = argparse(args).last('l', default=[i.level for i in spells if spell_name.lower() in i.name.lower()][0], type_=int) if args else 0}}
+{{gvar = load_json(get_gvar('9af34023-6eba-4789-82b1-e68b191220ac'))}}
+{{meta = [i for i in gvar if any([x for x in i.args if x in args])]}}
+{{' '.join([i.out for i in meta])}}
+{{cost = sum([max(int(get(i.points,i.points)),1) for i in meta])}}
+{{cc = "Sorcery Points"}}
+{{err("You don't seem to have a Sorcery Points counter.") if not cc_exists(cc) and cost else mod_cc(cc, -cost) if cc_exists(cc) and get_cc(cc)>=cost else err(f"Sorry, I'm afraid you don't have enough Sorcery Points for that.") if cost else ''}}
+{{f"""-f "{cc} {f'(-{cost})' if cost else ''}|{cc_str(cc) if cc_exists(cc) else '*None*'}" """ if args else get_gvar('f37f6edf-3014-4cb8-9f2b-3198164aee60')}} 
+{{' '.join([(f'"{i}"' if ' ' in i else i) for i in &ARGS&[1:]])}}

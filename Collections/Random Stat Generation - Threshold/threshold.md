@@ -10,7 +10,7 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 `-min <#>` - The minimum total of the combined rolls.
 `-max <#>` - The maximum total of the combined rolls.
 
-`-over <#|amount>` - Requires `amount` of rolls that are above `#`. Can be repeated (i.e. `-over 14|2 -over 16|1` for requiring atleast 2 stats over 14 and 1 over 16).
+`-over <#|amount>` - Requires `amount` of rolls that are above `#`. Can be repeated 
 `-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
 
 Servers can set a default set of args by setting an svar named `threshold`:
