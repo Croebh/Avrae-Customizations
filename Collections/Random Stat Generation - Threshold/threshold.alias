@@ -45,4 +45,4 @@ Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
 
 {{f'-desc "{helptxt}"' if help else '-desc "Ruling: '+((f"Minimum total of {Min}, " if Min else "")+(f"Maximum total of {Max}, " if Max else "")+(', '.join([f"Atleast {x[1]} over {x[0]}" for x in over]) if over else "")+', '+(', '.join([f"Atleast {x[1]} under {x[0]}" for x in under]) if under else "")).strip(' ,')+'"' if Min or Max or over or under else ""}}
 
--footer "!threshold help"
+-footer "!threshold help | Fun Fact: Of {tries} attempts, {{tries-len(a)}} were too low"
