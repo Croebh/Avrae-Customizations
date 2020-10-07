@@ -320,13 +320,14 @@
    "desc": "The value of the gvar. If the gvar doesn't exist, returns `None`."
   }
  },
- "get_svar(name)": {
+ "get_svar(name, default=None)": {
   "desc": "Retrieves and returns the value of a svar (server variable).",
   "url": "aliasing.evaluators.ScriptingEvaluator.get_svar",
   "param": [
-   {"name":"name", "type": ["str"], "desc":"The name of the svar."}
+   {"name":"name", "type": ["str"], "desc":"The name of the svar."},
+   {"name":"default", "type":["any"], "desc":"What to return if the name is not set."}
   ],
-  "returns": {"type":"str or None", "desc":"The value of the svar, or None if it does not exist."}
+  "returns": {"type":"str or None", "desc":"The value of the svar, or default if it does not exist."}
  },
  "load_json(jsonstr)": {
   "desc": "Loads an object from a JSON string. See [json.loads()](https://docs.python.org/3/library/json.html#json.loads).",

@@ -61,7 +61,8 @@ Combat={combatant.name: {
            "duration":effect.duration,
            "remaining":effect.remaining,
            "conc":effect.conc,
-           "effect":effect.effect
+           "effect":effect.effect,
+           "desc":effect.desc
           }
          for effect in combatant.effects},
          "attacks": [
