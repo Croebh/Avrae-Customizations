@@ -1,9 +1,17 @@
 embed
 <drac2>
 args = argparse(&ARGS&)
+
+if not args.last('t'):
+ character().set_cvar('dexBarb', 'True')
+ out.append("Disabled damage bonus for future uses.\n`!cvar delete dexBarb` to undo.")
+else:
+ # Set it temporarily, but not as a cvar. Will apply bear resists to target.
+ dexBarb = True
+
 ff  = "Fanatical Focus"
 i   = args.get("i")
-c   =  combat()
+c   = combat()
 cc  = "Rages" if cc_exists("Rages") else "Rage"
 lvl = int(get("BarbarianLevel", 0))
 r   = args.last("t") if "t" in args else name
