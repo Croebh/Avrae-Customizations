@@ -1,0 +1,18 @@
+embed
+<drac2>
+args = argparse(&ARGS&)
+c   =  combat()
+r   = args.last("t") if "t" in args else name
+v   = True
+C   = c.get_combatant(r) if c else""
+tname = C.name if C else r
+if c and C and C.get_effect("Rage"):
+ C.remove_effect("Rage")
+ return f""" -desc "Removed Rage effect from {tname}." """
+else:
+ v = False
+ return f""" -desc "...but {tname} wasn't Raging!" """
+</drac2>
+
+-title "{{f'{tname} {"stops Raging" if v else "tries to stop Raging"}!'}}"
+-footer "Barbarian | PHB 48" -color <color>
