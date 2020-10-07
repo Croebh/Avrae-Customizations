@@ -1,14 +1,22 @@
 embed
 <drac2>
-args = argparse(&ARGS&)
-c   =  combat()
-r   = args.last("t") if "t" in args else name
-v   = True
-C   = c.get_combatant(r) if c else""
-tname = C.name if C else r
-if c and C and C.get_effect("Rage"):
- C.remove_effect("Rage")
- return f""" -desc "Removed Rage effect from {tname}." """
+args   = argparse(&ARGS&)
+c      =  combat()
+r      = args.last("t") if "t" in args else name
+v      = True
+C      = c.get_combatant(r) if c else""
+frenzy = ""
+tname  = C.name if C else r
+if c and C and (effect := C.get_effect("Rage")):
+ if effect.name == "Frenzied Rage":
+  if not args.last('t'):
+   if not character().cc_exists("Exhaustion"):
+    character().create_cc("Exhaustion", 0, 6, None, 'bubble')
+    character().set_cc("Exhaustion", 0)
+   character().mod_cc("Exhaustion", 1)
+   frenzy = f""" -f "Exhaustion (+1)|{character().cc_str("Exhaustion")}" """
+ C.remove_effect(effect.name)
+ return f""" -desc "Removed Rage effect from {tname}." {frenzy} """
 else:
  v = False
  return f""" -desc "...but {tname} wasn't Raging!" """

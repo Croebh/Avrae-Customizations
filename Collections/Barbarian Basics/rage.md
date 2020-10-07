@@ -6,9 +6,7 @@ I would humbly like to ***RAAAAAGE***
 
 `-i` - Ignore requirements, does not use a counter.
 `-t <target>` - Will start a rage on the target.
-
-**Notes for Bear Totem Barbarians**
-In order for this alias to detect that you are a Totem Barbarian, with your level 3 totem set as Bear, you will need to do `!cvar l3totem Bear`. After you do this, the alias will apply the appropriate resistances.
+`frenzy` - Causes the Rage to be a frenzied rage.
 
 **Support Us**
 You can support me and this alias at [Ko-Fi](https://ko-fi.com/croebh)
