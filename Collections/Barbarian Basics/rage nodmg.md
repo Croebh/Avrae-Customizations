@@ -1,4 +1,4 @@
-This command will set your totem to bear, applying the appropriate resistances.
+Disables the `-d` damage on the init effect.
 
 If used with `-t`, will set it temporarily, otherwise, it sets a cvar so you don't need to use this again.
 
