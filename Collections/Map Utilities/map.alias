@@ -1,18 +1,18 @@
 embed
 <drac2>
 testVersion = False
-args = "@@@" if typeof("@@@") == "SafeList" else &ARGS&
-defaults = "&&&" if typeof("&&&") == "SafeDict" else None
+argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
-# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
-args = argparse(args)
+# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+argList if argList else [])
+args = argparse(argList)
 
 # Set are base variables
-defaults = load_json(get_svar("mapDefaults") or "{}") or defaults or {}
+defaults = load_json(get_svar("mapDefaults") or "{}") or {}
+mapsize = defaults.get("size", "10x10") or "10x10"
 maxSize = 99
-mapsize = None
-if mapsize != None:
+#If user hasn't set mapsize = "JSON" then continue
+if mapsize != "JSON":
  mapSplitX, mapSplitY = mapsize.lower().split('x')
  mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
  mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
@@ -64,6 +64,7 @@ newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
 nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
 </drac2>
+
 <drac2>
 # The default overlays, created by @Nerds and Dragons#2817
 defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
@@ -99,6 +100,7 @@ for spell, over in spellOverlays.items():
 spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 # Do we have a -spell#?
 </drac2>
+
 <drac2> # L318
 serverPresets=load_json(get_svar('mapPresets') or '{}')
 userPresets=load_json(get('mapPresets', '{}'))
@@ -114,6 +116,7 @@ if args.last('viewload') or args.last('loadview'):
    desc.append(f"Loaded view `{searchViewload}`.")
    break
 </drac2>
+
 <drac2>
 for overNum in [""]+[str(x) for x in range(1,11)]:
  if args.last('spell' + overNum):
@@ -180,9 +183,7 @@ if c:
   for attack in combatant.attacks:
    if attack.name == 'map':
     mapattach=combatant
-    mapattack = mapattach.get_effect("map")
-    if attack.raw.automation:
-     mapinfo = attack.raw.automation[0].text
+    mapinfo=attack.raw.automation[0].text
 </drac2>
 
 <drac2>
@@ -193,7 +194,8 @@ if c:
   mapinfo=mapinfo.split(' ~ ')
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
   mapsize=mapinfo.get('size')
-  if mapsize != None:
+  #If user hasn't set mapsize = "JSON" then continue
+  if mapsize != "JSON":
    if ":" in mapsize:
      mapLocSize = mapsize.split(':')
      mapviewlocation = f"{mapLocSize[0]}:"
@@ -408,6 +410,7 @@ if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or 
   set_uvar("mapBackgrounds",dump_json(userMaps))
   desc.append(f"Removed Map BG `{argDeletemap}`")
 </drac2>
+
 <drac2>
 #Here we allow the user to save spell overlays in their mapOverlays uvar
 if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay')):
@@ -471,6 +474,7 @@ if c:
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
     out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
 </drac2>
+
 <drac2>
 # Lets back up our map each time we run it, why not
 # This will back the entire `out` dictionary containing everyones positions and states
@@ -515,6 +519,7 @@ if c:
     # Display the change in size
     desc.append(f"Resetting size of {targ.name} to Medium (M)")
 </drac2>
+
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -537,6 +542,7 @@ if c:
     desc.append(f"Setting note of {targ.name} to {newNote}")
    # If the note is None, erase the note
 </drac2>
+
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -562,6 +568,7 @@ if c:
     # Display the change in color
     desc.append(f"Resetting color of {targ.name} to Black")
 </drac2>
+
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
@@ -641,7 +648,6 @@ if c:
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
    out[targ.name].update({"location": args.last('move').upper()})
 </drac2>
-
 
 <drac2>
 # Overlay stuff
@@ -990,8 +996,6 @@ if c:
       break
 </drac2>
 
-
-
 <drac2>
 if args.last('tokenimport'):
  tokenimport = args.last('tokenimport').encode()
@@ -1024,12 +1028,16 @@ if args.last('tokenimport'):
 
 <drac2>
 if c:
- # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, or -loadbattle  - arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'savebattle', 'deletebattle', 'loadbattle', 'json', 'deletejson')):
+ # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, -loadbattle, -loadjson or -deletejson  - arg, process that and add/replace the effect
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'savebattle', 'deletebattle', 'loadbattle', 'loadjson', 'deletejson')):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
+   #If user wants to set mapsize back to default
    if args.last('mapsize') in ('none', 'None', 'reset'):
-    mapsize = None
+    mapsize = defaults.get("size", "10x10") or "10x10"
+   #If user wants to have the mapsize be pulled from a loaded json file
+   elif args.last('mapsize') in ('json'):
+    mapsize = "JSON"
    else:
     mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
     mapSplitX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
@@ -1132,6 +1140,7 @@ if c:
     else:
      walls.append(inputtedWalls)
      desc.append(f"Wall added: `{inputtedWalls}`")
+  #If user wants to delete a specific already wall
   if args.last('deletewall'):
    inputtedWalls = args.last('deletewall')
    remWalls = [wall for wall in walls if inputtedWalls.lower() != wall.lower()]
@@ -1142,6 +1151,7 @@ if c:
     desc.append(f"Could not find wall: `{inputtedWalls}`")
   #If there is a -object call
   if args.last('object'):
+   #If user wants to remove ALL objects
    if args.last('object') in ('none', 'None', True, 'true', 'True'):
     objects = []
     desc.append(f"Objects reset")
@@ -1159,6 +1169,7 @@ if c:
      desc.append(f"Object added `{object}:{loadedObject}`")
     else:
      desc.append("Could not find object")
+  #If user wants to delete a specific object
   if args.last('deleteobject'):
    foundObject = "There is no object by that name"
    argsObject = args.last("deleteobject").lower().split(":")
@@ -1170,6 +1181,7 @@ if c:
    loadedObject=objectLocation+foundObject
    objects.remove(loadedObject)
    desc.append(f"Object `{object}:{loadedObject}` was removed")
+  # If user wants to save all mapinfo as well as combatant notes
   if args.last('savebattle'):
    argsBattle = args.last('savebattle')
    mapBGState = {}
@@ -1177,8 +1189,7 @@ if c:
     if value:
      if mapinfo.get('background')!= None:
       mapBGState["mapbg"] = mapinfo.get('background')
-     if mapinfo.get('mapsize') != None:
-      mapBGState["mapsize"] = mapsize
+     mapBGState["mapsize"] = mapsize
      if mapinfo.get('options')!= None:
       mapBGState["mapoptions"] = mapinfo.get('options')
      if mapinfo.get('walls')!= None:
@@ -1196,6 +1207,7 @@ if c:
    userBattles.update(savedBattle)
    set_uvar("mapBattles",dump_json(userBattles))
    desc.append(f"Saved the battle `{argsBattle}`")
+  #If user want to delete an already saved battle
   if args.last('deletebattle'):
    inputtedBattle = args.last('deletebattle')
    foundBattle = None
@@ -1207,59 +1219,63 @@ if c:
      break
    if not foundBattle:
     desc.append(f"Did not find the battle you were looking for")
+  #If user wants to load a saved battle
   if args.last('loadbattle'):
    argsBattle = args.last('loadbattle').lower()
    foundBattle = ""
    for searchBattle in userBattles:
     if argsBattle in searchBattle.lower():
      foundBattle = userBattles[searchBattle]
+     foundBattleName = searchBattle
      for searchCombatant in foundBattle:
       if searchCombatant not in ("mapattach"):
        foundCombatants = dict(list(foundBattle.items())[1:])
        currentCombatants = [combat().get_combatant(name)]
+       #Here saved combatant notes are loaded unless combatant isn't in combat
        if all([combat().get_combatant(searchCombatant) for searchCombatant in foundCombatants.keys()]):
         out = dict(list(foundBattle.items())[1:])
-        foundMapload = foundBattle["mapattach"]
-        if "mapbg" in foundMapload:
-         mapbg = foundMapload["mapbg"]
-        else:
-         mapbg = ""
-        if "mapsize"  in foundMapload:
-         mapsize = foundMapload["mapsize"]
-        else:
-         mapsize = None
-        if "mapoptions" in foundMapload:
-         mapoptions = foundMapload["mapoptions"]
-        else:
-         mapoptions = ""
-        if "walls" in foundMapload:
-         walls = foundMapload["walls"]
-        else:
-         walls = []
-        if "objects" in foundMapload:
-         objects = foundMapload["objects"]
-        else:
-         objects = []
-        if "json" in foundMapload:
-         loadedjson = foundMapload["json"].split(", ")
-        else:
-         loadedjson = []
-        if "view" in foundMapload:
-         mapviewlocation, mapviewsize = foundMapload["view"].replace('::',':').split(':')
-        desc.append(f"Loaded the battle `{argsBattle}`")
-        break
        else:
+        #Here lets user know what combatants they need to add to load ther info
         missingCombatants = [combatants for combatants in foundCombatants if not combat().get_combatant(combatants)]
-        desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to combat first to load the battle')
+        desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to load combatants info')
         break
-  if loadedjson != args.last('json', loadedjson):
-    if args.last('json') in ('none', 'None', 'reset'):
+      foundMapload = foundBattle["mapattach"]
+      if "mapbg" in foundMapload:
+       mapbg = foundMapload["mapbg"]
+      else:
+       mapbg = ""
+      if "mapsize"  in foundMapload:
+       mapsize = foundMapload["mapsize"]
+      if "mapoptions" in foundMapload:
+       mapoptions = foundMapload["mapoptions"]
+      else:
+       mapoptions = ""
+      if "walls" in foundMapload:
+       walls = foundMapload["walls"]
+      else:
+       walls = []
+      if "objects" in foundMapload:
+       objects = foundMapload["objects"]
+      else:
+       objects = []
+      if "json" in foundMapload:
+       loadedjson = foundMapload["json"].split(", ")
+      else:
+       loadedjson = []
+      if "view" in foundMapload:
+       mapviewlocation, mapviewsize = foundMapload["view"].replace('::',':').split(':')
+      desc.append(f"Loaded the battle `{foundBattleName}`")
+  #If user wants to load a saved json file
+  if loadedjson != args.last('loadjson', loadedjson):
+    #If user wants to clear ALL loaded json files
+    if args.last('loadjson') in ('none', 'None', 'reset'):
       loadedjson = []
       desc.append(f"JSON file removed")
     else:
-      inputtedJson = args.last('json')
+      inputtedJson = args.last('loadjson')
       loadedjson.append(inputtedJson)
       desc.append(f"Loaded JSON File {inputtedJson}")
+  #If user wants to delete a specific loaded json file
   if args.last('deletejson'):
     inputtedjson = args.last('deletejson')
     remjson = [json for json in loadedjson if inputtedjson.lower() != json.lower()]
@@ -1364,7 +1380,7 @@ if c:
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist")):
-  finalMap = f"""{map}{f"{mapsize}" if mapsize else None}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else"@/"}{f'{"/".join(objects)}/' if objects else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bg={mapbg}" if mapbg else ""}"""
+  finalMap = f"""{map}{f"" if mapsize == "JSON" else f"{mapsize}/" if mapsize else ""}{f"{mapviewlocation}:{mapviewsize}/" if mapviewsize and mapviewlocation else ""}{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else"@/"}{f'{"/".join(objects)}/' if objects else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bg={mapbg}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
@@ -1490,6 +1506,8 @@ elif not c or args.get('?') or args.get('help'):
 
              **__Map Size and Background Image__**
              `-mapsize <size>` - Sets the size of the map. Example: `-mapsize 20x20`
+             `-mapsize reset` - Sets mapsize to default settings
+             `-mapsize json` - Sets mapsize to read settings from loaded json file
              `-bg <url>` - Imports an image to use as background. Use `-options c` / `o`, see below, to scale / offset the image to match the grid.
              `-bg none` - Removes the background.
 
@@ -1517,8 +1535,9 @@ elif not c or args.get('?') or args.get('help'):
              `-deletebattle <name>` - Deletes a saved battle."
 
              -f "**__Loading and Deleteing Json Files__**
-             `-json <url>` - Loads Json file.
-             `-deletejson` - Deletes Json File
+             `-loadjson <url>` - Loads Json file.
+             `-deletejson` - Deletes A Specific Json File
+             `-loadjson reset` - Deletes All Json Files
              See [Predefined Maps and Tokens](http://docs.otfbm.com/#/predefined-maps-and-tokens) for detailed explination."
 
              -f "_ _|**__Interface Options__**
@@ -1636,7 +1655,9 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
   paginFooter = paginFooter.replace("####", str(len(presetPagin))) if len(presetPagin) > 1 else ""
  paginFooter += " | -search [name] to search"
 </drac2>
+
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.1"
+
 <drac2>
 # this is for debugging, only display in testing channels
 if args.last('debug'):
@@ -1646,4 +1667,5 @@ if args.last('debug'):
  {objects=}
  {walls=}```" """
 </drac2>
+
 -color <color>
