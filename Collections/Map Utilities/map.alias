@@ -1,15 +1,14 @@
-embed 
+embed
 <drac2>
 testVersion = False
-args = "@@@" if typeof("@@@") == "SafeList" else &ARGS&
-defaults = "&&&" if typeof("&&&") == "SafeDict" else None
+argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
 # args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
-args = argparse(args)
+args = argparse(argList)
 
 # Set are base variables
-defaults = load_json(get_svar("mapDefaults") or "{}") or defaults or {}
+defaults = load_json(get_svar("mapDefaults") or "{}") or {}
 mapsize = defaults.get("size", "10x10") or "10x10"
 maxSize = 99
 mapSplitX, mapSplitY = mapsize.lower().split('x')
@@ -26,6 +25,7 @@ mapattach = ""
 map="http://otfbm.io/"
 walls = []
 objects = []
+targ=None
 out={}
 baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 alph = []
@@ -63,7 +63,7 @@ newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
 </drac2>
 <drac2>
-# The default overlays, created by @Nerds and Dragons#2817 
+# The default overlays, created by @Nerds and Dragons#2817
 defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
 spellOverlays = defaultSpells.copy()
 # Grab the user selected spells, and update the main dict
@@ -108,7 +108,7 @@ if args.last('viewload') or args.last('loadview'):
  for searchViewload in userPresets:
   if argsViewload in searchViewload.lower():
    foundViewload = userPresets.get(searchViewload)
-   args = argparse(["-mapview", foundViewload] + "@@@")
+   args = argparse(["-mapview", foundViewload] + argList)
    desc.append(f"Loaded view `{searchViewload}`.")
    break
 </drac2>
@@ -121,11 +121,11 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
     # If we find it, add the overlay to the args
     # If its a string, its just a `-over9`
     if typeof(spellOverlays.get(spell)) == "str":
-     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "@@@")
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + argList)
     # If its a list, its starting with a -over9 and then theres other stuff
     elif typeof(spellOverlays.get(spell)) == "SafeList":
      adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
-     args = argparse(["-over" + overNum] + adjustedList + "@@@")
+     args = argparse(["-over" + overNum] + adjustedList + argList)
     # We only care about the first result
     break
 </drac2>
@@ -1574,12 +1574,14 @@ if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist'
 </drac2>
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v2.1"
 <drac2>
-# this is for debugging, only display in testing channels
-if args.last('debug'):
- return f"""-f "Debug (Only appears in this channel)|```{overlays=}
- {people=}
- {debug=}
- {objects=}
- {walls=}```" """
+# this is for debugging
+if testVersion:
+  return f"""-f "Debug|```
+  {targ=}
+  {overlays=}
+  {people=}
+  {debug=}
+  {objects=}
+  {walls=}```" """
 </drac2>
 -color <color>
