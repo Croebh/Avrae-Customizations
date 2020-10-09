@@ -1011,7 +1011,7 @@ if args.last('tokenimport'):
 <drac2>
 if c:
  # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, or -loadbattle  - arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'savebattle', 'deletebattle', 'loadbattle')):
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'mapload', 'savebattle', 'deletebattle', 'loadbattle')):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    mapSplitX, mapSplitY = args.last('mapsize', mapsize).lower().split('x')
