@@ -1,5 +1,7 @@
 Used for spending bullets when making attacks. Uses a Custom Countera, `Bullets`, in order to track your current bullet count.
 
+If you want to track the ammo fired create an svar|cvar|uvar named `trackShots` (EX: `!cvar trackShots 1`)
+
 If you're using multiple `-t` targets, or `-rr #` in order to make multiple attacks in one command, simply use the snippet more than once. 
 Example: `!attack revolver -t Tiamat -rr 3 bullet bullet bullet`
 

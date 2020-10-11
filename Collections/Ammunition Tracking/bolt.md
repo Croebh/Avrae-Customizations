@@ -1,5 +1,7 @@
 Used for spending bolts when making attacks. Uses two Custom Counters, `Bolts` and `Used Bolts`, in order to track your current bolt count as well as how many you've used for the `!collect` alias.
 
+If you want to track the ammo fired create an svar|cvar|uvar named `trackShots` (EX: `!cvar trackShots 1`)
+
 If you're using multiple `-t` targets, or `-rr #` in order to make multiple attacks in one command, simply use the snippet more than once. 
 Example: `!attack crossbow -t Tiamat -rr 3 bolt bolt bolt`
 
