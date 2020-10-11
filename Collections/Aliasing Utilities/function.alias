@@ -23,7 +23,7 @@ if searchTerm:
 else:
     # I guess we'll display the basic help, then
     return f""" -desc "`{ctx.prefix}function [search]` to look up a function.\nIf multiple similar, aim for an exact match." """
-    
+
 if len(searchResults) == 1:
     # We found it, bois!
     func = searchResults[0]
@@ -53,10 +53,10 @@ if len(searchResults) == 1:
     if (deprecated := funcInfo.get("deprecated")):
         out.append(f""" -f "**Deprecated**|This function was deprecated in version {deprecated.version}.
         Use `{deprecated.replacement}` instead."
-        -color FF0000 
+        -color FF0000
         -thumb https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Stop_hand.svg/1024px-Stop_hand.svg.png """)
-    out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`" 
-    -desc "{funcInfo.desc}" 
+    out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`"
+    -desc "{funcInfo.desc}"
     -f "[Link](https://avrae.readthedocs.io/en/latest/aliasing/api.html#{funcInfo.url})" """)
     return newline.join(out)
 else:

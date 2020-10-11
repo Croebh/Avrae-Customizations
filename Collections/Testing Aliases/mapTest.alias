@@ -1,11 +1,11 @@
 embed
 <drac2>
-testVersion = False
+testVersion = True
 argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
-args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+argList if argList else [])
-# args = argparse(argList)
+# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
+args = argparse(argList)
 
 # Set are base variables
 defaults = load_json(get_svar("mapDefaults") or "{}") or {}

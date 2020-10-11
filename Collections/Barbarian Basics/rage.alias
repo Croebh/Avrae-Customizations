@@ -28,7 +28,7 @@ t=C.resists.immune if C else ""
 T=["-resist "+x for x in b if x not in t]
 
 if C and v:
-  C.add_effect("Frenzied Rage" if fre else 'Rage',f'{f"-d {2+(lvl>8)+(lvl>15)}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, desc = "You have advantage on Strength checks and saving throws, and cannot cast or concentrate on spells. Ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then." + ("\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
+  C.add_effect("Frenzied Rage" if fre else 'Rage',f'{f"-d {2+(lvl>8)+(lvl>15)}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" + ("\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
   return f'-f "Effect|{str(C.get_effect("Rage")).splitlines()[0]}"'
 </drac2>
 
