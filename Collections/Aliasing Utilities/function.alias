@@ -57,7 +57,7 @@ if len(searchResults) == 1:
         -thumb https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Stop_hand.svg/1024px-Stop_hand.svg.png """)
     out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`"
     -desc "{funcInfo.desc}"
-    -f "[Link](https://avrae.readthedocs.io/en/latest/aliasing/api.html#{funcInfo.url})" """)
+    -f "[Link](https://avrae.readthedocs.io/en/stable/aliasing/api.html#{funcInfo.url})" """)
     return newline.join(out)
 else:
     # I guess we didn't find what we're looking for
@@ -72,5 +72,5 @@ else:
     return out + " -color 00FF00"
 </drac2>
 
--f "ReadTheDocs|A full list of Functions can be found at [avrae.readthedocs.io](https://avrae.readthedocs.io/en/latest/aliasing/api.html)"
+-f "ReadTheDocs|A full list of Functions can be found at [avrae.readthedocs.io](https://avrae.readthedocs.io/en/stable/aliasing/api.html)"
 -footer "All of these functions require being wrapped in double curly brackets, and will only function inside snippets, aliases, and the `{{ctx.prefix}}test` or `{{ctx.prefix}}tembed` commands."
