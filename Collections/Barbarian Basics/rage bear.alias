@@ -8,14 +8,15 @@ if not args.last('t'):
   out = "\n\nSet Level 3 totem to Bear for future uses.\n`!cvar delete l3totem` to undo."
 else:
  # Set it temporarily, but not as a cvar. Will apply bear resists to target.
- l3totem = bear
+ l3totem = "bear"
 
+wildshape = None
 ff  = "Fanatical Focus"
-i   = args.get("i")
+i   = args.get("i") or args.last('t')
 fre = args.get("frenzy")
 c   =  combat()
 cc  = "Rages" if cc_exists("Rages") else "Rage"
-lvl = int(get("BarbarianLevel", 0))
+lvl = int(get("BarbarianLevel", 0)) if not args.last('t') else 1
 r   = args.last("t") if "t" in args else name
 b   = ["bludgeoning", "piercing", "slashing"]
 if "bear" == get("l3totem", "").lower():
@@ -27,6 +28,7 @@ C   = c.get_combatant(r) if c else""
 v   = (cc_exists(cc) and get_cc(cc)>0) or i or lvl >= 20
 
 dmg = not (get('dexBarb') or args.last('dex') or args.last('nodmg'))
+dmgBonus = args.last('d', 2+(lvl>8)+(lvl>15))
 
 tname = C.name if C else r
 mod_cc(cc,-1) if v and not i and lvl<20 else ""
@@ -36,11 +38,14 @@ t=C.resists.immune if C else ""
 T=["-resist "+x for x in b if x not in t]
 
 if C and v:
-  C.add_effect("Frenzied Rage" if fre else 'Rage',f'{f"-d {2+(lvl>8)+(lvl>15)}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" + ("\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
-  return f'-f "Effect|{str(C.get_effect("Rage")).splitlines()[0]}"'
+  C.add_effect("Frenzied Rage" if fre else 'Rage',f'{f"-d {dmgBonus}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" + ("\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
+  if (group := c.get_group(C.name)) and "Wild Shape" in str(group):
+    wildshape = [i for i in group.combatants if i.name != C.name][0]
+    wildshape.add_effect("Frenzied Rage" if fre else 'Rage',f'{f"-d {dmgBonus}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, parent = C.get_effect("Rage"))
+  return f'-f "{C.name}|{str(C.get_effect("Rage")).splitlines()[0]}" ' + (f'-f "{wildshape.name}|{wildshape.get_effect("Rage")}"' if wildshape else '')
 </drac2>
 
 -title "{{f'{tname} {"Rages" if v else "tries to Rage"}!'}}"
 -desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if cc_exists(cc) else f"""You do not have this ability {'(Missing a **c**ustom **c**ounter named `Rage`. See `!help cc create` for how to make one manually, or run the `!level` alias as a Barbarian and it will make one for you.)' if lvl else ''}"""}}{{out}}"
--f "Rages{{f" (-1)" if v and not i and lvl<20 else ""}}|{{"Unlimited"if lvl>=20 else cc_str(cc) if cc_exists(cc) else"*None*"}}"
+{{f""" -f "Rages{f" (-1)" if v and not i and lvl<20 else ""}|{"Unlimited"if lvl>=20 else cc_str(cc) if cc_exists(cc) else"*None*"}" """ if not args.last("t") else ""}}
 -footer "Barbarian | PHB 48" -color <color>

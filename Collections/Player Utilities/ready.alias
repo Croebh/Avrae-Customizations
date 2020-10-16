@@ -1,0 +1,19 @@
+embed
+<drac2>
+args = argparse(&ARGS&)
+casting = any([i for i in &ARGS& if i.lower() in ["cast", "spell", "cantrip"]])
+target, combatTarget = name, ""
+if combat():
+    combatTarget = combat().current if combat().current.type!="group" else combat().me if combat().me else ""
+if combatTarget:
+    combatTarget.add_effect("Readying an Action","",1, casting, desc = ("Trigger/Action: &*&\n - " if "&*&" else "") + "When the trigger occurs, you can either take your reaction right after the trigger finishes or ignore the trigger.")
+output =  f"""-title "{combatTarget.name if combatTarget else target} Readies an Action!"
+-desc "You take the Ready action on your turn, which lets you act using your reaction before the start of your next turn. Specify a **trigger** and **action**."
+-footer "Actions in Combat | PHB 192"
+-thumb {image if "&1"+"&"=="&1&" else ""}
+-color {color} """ + \
+(f""" -f "{combatTarget.name}|**Effect**: {str(combatTarget.get_effect("Readying an Action")).splitlines()[0]}" """  if combatTarget else "") + \
+(f""" -f "Trigger and Action|&*&" """ if "&*&" else "")
+
+return output
+</drac2>

@@ -1,0 +1,10 @@
+embed
+<drac2>
+target, combatTarget = name if "&1"+"&"=="&1&" else "&1&", ""
+if combat() and combat().get_combatant(target):
+    combatTarget = combat().get_combatant(target)
+    combatTarget.add_effect("Disengage","",0,False, None, True, "Movement doesn’t provoke opportunity attacks for the rest of the turn")
+output =  f'-title "{combatTarget.name if combatTarget else target} Disengages!" -desc "If you take the Disengage action, your movement doesn’t provoke opportunity attacks for the rest of the turn." -footer "Actions in Combat | PHB 192" -thumb {image if "&1"+"&"=="&1&" else ""} -color {color}'+(f' -f "{combatTarget .name}|**Effect**: {str(combatTarget.get_effect("Disengage")).splitlines()[0]}"'  if combatTarget else "")
+
+return output
+</drac2>

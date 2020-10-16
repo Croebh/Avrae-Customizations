@@ -1,0 +1,28 @@
+embed
+
+<drac2>
+c = combat()
+args = argparse(&ARGS&)
+effect = None
+
+target = args.last('t', name)
+
+if c and (target := c.get_combatant(target)):
+ effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
+ concOut    = f"""-title "{target.name} drops concentration!" """
+ if effect:
+  target.remove_effect(effect.name)
+  concOut   = concOut + f""" -desc "You are no longer concentrating on {effect.name} and the effects have been removed." """
+ else:
+  concOut   = concOut + f""" -desc "You weren't concentrating on a spell in init." """
+elif target == name:
+ target = character()
+ concOut    = f"""-title "{name} drops concentration!" -desc "You aren't in initiative." """
+else:
+ concOut = f"""-title "{ctx.author.name} had a brain fart." -desc "**Invalid target.**\nEither join initiative with `{ctx.prefix}init join`, or select a valid target with `-t <name>`." """
+return concOut
+</drac2>
+
+
+-color <color>
+-thumb <image>
