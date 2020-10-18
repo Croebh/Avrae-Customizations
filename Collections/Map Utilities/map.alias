@@ -367,7 +367,7 @@ if args.last('mapload') or args.last('loadmap'):
 if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or args.last('deletemap'):
  #First option is to create mapbg preset
  if args.last('newmapbg') or args.last('savemap'):
-  mapName = (args.last('savemap') or args.last('newmapbg')).lower()
+  mapName = (args.last('savemap') or args.last('newmapbg'))
   mapBGState = {}
   formedMap = {mapName:mapBGState}
   for key, value in mapinfo.items():
