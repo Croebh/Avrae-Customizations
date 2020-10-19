@@ -7,6 +7,7 @@ args = argparse(&ARGS& + (["adv"] if warcaster else []))
 effect = None
 
 target = args.last('t', name)
+self = target == name
 dc = args.last('dc', 10, int)
 b = args.join("b", ' + ')
 adv = args.adv(boolwise=True)
@@ -50,4 +51,4 @@ return concOut
 
 
 -color <color>
--thumb <image>
+{{f"-thumb {image}" if self else ""}}

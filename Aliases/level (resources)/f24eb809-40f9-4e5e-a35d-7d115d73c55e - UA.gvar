@@ -345,6 +345,28 @@
   },
   {
     "Class": "Rogue",
+    "subclass": "Phantom",
+    "counters": [
+      {
+        "name": "Wails from the Grave",
+        "level": 3,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      },
+      {
+        "name": "Tokens of the Departed",
+        "level": 9,
+        "value": "intelligenceMod",
+        "reset": "none",
+        "display": "bubble",
+        "classLevel": "RogueLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Rogue",
     "subclass": "The Revived",
     "counters": [
       {

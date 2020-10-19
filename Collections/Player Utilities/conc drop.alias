@@ -6,6 +6,7 @@ args = argparse(&ARGS&)
 effect = None
 
 target = args.last('t', name)
+self = target == name
 
 if c and (target := c.get_combatant(target)):
  effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
@@ -25,4 +26,4 @@ return concOut
 
 
 -color <color>
--thumb <image>
+{{f"-thumb {image}" if self else ""}}
