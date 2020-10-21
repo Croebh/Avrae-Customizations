@@ -1305,6 +1305,7 @@ if c:
         missingCombatants = [combatants for combatants in foundCombatants if not combat().get_combatant(combatants)]
         desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to load combatants info')
         break
+       break 
       foundMapload = foundBattle["mapattach"]
       if "mapbg" in foundMapload:
        mapbg = foundMapload["mapbg"]
