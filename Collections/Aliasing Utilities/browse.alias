@@ -28,10 +28,10 @@ Once you're in the mode you want, you can make a search through different levels
 `{ctx.prefix}browse combat [search]` - Browses the channels `{ctx.prefix}init` by combatant.
 `{ctx.prefix}browse <ctx|context> [search]` - Browses the `ctx` context model."""
 
-skillList = ["acrobatics", "animalHandling", "arcana", "athletics", "deception", 
-             "history", "initiative", "insight", "intimidation", "investigation", 
-             "medicine", "nature", "perception", "performance", "persuasion", 
-             "religion", "sleightOfHand", "stealth", "survival", "strength", 
+skillList = ["acrobatics", "animalHandling", "arcana", "athletics", "deception",
+             "history", "initiative", "insight", "intimidation", "investigation",
+             "medicine", "nature", "perception", "performance", "persuasion",
+             "religion", "sleightOfHand", "stealth", "survival", "strength",
              "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
 
 Combat={combatant.name: {
@@ -45,15 +45,15 @@ Combat={combatant.name: {
          "note": combatant.note,
          "hp_str": combatant.hp_str(),
          "type": combatant.type,
-         "levels": dict([("total_level", combatant.levels.total_level)] + 
+         "levels": dict([("total_level", combatant.levels.total_level)] +
                         [(f'get(\\\"{clas[0]}\\\")',clas[1]) for clas in dict(combatant.levels).items()]),
          "resistances": {rType[0]: [{"dtype": rResist.dtype,
                                      "unless": rResist.unless,
                                      "only": rResist.only}
                                     for rResist in rType[1]]
-                        for rType in (("resist", combatant.resistances.resist), 
-                                      ("immune", combatant.resistances.immune), 
-                                      ("neutral", combatant.resistances.neutral), 
+                        for rType in (("resist", combatant.resistances.resist),
+                                      ("immune", combatant.resistances.immune),
+                                      ("neutral", combatant.resistances.neutral),
                                       ("vuln", combatant.resistances.vuln))},
          "effects": {
           effect.name:{
@@ -154,10 +154,10 @@ Character = {
                                         "unless": rResist.unless,
                                         "only": rResist.only}
                                        for rResist in rType[1]]
-                            for rType in (("resist", Char.resistances.resist), 
-                                          ("immune", Char.resistances.immune), 
-                                          ("neutral", Char.resistances.neutral), 
-                                          ("vuln", Char.resistances.vuln))},                            
+                            for rType in (("resist", Char.resistances.resist),
+                                          ("immune", Char.resistances.immune),
+                                          ("neutral", Char.resistances.neutral),
+                                          ("vuln", Char.resistances.vuln))},
              "cvars": Char.cvars,
              "saves": {
               f"get('{stat}')": {
@@ -217,14 +217,14 @@ context = {
             "name": ctx.channel.name,
             "topic": ctx.channel.topic
            },
-           "guild": 
+           "guild":
             ({"id": ctx.guild.id,
              "name": ctx.guild.name}) if ctx.guild else None,
            "prefix": ctx.prefix
           }
 
 # Edit this to use character().cvars after update
-cvar = ([x for x in get_raw().cvars if query[1].lower() in x.lower()]+[''])[0] if len(query)>1 and query[0] in 'cvars' else '' 
+cvar = ([x for x in get_raw().cvars if query[1].lower() in x.lower()]+[''])[0] if len(query)>1 and query[0] in 'cvars' else ''
 got = get(cvar,"")
 
 if query[0] == "combat":
@@ -274,8 +274,8 @@ for item in query:
  if typeof(current) == "SafeDict":
   # Loop through keys, priotizing exact matches, then partial matches, then get the first result
   key = (
-         [curKey for curKey in current if item and item.lower() == curKey.lower()] +
-         [curKey for curKey in current if item and item.lower() in curKey.lower()] +
+         [curKey for curKey in current if item and item.lower() == str(curKey).lower()] +
+         [curKey for curKey in current if item and item.lower() in str(curKey).lower()] +
          ['']
         )[0]
  elif item.isdigit() and typeof(current) == "SafeList" and int(item) in range(len(current)):

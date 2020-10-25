@@ -1,6 +1,6 @@
 embed -title "!use Code Renamer"
 {{args,combined,source,n,escQ=&ARGS&,{},load_json(get("resources","{}")),'\n','\\"'}}
-{{combined.update(load_json(get_svar('useResources') or '{}'))}}
+{{[combined.update(load_json(get_gvar(x))) for x in load_json(get_svar('useResources') or '{}')]}}
 {{combiner=[combined.update(load_json(get_gvar(x))) for x in source]}}
 {{valid=args and args[0] in combined and len(args)>1 and len(args[1])>1 and args[1][0].isalpha() and all([x.isalnum() or x=="_" for x in args[1]])}}
 <drac2>
