@@ -3,7 +3,7 @@ tembed
 c = combat()
 fName = sName = ""
 args = &ARGS&
-maxSize = 99
+maxSize = 150
 baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 alph = []
 for index in range(maxSize):

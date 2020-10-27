@@ -429,6 +429,8 @@ if c:
    note=target.note
    note=note.split(" | ")
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   if note.get('location'):
+    note['location'] = note['location'].upper()
    out[target.name]=note
    # Check if we have any overlays attached to effects, and then if at effect exists
    for overNum in [""]+[str(x) for x in range(1,11)]:
