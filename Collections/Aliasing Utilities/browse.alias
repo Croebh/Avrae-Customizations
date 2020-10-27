@@ -137,7 +137,9 @@ Character = {
                               "min": counter.min,
                               "max": counter.max,
                               "reset_on": counter.reset_on,
-                              "value": counter.value}
+                              "value": counter.value.
+                              "reset_by": counter.reset_by,
+                              "reset_to": counter.reset_to}
                             for counter in Char.consumables],
              "owner": Char.owner,
              "upstream": Char.upstream,
