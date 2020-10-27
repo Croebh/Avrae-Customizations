@@ -252,7 +252,7 @@ for maps, info in mapBG.items():
   elif typeof(info) == 'str':
    info = {"walls": info}
   if info.get('mapbg'):
-   if len(info.get('mapbg')) > 200:
+   if len(info.get('mapbg')) > 100:
     infoDesc.append(f"Background (Long URL)")
    else:
     infoDesc.append(f"Background ([Link]({info.get('mapbg')}))")
@@ -358,7 +358,7 @@ if args.last('mapload') or args.last('loadmap'):
      desc.append(f"- Objects: `{', '.join(objects)}`")
    neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}""".strip(" ~")
    if mapattach:
-    mapattach.add_effect('map', f"""-attack "||{neweffect}" """) 
+    mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
    break
 </drac2>
 
