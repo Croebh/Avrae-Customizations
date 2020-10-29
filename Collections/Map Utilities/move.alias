@@ -271,8 +271,8 @@ for maps, info in mapBG.items():
    else:
     infoDesc.append("Objects")
   maplist.append(f"""**{maps}** - {', '.join(infoDesc)}""".strip(",- "))
-# Split the list into groups of 15, to ensure it stays a reasonable size (used to be 20, then I added stuff)
-mapPagin = [maplist[i:i+15] for i in range(0, len(maplist), 15)]
+# Split the list into groups of 1, to ensure it stays a reasonable size (used to be 20, then I added stuff)
+mapPagin = [maplist[i:i+10] for i in range(0, len(maplist), 10)]
 # Do we have a -loadmap?
 if args.last('mapload') or args.last('loadmap'):
  # Loop through our users mapBackgrounds, looking for that map
