@@ -675,5 +675,57 @@
         "classLevel": "RogueLevel"
       }
     ]
+  },
+  {
+    "Class": "Monk",
+    "subclass": "Ascendant Dragon",
+    "counters": [
+      {
+        "name": "Breath of the Dragon",
+        "level": 3,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "MonkLevel"
+      },
+      {
+        "name": "Wings Unfurled",
+        "level": 6,
+        "value": "proficiencyBonus",
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "MonkLevel"
+      },
+      {
+        "name": "Aspect of the Wyrm",
+        "level": 6,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "MonkLevel"
+      }
+    ]
+  },
+  {
+    "Class": "Ranger",
+    "subclass": "Drakewarden",
+    "counters": [
+      {
+        "name": "Drake Companion",
+        "level": 3,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RangerLevel"
+      },
+      {
+        "name": "Drake's Breath",
+        "level": 6,
+        "value": 1,
+        "reset": "long",
+        "display": "bubble",
+        "classLevel": "RangerLevel"
+      }
+    ]
   }
 ]

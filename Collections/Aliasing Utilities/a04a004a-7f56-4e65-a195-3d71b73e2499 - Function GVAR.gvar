@@ -2723,6 +2723,20 @@
   "url": "aliasing.api.character.AliasCustomCounter.reset_on",
   "desc": "Returns the condition on which the cc resets. (‘long’, ‘short’, ‘none’, None)",
   "returns": {
+   "type": "int or None"
+  }
+ },
+ "AliasCustomCounter.reset_to": {
+  "url": "aliasing.api.character.AliasCustomCounter.reset_to",
+  "desc": "Returns the value the cc resets to, if it was created with an explicit `resetto`.",
+  "returns": {
+   "type": "str or None"
+  }
+ },
+ "AliasCustomCounter.reset_by": {
+  "url": "aliasing.api.character.AliasCustomCounter.reset_by",
+  "desc": "Returns the amount the cc changes by on a reset, if it was created with an explicit `resetby`.",
+  "returns": {
    "type": "str or None"
   }
  },
