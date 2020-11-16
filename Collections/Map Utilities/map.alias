@@ -4,7 +4,7 @@ testVersion = False
 argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
-# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+argsList if argsList else [])
+# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+argList if argList else [])
 args = argparse(argList)
 
 # Set are base variables
@@ -1193,23 +1193,23 @@ if c:
       zoom = ",".join([char for char in mapoptions.split('z')[1][0:3] if char.isdigit() or char == "."]).replace(",", "")
      else:
       zoom = ",".join([char for char in mapoptions[0:3] if char.isdigit() or char == "."]).replace(",", "")
-     desc.append(f' - Zoom set to {zoom}x')
+     desc.append(f' -- Zoom set to {zoom}x')
     if 'd' in mapoptions:
-     desc.append(f" - Dark Mode")
+     desc.append(f" -- Dark Mode")
     if 'n' in mapoptions:
-     desc.append(f" - Grid Hidden")
+     desc.append(f" -- Grid Hidden")
     if 'e' in mapoptions:
-     desc.append(f" - Disable Border Opacity")
+     desc.append(f" -- Disable Border Opacity")
     if 'f' in mapoptions:
-     desc.append(f" - Using alternative grid/token font")
+     desc.append(f" -- Using alternative grid/token font")
     if 'c' in mapoptions:
      gsize = ""
      gsize = ",".join([char for char in mapoptions.split("c")[1][0:2] if char.isdigit()]).replace(",", "")
-     desc.append(f' - Grid size adjusted to {gsize} px')
+     desc.append(f' -- Grid size adjusted to {gsize} px')
     if 'h' in mapoptions:
      gtrans = ""
      gtrans = ",".join([char for char in mapoptions.split("h")[1][0:2] if char.isdigit()]).replace(",", "")
-     desc.append(f' - Grid transparancy adjusted to {gtrans}%')
+     desc.append(f' -- Grid transparancy adjusted to {gtrans}%')
     if 'o' in mapoptions:
       offset = ""
       for char in mapoptions[mapoptions.index('o')+1:]:
@@ -1217,7 +1217,7 @@ if c:
         offset += char
        else:
         break
-      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
+      desc.append(f" -- Background Offset adjusted by {offset.replace(':', 'x')} px")
   if mapview != args.last('mapview', args.last('view', mapview)) or args.get('go'):
    # Do they want to reset the map view?
    if args.last('shift') or args.last('expand') or args.last('reduce') or args.get('go'):
