@@ -4,7 +4,7 @@ testVersion = False
 argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
-# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+args if args else [])
+# args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-move']+argsList if argsList else [])
 args = argparse(argList)
 
 # Set are base variables
@@ -41,9 +41,10 @@ for index in range(maxSize):
   alph.append(letter)
 col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o","pk"), "TSMLHG"
 COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
-presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Statue": "$S", "Open Pit": "$O", "Covered Pit": "$o"}
+presetObjects = load_json(get_gvar("9b15344a-1f09-43b5-b84e-f61e32e4a89a"))
 overlays=[]
 c = combat()
+com = combat().combatants
 gt = c.get_combatant if c else None
 debug = []
 desc = []
@@ -114,7 +115,7 @@ if args.last('viewload') or args.last('loadview'):
  for searchViewload in userPresets:
   if argsViewload in searchViewload.lower():
    foundViewload = userPresets.get(searchViewload)
-   args = argparse(["-mapview", foundViewload] + "argList")
+   args = argparse(["-mapview", foundViewload] + argList)
    desc.append(f"Loaded view `{searchViewload}`.")
    break
 </drac2>
@@ -128,11 +129,11 @@ for overNum in [""]+[str(x) for x in range(1,11)]:
     # If we find it, add the overlay to the args
     # If its a string, its just a `-over9`
     if typeof(spellOverlays.get(spell)) == "str":
-     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + "argList")
+     args = argparse(["-over" + overNum, spellOverlays.get(spell)] + argList)
     # If its a list, its starting with a -over9 and then theres other stuff
     elif typeof(spellOverlays.get(spell)) == "SafeList":
      adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
-     args = argparse(["-over" + overNum] + adjustedList + "argList")
+     args = argparse(["-over" + overNum] + adjustedList + argList)
     # We only care about the first result
     break
 </drac2>
@@ -189,7 +190,7 @@ objectlist = f""" -f 'Object Key|```{newline.join(objectTypeOut)}```' -image htt
 # If we're in combat, check all the things
 if c:
  # Collect information on every combatant
- for combatant in combat().combatants:
+ for combatant in com:
 
   # Grab map information, if it exists
   for attack in combatant.attacks:
@@ -348,23 +349,23 @@ if args.last('mapload') or args.last('loadmap'):
        zoom = ",".join([char for char in mapoptions.split('z')[1][0:3] if char.isdigit() or char == "."]).replace(",", " ")
       else:
        zoom = ",".join([char for char in mapoptions[0:3] if char.isdigit() or char == "."]).replace(",", "")
-      desc.append(f' - Zoom set to {zoom}x')
+      desc.append(f' -- Zoom set to {zoom}x')
      if 'd' in mapoptions:
-      desc.append(f" - Dark Mode")
+      desc.append(f" -- Dark Mode")
      if 'n' in mapoptions:
-      desc.append(f" - Grid Hidden")
+      desc.append(f" -- Grid Hidden")
      if 'e' in mapoptions:
-      desc.append(f" - Disable Border Opacity")
+      desc.append(f" -- Disable Border Opacity")
      if 'f' in mapoptions:
-      desc.append(f" - Using alternative grid/token font")
+      desc.append(f" -- Using alternative grid/token font")
      if 'c' in mapoptions:
       gsize = ""
       gsize = ",".join([char for char in mapoptions.split("c")[1][0:2] if char.isdigit()]).replace(",", "")
-      desc.append(f' - Grid size adjusted to {gsize} px')
+      desc.append(f' -- Grid size adjusted to {gsize} px')
      if 'h' in mapoptions:
       gtrans = ""
       gtrans = ",".join([char for char in mapoptions.split("h")[1][0:2] if char.isdigit()]).replace(",", "")
-      desc.append(f' - Grid transparancy adjusted to {gtrans}%')
+      desc.append(f' -- Grid transparancy adjusted to {gtrans}%')
      if 'o' in mapoptions:
        offset = ""
        for char in mapoptions[mapoptions.index('o')+1:]:
@@ -445,7 +446,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
 <drac2>
 if c:
  # Read each combatants notes for their information
- for target in combat().combatants:
+ for target in com:
   # If they have a note, perse it into a dict
   if target.note and ':' in target.note:
    note=target.note
@@ -615,43 +616,91 @@ if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
  if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  prevLoc = out[targ.name].get('location')
-  if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE") and (args.last('move')[0].isalpha() and args.last('move')[-1].isdigit()):
+  if args.last('go') or args.last('move'):
+   newLoc = ""
+   prevLoc = out[targ.name].get('location')
    # Fix bad locations?
    if prevLoc == "TRUE":
     _ = out[targ.name].pop('location')
     prevLoc = None
-   # Did they have a previous location? If so, lets calculate distance and draw a line
-   if prevLoc and prevLoc.lower() != args.last("move", "").lower():
+   if prevLoc:
     # Split previous location from XY to X and Y
-    prevLocX = ''.join(x for x in prevLoc if x.isalpha())
-    prevLocY = ''.join(y for y in prevLoc if y.isdigit())
-    if prevLocY and prevLocX:
-      prevLocY = int(prevLocY)
-      # Same as new location
-      newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
-      newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
-      # Calculate the delta for X and Y between the two
-      deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
-      # Throw them in the pot with some pythag
-      distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
-      # We want the positive delta (wish we had abs(), sigh)
-      deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
-      # Doing 5ft diag's, the distance is just the higher delta
-      distance = max(deltaX, deltaY)*5
-      # Grab the targets new color if changed, old color if set, or default to dark violet
-      colr = (args.last('color', out[targ.name].get('color','w')) + " ").strip("#~").lower()
-      colr = colr[:colr.index(" ")]
-      if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
-        colr = f"~{colr}"
-      # Add the line to the overlay list
-      overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-      # Display the change in location
-      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
+    prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
+    prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
+   if args.last('move') and args.last('move') not in (True, 't', '-t'):
+    newLocX = ''.join(x.upper() for x in args.last('move') if x.isalpha())
+    newLocY = int(''.join(y for y in args.last('move') if y.isdigit()))
+    newLoc = f"{newLocX}{newLocY}"
+   elif args.last('go') and args.last('go') not in (True, 't', '-t') and prevLoc:
+    pos = 0
+    moveStr = args.last('go')
+    moveList = []
+    # alphanuemricle splitting the movestring into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
+    for i in range(len(moveStr)):
+     if i > pos and moveStr[pos].isdigit() != moveStr[i].isdigit():
+      moveList.append(moveStr[pos:i])
+      pos = i
+    moveList.append(moveStr[pos:i+1])
+    # calculating the distances moved in each direction
+    moveEast = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "e" in moveList[x+1].lower()])//5
+    moveWest = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "w" in moveList[x+1].lower()])//5
+    moveNorth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "n" in moveList[x+1].lower()])//5
+    moveSouth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "s" in moveList[x+1].lower()])//5
+    # getting the new location by applying the distances to the old location
+    newLocX = alph[alph.index(prevLocX)+moveEast-moveWest]
+    newLocY = prevLocY+moveSouth-moveNorth
+    newLoc = f"{newLocX}{newLocY}"
+   # Did they have a previous location? If so, lets calculate distance and draw a line
+   if prevLoc and prevLocX and prevLocY and newLoc and prevLoc != newLoc:
+    # Grab the targets new color if changed, old color if set, or default to dark violet
+    colr = (args.last('color', out[targ.name].get('color', '~62C1BF')) + " ").strip("#~").lower()
+    colr = colr[:colr.index(" ")]
+    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+     colr = f"~{colr}"
+    elif len(colr) == 1:
+     getTokenColor = out[targ.name].get('color').split('(')
+     colr = getTokenColor[0].replace(" ", "")
+    if args.last('go'):
+     distance = 0
+     distanceT = 0
+     # draw arrows for each movement step
+     for x in range(len(moveList)):
+      if moveList[x].isdigit():
+       # get the location for each step and their distances
+       moveEast = int(moveList[x])//5 if "e" in moveList[x+1].lower() else 0
+       moveWest = int(moveList[x])//5 if "w" in moveList[x+1].lower() else 0
+       moveNorth = int(moveList[x])//5 if "n" in moveList[x+1].lower() else 0
+       moveSouth = int(moveList[x])//5 if "s" in moveList[x+1].lower() else 0
+       deltaX, deltaY = moveEast - moveWest, moveSouth - moveNorth
+       newLocX, newLocY = alph[alph.index(prevLocX) + deltaX] , prevLocY + deltaY
+       # distance for line drawing
+       stepDistance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY))*5,0))
+       # distance for all steps
+       # true distance is a bit strange then the argument assumes 5 ft diags, but eh should be fine
+       distanceT += stepDistance
+       # with 5ft diag's, the distance is just the movement step distance
+       distance += int(moveList[x])
+       # Add the line to the overlay list
+       overlays.append(f"*a{stepDistance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+       prevLocX, prevLocY = newLocX, newLocY
+    else:
+     # Calculate the delta for X and Y between the two
+     deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), prevLocY-newLocY
+     # Throw them in the pot with some pythag
+     distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+     # We want the positive delta (wish we had abs(), sigh)
+     deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+     # Doing 5ft diag's, the distance is just the higher delta
+     distance = max(deltaX, deltaY)*5
+     # Add the line to the overlay list
+     overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+    # Display the change in location
+    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {newLoc} ({f'~{distanceT}' if get('trueDistance') else distance} ft.).")
    else:
     # Display the change in location
-    desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
-   out[targ.name].update({"location": args.last('move').upper()})
+    desc.insert(0, f"Moving {targ.name} to {newLoc}.")
+   out[targ.name].update({"location":newLoc})
 </drac2>
 
 <drac2>
@@ -869,23 +918,23 @@ if c:
        zoom = ",".join([char for char in options.split('z')[1][0:3] if char.isdigit() or char == "."]).replace(",", "")
       else:
        zoom = ",".join([char for char in options[0:3] if char.isdigit() or char == "."]).replace(",", "")
-      desc.append(f' - Zoom set to {zoom}x')
+      desc.append(f' -- Zoom set to {zoom}x')
      if 'd' in options:
-      desc.append(f" - Dark Mode")
+      desc.append(f" -- Dark Mode")
      if 'n' in options:
-      desc.append(f" - Grid Hidden")
+      desc.append(f" -- Grid Hidden")
      if 'e' in options:
-      desc.append(f" - Disable Border Opacity")
+      desc.append(f" -- Disable Border Opacity")
      if 'f' in options:
-      desc.append(f" - Using alternative grid/token font")
+      desc.append(f" -- Using alternative grid/token font")
      if 'c' in options:
       gsize = ""
       gsize = ",".join([char for char in options.split("c")[1][0:2] if char.isdigit()]).replace(",", "")
-      desc.append(f' - Grid size adjusted to {gsize} px')
+      desc.append(f' -- Grid size adjusted to {gsize} px')
      if 'h' in options:
       gtrans = ""
       gtrans = ",".join([char for char in options.split("h")[1][0:2] if char.isdigit()]).replace(",", "")
-      desc.append(f' - Grid transparancy adjusted to {gtrans}%')
+      desc.append(f' -- Grid transparancy adjusted to {gtrans}%')
      if 'o' in options:
       offset = ""
       for char in options[options.index('o')+1:]:
@@ -893,7 +942,7 @@ if c:
         offset += char
        else:
         break
-      desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
+      desc.append(f" -- Background Offset adjusted by {offset.replace(':', 'x')} px")
   desc.append("")
 </drac2>
 
@@ -1032,7 +1081,7 @@ if args.last('distance'):
  argsDist = argsColor[0].split(':')
  height = int(argsDist[2] if len(argsDist) > 2 else "0")
  prevLoc = argsDist[0] if len(argsDist) > 1 else "A1" if argsDist else ""
- if c and (firstTarget := c.get_combatant(prevLoc)):
+ if c and (firstTarget := gt(prevLoc)):
   if (note := firstTarget.note) and 'Location: ' in note:
    note=note.split(" | ")
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
@@ -1042,7 +1091,7 @@ if args.last('distance'):
   else:
    prevLoc = None
  newLoc = argsDist[1] if len(argsDist) > 1 else argsDist[0] if argsDist else ""
- if c and (secondTarget := c.get_combatant(newLoc)):
+ if c and (secondTarget := gt(newLoc)):
   if (note := secondTarget.note) and 'Location: ' in note:
    note=note.split(" | ")
    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
@@ -1097,13 +1146,17 @@ if args.last('distance'):
    overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
    overlays.append(f"*s5{colr}{newLocX}{newLocY}")
   heightInfo = f"(Height: {height*5} ft. {'up' if height>0 else 'down' if height else ''})"
-  desc.append(f"{get('fName')}({alph[alph.index(prevLocX)].upper()}{prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}{newLocY}) {heightInfo if height>0 else ''} | {~{distanceT} if get('trueDistance') else distance} ft. {card} (~{degree}°)")
+  if get_svar('trueDistance') or get('trueDistance') == True:
+   distanceDisplay = f"~{distanceT}"
+  else:
+   distanceDisplay = f"{distance}"
+  desc.append(f"{get('fName')}({alph[alph.index(prevLocX)].upper()}{prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}{newLocY}) {heightInfo if height>0 else ''} | {distanceDisplay} ft. {card} (~{degree}°)")
 </drac2>
 
 <drac2>
 if c:
  # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, -loadbattle, -loadjson, -deletejson, -fow or -addfow  - arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'mapload', 'savebattle', 'deletebattle', 'loadbattle', 'loadjson', 'deletejson', 'fow', 'addfow')):
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'mapload', 'savebattle', 'deletebattle', 'loadbattle', 'loadjson', 'deletejson', 'fow', 'addfow', 'go' )):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    #If user wants to set mapsize back to default
@@ -1165,29 +1218,85 @@ if c:
        else:
         break
       desc.append(f" - Background Offset adjusted by {offset.replace(':', 'x')} px")
-  if mapview != args.last('mapview', args.last('view', mapview)):
+  if mapview != args.last('mapview', args.last('view', mapview)) or args.get('go'):
    # Do they want to reset the map view?
-   if args.last('mapview', args.last('view')).lower() in ('reset', 'none'):
-    mapviewlocation = mapviewsize = ""
-    desc.append(f"""Map view reset to default `{mapsize}`.""")
-   else:
-    # If the new mapview are different from the old one, update and display
-    mapview = args.last('mapview', args.last('view', mapview))
-    mapviewlocation = mapview.split(':')[0]
-    mapviewsize = mapview.split(':')[1]
-    if mapviewsize[0].isdigit():
-     mapSplitX, mapSplitY = mapviewsize.lower().split('x')
-     mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
-     mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+   if args.last('shift') or args.last('expand') or args.last('reduce') or args.get('go'):
+    # if the view gets shifted, expanded or reduced check if there is an old view to shift, expand or reduce
+    if mapinfo and mapinfo.get('view'):
+     mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
+     mapview = f"{mapviewlocation}:{mapviewsize}"
+     # mapview = mapinfo.get('view')
+     viewAnchor, viewSize = mapview.split(':')
+     viewX, viewY = viewSize.lower().split('x')
+     viewAnchorX = ''.join(x.upper() for x in viewAnchor if x.isalpha())
+     viewAnchorY = int(''.join(y for y in viewAnchor if y.isdigit()))
     else:
-     locX = alph.index(''.join(x.upper() for x in mapviewlocation if x.isalpha()))
-     locY = int(''.join(y for y in mapviewlocation if y.isdigit()))
-     mapX = alph.index(''.join(x.upper() for x in mapviewsize if x.isalpha()))
-     mapY = int(''.join(y for y in mapviewsize if y.isdigit()))
-     mapX = mapX - locX + 1
-     mapY = mapY - locY + 1
-    mapviewsize = f"{mapX}x{mapY}"
-    desc.append(f"Map view changed to `{mapview if f'{mapviewlocation}:{mapsize}'==mapview else f'{mapview} ({mapviewsize})'}`")
+     # if there isn't an old view take the mapsize instead
+     viewAnchorX, viewAnchorY = 'A', 1
+     viewX, viewY = mapsize.lower().split('x')
+    pos = 0
+    viewChangeStr = args.last('view') or args.last('go')
+    viewChangeList = []
+    # alphanuemricle splitting the viewChangeStr into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
+    for i in range(len(viewChangeStr)):
+     if i > pos and viewChangeStr[pos].isdigit() != viewChangeStr[i].isdigit():
+      viewChangeList.append(viewChangeStr[pos:i])
+      pos = i
+    viewChangeList.append(viewChangeStr[pos:i+1])
+    # calculating the changes in each direction
+    if len(viewChangeList) == 1:
+     # if only direction is given, go from current view to be modified by half
+     viewChangeEast = int(viewX)//2 if "e" in viewChangeList[0] else 0
+     viewChangeWest = int(viewX)//2 if "w" in viewChangeList[0] else 0
+     viewChangeNorth = int(viewY)//2 if "n" in viewChangeList[0] else 0
+     viewChangeSouth = int(viewY)//2 if "s" in viewChangeList[0] else 0
+    else:
+     # else summarise the given changes.
+     viewChangeEast = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "e" in viewChangeList[x+1].lower()])//5
+     viewChangeWest = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "w" in viewChangeList[x+1].lower()])//5
+     viewChangeNorth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "n" in viewChangeList[x+1].lower()])//5
+     viewChangeSouth = sum([int(viewChangeList[x]) for x in range(len(viewChangeList)) if viewChangeList[x].isdigit() and "s" in viewChangeList[x+1].lower()])//5
+    if args.last('shift'):
+     viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeEast - viewChangeWest]
+     viewAnchorY = viewAnchorY + viewChangeSouth - viewChangeNorth
+     desc.append(f"View shifted: {args.last('view') or args.last('go')} ")
+    elif args.last('expand'):
+     viewAnchorX = alph[alph.index(viewAnchorX) - viewChangeWest]
+     viewAnchorY = viewAnchorY - viewChangeNorth
+     viewX = int(viewX) + viewChangeEast + viewChangeWest
+     viewY = int(viewY) + viewChangeSouth + viewChangeNorth
+     desc.append(f"View expanded to: {mapviewlocation}:{mapviewsize}")
+    elif args.last('reduce'):
+     viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeWest]
+     viewAnchorY = viewAnchorY + viewChangeNorth
+     viewX = int(viewX) - viewChangeEast - viewChangeWest
+     viewY = int(viewY) - viewChangeSouth - viewChangeNorth
+     desc.append(f"View reduced to: {mapviewlocation}:{mapviewsize}")
+    mapviewlocation = f"{viewAnchorX}{viewAnchorY}"
+    mapviewsize = f"{viewX}x{viewY}"
+   else:
+    if args.last('mapview', args.last('view')).lower() in ('reset', 'none'):
+     mapviewlocation = mapviewsize = ""
+     desc.append(f"""Map view reset to default `{mapsize}`.""")
+    else:
+     # If the new mapview are different from the old one, update and display
+     mapview = args.last('mapview', args.last('view', mapview))
+     mapviewlocation = mapview.split(':')[0]
+     mapviewsize = mapview.split(':')[1]
+     if mapviewsize[0].isdigit():
+      mapSplitX, mapSplitY = mapviewsize.lower().split('x')
+      mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
+      mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+     else:
+      locX = alph.index(''.join(x.upper() for x in mapviewlocation if x.isalpha()))
+      locY = int(''.join(y for y in mapviewlocation if y.isdigit()))
+      mapX = alph.index(''.join(x.upper() for x in mapviewsize if x.isalpha()))
+      mapY = int(''.join(y for y in mapviewsize if y.isdigit()))
+      mapX = mapX - locX + 1
+      mapY = mapY - locY + 1
+     mapviewsize = f"{mapX}x{mapY}"
+     desc.append(f"Map view changed to `{mapview if f'{mapviewlocation}:{mapsize}'==mapview else f'{mapview} ({mapviewsize})'}`")
   #If there is a -wall
   if args.last('wall'):
    #If user wants to clear all the walls at once
@@ -1305,7 +1414,7 @@ if c:
         missingCombatants = [combatants for combatants in foundCombatants if not combat().get_combatant(combatants)]
         desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to load combatants info')
         break
-       break 
+       break
       foundMapload = foundBattle["mapattach"]
       if "mapbg" in foundMapload:
        mapbg = foundMapload["mapbg"]
@@ -1391,8 +1500,8 @@ if c:
   else:
    # Look for a combatant named DM or Map, auto attach
    for maptarg in ("map", "dm", "lair"):
-     if c.get_combatant(maptarg):
-       mapattach = c.get_combatant(maptarg)
+     if gt(maptarg):
+       mapattach = gt(maptarg)
        mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
        desc.append(f"""Autoattached map settings to {mapattach.name}""")
        break
@@ -1460,7 +1569,7 @@ if c:
   gt(target).set_note(dataout[target])
  # If a 'clear' arg is given, clear the entire map (clears everyones notes)
  if args.last('clear'):
-  [i.set_note(None)for i in combat().combatants]
+  [i.set_note(None)for i in com]
   people=[]
   overlays=[]
  # Join everything together and display the map if we aren't displaying the help
@@ -1683,7 +1792,7 @@ elif not c or args.get('?') or args.get('help'):
              Put one of these arguments between two coordinates that make a wall to draw a door in the middle. Example: `-wall B3-oD3` would draw an open door between B3 and D3."
 
              -f "_ _|**__Objects__**
-             `-object <location>:<object>` - Adds an object to the map. Some objects can be placed over multiple squares, to do so add a second coordinate after the first. Example: `-object A1B4:trap` would expand an trap object from A1 to B4. Objects can be added one at a time, or multiple at a time with multiple `-object`.
+             `-object <location>:<object>` - Adds an object to the map. Some objects can be placed over multiple squares, to do so add a second coordinate after the first. Example: `-object A1B4:trap` would expand an trap object from A1 to B4.
              `-deleteobject <location>:<object>` - Deletes the specified object from the map
 
              See `!map objectlist` for a list of objects"
