@@ -1266,13 +1266,13 @@ if c:
      viewAnchorY = viewAnchorY - viewChangeNorth
      viewX = int(viewX) + viewChangeEast + viewChangeWest
      viewY = int(viewY) + viewChangeSouth + viewChangeNorth
-     desc.append(f"View expanded to: {mapviewlocation}:{mapviewsize}")
+     desc.append(f"View expanded")
     elif args.last('reduce'):
      viewAnchorX = alph[alph.index(viewAnchorX) + viewChangeWest]
      viewAnchorY = viewAnchorY + viewChangeNorth
      viewX = int(viewX) - viewChangeEast - viewChangeWest
      viewY = int(viewY) - viewChangeSouth - viewChangeNorth
-     desc.append(f"View reduced to: {mapviewlocation}:{mapviewsize}")
+     desc.append(f"View reduced")
     mapviewlocation = f"{viewAnchorX}{viewAnchorY}"
     mapviewsize = f"{viewX}x{viewY}"
    else:
@@ -1718,8 +1718,12 @@ elif not c or args.get('?') or args.get('help'):
              `-view <coordinate>:<coordinate>` - Focuses on a portion of the map. Example: `-view A3:K12`
              `-view <coordinate>:<gridsize>` - Focuses on a portion of the map, but with a specified size instead of an end location. Example: `-view A3:4x10`
              `-view reset` - Returns to full view.
+             `-view <distance and direction> shift` - Will shift the current view coordinates in whatever distance and direction given. Example: `-view 15e shift` would shift the view focus 15ft eastward. You can do multiple directions and distances `-view 15e10s shift`
+             `-view <distance and direction> expand` - Will expand the set view focus in whatever distance and direction given. Example: `-view 10n10e expand` would take a view focus of c5:5x5 to c3:7x7
+             `-view <distance and direction> reduce` - Will reduce the current view focus in whatever distance and direction given. Example: `-view 10s10e reduce` would take a view focus of f3:7x7 to f3:5x5
+             Direction can be `n, ne, e, se, s, sw, w, nw`"
 
-             **__Saving, Loading and Deleting views__**
+             -f "_ _|**__Saving, Loading and Deleting views__**
              `!map viewlist` - Lists all saved views.
              `-saveview <name>,<coordinate>:<coordinate>` - Saves a view, for quick access. Example: `-saveview Ambush,K5:Z15`
              `-loadview <name>` - Loads a saved view.
@@ -1731,7 +1735,7 @@ elif not c or args.get('?') or args.get('help'):
              `-loadbattle <name>` - Loads a saved battle.
              `-deletebattle <name>` - Deletes a saved battle."
 
-             -f "**__Loading and Deleteing Json Files__**
+             -f "_ _|**__Loading and Deleteing Json Files__**
              `-loadjson <url>` - Loads Json file.
              `-deletejson <url>` - Deletes A Specific Json File
              `-loadjson reset` - Deletes All Json Files
@@ -1742,9 +1746,6 @@ elif not c or args.get('?') or args.get('help'):
              `-fow <coordinate>[:<coordinate>]` - Turns fog of war on but reveals a single coordinate or what's between a set of coordinates. Example: `!map -fow J5` or `!map -fow B1:E5`
              `-fow none` - Turns fog of war off and makes everything visible.
              `-addfow <coordinate>[:<coordinate>]` - Conceals a single coordinate or what's between a set of coordinates, with fog of war."
-
-             -f "_ _|**__Distance__**
-             `-distance <coordinate>:<coordinate>[,color]` - Will measure the distance between to coordinates. You also can measure between a target and a coordinate or between two targets. You can change the default color of the overlay if needed. Example: `!map -distance a1:d4` or `!map -distance prixaris:h5,r` or `!map -distance prixaris:go1,y`"
 
              -f "_ _|**__Interface Options__**
              `-options [args]` - Changes visual options using the following arguments:
@@ -1758,10 +1759,6 @@ elif not c or args.get('?') or args.get('help'):
              `o<#>:<#>` - Offsets the background image (in px). Example: `-options o20:40` would offset it 20px down and 40px to the right.
              Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change.
              You can set multiple settings at a time. Example: -options z2n would set the resolution at 2x and hide the grid."
-
-
-             -f "_ _|**__Backup / Restore__**
-             `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
 
              -f "_ _|**__Server Settings__**
              To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
@@ -1828,13 +1825,20 @@ elif not c or args.get('?') or args.get('help'):
              `-height <+/-#>` - Sets the target's position relative to the ground, which will be displayed above the map."
 
              -f "_ _|**__Other commands__**
+             `-go <distance and direction> [shift]` - Allows you to move a targeted token in different steps depending on the distance and direction given. Direction can be `n, ne, e, se, s, sw, w, nw` Example: `-go 10e10s5e` would move the token 10ft East, then 10ft South, and then 5ft East. If `shift` is inputted after the command, it will also shift the current view focus that direction and distance as well. See `!map help dm` for more info on `-view` options
              `-note <note>` - Sets an arbitrary note on the target.
              `-t <target> status` - Shows the target's details.
              `-savetoken <tokenName>:<shortcode>` - Saves a token to your `mapTokens` uvar. `!map tokenlist` to see your saved tokens.
              `-deletetoken <tokenName>` - Deletes a token you have saved
-             `-loadtoken <tokenName>` - Allows you to load a saved token to a target. Example: `!map -t go1 -loadtoken goblin`
+             `-loadtoken <tokenName>` - Allows you to load a saved token to a target. Example: `!map -t go1 -loadtoken goblin`"
 
-             **__Additional Information__**
+             -f "_ _|**__Distance__**
+             `-distance <coordinate>:<coordinate>[,color]` - Will measure the distance between two coordinates. You also can measure between a target and a coordinate or between two targets. You can change the default color of the overlay if needed. Example: `!map -distance a1:d4` or `!map -distance prixaris:h5,r` or `!map -distance prixaris:go1,y`"
+
+             -f "_ _|**__Backup / Restore__**
+             `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
+
+             -f "_ _|**__Additional Information__**
              The map calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """ + colorhelp + sizehelp
 
  help += helpindex
