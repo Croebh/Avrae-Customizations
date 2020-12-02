@@ -150,7 +150,7 @@ Arguments marked with **†** allow for variable evaluation via `{}`
 
 {{cvar, cgvar = args.last('cvar') or (a[0] if a else '{}'), {} }}
 
-{{_ = [cgvar.update(load_json(get_gvar(x))) for x in load_json(get_svar('useResources') or '[]') + load_json(get('resources','[]')) if get_gvar(x)]}}
+{{_ = [cgvar.update(load_json(get_gvar(x))) if typeof(load_json(get_gvar(x)))=="SafeDict" else err(f"Invalid GVAR: `{x}`. Please remove it from either your `resources` uvar, or your `useResources` svar.") for x in load_json(get_svar('useResources') or '[]') + load_json(get('resources','[]')) if get_gvar(x)]}}
 
 {{_ = help or out or [([[c.extend([f"-{x[0]}", str(i)]) for i in x[1]] if typeof(x[1])=='list' else c.append(f"-{x[0]}"), c.append(str(x[1]))]) for x in (load_json(get(cvar, '{}')) or cgvar.get(cvar, '{}')).items()] if get(cvar) or cgvar.get(cvar) else ''}}
 {{args = argparse(c + a)}}
