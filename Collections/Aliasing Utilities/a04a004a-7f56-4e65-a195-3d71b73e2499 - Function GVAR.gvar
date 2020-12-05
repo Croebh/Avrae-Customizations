@@ -254,7 +254,7 @@
    "desc": "The JSON formatted string."
   }
  },
- "err(reason)": {
+ "err(reason, pm_user=False)": {
   "desc": "Stops evaluation of an alias and shoes the user an error.",
   "url": "aliasing.api.functions.err",
   "param": [
@@ -264,6 +264,13 @@
      "str"
     ],
     "desc": "The error to show."
+   },
+   {
+    "name": "pm_user",
+    "type": [
+      "str"
+    ],
+    "desc": "Whether or not to PM the user the error traceback."
    }
   ],
   "raises": {
