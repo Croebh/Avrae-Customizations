@@ -2117,6 +2117,27 @@
   "returns": {
    "type": "str"
   }
+},
+ "AliasChannel.category": {
+  "desc": "The category of the channel the alias was run in.",
+  "url": "aliasing.api.context.AliasChannel.category",
+  "returns": {
+   "type": "AliasCategory"
+  }
+ },
+ "AliasCategory.id": {
+  "desc": "The ID of the category.",
+  "url": "aliasing.api.context.AliasCategory.id",
+  "returns": {
+   "type": "int"
+  }
+ },
+ "AliasCategory.name": {
+  "desc": "The name of the category.",
+  "url": "aliasing.api.context.AliasCategory.name",
+  "returns": {
+   "type": "str"
+  }
  },
  "AliasAuthor.discriminator": {
   "desc": "The user’s discriminator (number after the hash).",
@@ -2199,7 +2220,7 @@
   },
   "syntax": ">>> cc_str(\\\"Ki\\\")\n'11/17'\n>>> cc_str(\\\"Bardic Inspiration\\\")\n'◉◉◉〇〇'"
  },
- "character().create_cc(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None)": {
+ "character().create_cc(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None)": {
   "desc": "Creates a custom counter. If a counter with the same name already exists, it will replace it.",
   "url": "aliasing.api.character.AliasCharacter.create_cc",
   "param": [
@@ -2251,6 +2272,20 @@
      "str"
     ],
     "desc": "How much the counter should change by on a reset. Supports dice but not cvars."
+   },
+   {
+    "name": "title",
+    "type": [
+     "str"
+    ],
+    "desc": "The title of the counter."
+   },
+   {
+    "name": "desc",
+    "type": [
+     "str"
+    ],
+    "desc": "The description of the counter."
    }
   ],
   "returns": {
@@ -2258,7 +2293,7 @@
    "desc": "The newly created counter."
   }
  },
- "character().create_cc_nx(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None)": {
+ "character().create_cc_nx(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None)": {
   "desc": "Creates a custom counter if one with the given name does not already exist. Equivalent to:",
   "url": "aliasing.api.character.AliasCharacter.create_cc_nx",
   "param": [
@@ -2310,6 +2345,20 @@
      "str"
     ],
     "desc": "How much the counter should change by on a reset. Supports dice but not cvars."
+   },
+   {
+    "name": "title",
+    "type": [
+     "str"
+    ],
+    "desc": "The title of the counter."
+   },
+   {
+    "name": "desc",
+    "type": [
+     "str"
+    ],
+    "desc": "The description of the counter."
    }
   ]
  },

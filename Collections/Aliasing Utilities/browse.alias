@@ -137,7 +137,7 @@ Character = {
                               "min": counter.min,
                               "max": counter.max,
                               "reset_on": counter.reset_on,
-                              "value": counter.value.
+                              "value": counter.value,
                               "reset_by": counter.reset_by,
                               "reset_to": counter.reset_to}
                             for counter in Char.consumables],
@@ -217,7 +217,11 @@ context = {
            "channel": {
             "id": ctx.channel.id,
             "name": ctx.channel.name,
-            "topic": ctx.channel.topic
+            "topic": ctx.channel.topic,
+            "category": {
+             "id": ctx.channel.category.id,
+             "name": ctx.channel.category.name
+            }
            },
            "guild":
             ({"id": ctx.guild.id,
