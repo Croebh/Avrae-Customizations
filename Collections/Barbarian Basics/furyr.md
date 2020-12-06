@@ -1,1 +1,1 @@
-This snippet applies the Radiant damage for the Divine Fury feature of the Path of the Zealot Barbarian subclass.
+This snippet applies the Radiant damage for the Divine Fury feature of the Path of the Zealot Barbarian subclass. You must be in combat and raging to use this snippet.

@@ -1185,6 +1185,8 @@ if c:
       mapBGState["objects"] = mapinfo.get('objects').split('/')
      if mapinfo.get('view')!= None:
       mapBGState["view"] = mapinfo.get('view')
+     if mapinfo.get('fow')!= None:
+      mapBGState["fow"] = mapinfo.get('fow')
      break
    savedBGState = {"mapattach":mapBGState}
    savedBGState.update(out)
@@ -1209,30 +1211,46 @@ if c:
    for searchBattle in userBattles:
     if argsBattle in searchBattle.lower():
      foundBattle = userBattles[searchBattle]
+     foundBattleName = searchBattle
      for searchCombatant in foundBattle:
       if searchCombatant not in ("mapattach"):
        foundCombatants = dict(list(foundBattle.items())[1:])
        currentCombatants = [combat().get_combatant(name)]
+       #Here saved combatant notes are loaded unless combatant isn't in combat
        if all([combat().get_combatant(searchCombatant) for searchCombatant in foundCombatants.keys()]):
         out = dict(list(foundBattle.items())[1:])
-        foundMapload = foundBattle["mapattach"]
-        if "mapbg" in foundMapload:
-         mapbg = foundMapload["mapbg"]
-        mapsize = foundMapload["mapsize"]
-        if "mapoptions" in foundMapload:
-         mapoptions = foundMapload["mapoptions"]
-        if "walls" in foundMapload:
-         walls = foundMapload["walls"]
-        if "objects" in foundMapload:
-         objects = foundMapload["objects"]
-        if "view" in foundMapload:
-         mapviewlocation, mapviewsize = foundMapload["view"].replace('::',':').split(':')
-        desc.append(f"Loaded the battle `{argsBattle}`")
-        break
        else:
+        #Here lets user know what combatants they need to add to load ther info
         missingCombatants = [combatants for combatants in foundCombatants if not combat().get_combatant(combatants)]
-        desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to combat first to load the battle')
+        desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to load combatants info')
         break
+       break
+      foundMapload = foundBattle["mapattach"]
+      if "mapbg" in foundMapload:
+       mapbg = foundMapload["mapbg"]
+      else:
+       mapbg = ""
+      if "mapsize"  in foundMapload:
+       mapsize = foundMapload["mapsize"]
+      if "mapoptions" in foundMapload:
+       mapoptions = foundMapload["mapoptions"]
+      else:
+       mapoptions = ""
+      if "walls" in foundMapload:
+       walls = foundMapload["walls"]
+      else:
+       walls = []
+      if "objects" in foundMapload:
+       objects = foundMapload["objects"]
+      else:
+       objects = []
+      if "fow" in foundMapload:
+       fow = foundMapload["fow"].split(", ")
+      else:
+       fow = []
+      if "view" in foundMapload:
+       mapviewlocation, mapviewsize = foundMapload["view"].replace('::',':').split(':')
+      desc.append(f"Loaded the battle `{foundBattleName}`")
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach', args.last('attach')) and gt(args.last('mapattach', args.last('attach'))):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
@@ -1484,7 +1502,6 @@ elif not c or args.get('?') or args.get('help'):
              -f "_ _|**__Server Settings__**
              To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
              `!svar mapDefaults {\\\"size\\\":\\\"\\\", \\\"background\\\":\\\"\\\", \\\"options\\\":\\\"\\\"}`
-
              You can also copy your `mapOverlays`, `mapPresets`, `mapTokens`, `mapBattles`, `trueDistance` uvars into svars, and they'll be set/available for the whole server."
   """
  elif any(args.last(potentialArg) for potentialArg in ('walls', 'wall', 'door', 'doors', 'object', 'objects')):
