@@ -481,7 +481,8 @@
   "returns": {
    "type": "SimpleRollResult",
    "desc": "The result of the roll."
-  }
+  },
+  "alias": "vroll"
  },
  "chanid()": {
   "desc": "Returns the ID of the active Discord channel.",
