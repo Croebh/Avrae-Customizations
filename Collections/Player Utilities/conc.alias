@@ -20,7 +20,7 @@ if c and (target := c.get_combatant(target)):
  rollString = f"{target.saves.get('constitution').d20(adv)}" +  \
              (f' + {b}' if b else '') +  \
              (f' + {sb}' if sb else '') + \
-             (f' + {max(1, (target.stats.constitution-10)//2)} [bladesong]' if bladesong else '')
+             (f' + {max(1, (target.stats.get_mod('int')))} [bladesong]' if bladesong else '')
  concRoll   = vroll(rollString)
  success    = concRoll.total >= dc
  concOut    = f"""-title "{target.name} makes a Concentration check!"
