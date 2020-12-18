@@ -12,8 +12,11 @@ if c and (target := c.get_combatant(target)):
  effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
  concOut    = f"""-title "{target.name} drops concentration!" """
  if effect:
-  target.remove_effect(effect.name)
   concOut   = concOut + f""" -desc "You are no longer concentrating on {effect.name} and the effects have been removed." """
+  if "Mind Sharpener" in get("infusions",""):
+   character().set_cvar("lastEffect", dump_json([target.get_effect(effect.name).name, target.get_effect(effect.name).duration]))
+   concOut   = concOut + f"""-f "Mind Sharpener|Effect stored for Mind Sharpener Infusion." """
+  target.remove_effect(effect.name)
  else:
   concOut   = concOut + f""" -desc "You weren't concentrating on a spell in init." """
 elif target == name:
