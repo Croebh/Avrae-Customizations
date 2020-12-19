@@ -1882,7 +1882,7 @@
    }
   ]
  },
- "ParsedArguments.adv(ea=False, boolwise=False, ephem=False)": {
+ "ParsedArguments.adv(ea=False, boolwise=False, ephem=False, custom: dict = None)": {
   "desc": "Determines whether to roll with advantage, disadvantage, Elven Accuracy, or no special effect.",
   "url": "utils.argparser.ParsedArguments.adv",
   "param": [
@@ -1906,6 +1906,13 @@
      "bool"
     ],
     "desc": "Whether to return an ephemeral argument if such exists."
+   },
+   {
+    "name": "custom",
+    "type": [
+     "dict"
+    ],
+    "desc": "Dictionary of custom values to parse for. There should be a key for each value you want to overwrite. `custom={'adv': 'custom_adv'}` would allow you to parse for advantage if the `custom_adv` argument is found."
    }
   ],
   "returns": {
