@@ -1,0 +1,35 @@
+embed
+
+{{duel, monster, dm, curTime, args, HOUR, DAY, WEEK = int(get('arenaDuel',0)),int(get('arenaMonster',0)),int(get('arenaDm',0)),int(time()),"&*&".lower(), 3600, 86_400, 604_800}}
+
+{{duel, monster, dm = (duel + DAY - curTime) if duel else 0, (monster + WEEK - curTime) if monster else 0, (dm + WEEK - curTime) if dm else 0}}
+
+{{duelTime, monsterTime, DMTime = (duel//HOUR, (duel%HOUR)//60, duel%60) if duel > 0 else 0, (monster//HOUR, (monster%HOUR)//60, monster%60) if monster>0 else 0, (dm//HOUR, (dm%HOUR)//60, dm%60) if dm>0 else 0}}
+
+{{[character().set_cvar(x[0], curTime) for x in (('arenaDuel', duel, 'duel'), ('arenaMonster', monster, 'monster')) if x[1] <= 0 and x[2]in args]}}
+
+{{set_uvar('arenaDm', curTime) if dm <= 0 and 'dm' in args else ''}}
+
+<drac2>
+# Save current values to a uvar for `!arena all`
+arenaTimers = load_json(get('arenaTimers','{}'))
+arenaTimers[name] = {"duel":    int(get('arenaDuel', 0)),
+                     "monster": int(get('arenaMonster', 0))}
+set_uvar('arenaTimers', dump_json(arenaTimers))
+</drac2>
+
+-f "Duel|{{(f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] else ''}".strip(', ') or f"{duelTime[2]} Seconds" if duel>0 else '24 Hours' if duel<=0 and 'duel'.lower() in args else 'Available')}}|inline"
+
+-f "Monster Fight|{{f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] else ''}".strip(', ') or f"{monsterTime[2]} Seconds" if monster>0 else '7 Days' if monster<=0 and 'monster'.lower() in args else 'Available'}}|inline"
+
+-f "DM Experience|{{f"{f'{DMTime[0]//24} Days, ' if DMTime[0]//24 else ''}{f'{DMTime[0]%24} Hours, ' if DMTime[0]%24 else ''}{f'{DMTime[1]} Minutes, ' if DMTime[1] else ''}".strip(', ')or f"{DMTime[2]} Seconds" if dm>0 else '7 Days' if dm<=0 and 'dm'.lower() in args else 'Available'}}|inline"
+
+-footer "!arena duel - Set your duel timer
+!arena monster - Set your monster fight timer
+!arena dm - Set your DM Experience timer
+!arena all - View all character timers"
+
+-title "Arena Cooldowns for <name>"
+
+
+{{"-t 15"if chanid()=="687863391083167793"else""}}

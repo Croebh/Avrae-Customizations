@@ -1,0 +1,67 @@
+embed
+
+<drac2>
+# Load the current values, and update for the current character
+# On the off chance they ran `!arena all` before running the new `!arena`
+arenaTimer = load_json(get('arenaTimers','{}'))
+arenaTimer[name] = {"duel":    int(get('arenaDuel', 0)),
+                     "monster": int(get('arenaMonster', 0))}
+set_uvar('arenaTimers', dump_json(arenaTimer))
+
+# Seconds in anything over a minute
+HOUR, DAY, WEEK = 3600, 86_400, 604_800
+
+# Current time. I cast to int because this is a float and I dont need fractions of a second
+curTime = int(time())
+
+out = []
+
+# Loop over each character in the uvar
+for char, timers in arenaTimer.items():
+  curOut = ""
+
+  # Calculate their duel timer
+  duel    = timers['duel'] + DAY - curTime
+  duelTime = (duel//HOUR, (duel%HOUR)//60, duel%60) if duel > 0 else 0
+
+  # Calculate their monster fight timer
+  monster = timers['monster'] + WEEK - curTime
+  monsterTime = (monster//HOUR, (monster%HOUR)//60, monster%60) if monster>0 else 0
+
+  # If either of the timers aren't up, do things
+  if duelTime or monsterTime:
+    curOut = f""" -f "{char}|"""
+
+    # Display the duel timer if there is one
+    if duelTime:
+      curOut += "\n**Duel:** ~" + f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] and not duelTime[0] else ''}".strip(', ') or f"{duelTime[2]} Seconds"
+
+    # Display the monster fight timer if there is one
+    if monsterTime:
+      curOut += "\n**Monster Fight:** ~" + f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] and not [monsterTime][0] else ''}".strip(', ') or f"{monsterTime[2]} Seconds"
+    curOut += '|inline"'
+
+    # Add it to the output
+    out.append(curOut)
+
+# If any of our characters had timers to display, display em
+if out:
+  return ' '.join(out)
+
+# Otherwise, huzzah, do whatcha want
+else:
+  return f""" -f "Lucky You!|None of your characters (that have run the new alias) are on timer!" """
+
+</drac2>
+
+-desc "This will show all active duel or monster timers for your characters. If a character or timer is missing from this list, either they are off cooldown, or you haven't run the new alias with that character."
+
+-footer "!arena duel - Set your duel timer
+!arena monster - Set your monster fight timer
+!arena dm - Set your DM Experience timer
+!arena all - View all character timers"
+
+-title "Arena Cooldowns for {{ctx.author.display_name}}"
+
+
+{{"-t 15"if chanid()=="687863391083167793"else""}}

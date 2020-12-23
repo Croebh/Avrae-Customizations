@@ -1,0 +1,17 @@
+embed
+<drac2>
+out = []
+average = 0
+levels = {}
+if combat():
+ for target in combat().combatants:
+  if target.level and not (target.levels.get('Monster')):
+   out.append(f""" -f "{target.name}|**HP** - {target.hp_str().strip('<>')} | **AC** - {target.ac}\n{' | '.join([f"**{cls}** {level}" for (cls, level) in target.levels])}\n{target.resists}|inline" """ )
+   average += target.levels.total_level
+   levels[target.levels.total_level] = levels.get(target.levels.total_level, 0)+1
+ levelsOut = ', '.join([f"{count} at level `{lvl}`" for lvl, count in levels.items()])
+ return '\n'.join(out) + f""" -title "Combatant Levels" -desc "Average Level = `{round(average/len(out),2)}` ({levelsOut})" """
+
+else:
+ return """ -desc "This channel isn't in combat." """
+</drac2>
