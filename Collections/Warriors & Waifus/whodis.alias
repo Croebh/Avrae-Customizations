@@ -10,7 +10,7 @@ if combat():
    average += target.levels.total_level
    levels[target.levels.total_level] = levels.get(target.levels.total_level, 0)+1
  levelsOut = ', '.join([f"{count} at level `{lvl}`" for lvl, count in levels.items()])
- return '\n'.join(out) + f""" -title "Combatant Levels" -desc "Average Level = `{round(average/len(out),2)}` ({levelsOut})" """
+ return '\n'.join(out) + f""" -title "Combatant Levels" -desc "Average Level = `{round(average/len(out),2)}` ({levelsOut}) ({round(average/len(out),2)*50} DM xp)" """
 
 else:
  return """ -desc "This channel isn't in combat." """

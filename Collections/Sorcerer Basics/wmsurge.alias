@@ -1,2 +1,29 @@
-{{g,r,c,R,t,T,L=load_json(get_gvar('9274bf9a-f3d2-407e-9723-0a8901d04003')),vroll('1d100'),combat(),vroll('1d20'),'&1&' in 'tidesroll',"Tides of Chaos",int("&1&") if "&1&".isdigit() else 0}}{{g=g[ceil(L/2 or r.total/2)-1]}}{{f'multiline\n{ctx.prefix}embed' if not L and g.type=='cast' and (R.total==1 or t) else 'embed'}} {{s=[x for x in range(1,10) if get_slots(x)<get_slots_max(x)]}} {{"-desc '*No Wild Surge*'" if not L and R.total>1 and not t else f" -f '{f'Looking up roll: {L}' if L else r}{f' - {T}' if t and cc_exists(T) else ''} | {g.desc}'"}}{{Roll=vroll(g.roll) if g.type=='roll' or g.type=='health' else 0 }}{{mod_hp(Roll.total) if not L and g.type=='health' and (R.total==1 or t) else ''}}{{set_slots(s[0],get_slots(s[0])+1) if not L and g.type=='slots' and s and (R.total==1 or t) else ''}}{{set_cc('Sorcery Points', get_cc_max('Sorcery Points')) if not L and g.type=='cc' and (R.total==1 or t) else ''}}{{c.me.add_effect(g.effect[0],g.effect[2],g.effect[1]) if not L and g.type=='effect' and c and c.me and (R.total==1 or t) else ''}}{{'' if R.total>1 and not t else (f" -f 'Roll|{Roll}'" if g.type=='Roll' else f" -f 'Health gained|{Roll}\n{hp_str()}'" if g.type=='health' else f" -f 'Regain Slot|{slots_str(s[0]) if s else '*None*'}'" if g.type=='slots' else f" -f 'Sorcerer Points|{cc_str('Sorcery Points')}'" if g.type=='cc' else f" -f 'Gained Effect|Name: {g.effect[0]}\nDuration: {g.effect[1]} rounds'" if g.type =='effect' else '')}} -title "Wild Magic Surge {{'| '+str(R) if not (t or L) else ''}}" {{not cc_exists(T) or mod_cc(T,1) or f" -f '{T}|Recharged'" if not L and t else ''}} -color <color> -thumb <image>  -footer "{{ctx.prefix}}wmsurge - Roll for chance | {{ctx.prefix}}wmsurge [tide|roll] - Force a roll | {{ctx.prefix}}wmsurge [#] - Lookup a roll"
-{{'' if not L and R.total>1 and not t else (f'''{ctx.prefix}{f"""i reactcast "{name}" """ if c and c.me else "cast"} "{g.cast[0]}" -i -l {g.cast[1]} {"-t "+name if g.cast[2] else ""}''' if g.type=='cast' else '')}}
+embed
+
+{{gvar, surgeRoll, Combat, chanceRoll, tides, tidesCC, lookup = load_json(get_gvar('9274bf9a-f3d2-407e-9723-0a8901d04003')), vroll('1d100'), combat(), vroll('1d20'), '&1&' in 'tidesroll', "Tides of Chaos", int("&1&") if "&1&".isdigit() else 0}}
+{{surge = gvar[ceil(lookup/2 or surgeRoll.total/2)-1]}}
+
+{{usedSlots = [x for x in range(1, 10) if character().spellbook.get_slots(x) < character().spellbook.get_max_slots(x)]}}
+
+{{"-desc '*No Wild Surge*'" if not lookup and chanceRoll.total>1 and not tides else f" -f '{f'Looking up roll: {lookup}' if lookup else surgeRoll}{f' - {tidesCC}' if tides and character().cc_exists(tidesCC) else ''} | {surge.desc}'"}}
+
+{{Roll=vroll(surge.roll) if surge.type=='roll' or surge.type=='health' else 0 }}
+
+{{character().mod_hp(Roll.total, overflow=False) if not lookup and surge.type=='health' and (chanceRoll.total==1 or tides) else ''}}
+
+{{character().spellbook.set_slots(usedSlots[0],character().spellbook.get_slots(usedSlots[0])+1) if not lookup and surge.type=='slots' and usedSlots and (chanceRoll.total==1 or tides) else ''}}
+
+{{character.set_cc('Sorcery Points', character.get_cc_max('Sorcery Points')) if not lookup and surge.type=='cc' and (chanceRoll.total==1 or tides) else ''}}
+
+{{Combat.me.add_effect(surge.effect[0],surge.effect[2],surge.effect[1]) if not lookup and surge.type=='effect' and Combat and Combat.me and (chanceRoll.total==1 or tides) else ''}}
+
+{{'' if chanceRoll.total>1 and not tides else (f" -f 'Roll|{Roll}'" if surge.type=='Roll' else f" -f 'Health gained|{Roll}\n{character().hp_str()}'" if surge.type=='health' else f" -f 'Regain Slot|{character().spellbook.slots_str(usedSlots[0]) if usedSlots else '*None*'}'" if surge.type=='slots' else f" -f 'Sorcerer Points|{character().cc_str('Sorcery Points')}'" if surge.type=='cc' else f" -f 'Gained Effect|Name: {surge.effect[0]}\nDuration: {surge.effect[1]} rounds'" if surge.type =='effect' else '')}}
+
+-title "Wild Magic Surge {{'| '+str(chanceRoll) if not (tides or lookup) else ''}}"
+
+{{not character().cc_exists(tidesCC) or character().mod_cc(tidesCC,1) or f" -f '{tidesCC}|Recharged'" if not lookup and tides else ''}}
+
+-color <color>
+-thumb <image>
+
+-footer "{{ctx.prefix}}wmsurge - Roll for chance | {{ctx.prefix}}wmsurge [tide|roll] - Force a roll | {{ctx.prefix}}wmsurge [#] - Lookup a roll"
