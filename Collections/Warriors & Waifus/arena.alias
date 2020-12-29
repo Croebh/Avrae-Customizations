@@ -1,28 +1,158 @@
 embed
 
-{{duel, monster, dm, curTime, args, HOUR, DAY, WEEK = int(get('arenaDuel',0)),int(get('arenaMonster',0)),int(get('arenaDm',0)),int(time()),"&*&".lower(), 3600, 86_400, 604_800}}
-
-{{duel, monster, dm = (duel + DAY - curTime) if duel else 0, (monster + WEEK - curTime) if monster else 0, (dm + WEEK - curTime) if dm else 0}}
-
-{{duelTime, monsterTime, DMTime = (duel//HOUR, (duel%HOUR)//60, duel%60) if duel > 0 else 0, (monster//HOUR, (monster%HOUR)//60, monster%60) if monster>0 else 0, (dm//HOUR, (dm%HOUR)//60, dm%60) if dm>0 else 0}}
-
-{{[character().set_cvar(x[0], curTime) for x in (('arenaDuel', duel, 'duel'), ('arenaMonster', monster, 'monster')) if x[1] <= 0 and x[2]in args]}}
-
-{{set_uvar('arenaDm', curTime) if dm <= 0 and 'dm' in args else ''}}
-
 <drac2>
-# Save current values to a uvar for `!arena all`
+
+# =============================
+# Variables
+# =============================
+
+duel    = int(get('arenaDuel', 0))
+monster = int(get('arenaMonster', 0))
+dm      = int(get('arenaDm', 0))
+args    = "&*&".lower()
+
+curTime = int(time())
+
+# Calculate when the previous midnight in CST was
+CSTMid = ((curTime//3600) - ((curTime//3600) % 24) - 18) * 3600
+
+# Constants
+HOUR = 3600
+DAY  = 86_400
+WEEK = 604_800
+
+# Defaults
+duelTime    = (0, 0, 0)
+monsterTime = (0, 0, 0, 0)
+DMTime      = (0, 0, 0, 0)
+
+duelOut     = "Available"
+monsterOut  = "Available"
+DMOut       = "Available"
+
+newTimer    = 0
+
+# =============================
+# Duels
+# =============================
+
+# If a timer exists, calculate remaining time
+if duel:
+  duel = (duel + DAY - curTime)
+  # Is the timer still running?
+  if duel > 0:
+    # Calculate human parseable times (Hours, Minutes, Seconds)
+    duelTime = (duel//HOUR, (duel%HOUR)//60, duel%60)
+# If the timer is expired, and they called for it to be reset, do so
+if duel <= 0 and 'duel' in args:
+  character().set_cvar('arenaDuel', CSTMid)
+  # Recalculate parseable timers
+  duel = (CSTMid + DAY - curTime)
+  duelTime = (duel//HOUR, (duel%HOUR)//60, duel%60)
+  newTimer = 1
+
+# If the timer is running (or just set), lets parse it out to text
+if duel > 0:
+  duelOut = ""
+  if duelTime[0]:
+    duelOut += f'{duelTime[0]} Hours, '
+  if duelTime[1]:
+    duelOut += f'{duelTime[1]} Minutes'
+  duelOut = duelOut.strip(", ")
+  # We only want to show seconds if theres under a minute remaining
+  if not duelOut:
+    duelOut = f"{duelTime[2]} Seconds"
+  if newTimer == 1:
+    duelOut += " **(New)**"
+
+# =============================
+# Monster Fights
+# =============================
+
+# If a timer exists, calculate remaining time
+if monster:
+  monster = (monster + WEEK - curTime)
+  # Is the timer still running?
+  if monster > 0:
+    # Calculate human parseable times (Days, Hours, Minutes, Seconds)
+    monsterTime = (monster//DAY, (monster%DAY)//HOUR, (monster%HOUR)//60, monster%60)
+# If the timer is expired, and they called for it to be reset, do so
+if monster <= 0 and 'monster' in args:
+  character().set_cvar('arenaMonster', curTime)
+  # Recalculate parseable timers
+  monster = WEEK
+  monsterTime = (7, 0, 0, 0)
+  newTimer = 2
+
+# If the timer is running (or just set), lets parse it out to text
+if monster > 0:
+  monsterOut = ""
+  if monsterTime[0]:
+    monsterOut += f'{monsterTime[0]} Days, '
+  if monsterTime[1]:
+    monsterOut += f'{monsterTime[1]} Hours, '
+  # We only want to show minutes if theres under a day remaining
+  if monsterTime[2] and not monsterTime[0]:
+    monsterOut += f'{monsterTime[2]} Minutes'
+  monsterOut = monsterOut.strip(", ")
+  # We only want to show seconds if theres under a minute remaining
+  if not monsterOut:
+    monsterOut = f"{monsterTime[3]} Seconds"
+  if newTimer == 2:
+    monsterOut += " **(New)**"
+
+# =============================
+# DM Experience
+# =============================
+
+# If a timer exists, calculate remaining time
+if dm:
+  dm = (dm + WEEK - curTime)
+  # Is the timer still running?
+  if dm > 0:
+    # Calculate human parseable times (Days, Hours, Minutes, Seconds)
+    DMTime = (dm//DAY, (dm%DAY)//HOUR, (dm%HOUR)//60, dm%60)
+# If the timer is expired, and they called for it to be reset, do so
+if dm <= 0 and 'dm' in args:
+  set_uvar('arenaDm', curTime)
+  # Recalculate parseable timers
+  dm = WEEK
+  DMTime = (7, 0, 0, 0)
+  newTimer = 3
+
+# If the timer is running (or just set), lets parse it out to text
+if dm > 0:
+  DMOut = ""
+  if DMTime[0]:
+    DMOut += f'{DMTime[0]} Days, '
+  if DMTime[1]:
+    DMOut += f'{DMTime[1]} Hours, '
+  # We only want to show minutes if theres under a day remaining
+  if DMTime[2] and not DMTime[0]:
+    DMOut += f'{DMTime[2]} Minutes'
+  DMOut = DMOut.strip(", ")
+  # We only want to show seconds if theres under a minute remaining
+  if not DMOut:
+    DMOut = f"{DMTime[3]} Seconds"
+  if newTimer == 3:
+    DMOut += " **(New)**"
+
+
+# =============================
+# Setup for viewing all timers
+# =============================
+
 arenaTimers = load_json(get('arenaTimers','{}'))
 arenaTimers[name] = {"duel":    int(get('arenaDuel', 0)),
                      "monster": int(get('arenaMonster', 0))}
 set_uvar('arenaTimers', dump_json(arenaTimers))
 </drac2>
 
--f "Duel|{{(f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] else ''}".strip(', ') or f"{duelTime[2]} Seconds" if duel>0 else '24 Hours' if duel<=0 and 'duel'.lower() in args else 'Available')}}|inline"
+-f "Duel|{{duelOut}}|inline"
 
--f "Monster Fight|{{f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] else ''}".strip(', ') or f"{monsterTime[2]} Seconds" if monster>0 else '7 Days' if monster<=0 and 'monster'.lower() in args else 'Available'}}|inline"
+-f "Monster Fight|{{monsterOut}}|inline"
 
--f "DM Experience|{{f"{f'{DMTime[0]//24} Days, ' if DMTime[0]//24 else ''}{f'{DMTime[0]%24} Hours, ' if DMTime[0]%24 else ''}{f'{DMTime[1]} Minutes, ' if DMTime[1] else ''}".strip(', ')or f"{DMTime[2]} Seconds" if dm>0 else '7 Days' if dm<=0 and 'dm'.lower() in args else 'Available'}}|inline"
+-f "DM Experience|{{DMOut}}|inline"
 
 -footer "!arena duel - Set your duel timer
 !arena monster - Set your monster fight timer
@@ -31,5 +161,4 @@ set_uvar('arenaTimers', dump_json(arenaTimers))
 
 -title "Arena Cooldowns for <name>"
 
-
-{{"-t 15"if chanid()=="687863391083167793"else""}}
+{{"-t 30" if ctx.channel.id == 687863391083167793 else ""}}
