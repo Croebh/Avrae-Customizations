@@ -3,6 +3,9 @@ embed
 out = []
 average = 0
 levels = {}
+curTime = int(time())
+dmTimer = int(get('arenaDm', 0))
+
 if combat():
  for target in combat().combatants:
   if target.level and not (target.levels.get('Monster')):
@@ -10,7 +13,7 @@ if combat():
    average += target.levels.total_level
    levels[target.levels.total_level] = levels.get(target.levels.total_level, 0)+1
  levelsOut = ', '.join([f"{count} at level `{lvl}`" for lvl, count in levels.items()])
- return '\n'.join(out) + f""" -title "Combatant Levels" -desc "Average Level = `{round(average/len(out),2)}` ({levelsOut}) ({round(average/len(out),2)*50} DM xp)" """
+ return '\n'.join(out) + f""" -title "Combatant Levels" -desc "Average Level = `{round(average/len(out),2)}` ({levelsOut}) ({'500' if (dmTimer+604_800-curTime) <= 0 else round(average/len(out),2)*50} DM xp)" """
 
 else:
  return """ -desc "This channel isn't in combat." """
