@@ -11,15 +11,18 @@ monster = int(get('arenaMonster', 0))
 dm      = int(get('arenaDm', 0))
 args    = "&*&".lower()
 
+# Constants
+HOUR = 3600
+DAY  = 86_400
+WEEK = 604_800
+
 curTime = int(time())
 
 # Calculate when the previous midnight in CST was
 CSTMid = ((curTime//3600) - ((curTime//3600) % 24) - 18) * 3600
 
-# Constants
-HOUR = 3600
-DAY  = 86_400
-WEEK = 604_800
+if (curTime - CSTMid) > DAY:
+  CSTMid += DAY
 
 # Defaults
 duelTime    = (0, 0, 0)
