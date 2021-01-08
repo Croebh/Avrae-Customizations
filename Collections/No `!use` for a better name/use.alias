@@ -206,7 +206,7 @@ if cc and not cc_exists(cc) and get("name"):
 {{annotated, mathsep= ["dc", "phrase", "effect", "desc", "title", "save_bonus", "damage", "seffect", "maxhp", "xroll", "temphp", "n", "ndesc", "effectdesc", "seffectdesc"], "+-()/*[]"}}
 
 {{_ = [[set(x, get(x).replace(i[0], i[1])) for i in CHAR_STATS] for x in annotated if get(x)]}}
-{{_ = [[set(items, get(items).replace(repl[0], repl[1])) for repl in {item : str(roll(thing) or thing) for item in [get(items)[x:][get(items)[x:].index('{'):get(items)[x:].index('}')+1] for x in range(len(get(items))) if get(items)[x:].startswith('{') and get(items)[x:].count('}') ] if not set('thing', ''.join([str(args.last(i, get(i, i))) for i in "".join([(f" {char} " if char in "+-()/*" else char ) for char in item[1:-1]]).split()]))}.items()] for items in annotated if get(items)]}}
+{{_ = [[set(items, get(items).replace(repl[0], repl[1])) for repl in {item : str(roll(thing) or thing) for item in [get(items)[x:][get(items)[x:].index('{'):get(items)[x:].index('}')+1] for x in range(len(get(items))) if get(items)[x:].startswith('{') and get(items)[x:].count('}') ] if not set('thing', ''.join([str(args.last(i, get(i, i))) if not i.strip('+0').isdigit() else i for i in "".join([(f" {char} " if char in "+-()/*" else char ) for char in item[1:-1]]).split()]))}.items()] for items in annotated if get(items)]}}
 
 {{damage= (damage.split('|')+['']*2)[:3]}}
 {{damage, minDamage, maxDamage = damage[0], roll(damage[1]) if damage[1] and vroll(damage[1]) else None, roll(damage[2]) if damage[2] and vroll(damage[2]) else None}}
