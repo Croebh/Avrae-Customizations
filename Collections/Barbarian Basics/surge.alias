@@ -93,7 +93,7 @@ if c and (me := c.me) and (rageEffect := c.me.get_effect('Rage')):
   surgeEffect = str(me.get_effect(surgeEffect[0])).splitlines()[0]
   out.append(f""" -f "{name}|{surgeEffect}" """)
  if (use := surge.get('use')):
-  out.append(f""" -f "Usage|`!use {use} -t <targ>`" """)
+  out.append(f""" -f "Usage|`{ctx.prefix}use {use} -t <targ>`" """)
  if surge.name == "Vampiric Burst":
   tempRoll = vroll(f'1d12+{BarbarianLevel}')
   me.set_temp_hp(tempRoll.total)
@@ -109,5 +109,5 @@ resources = load_json(get('resources', '[]'))
 if "dff49f9e-4446-45c3-8029-c3338590462d" not in resources:
  resources.append("dff49f9e-4446-45c3-8029-c3338590462d")
  set_uvar('resources', dump_json(resources))
- return """-f "Added the `!surge` gvar to your `resources` uvar for `!use`." """
+ return f"""-f "Added the `{ctx.prefix}{ctx.alias}` gvar to your `resources` uvar for `!use`." """
 </drac2>
