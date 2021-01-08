@@ -1,0 +1,1 @@
+Allows the user to add the Bolstering Magic bonus to their checks and attacks.
