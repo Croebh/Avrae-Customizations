@@ -62,6 +62,3 @@ else:
 !arena all - View all character timers"
 
 -title "Arena Cooldowns for {{ctx.author.display_name}}"
-
-
-{{"-t 15"if chanid()=="687863391083167793"else""}}
