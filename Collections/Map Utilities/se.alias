@@ -1,0 +1,563 @@
+embed
+<drac2>
+testVersion = False
+argList = &ARGS&
+
+args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-spell'] + argList if argList else [])
+
+
+# Set are base variables
+defaults = load_json(get_svar("mapDefaults") or "{}") or {}
+mapsize = defaults.get("size", "10x10") or "10x10"
+maxSize = 99
+#If user hasn't set mapsize = "JSON" then continue
+if mapsize != "JSON":
+ mapSplitX, mapSplitY = mapsize.lower().split('x')
+ mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
+ mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
+ mapsize = f"{mapX}x{mapY}"
+mapoptions = defaults.get("options","")
+mapbg = defaults.get("background","")
+mapinfo = {}
+mapview = ""
+mapviewsize = ""
+mapviewlocation = ""
+mapattach = ""
+map="http://otfbm.io/"
+walls = []
+objects = []
+targ=None
+loadedjson = []
+fow = []
+out={}
+baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alph = []
+for index in range(maxSize):
+  letter = ""
+  if index // 26:
+    letter = baseAlph[(index // 26) - 1]
+  letter += baseAlph[index % 26]
+  alph.append(letter)
+col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o","pk"), "TSMLHG"
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+presetObjects = load_json(get_gvar("9b15344a-1f09-43b5-b84e-f61e32e4a89a"))
+overlays=[]
+c = combat()
+if c:
+ com = combat().combatants
+gt = c.get_combatant if c else None
+debug = []
+desc = []
+finalMap = ""
+sizeOffset = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
+# We don't have an aim point/target yet
+aimPoint = ""
+aimTarget = ""
+targAimPoint = ""
+targAimTarget = ""
+aimStick = False
+targPoint = ""
+aim = ""
+effect = None
+effectName = ""
+effectTarget =""
+prevLoc = ""
+# F-Strings like to yell at me for \'s
+newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
+# What characters do we need to strip from names?
+nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
+</drac2>
+
+<drac2>
+# The default overlays, created by @Nerds and Dragons#2817
+defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
+spellOverlays = defaultSpells.copy()
+# Grab the user selected spells, and update the main dict
+# This allows the user to replace/update items in the original dict
+userOverlays    = load_json(get('mapOverlays','{}'))
+serverOverlays = load_json(get_svar('mapOverlays') or '{}')
+spellOverlays.update(serverOverlays)
+if typeof(userOverlays) == 'SafeDict':
+ spellOverlays.update(userOverlays)
+else:
+ [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
+ # Iterate over the spell dict, making it a little easier to read.
+# Only select the ones they are searching for, if they are searching
+spelllist = []
+for spell, over in spellOverlays.items():
+ if args.last('search', '').lower() in spell.lower():
+  if typeof(over) == 'str':
+   over = [over]
+  overDesc = []
+  if any("{aim}" in item for item in over):
+   if overDesc:
+    overDesc.append("`aim`")
+   else:
+    overDesc.append("requires `aim`")
+  if argparse(over).last('effect'):
+   overDesc.append(f"attaches to init effect `{argparse(over).last('effect')}`")
+  spelllist.append(f"""**{spell}** - {', '.join(overDesc)}""".strip(',- '))
+# Split the list into groups of 20, to ensure it stays a reasonable size
+spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
+# Do we have a -spell#?
+</drac2>
+
+<drac2>
+if c:
+  if com:
+    if len(argList)>1:
+     aimArg = argList[1]
+     aimed = ["-aim", aimArg]
+    else:
+     aimed = ""
+    if args.last('t'):
+      targArg = args.last('t')
+    elif combat().current.name:
+      targArg = combat().me.name if combat().me else combat().current.name
+    else:
+      desc.append(f"You need to have someone selected in combat")
+    if args.get('n'):
+      aimStick = False
+    else:
+      aimStick = True
+    for overNum in [""]+[str(x) for x in range(1,11)]:
+     if args.get('none'):
+      args = argparse(['-t', targArg] + ['-over', "none"])
+     if args.last('spell' + overNum):
+      # Loop through our users spellOverlays, looking for that spell
+      for spell in spellOverlays:
+       if args.last('spell' + overNum).lower() in spell.lower():
+        # If we find it, add the overlay to the args
+        # If its a string, its just a `-over9`
+        if typeof(spellOverlays.get(spell)) == "str":
+         args = argparse(["-over" + overNum, spellOverlays.get(spell)] + ['-t', targArg] + aimed )
+        # If its a list, its starting with a -over9 and then theres other stuff
+        elif typeof(spellOverlays.get(spell)) == "SafeList":
+         adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell  )]
+         args = argparse(["-over" + overNum] + adjustedList + ['-t', targArg] + aimed)
+        # We only care about the first result
+        break
+</drac2>
+
+<drac2>
+# If we're in combat, check all the things
+if c:
+ # Collect information on every combatant
+ for combatant in com:
+
+  # Grab map information, if it exists
+  for attack in combatant.attacks:
+   if attack.name == 'map':
+    mapattach=combatant
+    mapinfo=attack.raw.automation[0].text
+</drac2>
+
+<drac2>
+if c:
+ # If we found a `map` attack with information, parse it now
+ if mapinfo:
+  # Split and convert to dict. Couldn't use | here because of how -attack effects are parsed
+  mapinfo=mapinfo.split(' ~ ')
+  mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
+  mapsize=mapinfo.get('size')
+  #If user hasn't set mapsize = "JSON" then continue
+  if mapsize != "JSON":
+   if ":" in mapsize:
+     mapLocSize = mapsize.split(':')
+     mapviewlocation = f"{mapLocSize[0]}:"
+     mapsize = mapviewsize = mapLocSize[1]
+   if mapsize[0].isdigit():
+    mapSplitX, mapSplitY = mapsize.lower().split('x')
+    mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
+    mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+   else:
+    mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+    mapY = int(''.join(y for y in mapsize if y.isdigit()))
+   mapsize = f"{mapX}x{mapY}"
+  mapbg=mapinfo.get('background')
+  mapoptions=mapinfo.get('options')
+  walls = mapinfo.get('walls')
+  walls = walls.split(', ') if walls else []
+  objects = mapinfo.get('objects')
+  objects = objects.split('/') if objects else []
+  loadedjson = mapinfo.get('json')
+  loadedjson = loadedjson.split(', ') if loadedjson else []
+  fow = mapinfo.get('fow')
+  fow = fow.split(', ') if fow else []
+  if mapinfo.get('view'):
+   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
+</drac2>
+
+<drac2>
+if c:
+ # Read each combatants notes for their information
+ for target in com:
+  # If they have a note, perse it into a dict
+  if target.note and ':' in target.note:
+   note=target.note
+   note=note.split(" | ")
+   note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   out[target.name]=note
+   # Check if we have any overlays attached to effects, and then if at effect exists
+   for overNum in [""]+[str(x) for x in range(1,11)]:
+    if out[target.name].get('effect'+overNum):
+     checkEffect, checkEffectTarget = out[target.name].get('effect'+overNum).split(' / ')
+     # If the effect (or the target it was on) are gone, remove the effect
+     if not gt(checkEffectTarget) or not gt(checkEffectTarget).get_effect(checkEffect):
+      _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+      _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+      _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+      desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
+      desc.append("")
+    # # If the overlay was -aim'd at a target, and if that aim target exists still
+    # if out[target.name].get('aim'+overNum):
+    #  aimTarget = out[target.name].get('aim'+overNum)
+    #  aimTargetX = ''.join([i for i in aimTarget if i.isalpha()])
+    #  aimTargetY = int(''.join([i for i in aimTarget if i.isdigit()]) or -1)
+    #  if not (aimTargetX.upper() in alph[:mapX+2] and 0 < aimTargetY <= mapY and not gt(aimTarget)):
+    #   _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+    #   _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+    #   _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+    #   desc.append(f"""Overlay {overNum} removed from `{target.name}` because aim target `{aimTarget}` no longer present.""")
+    #   desc.append("")
+  elif target.note:
+    note=target.note
+    desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
+    out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+</drac2>
+
+<drac2>
+# Lets back up our map each time we run it, why not
+# This will back the entire `out` dictionary containing everyones positions and states
+# to a uvar named mapStates, with the current channels id added as s key inside it.
+# This way you won't accidentally overwrite your backup with the backup from another channel
+
+mapStates = load_json(get('mapStates','{}'))
+prevBack = mapStates.get(chanid())
+mapStates.update({chanid(): out})
+set_uvar('mapStates', dump_json(mapStates))
+# Clean up old uvars that are no longer needed
+delete_uvar("mapState"+chanid())
+delete_uvar("mapSize"+chanid())
+
+# Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
+# and replace out out dict with it. We do this after we set the backup, so we can undo the undo
+if args.last('undo') and prevBack:
+  out = prevBack
+  desc.append("> **Reloaded backup from last time this user ran a map command. The state this erased has now been set as their new backup.**")
+</drac2>
+
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+  targ=gt(args.last('t', combat().me.name if combat().me else None))
+  # If they don't have a note/location set, add them to the list
+  if not out.get(targ.name):
+   out[targ.name] = {}
+  # If there is a -size arg, change their size
+  if args.last('size'):
+   size=args.last('size')[0].upper()
+   # Confirm that the given size is valid before updating
+   if size in siz:
+    out[targ.name].update({"size":f"{size} ({SIZ[size]})"})
+    # Display the change in size
+    desc.append(f"Changing size of {targ.name} to {SIZ[size]} ({size})")
+   # If the size is None, erase the size, setting them back to Medium
+   elif args.last('size') in (None,"None","none"):
+    if 'size' in out[targ.name]:
+     _ = out[targ.name].pop('size')
+    # Display the change in size
+    desc.append(f"Resetting size of {targ.name} to Medium (M)")
+</drac2>
+
+<drac2>
+# Overlay stuff
+if c:
+  for overNum in [""]+[str(x) for x in range(1,11)]:
+   # Is the user trying to set an overlay?
+   if args.last('over'+overNum):
+    # If we have a target, but our -over arg is none, we're trying to delete our overlay
+    if args.last('t') and gt(args.last('t')) and (args.last('over'+overNum) in ("none", "None")):
+     _ = out[targ.name].pop('overlay'+overNum) if 'overlay'+overNum in out[targ.name] else None
+     _ = out[targ.name].pop('aim'+overNum) if 'aim'+overNum in out[targ.name] else None
+     desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
+    else: # Split the input by commas
+     overlay = args.last('over'+overNum).split(',')
+     # First argument is always the shape, so lets pop it out
+     oShape = overlay.pop(0).lower()
+
+     # Are we attaching this to an effect?
+     if args.last('effect'+overNum):
+      # Split our effect up, in case we have a specified target
+      effectName, effectTarget = (args.last('effect'+overNum).split('|')+[targ.name])[:2]
+      effectTarget = gt(effectTarget)
+      # Do we have a proper target, and does that target have our effect
+      if effectTarget is not None and effectTarget.get_effect(effectName) is not None:
+       effect = effectTarget.get_effect(effectName)
+
+     # Are we aiming at someone?
+     if args.last('aim'+overNum):
+      # Split our aim up, in case we have a |split
+      aim = (args.last('aim'+overNum).split('|')+[""])[:2]
+      # aimStick = (aim[1].lower() == "stick") or effect
+      # Account for the user putting |stick on the wrong arg. Won't advertise this, as its unintended.
+      # If the target is, well, a target, grab its location
+      for target in out:
+       if aim[0].lower() in target.lower():
+        aimPoint = out[target]['location']
+        # Is our target larger than medium? If so, we need to offset to adjust
+        if out[target].get('size',"M")[0] in "LHG":
+         aimOffset = sizeOffset.get(out[target].get('size',"M")[0])
+         aimTargX = ''.join(x for x in aimPoint if x.isalpha())
+         aimTargY = int(''.join(y for y in aimPoint if y.isdigit()))
+         aimTargX = alph[alph.index(aimTargX)+aimOffset]
+         aimTargY += aimOffset
+         aimPoint = f"{aimTargX}{aimTargY}"
+        aimTarget = target
+      # If the target wasn't a target, it was coordinates. Use them.
+      if not aimPoint:
+       aimPoint = aim[0]
+       aimTarget = aim[0].upper()
+
+     # Our basic structure, pre laid out
+     currentOver = {"shape": "", "size": "", "width": ",", "color": "", "colorDesc": "", "loc": "", "eloc": ""}
+
+     # This has all the information we need for our overlay[
+     shapeDict = [{"type": "circle",       "name":"c",  "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circletop",    "name":"ct", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "circlecorner", "name":"co", "num": [3], "args": ("size", "color", "loc")},
+                  {"type": "cone",         "name":"t",  "num": [4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "line",         "name":"l",  "num": [5], "args": ("size", "width", "color", "loc", "eloc")},
+                  {"type": "arrow",        "name":"a",  "num": [3], "args": ("color", "loc", "eloc")},
+                  {"type": "square",       "name":"s",  "num": [3,4], "args": ("size", "color", "loc", "eloc")},
+                  {"type": "squaretop",    "name":"st", "num": [3,4], "args": ("size", "color", "loc", "eloc")}]
+
+     # Is the overlay valid?
+     overValid = False
+
+     # Did our user try to have the location linked to a target, but failed to supply a target?
+     if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
+      overlay = None
+      desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
+     # Same for aiming it at something. If they failed to supply a -aim#
+     elif "{aim}" in args.last('over'+overNum) and not args.last('aim'+overNum):
+      overlay = None
+      desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
+     else:
+      # Otherwise, lets loop through our possible overlays
+      for shape in shapeDict:
+       # Does it have a valid amount of arguments for the given shape?
+       if oShape == shape.type and len(overlay) in shape.num:
+        currentOver['shape'] = shape.name
+        # Iterate over the needed args
+        for index in range(len(overlay)):
+         # If its a color, we need to account for both preset colors and hex codes
+         if shape.args[index] == "color":
+          overlaycolor = overlay[index].lower().strip('~') + " "
+          overlaycolor = overlaycolor[:overlaycolor.index(' ')].strip()
+          # If this is in our preset colors, use that
+          if overlaycolor in col:
+           currentOver[shape.args[index]] += overlaycolor
+           currentOver['colorDesc'] += COL[overlaycolor]
+          # Otherwise, check if its a hex code, either 3 or 6 digits
+          elif len(overlaycolor) in (3, 6) and not overlaycolor.strip("abcdef1234567890"):
+           currentOver[shape.args[index]] += f"~{overlaycolor}"
+           currentOver['colorDesc'] += f"#{overlaycolor.upper()}"
+         else:
+          currentOver[shape.args[index]] += overlay[index]
+        # Set the overlay for the map
+        overlay = f"""{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        # Set the description
+        overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Overlay {overNum}**
+                       - Color: `{currentOver.colorDesc}`
+                       {f"- Size: `{currentOver.size} ft. " + ("radius`" if shape.type in "circletop" else "long`" if shape.type in "coneline" else "wide`") if shape.type != "arrow" else ""}
+                       {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Starting' if shape.type == 'cone' else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
+                       {f"- Width: `{currentOver.width.strip(', ')} ft.`" if shape.type == "line" else ""}
+                       {f"- Aim: `{aimTarget or currentOver.eloc.upper()}`" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}
+                       {f"- Effect: `{effect.name}` on `{effectTarget.name}`" if effect else ""}"""
+        overdesc = '\n'.join([i.strip() for i in overdesc.split('\n') if i.strip()])
+        # If we made it this far, the overlay is valid, so we can break out of the loop
+        overValid = True
+        break
+     if not overValid:
+      overlay = None
+     # If, after all the parsing above, we managed to get a proper overlay, continue
+     if overlay:
+      # Do we have a -aim? If so, replace {aim} with the aimPoint gathered before, and display who you're aiming at
+      if aimPoint:
+       overdesc = overdesc.replace('{aim}',aimPoint)
+      # Are we attaching this overlay to a target?
+      if args.last('t') and gt(args.last('t')):
+       if not aimPoint or (aimPoint and aimStick) or effect:
+        # If so, and no -aim (or -aim but also stick), lets attach it to the notes
+        out[targ.name].update({"overlay"+overNum: overlay})
+        if aimStick:
+         out[targ.name].update({"aim"+overNum: aimTarget})
+        if effect:
+         out[targ.name].update({f"effect{overNum}": f"{effect.name} / {effectTarget.name}"})
+       else:
+        # If so, and -aim, lets *not* attach it to the notes, and just display it once
+        targPoint = out[targ.name].get('location','A1')
+        # Is our target Large or bigger? If so, adjust accordingly
+        if out[targ.name].get('size',"M")[0] in "LHG":
+         targOffset = sizeOffset.get(out[targ.name].get('size',"M")[0])
+         TargX = ''.join(x for x in targPoint if x.isalpha())
+         TargY = int(''.join(y for y in targPoint if y.isdigit()))
+         TargX = alph[alph.index(TargX)+targOffset]
+         TargY += targOffset
+         targPoint = f"{TargX}{TargY}"
+        overlays.append(overlay.replace("{targ}", targPoint).replace("{aim}", aimPoint))
+       desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + newline + f"- Attached: `{targ.name}`")
+      else:
+       # Otherwise, lets just display it once
+       overlays.append(overlay.replace("{aim}", aimPoint))
+       desc.append(overdesc)
+</drac2>
+
+<drac2>
+if c:
+ for aimNum in [""]+[str(x) for x in range(1,11)]:
+  # Is the user trying to change a -aim?
+  # Make sure they don't have a `-over`
+  if args.last('aim'+aimNum) and not args.last('over'+aimNum):
+   # Also make sure there is a valid target
+   if (curTarg := args.last('t', combat().me.name if combat().me else None)) and (curTarg := gt(curTarg)):
+    # And that target has an overlay, and an existing aim point
+    if out[curTarg.name].get('overlay'+aimNum) and out[curTarg.name].get('aim'+aimNum):
+     # If they used |stick, remove it, as its implied at this point
+     aim = args.last('aim'+aimNum).split('|')[0]
+     # If the aim target is, well, a target, grab its location
+     for target in out:
+      if aim.lower() in target.lower():
+       aimPoint = out[target]['location']
+       # Is our aim target larger than medium? If so, we need to offset to adjust
+       if out[target].get('size',"M")[0] in "LHG":
+        aimOffset = sizeOffset.get(out[target].get('size',"M")[0])
+        aimTargX = ''.join(x for x in aimPoint if x.isalpha())
+        aimTargY = int(''.join(y for y in aimPoint if y.isdigit()))
+        aimTargX = alph[alph.index(aimTargX)+aimOffset]
+        aimTargY += aimOffset
+        aimPoint = f"{aimTargX}{aimTargY}"
+       aimTarget = target
+     # If its not a target, use coordinates
+     if not aimPoint:
+      aimPoint = aim
+      aimTarget = aim.upper()
+     # Notify the user as to what happened
+     desc.append(f"""Aim point for Overlay {aimNum} on {curTarg.name} changed from {out[curTarg.name].get('aim'+aimNum)} to {aimTarget}.""")
+     # Update the aim target
+     out[curTarg.name].update({"aim"+aimNum: aimTarget})
+</drac2>
+
+<drac2>
+if c:
+ # Parse the collected notes and information into the format readable by otfbm.com
+ people = []
+ for target in out:
+  tLocation = out[target].get('location')
+  tSize = out[target].get('size','M')[0].upper()
+  tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
+  tColor = tColor[:tColor.index(" ")].strip('#')
+  tToken = out[target].get('token')
+  # Account for hex colors
+  if len(tColor) in (3, 6):
+   tColor = f"~{tColor}".upper()
+  tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  # Only display if they have a location
+  if tLocation:
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
+  # Do they have a height set? If so, display it
+  if out[target].get('height'):
+   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
+  # Do they have overlays?
+  for overNum in [""]+[str(x) for x in range(1,11)]:
+    # Ensure we're not grabbing the previous overlays aim point
+    targAimPoint = ""
+    if out[target].get('overlay'+overNum):
+     targPoint = out[target].get('location','A1')
+     # Is our target Large or bigger? If so, adjust accordingly
+     if out[target].get('size',"M")[0] in "LHG":
+      targOffset = sizeOffset.get(out[target].get('size',"M")[0])
+      TargX = ''.join(x for x in targPoint if x.isalpha())
+      TargY = int(''.join(y for y in targPoint if y.isdigit()))
+      TargX = alph[alph.index(TargX)+targOffset]
+      TargY += targOffset
+      targPoint = f"{TargX}{TargY}"
+     # If the target has an aim point set
+     if out[target].get('aim'+overNum):
+      for aimTarget in out:
+       # We need to check to see if they were targetting a... target
+       if out[target].get('aim'+overNum).lower() in aimTarget.lower():
+        targAimPoint = out[aimTarget]['location']
+        # Is our aimTarget larger than medium? If so, we need to offset to adjust
+        if out[aimTarget].get('size',"M")[0] in "LHG":
+         targAimOffset = sizeOffset.get(out[aimTarget].get('size',"M")[0])
+         targAimTargX = ''.join(x for x in targAimPoint if x.isalpha())
+         targAimTargY = int(''.join(y for y in targAimPoint if y.isdigit()))
+         targAimTargX = alph[alph.index(targAimTargX)+targAimOffset]
+         targAimTargY += targAimOffset
+         targAimPoint = f"{targAimTargX}{targAimTargY}"
+       # If the aimTarget wasn't a target, it was coordinates. Use them.
+       if not targAimPoint:
+        targAimPoint = out[target].get('aim'+overNum).upper()
+     # Add each targets overlay to the overlays list
+     overlays.append(out[target].get('overlay'+overNum).replace("{targ}", targPoint).replace("{aim}", targAimPoint).strip("*"))
+ # Reconvert all of our map information back into the readable note format
+ dataout={x:' | '.join([f"{item[0].title()}: {item[1]}"for item in out[x].items()])for x in out}
+ # Then set everyones note again. Kinda a chainsaw instead of a scalpel situation here.
+ for target in dataout:
+  gt(target).set_note(dataout[target])
+ # Join everything together and display the map if we aren't displaying the help
+ overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
+ if not any(args.get(arg) for arg in ('?', 'help', 'list')):
+  finalMap = f"""{map}{f"" if mapsize == "JSON" else f"{mapsize}/" if mapsize else ""}{f"{mapviewlocation}:{mapviewsize}/" if mapviewsize and mapviewlocation else ""}{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else"@/"}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1&cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}{f"&bg={mapbg}" if mapbg else ""}"""
+  return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+</drac2>
+
+<drac2>
+# Are we trying to display the spelllist?
+if args.get('list'):
+ # Only grab the page selected, default to first
+ if spellPagin:
+  spellPage = f"""-desc "{newline.join(spellPagin[ min(len(spellPagin),args.last('page', 1, int)-1)] )}" """
+ else:
+  spellPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
+ # Add some pizazz
+ return spellPage + f"""-title "Wait, how do you Spell that again?"
+                        -f "Add your own overlays/spells | You can add your own overlays/spells by running the command `!map -save <spellname>:<overlay>`
+                        See `!map help spell` for more info"  """
+# If we're not in combat, or "?" or "help" are given as arguments, display the help
+elif not c or args.get('?') or args.get('help'):
+ help = f"""-title "Master. Master. Master of Spells, I'm pulling your overlays"
+            -desc "__**Map Utility**__
+            This is a utility to use with the `!map` alias. It allows you can quickly place preset spell effect overlays or ones that you have saved."
+            -f "_ _|**__Basic Commands__**
+            `!se <name of spell/saved overlay> [aim] [-t <target>] [-n]` - You can place a preset spell effect overlays or ones you have saved. If the name contains multiple words, you need to have it in quotes. It will auto attach the overlay to your active character or current character in initiative. If there is an `{aimD}` in the spell preset, then you can input either a combatant name or location. Example: `!se \\"Circle of Death\\" b9` or `!se burning go1`
+
+            If you want to attach the overlay to another combatant than your active character or current character in combat, you can add `-t <combatant name>` at the end of all arguments. Example: `!se colorspray prixaris -t go1`
+
+            All overlays will automatically stick and remain if the `!map` alias is called unless `-n` is placed as the last argument. Example: `!se fireball d5 -n`"
+
+            -f "_ _|__**Other Commands**__
+            `!se -aim <target/location>` - This will change the aim of the overlay of your current active character or current character in initiative.
+            `!se none` - Remove the attached overlay to your active character or current character in initiative.
+            `!se list` - See a list of all ready-made spell overlays."
+            """
+ if not combat():
+  help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
+
+ return '\n'.join([i.lstrip() for i in help.split('\n')])
+</drac2>
+
+<drac2>
+paginFooter = ""
+if args.last('list'):
+ paginFooter = f" | Page {args.last('page', 1)} / #### | -page # to change page |"
+ paginFooter = paginFooter.replace("####", str(len(spellPagin))) if len(spellPagin) > 1 else ""
+ paginFooter += " -search [name] to search |"
+</drac2>
+
+-footer "!se ? | {{paginFooter}} v1.0"
+-color <color>
+
