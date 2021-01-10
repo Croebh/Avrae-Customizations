@@ -1282,7 +1282,7 @@ if c:
    inputtedBattle = args.last('deletebattle')
    foundBattle = None
    for battle in userBattles:
-    if inputtedBattle in battle.lower():
+    if inputtedBattle.lower() in battle.lower():
      foundBattle = userBattles.pop(battle)
      set_uvar("mapBattles", dump_json(userBattles))
      desc.append(f"Deleted the battle `{inputtedBattle}`")
