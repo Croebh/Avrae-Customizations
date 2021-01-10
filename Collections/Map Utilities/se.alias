@@ -112,7 +112,7 @@ if c:
      aimed = ""
     if args.last('t'):
       targArg = args.last('t')
-    elif combat().current.name:
+    elif combat().current:
       targArg = combat().me.name if combat().me else combat().current.name
     else:
       desc.append(f"You need to have someone selected in combat")
