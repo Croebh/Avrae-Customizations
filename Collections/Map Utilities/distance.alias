@@ -2,9 +2,17 @@ embed
 <drac2>
 testVersion = False
 argList = &ARGS&
+otherArgs = []
+
+# Capture args that aren't related to distance
+for i, arg in enumerate(argList):
+  if arg.lower() in ['silent', '?', 'help']:
+    otherArgs.append(argList.pop(i))
+
+argList = [' '.join(argList)]
 
 # Comment the first line for `!map`, second line for `!move`
-args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-distance']+argList if argList else [])
+args = argparse(['-distance']+argList+otherArgs if argList else [])
 # args = argparse(argList)
 
 # Set are base variables
@@ -156,34 +164,13 @@ if c:
 </drac2>
 
 <drac2>
-# Lets back up our map each time we run it, why not
-# This will back the entire `out` dictionary containing everyones positions and states
-# to a uvar named mapStates, with the current channels id added as s key inside it.
-# This way you won't accidentally overwrite your backup with the backup from another channel
-
-mapStates = load_json(get('mapStates','{}'))
-prevBack = mapStates.get(chanid())
-mapStates.update({chanid(): out})
-set_uvar('mapStates', dump_json(mapStates))
-# Clean up old uvars that are no longer needed
-delete_uvar("mapState"+chanid())
-delete_uvar("mapSize"+chanid())
-
-# Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
-# and replace out out dict with it. We do this after we set the backup, so we can undo the undo
-if args.last('undo') and prevBack:
-  out = prevBack
-  desc.append("> **Reloaded backup from last time this user ran a map command. The state this erased has now been set as their new backup.**")
-</drac2>
-
-<drac2>
 # If user wants to measure the distance between two coordinates
 if args.last('distance'):
  fName = sName = ""
  cardinal = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW","W", "WNW", "NW", "NNW"]
  tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.1051],[7,0.1228],[8,0.1405],[9,0.1584],[10,0.1763],[11,0.1944],[12,0.2126],[13,0.2309],[14,0.2493],[15,0.2679],[16,0.2867],[17,0.3057],[18,0.3249],[19,0.3443],[20,0.3640],[21,0.3839],[22,0.4040],[23,0.4245],[24,0.4452],[25,0.4663],[26,0.4877],[27,0.5095],[28,0.5317],[29,0.5543],[30,0.5774],[31,0.6009],[32,0.6249],[33,0.6494],[34,0.6745],[35,0.7002],[36,0.7265],[37,0.7536],[38,0.7813],[39,0.8098],[40,0.8391],[41,0.8693],[42,0.9004],[43,0.9325],[44,0.9657],[45,1.0000],[46,1.0355],[47,1.0724],[48,1.1106],[49,1.1504],[50,1.1918],[51,1.2349],[52,1.2799],[53,1.3270],[54,1.3764],[55,1.4281],[56,1.4826],[57,1.5399],[58,1.6003],[59,1.6643],[60,1.7321],[61,1.8040],[62,1.8807],[63,1.9626],[64,2.0503],[65,2.1445],[66,2.2460],[67,2.3559],[68,2.4751],[69,2.6051],[70,2.7475],[71,2.9042],[72,3.0777],[73,3.2709],[74,3.4874],[75,3.7321],[76,4.0108],[77,4.3315],[78,4.7046],[79,5.1446],[80,5.6713],[81,6.3138],[82,7.1154],[83,8.1443],[84,9.5144],[85,11.4301],[86,14.3007],[87,19.0811],[88,28.6363],[89,57.2900]]
  argsColor = args.last('distance').split(',')
- argsDist = argsColor[0].split(':')
+ argsDist = argsColor[0].split(':' if ':' in argsColor[0] else None) # Backwards compat
  height = int(argsDist[2] if len(argsDist) > 2 else "0")
  prevLoc = argsDist[0] if len(argsDist) > 1 else "A1" if argsDist else ""
  if c and (firstTarget := gt(prevLoc)):
@@ -317,11 +304,6 @@ if c:
  # Then set everyones note again. Kinda a chainsaw instead of a scalpel situation here.
  for target in dataout:
   gt(target).set_note(dataout[target])
- # If a 'clear' arg is given, clear the entire map (clears everyones notes)
- if args.last('clear'):
-  [i.set_note(None)for i in com]
-  people=[]
-  overlays=[]
  # Join everything together and display the map if we aren't displaying the help
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
 if c and not any(args.get(arg) for arg in ('?', 'help')):
@@ -336,8 +318,8 @@ if args.last('distance') == None or args.last('?') or args.last('help'):
             This is an utility that can be used with the `!map` alias or on its own. It shows distance between sets of cartesian coordinates.
 
             __**Distance Commands**__
-            `!distance <coordinate>:<coordinate>[:height][,color]` - Will measure the distance between two coordinates. Example: `!distance a1:d4`
-            If you are in combat, you can also measure between a combatant and a coordinate or between two combatants. As an additional option, you can change the default color of the overlay if needed as well as include height. Example: `!distance prixaris:h5` or `!distance prixaris:go1,y` or `!distance f9:j10:30`
+            `!distance <coordinate> <coordinate> [height][,color]` - Will measure the distance between two coordinates. Example: `!distance a1:d4`
+            If you are in combat, you can also measure between a combatant and a coordinate or between two combatants. As an additional option, you can change the default color of the overlay if needed as well as include height. Example: `!distance prixaris h5` or `!distance prixaris go1,y` or `!distance f9 j10 30`
 
             This calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """
 
