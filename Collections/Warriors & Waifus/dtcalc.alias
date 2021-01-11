@@ -1,0 +1,62 @@
+embed
+<drac2>
+calendar   = load_json(get_gvar("9ebaa622-43c5-4f97-9ba3-7a95cab94d09"))
+monthLen   = [i.length for i in calendar.months]
+monthNames = [i.name for i in calendar.months]
+out        = []
+
+# Constants
+WEEKDAYS   = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+HOUR       = 3600
+DAY        = 86_400
+WEEK       = 604_800
+TIMEZONE   = float(get('timezone', -6)) # Default to Central US, like arena timers
+
+# Calculate the current time and when downtime would be done
+TIME       = time() + (TIMEZONE * HOUR)
+DOWNTIME   = TIME + ((DAY*2) + (HOUR*7) + (60*12)) # 2 days, 7 hours, 12 minutes
+
+
+for i, iterTime in enumerate([TIME, DOWNTIME]):
+  # Calculate what day it is (-12 is for leapdays since 1970)
+  day        = int((iterTime//DAY)-12)%365
+  # The weekday (Modulus is fun!)
+  weekday    = WEEKDAYS[day%7]
+  # Start in January work our way up
+  month      = 1
+  # Calculate the hour and minute
+  hour       = int(iterTime % DAY // HOUR)
+  minute     = int(iterTime % DAY % HOUR // 60)
+
+  # Figure out what month we're in
+  for x in range(12):
+    # If the number of days is greater than the number of days in the month,
+    # move to the next month
+    if month > x and day > monthLen[x]:
+      # Subtract this months days
+      day = day-monthLen[x]
+      # And increment the month
+      month += 1
+
+  # Day of the week suffix
+  suffix = 'th'
+  if not 14>day>10:
+    z = int(str(day)[-1:])
+    if   z == 1:
+      suffix = 'st' #1st
+    elif z == 2:
+      suffix = 'nd' #2nd
+    elif z == 3:
+      suffix = 'rd' #3rd
+
+  # Output our time
+  out.append(f""" -f "{"After Downtime" if i else "Current Time"}|{f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"}, {f"{weekday} the {day}{suffix} day of " if calendar.months[month-1].length != 1 else ''}{monthNames[month-1]}" """)
+
+return '\n'.join(out)
+
+</drac2>
+
+-title "Downtime Calculator"
+-footer "UTC {{f"{TIMEZONE:+}"}}"
+
+{{'-t 15 -f "This embed will delete itself automatically in 15 seconds."' if ctx.channel.id == 690979209639624704 else ''}}
