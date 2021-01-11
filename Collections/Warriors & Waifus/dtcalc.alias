@@ -4,12 +4,15 @@ calendar   = load_json(get_gvar("9ebaa622-43c5-4f97-9ba3-7a95cab94d09"))
 monthLen   = [i.length for i in calendar.months]
 monthNames = [i.name for i in calendar.months]
 out        = []
+desc       = []
+args       = argparse(&ARGS&)
+n          = '\n'
 
-# How many weeks are they working?
-workweeks  = argparse(&ARGS&).last('rr', 1, int)
+# How many weeks are they working, min 1
+workweeks  = max(1, args.last('rr', 1, int))
 
 # Constants
-WEEKDAYS   = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+WEEKDAYS   = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday']
 HOUR       = 3600
 DAY        = 86_400
 WEEK       = 604_800
@@ -55,6 +58,7 @@ for i, iterTime in enumerate([TIME, DOWNTIME]):
 
   # Output our time
   out.append(f""" -f "{f"After Downtime ({workweeks} workweek{'s' if workweeks>1 else ''})" if i else "Current Time"}|{f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"}, {f"{weekday} the {day}{suffix} day of " if calendar.months[month-1].length != 1 else ''}{monthNames[month-1]}" """)
+  desc.append(f"""**IRL {['Start','End'][i]} Date and Local Time:** {day}/{month}/21 {f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"} - UTC {TIMEZONE:+}""")
 
 return '\n'.join(out)
 
@@ -64,3 +68,16 @@ return '\n'.join(out)
 -footer "UTC {{f"{TIMEZONE:+}"}} | -rr [#] for more than one workweek"
 
 {{'-t 15 -f "This embed will delete itself automatically in 15 seconds."' if ctx.channel.id == 690979209639624704 else ''}}
+
+<drac2>
+if args.last('out'):
+  return f""" -desc "```md
+**Character name:** {args.last('name', name)}
+**Which specific activity are you taking:** {args.last('activity', '')}
+**What are you doing with that activity:** {args.last('reason', '')}
+**Amount of gold spent for activity:** {args.last('gold', 'N/A')}
+{n.join(desc)}
+**Any rolls need to be done by dms?:** {args.last('rolls', '')}
+**If so for what:** {args.last('dmreason', '')}
+```" """
+</drac2>
