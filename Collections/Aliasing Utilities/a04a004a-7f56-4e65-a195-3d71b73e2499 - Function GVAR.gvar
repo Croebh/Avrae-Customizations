@@ -1,11 +1,13 @@
 {
  "all(iterable)": {
   "desc": "Return `True` if all elements of the *iterable* are true, or if the iterable is empty.",
-  "url": "all"
+  "url": "all",
+  "syntax": ">>> all([1, True, \\\"Hello\\\"])\nTrue\n>>> all([1, True, \\\"Hello\\\", False])\nFalse"
  },
  "any(iterable)": {
   "desc": "Return `True` if any element of the iterable is true. If the iterable is empty, return `False`.",
-  "url": "any"
+  "url": "any",
+  "syntax": ">>> any([1, True, False, \\\"Hello\\\"])\nTrue\n>>> any([0, False, \\\"\\\", []])\nFalse\n>>> any([])\nFalse"
  },
  "ceil(x)": {
   "desc": "Rounds a number up to the nearest integer. See [math.ceil()](https://docs.python.org/3/library/math.html#math.ceil).",
@@ -23,7 +25,8 @@
    "type": "int",
    "desc": "The small integer >= x"
   },
-  "url": "ceil"
+  "url": "ceil",
+  "syntax": ">>> ceil(2.1)\n3\n>>> ceil(3.9)\n4"
  },
  "float(x)": {
   "desc": "Converts *x* to a floating point number.",
@@ -42,7 +45,8 @@
    "type": "float",
    "desc": "The float"
   },
-  "url": "float"
+  "url": "float",
+  "syntax": ">>> float(\\\"2.1\\\")\n2.1\n>>> float(3)\n3.0"
  },
  "floor(x)": {
   "desc": "Rounds a number down to the nearest integer. See [math.floor()](https://docs.python.org/3/library/math.html#math.floor).",
@@ -60,7 +64,8 @@
    "type": "int",
    "desc": "The small integer <= x"
   },
-  "url": "floor"
+  "url": "floor",
+  "syntax": ">>> floor(2.1)\n2\n>>> floor(3.9)\n3"
  },
  "int(x)": {
   "desc": "Converts *x* to an integer.",
@@ -79,7 +84,8 @@
    "type": "int",
    "desc": "The integer"
   },
-  "url": "int"
+  "url": "int",
+  "syntax": ">>> int(\\\"2\\\")\n2\n>>> int(6.2)\n6"
  },
  "len(s)": {
   "desc": "Return the length (the number of items) of an object. The argument may be a sequence (such as a string, bytes, tuple, list, or range) or a collection (such as a dictionary, set, or frozen set).",
@@ -87,15 +93,18 @@
    "type": "int",
    "desc": "The length of the argument."
   },
-  "url": "len"
+  "url": "len",
+  "syntax": ">>> len([1, 1, 2, 3, 5])\n5\n>>> len(\\\"Hello, World\\\")\n12"
  },
  "max(iterable, *[, key, default]) | max(arg1, arg2, *args[, key])": {
   "desc": "Return the largest item in an iterable or the largest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The largest item in the iterable is returned. If two or more positional arguments are provided, the largest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are maximal, the function returns the first one encountered.",
-  "url": "max"
+  "url": "max",
+  "syntax": ">>> max(2, 6, 7, 1)\n7"
  },
  "min(iterable, *[, key, default]) | min(arg1, arg2, *args[, key])": {
   "desc": "Return the smallest item in an iterable or the smallest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The smallest item in the iterable is returned. If two or more positional arguments are provided, the smallest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are minimal, the function returns the first one encountered.",
-  "url": "min"
+  "url": "min",
+  "syntax": ">>> max(2, 6, 7, 1)\n1"
  },
  "range(stop) | range(start, stop[, step])": {
   "desc": "Returns a list of numbers in the specified range.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, `ValueError` is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.\n\nA range object will be empty if `r[0]` does not meet the value constraint. Ranges do support negative indices, but these are interpreted as indexing from the end of the sequence determined by the positive indices.",
@@ -126,7 +135,8 @@
   "returns": {
    "desc": "The range of numbers",
    "type": "list"
-  }
+  },
+  "syntax": ">>> range(10)\n[0, 1, 2, 3, 4, 5, 6, 7, 9]\n>>> range(3, 5)\n[3, 4]\n>>> range(9, 0, -1)\n[9, 8, 7, 6, 5, 4, 3, 2, 1]"
  },
  "round(number [, ndigits])": {
   "desc": "Return number rounded to ndigits precision after the decimal point. If ndigits is omitted or is `None`, it returns the nearest integer to its input.",
@@ -151,7 +161,8 @@
   "returns": {
    "type": "float",
    "desc": "The rounded number"
-  }
+  },
+  "syntax": ">>> round(2.1)\n2\n>>> round(2/3, 4)\n0.6667\n# Rounds towards even numbers on x.5\n>>> (round(2.5), round(3.5))\n(2, 4)"
  },
  "sqrt(x)": {
   "desc": "See [math.sqrt()](https://docs.python.org/3/library/math.html#math.sqrt)",
@@ -159,7 +170,8 @@
   "returns": {
    "type": "float",
    "desc": "The square root of *x*"
-  }
+  },
+  "syntax": ">>> sqrt(25)\n5\n>>> sqrt(32)\n5.656854249492381"
  },
  "str(x)": {
   "desc": "Converts *x* to a string.",
@@ -176,11 +188,13 @@
   "returns": {
    "type": "str",
    "desc": "The string."
-  }
+  },
+  "syntax": ">>> str(5)\n\\\"5\\\"\n>>> \\\"Hello, \\\" + str(2)\n\\\"Hello, 2\\\" "
  },
  "sum(iterable [, start])": {
   "desc": "Sums *start* and the items of an *iterable* from left to right and returns the total. *start* defaults to `0`. The iterable’s items are normally numbers, and the start value is not allowed to be a string.",
-  "url": "sum"
+  "url": "sum",
+  "syntax": ">>> sum([6, 4, 2, 3, 6])\n21\n>>> sum([6, 7], 10)\n23"
  },
  "time()": {
   "desc": "Return the time in seconds since the UNIX epoch (Jan 1, 1970, midnight UTC) as a floating point number. See [time.time()](https://docs.python.org/3/library/time.html#time.time).",
@@ -189,7 +203,8 @@
    "type": "float",
    "desc": "The epoch time."
   },
-  "alias": "curdate"
+  "alias": "curdate",
+  "syntax": ">>> time()\n1610417511.6360219"
  },
  "argparse(args)": {
   "desc": "Parses arguments.",
@@ -216,7 +231,8 @@
   "returns": {
    "type": "AliasCharacter",
    "desc": "The active character."
-  }
+  },
+  "syntax": ">>> char = character()\n>>> char.sheet_type\n\\\"beyond\\\"\n>>> str(char)\n<AliasStatBlock name=Croebh>"
  },
  "combat()": {
   "desc": "Returns the combat active in the channel if one is. Otherwise, returns `None`.",
@@ -224,14 +240,16 @@
   "returns": {
    "type": "SimpleCombat",
    "desc": "The active combat."
-  }
+  },
+  "syntax": ">>> c = combat()\n>>> c.get_combatant(\\\"OR1\\\").init\n18\n>>> str(c)\n\\\"Initiative in #channel\\\" "
  },
  "ctx": {
   "desc": "The context the alias was invoked in. See [AliasContext](https://avrae.readthedocs.io/en/latest/aliasing/api.html#aliasing.api.context.AliasContext) for more details.\n\nNote that this is an automatically bound name and not a function.",
   "url": "ctx",
   "type": {
    "name": "AliasContext"
-  }
+  },
+  "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n ctx.prefix\n\\\"!\\\" "
  },
  "delete_uvar(name)": {
   "desc": "Deletes a user variable. Does nothing if the variable does not exist.",
@@ -244,7 +262,8 @@
     ],
     "desc": "The name of the variable to delete"
    }
-  ]
+  ],
+  "syntax": ">>> uvar_exists(\\\"uvarName\\\")\nTrue\n>>> delete_uvar(\\\"uvarName\\\")\n>>> uvar_exists(\\\"uvarName\\\")\nFalse"
  },
  "dump_json(obj)": {
   "desc": "Serializes an object to a JSON string. See [json.dumps()](https://docs.python.org/3/library/json.html#json.dumps).",
@@ -252,7 +271,8 @@
   "returns": {
    "type": "str",
    "desc": "The JSON formatted string."
-  }
+  },
+  "syntax": ">>> json = {\\\"Test\\\": 1}\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json = dump_json(json)\n>>> typeof(json)\n\\\"str\\\"\n>>> json\n'{\\\"Test\\\": 1}'"
  },
  "err(reason, pm_user=False)": {
   "desc": "Stops evaluation of an alias and shoes the user an error.",
@@ -351,7 +371,8 @@
   "returns": {
    "type": "dict, list, str, int, float, bool, nonetype",
    "desc": "The converted jsonstr."
-  }
+  },
+  "syntax": ">>> json = '{\\\"Test\\\": 1}'\n>>> typeof(json)\n\\\"str\\\"\n>>> json = load_json(json)\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json\n{\\\"Test\\\": 1}"
  },
  "randint(x)": {
   "desc": "Returns a random integer in the range `[0..x]`.",
