@@ -296,7 +296,8 @@
   "raises": {
    "name": "AliasException",
    "desc": ""
-  }
+  },
+  "syntax": ">>> err('Missing Custom Counter')\nError evaluating expression: Missing Custom Counter"
  },
  "exists(name)": {
   "desc": "Returns whether or not a name is set in the current evaluation context.",
@@ -304,7 +305,8 @@
   "returns": {
    "type": "Bool",
    "desc": "`True` if it exists, else `False`"
-  }
+  },
+  "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
  },
  "get(name, default=None)": {
   "desc": "Gets the value of a name, or returns *default* if the name is not set.",
@@ -328,7 +330,8 @@
   "returns": {
    "type": "any",
    "desc": "The found name, else *default*."
-  }
+  },
+  "syntax": ">>> get('thisExists', 'Missing!')\nThe thing!\n>> get('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get('thisDoesNotExist')\nNone"
  },
  "get_gvar(address)": {
   "desc": "Retrieves and returns the value of a gvar (global variable).",
@@ -345,7 +348,8 @@
   "returns": {
    "type": "str",
    "desc": "The value of the gvar. If the gvar doesn't exist, returns `None`."
-  }
+  },
+  "syntax": ">>> get_gvar('a04a004a-7f56-4e65-a195-3d71b73e2499')\n<contents of the gvar>\n>>> get_gvar('this is an invalid address')\nNone"
  },
  "get_svar(name, default=None)": {
   "desc": "Retrieves and returns the value of a svar (server variable).",
@@ -354,7 +358,8 @@
    {"name":"name", "type": ["str"], "desc":"The name of the svar."},
    {"name":"default", "type":["any"], "desc":"What to return if the name is not set."}
   ],
-  "returns": {"type":"str or None", "desc":"The value of the svar, or default if it does not exist."}
+  "returns": {"type":"str or None", "desc":"The value of the svar, or default if it does not exist."},
+  "syntax": ">>> get_svar('thisExists', 'Missing!')\nThe thing!\n>> get_svar('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get_svar('thisDoesNotExist')\nNone"
  },
  "load_json(jsonstr)": {
   "desc": "Loads an object from a JSON string. See [json.loads()](https://docs.python.org/3/library/json.html#json.loads).",
@@ -389,7 +394,8 @@
   "returns": {
    "type": "int",
    "desc": "A random integer."
-  }
+  },
+  "syntax": "# This will return an int from 0-19 (and never 20)\n>>> randint(20)\n8"
  },
  "roll(dice)": {
   "desc": "Rolls dice and returns the output.\n\nSee `!help roll` for syntax.",
@@ -406,7 +412,8 @@
   "returns": {
    "type": "int",
    "desc": "The roll’s total, or 0 if an error was encountered."
-  }
+  },
+  "syntax": "# If you plan on displaying the entire roll, look at vroll()\n>>> roll('1d20')\n3\n>>> roll('invalidString')\n0"
  },
  "set_uvar(name, value)": {
   "desc": "Sets a user variable.",
@@ -426,7 +433,8 @@
     ],
     "desc": "The value to set it to."
    }
-  ]
+  ],
+  "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str"
  },
  "set_uvar_nx(name, value)": {
   "desc": "Sets a user variable if there is not already an existing name.",
@@ -446,7 +454,8 @@
     ],
     "desc": "The value to set it to."
    }
-  ]
+  ],
+  "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str\n set_uvar_nx('theThing', 2)\n>>> get('theThing')\n1"
  },
  "typeof(inst)": {
   "desc": "Returns the name of the type of an object.",
@@ -463,7 +472,8 @@
   "returns": {
    "type": "str",
    "desc": "The type of object."
-  }
+  },
+  "syntax": ">>> typeof('Hello, world!')\n'str'\n>>> typeof(vroll('1d20'))\n'SimpleRollResult'"
  },
  "uvar_exists(name)": {
   "desc": "Returns whether a uvar exists.",
@@ -471,7 +481,8 @@
   "returns": {
    "type": "bool",
    "desc": "`True` if it exists, else `False`"
-  }
+  },
+  "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
  },
  "vroll(rollStr, multiply=1, add=0)": {
   "desc": "Rolls dice and returns a detailed roll result.\n\nSee `!help roll` for syntax.",
@@ -503,7 +514,8 @@
    "type": "SimpleRollResult",
    "desc": "The result of the roll."
   },
-  "alias": "vroll"
+  "alias": "vroll",
+  "syntax": ">>> ourRoll = vroll('1d20+3')\n>>> str(ourRoll)\n1d20 (19) + 3 = `22`\n>>> ourRoll.total\n22\n>>> ourRoll = vroll('1d20+3', 2, 1)\n# Multiply dice by 2, but add 1 die after\n>>> str(ourRoll)\n3d20 (14, 9, 5) + 3 = `31`"
  },
  "chanid()": {
   "desc": "Returns the ID of the active Discord channel.",
@@ -1135,47 +1147,52 @@
   },
   "alias": "browse"
  },
- "SimpleCombat.combatants": {
+ "combat().combatants": {
   "desc": "A list of all `SimpleCombatant` in combat.",
   "url": "aliasing.api.combat.SimpleCombat.combatants",
   "returns": {
    "type": "list[SimpleCombatant]",
    "desc": "A list of the `SimpleCombatants` in the combat."
-  }
+  },
+  "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().combatants[0].name\n'OR1'"
  },
- "SimpleCombat.current": {
+ "combat().current": {
   "desc": "The `SimpleCombatant` or `SimpleGroup` representing the combatant whose turn it is.",
   "url": "aliasing.api.combat.SimpleCombat.current",
   "returns": {
    "type": "SimpleCombatant** *or* **SimpleGroup",
    "desc": "The combatant or group whose turn it is."
-  }
+  },
+  "syntax": ">>> combat().current\n<AliasStatBlock name=OR1>"
  },
- "SimpleCombat.me": {
+ "combat().me": {
   "desc": "The `SimpleCombatant` representing the active character in combat, or `None` if the character is not in the combat.",
   "url": "aliasing.api.combat.SimpleCombat.me",
   "returns": {
    "type": "SimpleCombatant",
    "desc": "The users active character in combat."
-  }
+  },
+  "syntax": ">>> combat().me\n<AliasStatBlock name=Hero McHeroson>\n>>> character().name\n'Hero McHeroson'\n>>> !char Broseidon\nActive character changed to Broseidon\n>>> combat().me\nNone"
  },
- "SimpleCombat.round_num": {
+ "combat().round_num": {
   "desc": "An `int` representing the round number of the combat.",
   "url": "aliasing.api.combat.SimpleCombat.round_num",
   "returns": {
    "type": "int",
    "desc": "The round number."
-  }
+  },
+  "syntax": ">>> combat().round_num\n7"
  },
- "SimpleCombat.turn_num": {
+ "combat().turn_num": {
   "desc": "An `int` representing the initiative score of the current turn.",
   "url": "aliasing.api.combat.SimpleCombat.turn_num",
   "returns": {
    "type": "int",
    "desc": "The turn number."
-  }
+  },
+  "syntax": ">>> combat().turn_num\n17"
  },
- "SimpleCombat.get_combatant(name)": {
+ "combat().get_combatant(name)": {
   "desc": "Gets a `SimpleCombatant`, fuzzy searching (partial match) on name.",
   "param": [
    {
@@ -1191,9 +1208,10 @@
    "desc": "The combatant."
   },
   "url": "aliasing.api.combat.SimpleCombat.get_combatant",
-  "alias": "targets"
+  "alias": "targets",
+  "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().get_combatant('or1')\n<AliasStatBlock name=OR1>"
  },
- "SimpleCombat.get_group(name)": {
+ "combat().get_group(name)": {
   "desc": "Gets a `SimpleGroup`, fuzzy searching (partial match) on name.",
   "param": [
    {
@@ -1208,28 +1226,32 @@
    "type": "SimpleGroup",
    "desc": "The group."
   },
-  "url": "aliasing.api.combat.SimpleCombat.get_group"
+  "url": "aliasing.api.combat.SimpleCombat.get_group",
+  "syntax": ">>> combat().get_group('Gobbos')\nGobbos (3 combatants)\n>>> combat().get_group('Gobbos').combatants\n[<AliasStatBlock name=GO1>, <AliasStatBlock name=GO2>, <AliasStatBlock name=GO3>]"
  },
  "SimpleCombatant.effects": {
   "url": "aliasing.api.combat.SimpleCombatant.effects",
   "desc": "A list of SimpleEffect active on the combatant.",
   "type": {
    "name": "list of SimpleEffect"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
  },
  "SimpleCombatant.init": {
   "url": "aliasing.api.combat.SimpleCombatant.init",
   "desc": "What the combatant rolled for initiative.",
   "type": {
    "name": "int"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
  },
  "SimpleCombatant.initmod": {
   "url": "aliasing.api.combat.SimpleCombatant.initmod",
   "desc": "An int representing the combatant’s initiative modifier.",
   "type": {
    "name": "int"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.initmod\n3"
  },
  "SimpleCombatant.level": {
   "deprecated": {
@@ -1258,14 +1280,16 @@
   "desc": "The type of the object (\\\"combatant\\\"), to determine whether this is a group or not.",
   "type": {
    "name": "str"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.type\n'combatant'"
  },
  "SimpleCombatant.ac": {
   "url": "aliasing.api.combat.SimpleCombatant.ac",
   "desc": "The armor class of the creature.",
   "returns": {
    "type": "int or None"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.ac\n21"
  },
  "SimpleCombatant.add_effect(name: str, args: str, duration: int = -1, concentration:bool = False, parent=None, end: bool = False, desc:str = None)": {
   "url": "aliasing.api.combat.SimpleCombatant.add_effect",
@@ -1320,21 +1344,23 @@
     ],
     "desc": "A description of the effect."
    }
-  ]
+  ],
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[]\n>>> target.add_effect('Rage', '-d 2 -resist piercing -resist bludgeoning -resist slashing', 10, desc='This boi be angry!')\n# If you don't need one of the arguments that has a default (Such as conc or parent)\n# You can skip it by using positional arguments (desc='This boi be angry!)\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
  },
  "SimpleCombatant.attacks": {
   "url": "aliasing.api.combat.SimpleCombatant.attacks",
   "desc": "The attacks of the creature.",
   "returns": {
    "type": "AliasAttackList"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('OR1')\n>>> str(target.attacks)\n'''**Greataxe:** Attack: +5 to hit. Hit: 1d12 + 3 [slashing] damage.\n**Javelin:** Attack: +5 to hit. Hit: 1d6 + 3 [piercing] damage.'''\n>>> target.attacks[0].name\n'Greataxe'"
  },
  "SimpleCombatant.damage(dice_str, crit=False, d=None, c=None, critdice=0, overheal=False)": {
   "url": "aliasing.api.combat.SimpleCombatant.damage",
   "desc": "Does damage to a combatant, and returns the rolled result and total, accounting for resistances.",
   "returns": {
    "type": "dict",
-   "desc": "Dictionary representing the results of the Damage Automation with two keys, `'damage'` and `'total'`, detailing the resulting string and total damage, respectively."
+   "desc": "Dictionary representing the results of the Damage Automation with three keys, `'damage'`, `'total'`, `roll`, detailing the resulting string, total damage, and the roll itself, respectively."
   },
   "param": [
    {
@@ -1379,7 +1405,8 @@
     ],
     "desc": "Whether or not to allow this damage to exceed a target’s HP max."
    }
-  ]
+  ],
+  "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n<15/15>\n>>> damage = target.damage('1d8 [piercing]')\n>>> damage\n{'damage': '**Damage:** 1d8 (7) [piercing] = `7`', 'total': 7, 'roll': <RollResult total=7>}\n>>> target.hp_str()\n<8/15>\n>>> damage.damage # I know it looks funny\n**Damage:** 1d8 (7) [piercing] = `7`\n# But what if we want to preroll our damage?\n>>> preRolled = vroll('1d4 [cold] + 1d4 [fire]')\n>>> str(preRolled)\n1d4 (3) [cold] + 1d4 (**4**) [fire] = `7`\n>>> damage = target.damage(preRolled.consolidated())\n>>> damage\n{'damage': '**Damage:** (3 [cold]) / 2 + 4 [fire] = `5`', 'total': 5, 'roll': <RollResult total=5>}\n# They were resistant to cold damage!\n>>> target.hp_str()\n<2/15>"
  },
  "SimpleCombatant.get_effect(name: str)": {
   "url": "aliasing.api.combat.SimpleCombatant.get_effect",
@@ -1396,21 +1423,24 @@
     ],
     "desc": "The name of the effect to get."
    }
-  ]
+  ],
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]\n>>> effect = target.get_effect('Rage')\n>>> effect.name\n'Rage'"
  },
  "SimpleCombatant.hp": {
   "url": "aliasing.api.combat.SimpleCombatant.hp",
   "desc": "The current HP of the creature.",
   "returns": {
    "type": "int or None"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.hp\n10"
  },
  "SimpleCombatant.hp_str()": {
   "url": "aliasing.api.combat.SimpleCombatant.hp_str",
   "desc": "Returns a string describing the creature’s current, max, and temp HP.",
   "returns": {
    "type": "str"
-  }
+  },
+  "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n'<15/15>'\n# Now, lets assume they are hidden\n>>> target.hp_str()\n'<Healthy>'"
  },
  "SimpleCombatant.levels": {
   "url": "aliasing.api.combat.SimpleCombatant.levels",
