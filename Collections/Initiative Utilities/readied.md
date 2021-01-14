@@ -1,0 +1,1 @@
+For when you use your readied action as set by `!ready`
