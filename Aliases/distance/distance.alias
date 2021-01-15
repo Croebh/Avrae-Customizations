@@ -1,1 +1,0 @@
-{{args=&ARGS&}}{{get_gvar("fc277412-9672-4ed5-9a8f-518b4ad0149d").replace('@ARGS@',dump_json(args))}}
