@@ -32,7 +32,7 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 `-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
 
 Servers can set a default set of args by setting an svar named `threshold`:
-Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
+Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`
 
 """
 </drac2>
