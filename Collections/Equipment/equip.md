@@ -13,6 +13,10 @@ __**Valid Arguments: Basics**__
 `2h` - only for versatile weapons: marks the attack as using two-hands
 `off` - marks the weapon as offhand for two-weapon fighting, and removes bonus damage from Strength or Dexterity modifier
 `savage` - sets the weapon to roll damage dice twice and choose the higher as per the Savage Attacker feat (use only for melee weapons)
+`-verb <verb>` - The verb to use for this attack. (e.g. \"Padellis <verb> a dagger!\") (Only works for personal attacks)
+`proper` - This attack's name is a proper noun. (Only works for personal attacks)
+`-criton <#>` - This attack crits on a number other than a natural 20. (Only works for personal attacks)
+`-c <extra crit damage>` - How much extra damage (beyond doubling dice) this attack does on a crit. (Only works for personal attacks)
 
 __**Valid Arguments: Fighting Styles**__
 `archery` - applies the Archery Fighting Style (use only for ranged weapons)

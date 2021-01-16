@@ -2,14 +2,33 @@
 args = &ARGS&
 wn, g, args = args[0] if args else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(args)
 style, customName, bonus, damage = g.style, args.last("name"), args.join("b", "+"), args.join("d", "+")
+
 chosenWeapon = None
 for weapon in g.weapons:
  if wn and wn.lower()in weapon.name.lower():
   chosenWeapon = weapon
   break
 if chosenWeapon:
- offhand, twohanded, noprof, monk = args.last("off"), args.last("2h") and chosenWeapon.get("vers"), args.last("noprof") or args.last('t'), args.last("monk")
- archery, dueling, gwf, thrown, unarmed, savage = args.last("archery") and "ranged" in chosenWeapon.type.lower(), args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc, args.last("gwf") and ("two" in chosenWeapon.desc or twohanded), args.last("thrown") and "thrown" in chosenWeapon.desc.lower(), args.last("uf"), args.last("savage") and chosenWeapon.type=="Melee"
+ offhand = args.last("off")
+ twohanded = args.last("2h") and chosenWeapon.get("vers")
+ noprof = args.last("noprof") or args.last('t')
+ monk = args.last("monk")
+ archery = args.last("archery") and "ranged" in chosenWeapon.type.lower()
+ dueling = args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc
+ gwf     = args.last("gwf") and ("two" in chosenWeapon.desc or twohanded)
+ thrown  = args.last("thrown") and "thrown" in chosenWeapon.desc.lower()
+ unarmed = args.last("uf")
+ savage  = args.last("savage") and chosenWeapon.type=="Melee"
+ criton  = args.last('criton') or ""
+ if criton:
+  criton = f""" -criton "{criton}" """
+ critd   = args.last('c') or ""
+ if critd:
+  critd = f""" -c "{critd}" """
+ proper    = args.last('proper', type_=bool)
+ verb    = args.last('verb') or ""
+ if verb:
+  verb = f""" -verb "{verb}" """
  mod = g.z[args.last("stat")] if args.last("stat") else "dexterityMod"if "ranged" in chosenWeapon.type.lower() else f'max(dexterityMod, strengthMod)'if chosenWeapon.get('finesse') or monk else "strengthMod"
  twohanded = unarmed and twohanded if "Unarmed" in chosenWeapon.name else twohanded
  tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else g.prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
@@ -23,5 +42,5 @@ if chosenWeapon:
  desc += args.get("desc")
  desc = "\n\n".join(desc)
  tag = " (2H)" if twohanded else " (Offhand)" if offhand else " (1H)" if chosenWeapon.get("vers") and not("Unarm" in chosenWeapon.name and not unarmed) else ""
- cmd = f'attack add "{customName if customName else chosenWeapon.name}{tag}" -b "{tohit}" -d "{damageDice}" -desc "{desc}"'
+ cmd = f'''attack add "{customName if customName else chosenWeapon.name}{tag}" -b "{tohit}" -d "{damageDice}" -desc "{desc}" {verb} {critd} {criton} {"proper"*proper}'''
 return get_gvar(g.help) if not &ARGS& or args.last("help") else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if args.last('t') else cmd</drac2>
