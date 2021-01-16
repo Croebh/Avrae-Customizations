@@ -204,7 +204,10 @@ if c:
   # Split and convert to dict. Couldn't use | here because of how -attack effects are parsed
   mapinfo=mapinfo.split(' ~ ')
   mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
-  mapsize=mapinfo.get('size')
+  if mapinfo.get('size') == None:
+    mapsize = defaults.get("size", "10x10") or "10x10"
+  else:
+    mapsize=mapinfo.get('size')
   #If user hasn't set mapsize = "JSON" then continue
   if mapsize != "JSON":
    if ":" in mapsize:
@@ -1040,7 +1043,7 @@ if c:
 
 <drac2>
 if args.last('tokenimport'):
- tokenimport = args.last('tokenimport').encode()
+ tokenimport = args.last('tokenimport').strip('<>').encode()
 
  b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 

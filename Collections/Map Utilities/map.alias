@@ -1043,7 +1043,7 @@ if c:
 
 <drac2>
 if args.last('tokenimport'):
- tokenimport = args.last('tokenimport').encode()
+ tokenimport = args.last('tokenimport').strip('<>').encode()
 
  b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 

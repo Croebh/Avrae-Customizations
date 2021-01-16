@@ -1,11 +1,13 @@
 echo <drac2>
-a = '&*&'
+a = '&*&'.strip('<>')
+
 arg = a.encode()
 
 b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
 
 ascii_bin_str = ""
 output = ""
+
 
 for c in arg:
     ascii_bin_str += f'{c:08b}'  # construct a binary-representation string
@@ -25,7 +27,7 @@ if leftoverBits > 0:
         output += b64_index[int(leftover+('0' * 2), base=2)]
         output += '='
 if arg:
-  return f'https://token.otfbm.io/meta/{output}'
+  return f'Token for <{a}>:\nhttps://token.otfbm.io/meta/{output}'
 else:
   return f'No token link provided. Please use `!tokenimport [URL]` to generate a short code for `!map`'
 </drac2>
