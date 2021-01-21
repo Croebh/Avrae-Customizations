@@ -48,6 +48,31 @@
   "url": "float",
   "syntax": ">>> float(\\\"2.1\\\")\n2.1\n>>> float(3)\n3.0"
  },
+ "enumerate(iter[, start=0])": {
+  "desc": "Returns a iterable of tuples containing a count and the values from the iterable. Starts at `start`.",
+  "param": [
+   {
+    "name": "iter",
+    "type": [
+     "iterable"
+    ],
+    "desc": "The value to convert"
+   },
+   {
+    "name": "start",
+    "type": [
+     "int"
+    ],
+    "desc": "The starting value for the count"
+   }
+  ],
+  "returns": {
+   "type": "iterable[tuple[int, any]]",
+   "desc": "enumerate of count and objects."
+  },
+  "url": "enumerate",
+  "syntax": ">>> ourList = [\\\"Barbarian\\\", \\\"Bard\\\", \\\"Rogue\\\"]\n>>> return list(enumerate(ourList))\n[(0, \\\"Barbarian\\\"), (1, \\\"Bard\\\"), (2, \\\"Rogue\\\")]\n>>> out = []\n>>> for index, clas in enumerate(ourList, 1)\n...    out.append(f\\\"{clas} is number {index}\\\")\n>>> return ', and '.join(out)\n\\\"Barbarian is number 1, and Bard is number 2, and Rogue is number 3\\\""
+ },
  "floor(x)": {
   "desc": "Rounds a number down to the nearest integer. See [math.floor()](https://docs.python.org/3/library/math.html#math.floor).",
   "param": [
@@ -1155,6 +1180,15 @@
    "desc": "A list of the `SimpleCombatants` in the combat."
   },
   "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().combatants[0].name\n'OR1'"
+ },
+ "combat().groups": {
+  "desc": "A list of all `SimpleGroup` in combat.",
+  "url": "aliasing.api.combat.SimpleCombat.groups",
+  "returns": {
+   "type": "list[SimpleGroup]",
+   "desc": "A list of the `SimpleGroup` in the combat."
+  },
+  "syntax": ">>> [f\\\"{group.name} - {len(group.combatants)} Members\\\" for group in combat().groups]\n# A list of all the groups in the combat, with the number of combatants in them\n[\\\"Orc - 4\\\", \\\"Wolf - 4\\\"]"
  },
  "combat().current": {
   "desc": "The `SimpleCombatant` or `SimpleGroup` representing the combatant whose turn it is.",

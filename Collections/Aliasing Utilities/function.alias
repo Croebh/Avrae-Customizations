@@ -66,8 +66,8 @@ else:
     out = f""" -title "List of functions/methods containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
     if len(searchResults):
         # We found possibilities, bois!
-        out += f""" -desc "{newline.join(searchResults[:40])}
-        {f"({len(searchResults)-40} results not shown)" if len(searchResults)>40 else ""}" """
+        out += f""" -desc "{newline.join(searchResults[:41])}
+        {f"({len(searchResults)-41} results not shown)" if len(searchResults)>41 else ""}" """
     else:
         # We aint find shit, bois :-(
         out += """ -desc "*No Results Found*" """
