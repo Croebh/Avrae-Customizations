@@ -1,0 +1,98 @@
+embed
+
+<drac2>
+
+SaveTypes = ["dex", "str", "con", "wis", "int", "cha"]
+StatTypes = ["dexterity", "strength", "constitution", "wisdom", "intelligence", "charisma"]
+NewLine   = "\n"
+
+args = argparse(&ARGS&)
+init = combat()
+
+totalDamage = 0
+
+user = init.get_combatant(args.last('user', name))
+
+# One Off
+dc          = args.last('dc', 10, int)
+crit        = args.last('crit', False, type_ = bool)
+save_type   = args.last('save', args.last('s', 'dex')).lower()[:3]
+
+# Flavour
+flavourOut  = ""
+phrase      = args.join('phrase', NewLine, "")
+desc        = args.last('desc',  '', str)
+title       = args.last('title',  f'Make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
+
+flavourOut  += f""" -title "{title}" """
+if desc:
+ flavourOut += f""" -f "Effect|{desc}" """
+if phrase:
+ flavourOut += f""" -desc "*{phrase}*" """
+
+# General
+damage      = args.last('d',   '', type_ = str)
+damage      = vroll(damage, 1 + crit) if damage else ""
+
+# Ignore Certain Args
+args.ignore('d')
+
+metaOut     = []
+if damage:
+ metaOut.append(f"""**Damage:** {damage}""")
+metaOut.append(f"""**DC:** {dc}""")
+metaOut.append(f"""{save_type.upper()} save""")
+
+metaOut = f""" -f "Meta|{NewLine.join(metaOut)}" """
+
+targets = []
+for targ in args.get('t'):
+  targName, targArgs = (targ.split("|")+[""])[:2]
+  targArgs = argparse(targArgs)
+  if curTarg := init.get_combatant(targName):
+   targets.append(curTarg)
+   args.add_context(curTarg.name, targArgs)
+  elif curTarg := init.get_group(targName):
+   for gTarg in curTarg.combatants:
+    targets.append(gTarg)
+    args.add_context(gTarg.name, targArgs)
+
+targetOut   = []
+
+for target in targets:
+ args.set_context(target.name)
+ tOut = []
+ save_bonus  = args.get('b')
+ adv = args.adv(boolwise=True)
+
+ targDamage = damage.consolidated()
+ if targD := args.get('d'):
+  targDamage += "+" + "+".join(targD)
+
+ for effect in target.effects:
+  if (sb := effect.effect.get('sb')):
+    save_bonus.append(sb)
+
+ # Grab our save string and add our bonuses
+ saveStr  = target.saves.get(save_type).d20(adv)
+ saveStr += '+'.join(save_bonus).replace('+-', '-')
+
+ # Roll the save and compare against the DC
+ save     = vroll(saveStr)
+ success  = save.total >= dc
+
+ tOut.append(f"""**{save_type.upper()} Save:** {save}; {["Failure!", "Success!"][success]}""")
+
+ if not success:
+  if targDamage:
+   targDamage = target.damage(targDamage, crit)
+   totalDamage += targDamage.total
+   tOut.append(targDamage.damage)
+
+ targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}" """)
+
+
+return metaOut + NewLine.join(targetOut) + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
+</drac2>
+
+-f "Debug|{{f"{totalDamage=}"}}"
