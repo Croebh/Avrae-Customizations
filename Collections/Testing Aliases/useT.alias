@@ -24,21 +24,26 @@ anno = {}
 user = init.get_combatant(args.last('user', name))
 name = user.name if user else name
 
+# Misc
+anno["n"]            = args.last("n",     "", str)
+anno["ndesc"]        = args.last("ndesc", "", str)
+anoo["roll"]         = args.last("roll",  "", str)
+
 # One Off
-anno["dc"]           = args.last('dc', "10", str)
-crit                 = args.last('crit', False, type_ = bool)
+anno["dc"]           = args.last('dc',   "10", str)
+crit                 = args.last('crit', False, bool)
 save_type            = args.last('save', args.last('s', 'dex')).lower()[:3]
+
+# General
+anno["damage"]       = args.last('d',   '', str)
+anno["maxhp"]        = args.last('max', '', str)
+anno["temphp"]       = args.last('thp', '', str)
+anno["save_bonus"]   = args.get('b')
 
 # Flavour
 anno["phrase"]       = args.join('phrase', NewLine, "")
 anno["desc"]         = args.last('desc',  '', str)
 anno["title"]        = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
-
-# General
-anno["damage"]       = args.last('d',   '', type_=str)
-anno["maxhp"]        = args.last('max', '', type_=str)
-anno["temphp"]       = args.last('thp', '', type_=str)
-anno["save_bonus"]   = args.get('b')
 
 # We need this to be a dict for the annotating below
 targetsCache         = {i:targ for i, targ in enumerate(args.get('t'))}
@@ -70,18 +75,18 @@ for annoGroup in [anno, targetsCache]:
     # If its a number, or a math seperator, add it to the output unchanged
     if (sep.strip('-.').isdigit() or sep in mathsep):
      segOut.append(sep)
-    # If an -arg was provided with this name, add that
-    elif args.last(sep) is not None:
-     segOut.append(str(args.last(sep)))
-    # If a variable exists, add that
-    elif get(sep) is not None:
-     segOut.append(str(get(sep)))
     # If a annotated exists, add that
     elif anno.get(sep) is not None:
      if typeof(anno.get(sep)) == "SimpleRollResult":
       segOut.append(str(anno.get(sep).total))
      else:
       segOut.append(str(anno.get(sep)))
+    # If an -arg was provided with this name, add that
+    elif args.last(sep) is not None:
+     segOut.append(str(args.last(sep)))
+    # If a variable exists, add that
+    elif get(sep) is not None:
+     segOut.append(str(get(sep)))
     # Otherwise add it unchanged
     else:
      segOut.append(sep)
@@ -93,17 +98,18 @@ for annoGroup in [anno, targetsCache]:
 
   for i, origin in enumerate(bracedSegments):
    string = string.replace("{"+origin+"}", str(stringOut[i]))
-  annoGroup[key] = string
+  # Roll our rollables
+  if key in ["damage", "maxhp", "temphp", "dc", "roll", "n"]:
+   if key in ["dc", "n"]:
+    annoGroup[key] =  roll(string)
+   elif key in ["maxhp", "temphp", "roll", "damage"]:
+    annoGroup[key] = vroll(string, 1 + (crit if key == "damage" else 0))
+  else:
+   annoGroup[key] = string
 
 # ----------------------------------
 # | Args part two elecric boogaloo |
 # ----------------------------------
-
-# Roll our rollables
-anno["damage"] = vroll(anno["damage"], 1 + crit) if anno.get("damage") else ""
-anno["maxhp"]  = vroll(anno["maxhp"])  if anno.get("maxhp")  else ""
-anno["temphp"] = vroll(anno["temphp"]) if anno.get("temphp") else ""
-anno["dc"]     = roll(anno["dc"])
 
 # Ignore Certain Args so we aren't reparsing them in the target loop
 args.ignore('d')
@@ -134,7 +140,7 @@ for targ in targetsCache.values():
 # --------------------
 
 for target in targets:
- tOut     = []
+ tOut = []
 
  # Grab our specific targets arguments
  args.set_context(target.name)
@@ -225,6 +231,10 @@ if anno.get("maxhp"):
  metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
 if anno.get("temphp"):
  metaOut.append(f"""**Temp. HP:** {anno["temphp"]}""")
+if anno.get('n'):
+ metaOut.append(f"""**{anno.get('ndesc', 'Number')}**: {anno.get('n')}""")
+if anno.get('roll'):
+ metaOut.append(f"""**Roll**: {anno.get('roll')}""")
 metaOut.append(f"""**DC:** {anno["dc"]}""")
 metaOut.append(f"""{save_type.upper()} save""")
 # Join it together
@@ -242,5 +252,3 @@ if anno.get("phrase"):
 
 return metaOut + NewLine.join(targetOut) + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
 </drac2>
-
--f "Debug|{{f"{totalDamage=}"}}"
