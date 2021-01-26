@@ -37,6 +37,7 @@ anno["title"]        = args.last('title',  f'{name} wants you to make a {StatTyp
 # General
 anno["damage"]       = args.last('d',   '', type_=str)
 anno["maxhp"]        = args.last('max', '', type_=str)
+anno["temphp"]       = args.last('thp', '', type_=str)
 anno["save_bonus"]   = args.get('b')
 
 # We need this to be a dict for the annotating below
@@ -77,7 +78,10 @@ for annoGroup in [anno, targetsCache]:
      segOut.append(str(get(sep)))
     # If a annotated exists, add that
     elif anno.get(sep) is not None:
-     segOut.append(str(anno.get(sep)))
+     if typeof(anno.get(sep)) == "SimpleRollResult":
+      segOut.append(str(anno.get(sep).total))
+     else:
+      segOut.append(str(anno.get(sep)))
     # Otherwise add it unchanged
     else:
      segOut.append(sep)
@@ -97,12 +101,14 @@ for annoGroup in [anno, targetsCache]:
 
 # Roll our rollables
 anno["damage"] = vroll(anno["damage"], 1 + crit) if anno.get("damage") else ""
-anno["maxhp"]  = vroll(anno["maxhp"]) if anno.get("maxhp") else ""
+anno["maxhp"]  = vroll(anno["maxhp"])  if anno.get("maxhp")  else ""
+anno["temphp"] = vroll(anno["temphp"]) if anno.get("temphp") else ""
 anno["dc"]     = roll(anno["dc"])
 
 # Ignore Certain Args so we aren't reparsing them in the target loop
 args.ignore('d')
 args.ignore('max')
+args.ignore('thp')
 args.ignore('pass')
 args.ignore('fail')
 
@@ -144,6 +150,11 @@ for target in targets:
  if targM := args.get('max'):
   targMaxhp += "+" + "+".join(targM)
 
+ # Figure out our entire temp hp adjustment
+ targTemphp = anno["temphp"].consolidated() if anno.get("temphp") else ""
+ if targT := args.get('thp'):
+  targTemphp += "+" + "+".join(targT)
+
  # If we aren't automatically passing or failing
  if not (gAutoPass or autoPass):
 
@@ -160,7 +171,7 @@ for target in targets:
 
   # Roll the save and compare against the DC
   save     = vroll(saveStr)
-  success  = save.total >= dc
+  success  = save.total >= anno["dc"]
 
   tOut.append(f"""**{save_type.upper()} Save:** {save}; {["Failure", "Success"][success]}!""")
  elif gAutoPass:
@@ -186,6 +197,17 @@ for target in targets:
    if targMaxhp.total != anno.get("maxhp", {"total": None}).total:
     tOut.append(f"""**Max HP Roll:** {targMaxhp}""")
    tOut.append(f"""Max HP {["Decreased", "Increased", "Unchanged"][(targMaxhp.total>=0) + (targMaxhp==0)]}: `{targMaxhp.total:+}`""")
+  # Do we have a max hp adjustment? If so, apply it and add to total
+  if targTemphp:
+   targTemphp = vroll(targTemphp)
+   # Was there a specific adjustment?
+   if targTemphp.total != anno.get("temphp", {"total": None}).total:
+    tOut.append(f"""**Temp. HP Roll:** {targTemphp}""")
+   if targTemphp.total > target.temp_hp:
+    target.set_temp_hp(targTemphp.total)
+    tOut.append(f"""Temp. HP Set: `{targTemphp.total}`""")
+   else:
+    tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
 
  # Add our target output to the list
  targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
@@ -201,6 +223,8 @@ if anno.get("damage"):
  metaOut.append(f"""**Damage:** {anno["damage"]}""")
 if anno.get("maxhp"):
  metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
+if anno.get("temphp"):
+ metaOut.append(f"""**Temp. HP:** {anno["temphp"]}""")
 metaOut.append(f"""**DC:** {anno["dc"]}""")
 metaOut.append(f"""{save_type.upper()} save""")
 # Join it together
