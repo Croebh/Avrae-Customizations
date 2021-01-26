@@ -35,7 +35,8 @@ anno["desc"]         = args.last('desc',  '', str)
 anno["title"]        = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
 
 # General
-anno["damage"]       = args.last('d', '', type_ = str)
+anno["damage"]       = args.last('d',   '', type_=str)
+anno["maxhp"]        = args.last('max', '', type_=str)
 anno["save_bonus"]   = args.get('b')
 
 # We need this to be a dict for the annotating below
@@ -94,12 +95,14 @@ for annoGroup in [anno, targetsCache]:
 # | Args part two elecric boogaloo |
 # ----------------------------------
 
-# Roll our base damage and our DC
+# Roll our rollables
 anno["damage"] = vroll(anno["damage"], 1 + crit) if anno.get("damage") else ""
+anno["maxhp"]  = vroll(anno["maxhp"]) if anno.get("maxhp") else ""
 anno["dc"]     = roll(anno["dc"])
 
 # Ignore Certain Args so we aren't reparsing them in the target loop
 args.ignore('d')
+args.ignore('max')
 args.ignore('pass')
 args.ignore('fail')
 
@@ -136,6 +139,11 @@ for target in targets:
  if targD := args.get('d'):
   targDamage += "+" + "+".join(targD)
 
+ # Figure out our entire max hp adjustment
+ targMaxhp = anno["maxhp"].consolidated() if anno.get("maxhp") else ""
+ if targM := args.get('max'):
+  targMaxhp += "+" + "+".join(targM)
+
  # If we aren't automatically passing or failing
  if not (gAutoPass or autoPass):
 
@@ -170,6 +178,14 @@ for target in targets:
    targDamage = target.damage(targDamage, crit)
    totalDamage += targDamage.total
    tOut.append(targDamage.damage)
+  # Do we have a max hp adjustment? If so, apply it and add to total
+  if targMaxhp:
+   targMaxhp = vroll(targMaxhp)
+   target.set_maxhp(target.max_hp + targMaxhp.total)
+   # Was there a specific adjustment?
+   if targMaxhp.total != anno.get("maxhp", {"total": None}).total:
+    tOut.append(f"""**Max HP Roll:** {targMaxhp}""")
+   tOut.append(f"""Max HP {["Decreased", "Increased", "Unchanged"][(targMaxhp.total>=0) + (targMaxhp==0)]}: `{targMaxhp.total:+}`""")
 
  # Add our target output to the list
  targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
@@ -183,6 +199,8 @@ for target in targets:
 metaOut = []
 if anno.get("damage"):
  metaOut.append(f"""**Damage:** {anno["damage"]}""")
+if anno.get("maxhp"):
+ metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
 metaOut.append(f"""**DC:** {anno["dc"]}""")
 metaOut.append(f"""{save_type.upper()} save""")
 # Join it together
