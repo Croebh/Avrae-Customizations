@@ -27,7 +27,7 @@ name = user.name if user else name
 # Misc
 anno["n"]            = args.last("n",     "", str)
 anno["ndesc"]        = args.last("ndesc", "", str)
-anoo["roll"]         = args.last("roll",  "", str)
+anno["roll"]         = args.last("roll",  "", str)
 
 # One Off
 anno["dc"]           = args.last('dc',   "10", str)
