@@ -481,6 +481,27 @@
    "type": "AliasAttackList"
   }
  },
+ "character().cc(name)": {
+  "desc": "Gets the AliasCustomCounter with the name name",
+  "url": "aliasing.api.character.AliasCharacter.cc",
+  "param": [
+   {
+    "name": "name",
+    "type": [
+     "str"
+    ],
+    "desc": "The name of the custom counter to get."
+   }
+  ],
+  "returns": {
+   "type": "AliasCustomCounter",
+   "desc": "The custom counter"
+  },
+  "raises": {
+   "name": "ConsumableException",
+   "desc": "If the counter does not exist."
+  }
+ },
  "character().cc_exists(name)": {
   "desc": "Returns whether a custom counter exists.",
   "url": "aliasing.api.character.AliasCharacter.cc_exists",
