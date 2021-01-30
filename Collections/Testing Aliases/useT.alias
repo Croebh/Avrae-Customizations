@@ -95,7 +95,6 @@ for annoGroup in [anno, targetsCache]:
    # Roll and append (invalid roll() return 0)
    stringOut.append(roll(segOut) if segOut.strip('+-').isdigit() else roll(segOut) or segOut)
   # Replace the original string
-
   for i, origin in enumerate(bracedSegments):
    string = string.replace("{"+origin+"}", str(stringOut[i]))
   # Roll our rollables
@@ -118,12 +117,55 @@ args.ignore('thp')
 args.ignore('pass')
 args.ignore('fail')
 
+# ---------------
+# | Consumables |
+# ---------------
+
+# Default to 'everything is fine'
+valid           = True
+
+consumeOut      = []
+consumes        = {"cc": {}, "slot": {}, "item": {}}
+invalidConsumes = {"cc": [], "slot": [], "item": []}
+
+for counterNum in [""]+[str(x) for x in range(1,11)]:
+ if cc := args.last('cc' + counterNum):
+  ccUses = args.last('ccnum' + counterNum, 1, int)
+  # Was it an exact match?
+  if character().cc_exists(cc):
+   cc = character().cc(cc)
+  # Otherwise, loop through all counters and fuzzy search
+  else:
+   for counter in character().consumables:
+    if cc.lower() in counter.name.lower():
+     cc = counter
+     break
+   # If we got through the whole for loop with nothing, no matches
+   else:
+    cc = None
+  # Did we find a valid counter? Add it to the consumes dic
+  if cc:
+   consumes["cc"].update({cc: consumes.get(cc.name, 0) - ccUses})
+
+if not args.last('i'):
+ # Make sure all counters won't be made out of bounds (need to add spell slots and items to this too)
+ if all([1 if cc.min <= (cc.value - ccUses) <= cc.max else invalidConsumes["cc"].append(f"""**{cc.name}** ({ccUses:+}): {str(cc)}""") for cc, ccUses in consumes["cc"].items()]):
+  # If everything was valid, go through and modify them all
+  for counter, ccUses in consumes["cc"].items():
+   cc.set(cc.value - ccUses)
+   consumeOut.append(f""" -f "{cc.name} ({-ccUses:+})|{str(cc)}" """)
+ # Otherwise, something would go out of bounds, cancel everything and inform the user
+ else:
+  consumeOut.append(f""" -f "Consumable out of Bounds|Unfortunately, one or more of your consumables would be put out of bounds by this action:
+   {NewLine.join(invalidConsumes["cc"]) if invalidConsumes["cc"] else "" }" """)
+  valid = False
+
 # -------------------
 # | Get Target Loop |
 # -------------------
 
-targets = []
-targetOut   = []
+targets   = []
+targetOut = []
 for targ in targetsCache.values():
   targName, targArgs = (targ.split("|")+[""])[:2]
   targArgs = argparse(targArgs)
@@ -192,6 +234,8 @@ for target in targets:
  if not success:
   # Do we have damage? If so, apply it and add to total
   if targDamage:
+   if args.last('avoid'):
+    targDamage = f"""({targDamage})/2"""
    targDamage = target.damage(targDamage, crit)
    totalDamage += targDamage.total
    tOut.append(targDamage.damage)
@@ -214,6 +258,16 @@ for target in targets:
     tOut.append(f"""Temp. HP Set: `{targTemphp.total}`""")
    else:
     tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
+ else:
+  # Do we have damage and half/avoid? If so, apply it and add to total
+  if targDamage:
+   if args.last('avoid'):
+    targDamage = f"""({targDamage})*0"""
+   elif args.last('half'):
+    targDamage = f"""({targDamage})/2"""
+   targDamage = target.damage(targDamage, crit)
+   totalDamage += targDamage.total
+   tOut.append(targDamage.damage)
 
  # Add our target output to the list
  targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
@@ -225,20 +279,23 @@ for target in targets:
 # | Meta Output |
 # ---------------
 metaOut = []
-if anno.get("damage"):
- metaOut.append(f"""**Damage:** {anno["damage"]}""")
-if anno.get("maxhp"):
- metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
-if anno.get("temphp"):
- metaOut.append(f"""**Temp. HP:** {anno["temphp"]}""")
-if anno.get('n'):
- metaOut.append(f"""**{anno.get('ndesc', 'Number')}**: {anno.get('n')}""")
-if anno.get('roll'):
- metaOut.append(f"""**Roll**: {anno.get('roll')}""")
-metaOut.append(f"""**DC:** {anno["dc"]}""")
-metaOut.append(f"""{save_type.upper()} save""")
-# Join it together
-metaOut = f""" -f "Meta|{NewLine.join(metaOut)}" """
+if valid:
+ if anno.get("damage"):
+  metaOut.append(f"""**Damage:** {anno["damage"]}""")
+ if anno.get("maxhp"):
+  metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
+ if anno.get("temphp"):
+  metaOut.append(f"""**Temp. HP:** {anno["temphp"]}""")
+ if anno.get('n'):
+  metaOut.append(f"""**{anno.get('ndesc', 'Number')}**: {anno.get('n')}""")
+ if anno.get('roll'):
+  metaOut.append(f"""**Roll**: {anno.get('roll')}""")
+ metaOut.append(f"""**DC:** {anno["dc"]}""")
+ metaOut.append(f"""{save_type.upper()} save""")
+ # Join it together
+ metaOut = f""" -f "Meta|{NewLine.join(metaOut)}" """
+else:
+ metaOut = ""
 
 # ------------------
 # | Flavour Output |
@@ -250,5 +307,7 @@ if anno.get("desc"):
 if anno.get("phrase"):
  flavourOut += f""" -desc "*{anno.get("phrase")}*" """
 
-return metaOut + NewLine.join(targetOut) + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
+consumeOut = ' '.join(consumeOut)
+
+return metaOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
 </drac2>
