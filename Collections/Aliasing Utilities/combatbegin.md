@@ -1,4 +1,6 @@
-A simple alias to set up a test combat, containing four grouped Orcs, four grouped Wolves, and 2 ungrouped Goblins, as well as your current character.
+A simple alias to set up a test combat, containing four grouped Orcs, four grouped Wolves, 2 ungrouped Goblins,  and 1 mage, as well as your current character.
+
+If you use the argument `-h`, it will unhide the monsters when adding them.
 
 **Support Us**
 You can support me and this alias at [Ko-Fi](https://ko-fi.com/croebh)
