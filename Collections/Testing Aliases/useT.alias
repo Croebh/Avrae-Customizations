@@ -60,35 +60,39 @@ user = init.get_combatant(args.last('user', name)) or character()
 name = user.name if user else name
 
 # Misc
-anno["n"]            = args.last("n",     "", str)
-anno["ndesc"]        = args.last("ndesc", "", str)
-anno["roll"]         = args.last("roll",  "", str)
+anno["n"]           = args.last("n",     "", str)
+anno["ndesc"]       = args.last("ndesc", "", str)
+anno["roll"]        = args.last("roll",  "", str)
 
 # One Off
-anno["dc"]           = args.last('dc',   "10", str)
-crit                 = args.last('crit', False, bool)
-save_type            = args.last('save', args.last('s', 'dex')).lower()[:3]
+anno["dc"]          = args.last('dc',   "10", str)
+crit                = args.last('crit', False, bool)
+save_type           = args.last('save', args.last('s', 'dex')).lower()[:3]
 
 # General
-anno["damage"]       = args.last('d',   '', str)
-anno["maxhp"]        = args.last('max', '', str)
-anno["temphp"]       = args.last('thp', '', str)
-anno["save_bonus"]   = args.get('b')
+anno["save_bonus"]  = args.get('b')
+anno["damage"]      = args.last('d',   "", str)
+anno["maxhp"]       = args.last('max', "", str)
+anno["temphp"]      = args.last('thp', "", str)
+anno["effect"]      = args.last("effect", "", str)
+anno["effectdesc"]  = args.last("effectdesc", "", str)
+anno["seffect"]     = args.last("seffect", "", str)
+anno["seffectdesc"] = args.last("seffectdesc", "", str)
 
 # Flavour
-anno["phrase"]       = args.join('phrase', NewLine, "")
-anno["desc"]         = args.last('desc',   '', str)
-anno["thumb"]        = args.last('thumb',
+anno["phrase"]      = args.join('phrase', NewLine, "")
+anno["desc"]        = args.last('desc',   '', str)
+anno["thumb"]       = args.last('thumb',
                                  image if character().name == user.name else
                                  "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png", str)
-anno["color"]        = args.last('color',  color, str)
-anno["image"]        = args.last('image',  "", str)
-anno["title"]        = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
+anno["color"]       = args.last('color',  color, str)
+anno["image"]       = args.last('image',  "", str)
+anno["title"]       = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
 
 # We need this to be a dict for the annotating below
-targetsCache         = {i:targ for i, targ in enumerate(args.get('t'))}
+targetsCache       = {i:targ for i, targ in enumerate(args.get('t'))}
 
-gAutoPass            = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
+gAutoPass          = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
 
 # Clear out unused args
 for arg in anno.copy():
@@ -221,6 +225,14 @@ if not args.last('i'):
    {NewLine.join(invalidConsumes["slot"]) if invalidConsumes["slot"] else "" }" """.replace("   ","").replace("\n\n", "\n"))
   valid = False
 
+# ------------------
+# | Effect Parsing |
+# ------------------
+
+# This is where I would have my -effect parser
+# .....
+# IF I HAD ONE
+
 # -------------------
 # | Get Target Loop |
 # -------------------
@@ -339,6 +351,7 @@ for target in targets:
 # ---------------
 # | Meta Output |
 # ---------------
+
 metaOut = []
 if valid:
  if anno.get("damage"):
@@ -361,6 +374,7 @@ else:
 # ------------------
 # | Flavour Output |
 # ------------------
+
 flavourOut   = ""
 flavourOut  += f""" -title "{anno.get("title")}" """
 flavourOut  += f""" -color {anno.get('color')} """
