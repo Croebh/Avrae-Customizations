@@ -31,7 +31,8 @@ for gvar in load_json(get_svar('useResources', '[]')) + load_json(get('resources
   cgvar.update(gvarLoad)
  # Otherwise, inform the user that it was invalid
  else:
-  return f""" -title "Invalid GVAR: `{gvar}`" -desc "Please remove it from either your `resources` uvar, or your `useResources` svar." """
+  return f""" -title "Invalid GVAR: `{gvar}`"
+  -desc "Please remove it from either your `resources` uvar, or your `useResources` svar." """
 
 cvar  = args.last('cvar') or (a[0] if a else '{}')
 # If we have a cvar, lets add it to our args
@@ -76,7 +77,12 @@ anno["save_bonus"]   = args.get('b')
 
 # Flavour
 anno["phrase"]       = args.join('phrase', NewLine, "")
-anno["desc"]         = args.last('desc',  '', str)
+anno["desc"]         = args.last('desc',   '', str)
+anno["thumb"]        = args.last('thumb',
+                                 image if character().name == user.name else
+                                 "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png", str)
+anno["color"]        = args.last('color',  color, str)
+anno["image"]        = args.last('image',  "", str)
 anno["title"]        = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
 
 # We need this to be a dict for the annotating below
@@ -357,6 +363,9 @@ else:
 # ------------------
 flavourOut   = ""
 flavourOut  += f""" -title "{anno.get("title")}" """
+flavourOut  += f""" -color {anno.get('color')} """
+flavourOut  += f""" -thumb {anno.get('thumb')} """
+flavourOut  += f""" -image {anno.get('image')} """
 if anno.get("desc"):
  flavourOut += f""" -f "Effect|{anno.get("desc")}" """
 if anno.get("phrase"):
