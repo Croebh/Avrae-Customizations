@@ -466,8 +466,11 @@ if valid:
   metaOut.append(f"""**{anno.get('ndesc', 'Number')}**: {anno.get('n')}""")
  if anno.get('roll'):
   metaOut.append(f"""**Roll**: {anno.get('roll')}""")
- metaOut.append(f"""**DC:** {anno["dc"]}""")
- metaOut.append(f"""{save_type.upper()} save""")
+ # We don't need save info if everyone auto fail/passes
+ if not gAutoPass:
+  metaOut.append(f"""**DC:** {anno["dc"]}""")
+  metaOut.append(f"""{save_type.upper()} save""")
+if metaOut:
  # Join it together
  metaOut = f""" -f "Meta|{NewLine.join(metaOut)}" """
 else:
