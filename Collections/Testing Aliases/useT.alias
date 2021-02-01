@@ -90,9 +90,10 @@ anno["image"]       = args.last('image',  "", str)
 anno["title"]       = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
 
 # We need this to be a dict for the annotating below
-targetsCache       = {i:targ for i, targ in enumerate(args.get('t'))}
+targetsCache        = {i:targ for i, targ in enumerate(args.get('t'))}
 
-gAutoPass          = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
+gAutoPass           = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
+hide                = args.last('h')
 
 # Clear out unused args
 for arg in anno.copy():
@@ -457,7 +458,7 @@ else:
 metaOut = []
 if valid:
  if anno.get("damage"):
-  metaOut.append(f"""**Damage:** {anno["damage"]}""")
+  metaOut.append(f"""**Damage:** {"Hidden" if hide else anno["damage"]}""")
  if anno.get("maxhp"):
   metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
  if anno.get("temphp"):
@@ -468,7 +469,7 @@ if valid:
   metaOut.append(f"""**Roll**: {anno.get('roll')}""")
  # We don't need save info if everyone auto fail/passes
  if not gAutoPass:
-  metaOut.append(f"""**DC:** {anno["dc"]}""")
+  metaOut.append(f"""**DC:** {"Hidden" if hide else anno["dc"]}""")
   metaOut.append(f"""{save_type.upper()} save""")
 if metaOut:
  # Join it together
