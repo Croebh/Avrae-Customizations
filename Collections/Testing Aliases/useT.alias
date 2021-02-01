@@ -229,9 +229,65 @@ if not args.last('i'):
 # | Effect Parsing |
 # ------------------
 
-# This is where I would have my -effect parser
-# .....
-# IF I HAD ONE
+# Targetted Effects
+if anno.get('effect'):
+ effect = {}
+ eSplit  = anno.get('effect').split('|')
+ # First arg should always be there
+ effect["name"] = eSplit.pop(0)
+ effect["args"] = ""
+ effect["dur"]  = -1
+
+ # If theres only one arg left, it'd be args
+ if len(eSplit) == 1:
+   effect["args"] = eSplit.pop(0)
+ # If its two, its args and duration
+ elif len(eSplit) == 2:
+   effect["args"] = eSplit.pop(0)
+   effect["dur"]  = eSplit.pop(0)
+ # If its 3 or more, and has -attack, account for that
+ elif len(eSplit) >= 3 and '-attack' in anno.get('effect'):
+   # Count how many -attack are in the args
+   aCount = anno.get('effect').count('-attack')*3
+   effect["args"] = '|'.join(eSplit[:aCount])
+   effect["dur"]  = (eSplit[aCount:] or [-1])[0]
+
+ # Handle our special arguments
+ effectArgs = argparse(effect["args"])
+ for special in ["separate", "parent", "end", "conc", "desc"]:
+  effect[special] = effectArgs.last(special)
+
+ anno["effect"] = effect
+
+# Self Effects
+if anno.get('seffect'):
+ effect = {}
+ eSplit  = anno.get('seffect').split('|')
+ # First arg should always be there
+ effect["name"] = eSplit.pop(0)
+ effect["args"] = ""
+ effect["dur"]  = -1
+
+ # If theres only one arg left, it'd be args
+ if len(eSplit) == 1:
+   effect["args"] = eSplit.pop(0)
+ # If its two, its args and duration
+ elif len(eSplit) == 2:
+   effect["args"] = eSplit.pop(0)
+   effect["dur"]  = eSplit.pop(0)
+ # If its 3 or more, and has -attack, account for that
+ elif len(eSplit) >= 3 and '-attack' in anno.get('effect'):
+   # Count how many -attack are in the args
+   aCount = anno.get('effect').count('-attack')*3
+   effect["args"] = '|'.join(eSplit[:aCount])
+   effect["dur"]  = (eSplit[aCount:] or [-1])[0]
+
+ # Handle our special arguments
+ effectArgs = argparse(effect["args"])
+ for special in ["end", "conc", "desc"]:
+  effect[special] = effectArgs.last(special)
+
+ anno["seffect"] = effect
 
 # -------------------
 # | Get Target Loop |
@@ -249,6 +305,13 @@ for targ in targetsCache.values():
    for gTarg in curTarg.combatants:
     targets.append(gTarg)
     args.add_context(gTarg.name, targArgs)
+
+# -------------------
+# | Self Targetting |
+# -------------------
+
+# Do the thing, zhu-lee
+
 
 # --------------------
 # | Main Target Loop |
