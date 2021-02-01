@@ -105,62 +105,64 @@ for arg in anno.copy():
 # ---------------------------
 
 mathsep   = "+-()/*[]"
-for annoGroup in [anno, targetsCache]:
- for key, string in annoGroup.items():
-  # Get all parts enclosed in {braces}
-  bracedSegments = [(part := part.split('{')[0])[:part.index('}')] for part in string.split('{') if '}' in part]
-  stringOut = []
-  # Iterate over each one
-  for segment in bracedSegments:
-   segOut = []
-   # Separate out things in mathsep, with spaces
-   sepSegment = "".join([(f" {char} " if char in mathsep else char) for char in segment]).split()
-   # Iterate over each part
-   for sep in sepSegment:
-    # If its a number, or a math seperator, add it to the output unchanged
-    if (sep.strip('-.').isdigit() or sep in mathsep):
-     segOut.append(sep)
-    # If a annotated exists, add that
-    elif anno.get(sep) is not None:
-     if typeof(anno.get(sep)) == "SimpleRollResult":
-      segOut.append(str(anno.get(sep).total))
+if not out:
+ for annoGroup in [anno, targetsCache]:
+  for key, string in annoGroup.items():
+   # Get all parts enclosed in {braces}
+   bracedSegments = [(part := part.split('{')[0])[:part.index('}')] for part in string.split('{') if '}' in part]
+   stringOut = []
+   # Iterate over each one
+   for segment in bracedSegments:
+    segOut = []
+    # Separate out things in mathsep, with spaces
+    sepSegment = "".join([(f" {char} " if char in mathsep else char) for char in segment]).split()
+    # Iterate over each part
+    for sep in sepSegment:
+     # If its a number, or a math seperator, add it to the output unchanged
+     if (sep.strip('-.').isdigit() or sep in mathsep):
+      segOut.append(sep)
+     # If a annotated exists, add that
+     elif anno.get(sep) is not None:
+      if typeof(anno.get(sep)) == "SimpleRollResult":
+       segOut.append(str(anno.get(sep).total))
+      else:
+       segOut.append(str(anno.get(sep)))
+     # If an -arg was provided with this name, add that
+     elif args.last(sep) is not None:
+      segOut.append(str(args.last(sep)))
+     # If a variable exists, add that
+     elif get(sep) is not None:
+      segOut.append(str(get(sep)))
+     # Otherwise add it unchanged
      else:
-      segOut.append(str(anno.get(sep)))
-    # If an -arg was provided with this name, add that
-    elif args.last(sep) is not None:
-     segOut.append(str(args.last(sep)))
-    # If a variable exists, add that
-    elif get(sep) is not None:
-     segOut.append(str(get(sep)))
-    # Otherwise add it unchanged
-    else:
-     segOut.append(sep)
-   # Convert it to a string
-   segOut = ''.join(segOut)
-   # Roll and append (invalid roll() return 0)
-   stringOut.append(roll(segOut) if segOut.strip('+-').isdigit() else roll(segOut) or segOut)
-  # Replace the original string
-  for i, origin in enumerate(bracedSegments):
-   string = string.replace("{"+origin+"}", str(stringOut[i]))
-  # Roll our rollables
-  if key in ["damage", "maxhp", "temphp", "dc", "roll", "n"]:
-   if key in ["dc", "n"]:
-    annoGroup[key] =  roll(string)
-   elif key in ["maxhp", "temphp", "roll", "damage"]:
-    annoGroup[key] = vroll(string, 1 + (crit if key == "damage" else 0))
-  else:
-   annoGroup[key] = string
+      segOut.append(sep)
+    # Convert it to a string
+    segOut = ''.join(segOut)
+    # Roll and append (invalid roll() return 0)
+    stringOut.append(roll(segOut) if segOut.strip('+-').isdigit() else roll(segOut) or segOut)
+   # Replace the original string
+   for i, origin in enumerate(bracedSegments):
+    string = string.replace("{"+origin+"}", str(stringOut[i]))
+   # Roll our rollables
+   if key in ["damage", "maxhp", "temphp", "dc", "roll", "n"]:
+    if key in ["dc", "n"]:
+     annoGroup[key] =  roll(string)
+    elif key in ["maxhp", "temphp", "roll", "damage"]:
+     annoGroup[key] = vroll(string, 1 + (crit if key == "damage" else 0))
+   else:
+    annoGroup[key] = string
 
 # ----------------------------------
 # | Args part two elecric boogaloo |
 # ----------------------------------
 
-# Ignore Certain Args so we aren't reparsing them in the target loop
-args.ignore('d')
-args.ignore('max')
-args.ignore('thp')
-args.ignore('pass')
-args.ignore('fail')
+# Ignore Certain Args so we aren't reparsing them in the target loop if not outputting
+if not out:
+ args.ignore('d')
+ args.ignore('max')
+ args.ignore('thp')
+ args.ignore('pass')
+ args.ignore('fail')
 
 # ---------------
 # | Consumables |
@@ -206,7 +208,7 @@ for slotNum in [""]+[str(x) for x in range(1,11)]:
 counterValid = all([1 if cc.min <= (cc.value + ccUses) <= cc.max else invalidConsumes["cc"].append(f"""**{cc.name}** ({ccUses:+}): {str(cc)}""") for cc, ccUses in consumes["cc"].items()])
 slotValid = all([1 if 0 <= (user.spellbook.get_slots(slot) + slotUses) <= user.spellbook.get_max_slots(slot) else invalidConsumes["slot"].append(f"""{user.spellbook.slots_str(slot)} ({slotUses:+})""") for slot, slotUses in consumes["slot"].items()])
 
-if not args.last('i'):
+if not args.last('i') and not out:
  if counterValid and slotValid:
   # If everything was valid, go through and modify them all
   for cc, ccUses in consumes["cc"].items():
@@ -311,140 +313,142 @@ for targ in targetsCache.values():
 # | Main Target Loop |
 # --------------------
 
-for target in targets:
- tOut = []
+if not out:
+ for target in targets:
+  tOut = []
 
- # Grab our specific targets arguments
- args.set_context(target.name)
- autoPass = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
+  # Grab our specific targets arguments
+  args.set_context(target.name)
+  autoPass = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
 
- # Figure out our entire damage string
- targDamage = anno["damage"].consolidated() if anno.get("damage") else ""
- if targD := args.get('d'):
-  targDamage += "+" + "+".join(targD)
+  # Figure out our entire damage string
+  targDamage = anno["damage"].consolidated() if anno.get("damage") else ""
+  if targD := args.get('d'):
+   targDamage += "+" + "+".join(targD)
 
- # Figure out our entire max hp adjustment
- targMaxhp = anno["maxhp"].consolidated() if anno.get("maxhp") else ""
- if targM := args.get('max'):
-  targMaxhp += "+" + "+".join(targM)
+  # Figure out our entire max hp adjustment
+  targMaxhp = anno["maxhp"].consolidated() if anno.get("maxhp") else ""
+  if targM := args.get('max'):
+   targMaxhp += "+" + "+".join(targM)
 
- # Figure out our entire temp hp adjustment
- targTemphp = anno["temphp"].consolidated() if anno.get("temphp") else ""
- if targT := args.get('thp'):
-  targTemphp += "+" + "+".join(targT)
+  # Figure out our entire temp hp adjustment
+  targTemphp = anno["temphp"].consolidated() if anno.get("temphp") else ""
+  if targT := args.get('thp'):
+   targTemphp += "+" + "+".join(targT)
 
- # If we aren't automatically passing or failing
- if not (gAutoPass or autoPass):
+  # If we aren't automatically passing or failing
+  if not (gAutoPass or autoPass):
 
-  # Figure out all of our save bonuses
-  save_bonus = anno.get("save_bonus", [])
-  adv = args.adv(boolwise=True)
-  for effect in target.effects:
-   if (sb := effect.effect.get('sb')):
-     save_bonus.append(sb)
+   # Figure out all of our save bonuses
+   save_bonus = anno.get("save_bonus", [])
+   adv = args.adv(boolwise=True)
+   for effect in target.effects:
+    if (sb := effect.effect.get('sb')):
+      save_bonus.append(sb)
 
-  # Grab our save string and add our bonuses
-  saveStr  = target.saves.get(save_type).d20(adv)
-  saveStr += '+'.join(save_bonus).replace('+-', '-')
+   # Grab our save string and add our bonuses
+   saveStr  = target.saves.get(save_type).d20(adv)
+   saveStr += '+'.join(save_bonus).replace('+-', '-')
 
-  # Roll the save and compare against the DC
-  save     = vroll(saveStr)
-  success  = save.total >= anno["dc"]
+   # Roll the save and compare against the DC
+   save     = vroll(saveStr)
+   success  = save.total >= anno["dc"]
 
-  tOut.append(f"""**{save_type.upper()} Save:** {save}; {["Failure", "Success"][success]}!""")
- elif gAutoPass:
-  # Global flag (1 is true, -1 is false)
-  success = gAutoPass == 1
- else:
-  # Target flag (1 is true, -1 is false)
-  success = autoPass == 1
-  tOut.append(f"""**{save_type.upper()} Save:** Automatic {["Failure", "Success"][success]}!""")
+   tOut.append(f"""**{save_type.upper()} Save:** {save}; {["Failure", "Success"][success]}!""")
+  elif gAutoPass:
+   # Global flag (1 is true, -1 is false)
+   success = gAutoPass == 1
+  else:
+   # Target flag (1 is true, -1 is false)
+   success = autoPass == 1
+   tOut.append(f"""**{save_type.upper()} Save:** Automatic {["Failure", "Success"][success]}!""")
 
- # If they failed, do things to them
- if not success:
-  # Do we have damage? If so, apply it and add to total
-  if targDamage:
-   if args.last('avoid'):
-    targDamage = f"""({targDamage})/2"""
-   targDamage = target.damage(targDamage, crit)
-   totalDamage += targDamage.total
-   tOut.append(targDamage.damage)
-  # Do we have a max hp adjustment? If so, apply it and add to total
-  if targMaxhp:
-   targMaxhp = vroll(targMaxhp)
-   target.set_maxhp(target.max_hp + targMaxhp.total)
-   # Was there a specific adjustment?
-   if targMaxhp.total != anno.get("maxhp", {"total": None}).total:
-    tOut.append(f"""**Max HP Roll:** {targMaxhp}""")
-   tOut.append(f"""Max HP {["Decreased", "Increased", "Unchanged"][(targMaxhp.total>=0) + (targMaxhp==0)]}: `{targMaxhp.total:+}`""")
-  # Do we have a max hp adjustment? If so, apply it and add to total
-  if targTemphp:
-   targTemphp = vroll(targTemphp)
-   # Was there a specific adjustment?
-   if targTemphp.total != anno.get("temphp", {"total": None}).total:
-    tOut.append(f"""**Temp. HP Roll:** {targTemphp}""")
-   if targTemphp.total > target.temp_hp:
-    target.set_temp_hp(targTemphp.total)
-    tOut.append(f"""Temp. HP Set: `{targTemphp.total}`""")
-   else:
-    tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
-  # Are we adding an effect?
-  if tEffect := anno["effect"]:
-
-   # Set our parent effect (Defaulting to None)
-   parent = None
-   # If we're parenting the effect to a target, we need to make sure that effect exists
-   if (sEffect := anno["seffect"]) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
-    # Are we created one parent effect?
-    if not sEffect.get('separate'):
-     # If the parent effect doesn't exist yet, lets create it
-     if not sEffect.get('created'):
-      user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
-      sEffect["created"] = [(parent := user.get_effect(sEffect["name"]))]
-    # Otherwise, we need to append or replace the targets name (so our effects don't overwrite)
+  # If they failed, do things to them
+  if not success:
+   # Do we have damage? If so, apply it and add to total
+   if targDamage:
+    if args.last('avoid'):
+     targDamage = f"""({targDamage})/2"""
+    targDamage = target.damage(targDamage, crit)
+    totalDamage += targDamage.total
+    tOut.append(targDamage.damage)
+   # Do we have a max hp adjustment? If so, apply it and add to total
+   if targMaxhp:
+    targMaxhp = vroll(targMaxhp)
+    target.set_maxhp(target.max_hp + targMaxhp.total)
+    # Was there a specific adjustment?
+    if targMaxhp.total != anno.get("maxhp", {"total": None}).total:
+     tOut.append(f"""**Max HP Roll:** {targMaxhp}""")
+    tOut.append(f"""Max HP {["Decreased", "Increased", "Unchanged"][(targMaxhp.total>=0) + (targMaxhp==0)]}: `{targMaxhp.total:+}`""")
+   # Do we have a max hp adjustment? If so, apply it and add to total
+   if targTemphp:
+    targTemphp = vroll(targTemphp)
+    # Was there a specific adjustment?
+    if targTemphp.total != anno.get("temphp", {"total": None}).total:
+     tOut.append(f"""**Temp. HP Roll:** {targTemphp}""")
+    if targTemphp.total > target.temp_hp:
+     target.set_temp_hp(targTemphp.total)
+     tOut.append(f"""Temp. HP Set: `{targTemphp.total}`""")
     else:
-     if "[tname]" not in sEffect["name"]:
-      sName = sEffect["name"] + f" - {target.name}"
+     tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
+   # Are we adding an effect?
+   if tEffect := anno["effect"]:
+
+    # Set our parent effect (Defaulting to None)
+    parent = None
+    # If we're parenting the effect to a target, we need to make sure that effect exists
+    if (sEffect := anno["seffect"]) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
+     # Are we created one parent effect?
+     if not sEffect.get('separate'):
+      # If the parent effect doesn't exist yet, lets create it
+      if not sEffect.get('created'):
+       user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+       sEffect["created"] = [(parent := user.get_effect(sEffect["name"]))]
+     # Otherwise, we need to append or replace the targets name (so our effects don't overwrite)
      else:
-      sName = sEffect["name"].replace("[tname]", target.name)
-     user.add_effect(sName, sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
-     sEffect["created"] = sEffect.get("created", []) + [(parent := user.get_effect(sName))]
-   # Finally, add our effect
-   target.add_effect(tEffect["name"], tEffect["args"], tEffect["dur"], tEffect["conc"], parent, tEffect["end"], anno.get("effectdesc"))
-   tOut.append(f"""**Effect:** {str(target.get_effect(tEffect["name"])).splitlines()[0]}""")
+      if "[tname]" not in sEffect["name"]:
+       sName = sEffect["name"] + f" - {target.name}"
+      else:
+       sName = sEffect["name"].replace("[tname]", target.name)
+      user.add_effect(sName, sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+      sEffect["created"] = sEffect.get("created", []) + [(parent := user.get_effect(sName))]
+    # Finally, add our effect
+    target.add_effect(tEffect["name"], tEffect["args"], tEffect["dur"], tEffect["conc"], parent, tEffect["end"], anno.get("effectdesc"))
+    tOut.append(f"""**Effect:** {str(target.get_effect(tEffect["name"])).splitlines()[0]}""")
 
- else:
-  # Do we have damage and half/avoid? If so, apply it and add to total
-  if targDamage:
-   if args.last('avoid'):
-    targDamage = f"""({targDamage})*0"""
-   elif args.last('half'):
-    targDamage = f"""({targDamage})/2"""
-   targDamage = target.damage(targDamage, crit)
-   totalDamage += targDamage.total
-   tOut.append(targDamage.damage)
+  else:
+   # Do we have damage and half/avoid? If so, apply it and add to total
+   if targDamage:
+    if args.last('avoid'):
+     targDamage = f"""({targDamage})*0"""
+    elif args.last('half'):
+     targDamage = f"""({targDamage})/2"""
+    targDamage = target.damage(targDamage, crit)
+    totalDamage += targDamage.total
+    tOut.append(targDamage.damage)
 
- # Add our target output to the list
- targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
+  # Add our target output to the list
+  targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
 
- # Reset our context
- args.set_context(None)
+  # Reset our context
+  args.set_context(None)
 
 # -------------------
 # | Self Targetting |
 # -------------------
 
 userOut = []
-# Is the user an active combatant?
-if typeof(user) == "SimpleCombatant":
- # Lets do effects first (only?)
- # If we have an seffect, and wasn't already created
- # and not just not made because everyone passed their save
- if (sEffect := anno["seffect"]) and not sEffect.get('created') and not 'parent' in sEffect.get('args'):
-  user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
-  sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sName)]
- for effect in sEffect.get("created"):
-  userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
+if not out:
+ # Is the user an active combatant?
+ if typeof(user) == "SimpleCombatant":
+  # Lets do effects first (only?)
+  # If we have an seffect, and wasn't already created
+  # and not just not made because everyone passed their save
+  if (sEffect := anno["seffect"]) and not sEffect.get('created') and not 'parent' in sEffect.get('args'):
+   user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+   sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sName)]
+  for effect in sEffect.get("created"):
+   userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
 
 if userOut:
  userOut = f""" -f "{user.name}|{NewLine.join(userOut)}" """
@@ -493,5 +497,13 @@ if anno.get("phrase"):
 
 consumeOut = ' '.join(consumeOut)
 
-return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
+if out:
+ arg_list = ["s", "dc", "h", "b", "pass", "fail", "d", "half", "effect", "max", "title", "phrase", "desc", "thumb", "avoid", "save", "i", "seffect", "xroll", "t", "thp", "n", "effectdesc", "seffectdesc"]
+ for consum in ["cc", "ccnum", "slot", "slotnum", "item", "itemqty"]:
+  arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1,11)])
+ quotes='\\"'
+ cout = {x : (args.last(x) if x!='t' else args.get(x)) for x in arg_list if x in args} if out else ''
+ return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_json(cout).replace('"',quotes)}{NewLine}{'`' * 3}" """
+else:
+ return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
 </drac2>
