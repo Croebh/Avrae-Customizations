@@ -71,12 +71,12 @@ save_type           = args.last('save', args.last('s', 'dex')).lower()[:3]
 
 # General
 anno["save_bonus"]  = args.get('b')
-anno["damage"]      = args.last('d',   "", str)
-anno["maxhp"]       = args.last('max', "", str)
-anno["temphp"]      = args.last('thp', "", str)
-anno["effect"]      = args.last("effect", "", str)
-anno["effectdesc"]  = args.last("effectdesc", "", str)
-anno["seffect"]     = args.last("seffect", "", str)
+anno["damage"]      = args.last('d',           "", str)
+anno["maxhp"]       = args.last('max',         "", str)
+anno["temphp"]      = args.last('thp',         "", str)
+anno["effect"]      = args.last("effect",      "", str)
+anno["effectdesc"]  = args.last("effectdesc",  "", str)
+anno["seffect"]     = args.last("seffect",     "", str)
 anno["seffectdesc"] = args.last("seffectdesc", "", str)
 
 # Flavour
@@ -254,7 +254,7 @@ if anno.get('effect'):
 
  # Handle our special arguments
  effectArgs = argparse(effect["args"])
- for special in ["separate", "parent", "end", "conc", "desc"]:
+ for special in ["end", "conc", "desc"]:
   effect[special] = effectArgs.last(special)
 
  anno["effect"] = effect
@@ -284,7 +284,7 @@ if anno.get('seffect'):
 
  # Handle our special arguments
  effectArgs = argparse(effect["args"])
- for special in ["end", "conc", "desc"]:
+ for special in ["separate", "parent", "end", "conc", "desc"]:
   effect[special] = effectArgs.last(special)
 
  anno["seffect"] = effect
@@ -305,13 +305,6 @@ for targ in targetsCache.values():
    for gTarg in curTarg.combatants:
     targets.append(gTarg)
     args.add_context(gTarg.name, targArgs)
-
-# -------------------
-# | Self Targetting |
-# -------------------
-
-# Do the thing, zhu-lee
-
 
 # --------------------
 # | Main Target Loop |
@@ -394,6 +387,31 @@ for target in targets:
     tOut.append(f"""Temp. HP Set: `{targTemphp.total}`""")
    else:
     tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
+  # Are we adding an effect?
+  if tEffect := anno["effect"]:
+
+   # Set our parent effect (Defaulting to None)
+   parent = None
+   # If we're parenting the effect to a target, we need to make sure that effect exists
+   if (sEffect := anno["seffect"]) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
+    # Are we created one parent effect?
+    if not sEffect.get('separate'):
+     # If the parent effect doesn't exist yet, lets create it
+     if not sEffect.get('created'):
+      user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+      sEffect["created"] = [(parent := user.get_effect(sEffect["name"]))]
+    # Otherwise, we need to append or replace the targets name (so our effects don't overwrite)
+    else:
+     if "[tname]" not in sEffect["name"]:
+      sName = sEffect["name"] + f" - {target.name}"
+     else:
+      sName = sEffect["name"].replace("[tname]", target.name)
+     user.add_effect(sName, sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+     sEffect["created"] = sEffect.get("created", []) + [(parent := user.get_effect(sName))]
+   # Finally, add our effect
+   target.add_effect(tEffect["name"], tEffect["args"], tEffect["dur"], tEffect["conc"], parent, tEffect["end"], anno.get("effectdesc"))
+   tOut.append(f"""**Effect:** {str(target.get_effect(tEffect["name"])).splitlines()[0]}""")
+
  else:
   # Do we have damage and half/avoid? If so, apply it and add to total
   if targDamage:
@@ -410,6 +428,27 @@ for target in targets:
 
  # Reset our context
  args.set_context(None)
+
+# -------------------
+# | Self Targetting |
+# -------------------
+
+userOut = []
+# Is the user an active combatant?
+if typeof(user) == "SimpleCombatant":
+ # Lets do effects first (only?)
+ # If we have an seffect, and wasn't already created
+ # and not just not made because everyone passed their save
+ if (sEffect := anno["seffect"]) and not sEffect.get('created') and not 'parent' in sEffect.get('args'):
+  user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+  sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sName)]
+ for effect in sEffect.get("created"):
+  userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
+
+if userOut:
+ userOut = f""" -f "{user.name}|{NewLine.join(userOut)}" """
+else:
+ userOut = ""
 
 # ---------------
 # | Meta Output |
@@ -450,5 +489,5 @@ if anno.get("phrase"):
 
 consumeOut = ' '.join(consumeOut)
 
-return metaOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
+return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
 </drac2>
