@@ -146,7 +146,7 @@
   "desc": "Equivalent to result.full.",
   "url": "aliasing.api.functions.SimpleRollResult.__str__"
  },
- "ParsedArguments.add_context(context, args)": {
+ "argparse(args).add_context(context, args)": {
   "desc": "Adds contextual parsed arguments (arguments that only apply in a given context)",
   "url": "utils.argparser.ParsedArguments.add_context",
   "alias": "argcontext",
@@ -167,7 +167,7 @@
    }
   ]
  },
- "ParsedArguments.adv(ea=False, boolwise=False, ephem=False, custom: dict = None)": {
+ "argparse(args).adv(ea=False, boolwise=False, ephem=False, custom: dict = None)": {
   "desc": "Determines whether to roll with advantage, disadvantage, Elven Accuracy, or no special effect.",
   "url": "utils.argparser.ParsedArguments.adv",
   "param": [
@@ -205,7 +205,7 @@
    "desc": "`-1` or False for dis, `0` or None for normal, `1` or True for adv, `2` for ea"
   }
  },
- "ParsedArguments.get(arg, default=None, type_=<class 'str'>, ephem=False)": {
+ "argparse(args).get(arg, default=None, type_=<class 'str'>, ephem=False)": {
   "desc": "Gets a list of all values of an argument.",
   "url": "utils.argparser.ParsedArguments.get",
   "param": [
@@ -243,7 +243,7 @@
    "desc": "The relevant argument list."
   }
  },
- "ParsedArguments.ignore(arg)": {
+ "argparse(args).ignore(arg)": {
   "desc": "Removes any instances of an argument from the result in all contexts (ephemeral included).",
   "url": "utils.argparser.ParsedArguments.ignore",
   "param": [
@@ -256,7 +256,7 @@
    }
   ]
  },
- "ParsedArguments.join(arg, connector: str, default=None, ephem=False)": {
+ "argparse(args).join(arg, connector: str, default=None, ephem=False)": {
   "desc": "Returns a str formed from all of one arg, joined by a connector.",
   "url": "utils.argparser.ParsedArguments.join",
   "param": [
@@ -293,7 +293,7 @@
    "type": "str or default"
   }
  },
- "ParsedArguments.last(arg, default=None, type_: type = <class 'str'>, ephem=False)": {
+ "argparse(args).last(arg, default=None, type_: type = <class 'str'>, ephem=False)": {
   "desc": "Gets the last value of an arg.",
   "url": "utils.argparser.ParsedArguments.last",
   "param": [
@@ -334,7 +334,7 @@
    "type": "The relevant argument."
   }
  },
- "ParsedArguments.set_context(context)": {
+ "argparse(args).set_context(context)": {
   "desc": "Sets the current argument parsing context.",
   "url": "utils.argparser.ParsedArguments.set_context",
   "alias": "argcontext",
