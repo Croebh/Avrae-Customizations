@@ -59,7 +59,7 @@ args = argparse(c + a)
 totalDamage = 0
 anno = {}
 
-user = init.get_combatant(args.last('user', name)) or character()
+user = (init.get_combatant(args.last('user', name)) if init else None) or character()
 name = user.name if user else name
 
 # Misc
@@ -108,7 +108,7 @@ anno["thumb"]       = args.last('thumb',
                                  "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png", str)
 anno["color"]       = args.last('color',  color, str)
 anno["image"]       = args.last('image',  "", str)
-anno["title"]       = args.last('title',  f'{name} wants you to make a {StatTypes[SaveTypes.index(save_type)].title()} Save!', str)
+anno["title"]       = args.last('title',  '', str)
 
 # We need this to be a dict for the annotating below
 targetsCache        = {i:targ for i, targ in enumerate(args.get('t'))}
@@ -548,7 +548,7 @@ else:
 # ------------------
 
 flavourOut   = ""
-flavourOut  += f""" -title "{anno.get("title")}" """
+flavourOut  += f""" -title "{anno.get("title", f'[name] wants you to make a [sname] Save!' if not gAutoPass else "[name] wants to do the thing!").replace('[name]', name).replace('[sname]', StatTypes[SaveTypes.index(save_type)].title())}" """
 flavourOut  += f""" -color {anno.get('color')} """
 flavourOut  += f""" -thumb {anno.get('thumb')} """
 flavourOut  += f""" -image {anno.get('image')} """
@@ -560,7 +560,72 @@ if anno.get("phrase"):
 consumeOut = ' '.join(consumeOut)
 
 if help:
- return f""" -title "Well shit, son" -desc "You should probably write the help then, shouldn't you?" """
+ return """
+-title "So I heard you want help?"
+-desc "Rolls saves for combatants in init. Pulls their save bonuses and relevant effects from the combat.
+
+**__Valid Arguments__**
+
+Arguments marked with **†** allow for variable evaluation via `{}`
+
+`-save [str|dex|con|wis|cha|int]` - Sets the save to be rolled (Default: Dex)
+`-dc [#]` - Sets the DC (Default: 10). **†**
+`-h` - Hides the DC and Damage
+
+`-t \"[target]\"` - Sets targets for the save. You can chain multiple targets or do a single target. If you pass no targets, it will roll the save for your active character. `{name}` is replaced with your characters name.
+`-t \"[target]|[args]\"` - Sets a target, and also allows for specific args to apply to them. (e.g, `-t \"OR1|pass\"` to force `OR1` to succeed.)
+`adv/dis` - Causes the save or saves to be rolled at dis/advantage.
+`-b [conditional bonus]` - Adds (or subtracts) a bonus to the saves (accepts dice). **†**
+
+`pass` - Automatically succeed on the save.
+`fail` - Automatically fail the save."
+
+-f "Affect the Targets|`-d [damage]` - Sets damage to be dealt on a failed save. **†**
+`-d \"[damage]|[minimum]|[maximum]\"` - Sets damage to be dealt on a fail, with a set maximum and or minimum damage. If no minimum, leave blank (`-d 1d10||1`). **†**
+`crit` - Doubles the dice in `-d`
+`half` - Halves the `-d` damage on a successful save.
+`avoid` - Halves the `-d` damage on a failed save, and zeroes it out on a success.
+`-effect \"[name]|[effects]|[duration]\"` - Adds an effect to the target. If no duration is given, defaults to infinite. **†**
+`-effectdesc \"[desc]\"` - Adds a description to effects. **†**
+`-max [#]` - Modifies the max health of those who fail the save. `{damage}` will be replaced by the total damage. **†**
+`-thp [#]` - Sets the temporary hit points of those who fail the save. **†**"
+
+-f "Self Targetting|`-seffect \"[name]|[effects]|[duration]\"` - Adds an effect to the user. If no duration is given, defaults to infinite. If `[effects]` contains the tag `parent`, any effects made by `-effect` will use this as its parent. If `[effects]` contains `separate`, it will make an individual effect on the user for each target that fails, either replacing `[tname]` in the effect name with the targets name, or appending it.  **†**
+`-seffectdesc \"[desc]\"` - Adds a description to the seffect. **†**
+`-user [name]` - Sets the 'user' of the ability, for `-seffect`. If no `-user` is given, defaults to your currently active character."
+
+-f "Consumables|For all of these consumables, you can append a number from 1 through 10 (i.e, `-cc1`, `-ccnum1`), in order to affect multiple of a consumable type in a single command.
+`-cc \"[cc name]\"` - Uses a single use of a counter. Errors if no uses remaining.
+`-ccnum [#]` - Changes the amount of uses `-cc` uses/regains.
+`-slot [#]` - Uses a single use of a spell slot. Errors if none remaining.
+`-slotnum [#]` - Changes the amount of slots `-slot` uses.
+`-item \"[container]|[item]\"` - Removes a single item from the appropriate container. Requires setup via the `!bag` alias.
+`-itemqty [#]` - Changes the amount of items `-item` removes/adds.
+`-i` - Sets `-ccnum` `-slotnum` and `-itemqty` to 0."
+
+-f "Flavour/Description|`-title \"[title]\"` - Replaces the title. `[name]` and `[sname]`  will be replaced automatically. **†**
+`-phrase \"[flavor text]\"` - Adds flavor text to the save. **†**
+`-desc \"[descriptive text]\"` - Adds a field for rules text and such. **†**
+`-thumb [url]` - Adds a thumbnail image.
+`-image [url]` - Adds a full sized image.
+`-color [hexcode]` - Sets the colour on the left side of the embed.
+`-roll [dice]` - Rolls additional dice, just for display. **†**
+`-n #` - A set number, such as damage taken or a minimum total. Can be called with `{n}` **†**
+`-ndesc "[desc]"` - The description text used when `-n` is displayed in the meta field. Default is `Number`. **†**"
+
+-f "Special Cvars|`{{"{scale}"}}` - Is replaced with cantrip scaling by default (1 till 5, then 2 till 11, etc). This scale can be overriden in a cvar loaded with `-cvar`, as follows: `{\\\"scale\\\": \\\"{'1':10, '5':20, '11':30, '17':40}\\\"}`
+`{spellDC}` - Is replaced with your sheets default Spell DC.
+`{spellAB}` - Is replaced with your sheets default Spell Attack Bonus."
+
+-f "Resources and Presets|`-cvar [cvar]` - Load a set of args from a cvar or uvar. Will attempt to load the first argument as a cvar (e.g, `dborn` in `!use dborn -t or1`)
+`-out [cvar]` - Will output a code block for creating a cvar with the given arguments. Does **Not** create the cvar/uvar.
+You can have gvars full of `!use` cvars, so you can potentially have one for all of the Paladin features, and subscribe to that instead of having personal cvars. Of course, personal cvars of the same name would have priority, in case you wanted to add additional pizzaz.
+
+The cvar resources should contain a list of gvars, for example:
+> `!cvar resources [\"2a2deaec-180c-4d03-818c-879e465f1c0a\"]`
+You can also set a svar named `useResources` to have a server set as well.
+
+Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """
 
 if out:
  arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc"]
