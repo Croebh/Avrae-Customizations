@@ -111,7 +111,7 @@ anno["image"]       = args.last('image',  "", str)
 anno["title"]       = args.last('title',  '', str)
 
 # We need this to be a dict for the annotating below
-targetsCache        = {i:targ for i, targ in enumerate(args.get('t'))}
+targetsCache        = {i:targ for i, targ in enumerate(args.get('t', [name]))}
 
 gAutoPass           = args.adv(custom={'adv': 'pass', 'dis': 'fail'})
 hide                = args.last('h')
@@ -229,14 +229,17 @@ if user and user.name == name:
  for itemNum in [""]+[str(x) for x in range(1,11)]:
   if item := args.last('item' + itemNum):
    itemUses = args.last('itemqty' + itemNum, 1, int)
-   # If we don't have a specified bag, this is invalid
+   # If we don't have a specified bag, search all bags?
    if not "|" in item:
-    break
+    item = f"|{item}"
    itemBag, item = item.split("|")
    for index, bag in enumerate(bags):
     bag, items = bag
     if itemBag.lower() in bag.lower() and item in items:
      consumes["item"].update({item: [index, consumes["item"].get(item, [0,0])[1] + itemUses]})
+     break
+   else:
+    invalidConsumes["item"].append(f"""Could not find {item} in your {itemBag if itemBag else 'bags'}.""")
 
 for slotNum in [""]+[str(x) for x in range(1,11)]:
  if slot := args.last('slot' + slotNum):
@@ -253,7 +256,7 @@ slotValid = all([1 if 0 <= (user.spellbook.get_slots(slot) + slotUses) <= user.s
 itemValid = all([1 if 0 <= (bags[info[0]][1].get(item) - info[1]) else invalidConsumes["item"].append(f"""**{item}** in **{bags[info[0]][0]}** ({-info[1]:+}): {bags[info[0]][1].get(item)} remaining""")  for item, info in consumes["item"].items()])
 
 if not args.last('i') and not (out or help):
- if counterValid and slotValid and itemValid:
+ if counterValid and slotValid and itemValid and not invalidConsumes["item"]:
   # If everything was valid, go through and modify them all
   for cc, ccUses in consumes["cc"].items():
    cc.set(cc.value + ccUses)
@@ -349,16 +352,17 @@ if anno.get('seffect'):
 
 targets   = []
 targetOut = []
-for targ in targetsCache.values():
-  targName, targArgs = (targ.split("|")+[""])[:2]
-  targArgs = argparse(targArgs)
-  if curTarg := init.get_combatant(targName.replace('{name}', name)):
-   targets.append(curTarg)
-   args.add_context(curTarg.name, targArgs)
-  elif curTarg := init.get_group(targName):
-   for gTarg in curTarg.combatants:
-    targets.append(gTarg)
-    args.add_context(gTarg.name, targArgs)
+if init:
+ for targ in targetsCache.values():
+   targName, targArgs = (targ.split("|")+[""])[:2]
+   targArgs = argparse(targArgs)
+   if curTarg := init.get_combatant(targName.replace('{name}', name)):
+    targets.append(curTarg)
+    args.add_context(curTarg.name, targArgs)
+   elif curTarg := init.get_group(targName):
+    for gTarg in curTarg.combatants:
+     targets.append(gTarg)
+     args.add_context(gTarg.name, targArgs)
 
 # --------------------
 # | Main Target Loop |
