@@ -2,6 +2,8 @@ embed
 
 <drac2>
 
+VERSION = "5.0a"
+
 # ------------------
 # | Constants, etc |
 # ------------------
@@ -63,6 +65,20 @@ name = user.name if user else name
 anno["n"]           = args.last("n",     "", str)
 anno["ndesc"]       = args.last("ndesc", "", str)
 anno["roll"]        = args.last("roll",  "", str)
+
+# Default to cantrip scaling
+if scale := args.last('scale', {"1" : 1, "5" : 2, "11" : 3, "17" : 4}):
+  if typeof(scale) == "str":
+   scale = load_json(scale)
+scaleNum = 0
+for lvl, value in scale.items():
+ if user.levels.total_level >= int(lvl):
+  scaleNum = value
+scale = scaleNum
+
+# Quick access to their default spell stats
+spellDC             = user.spellbook.dc
+spellAB             = user.spellbook.sab
 
 # One Off
 anno["dc"]          = args.last('dc',   "10", str)
@@ -392,12 +408,12 @@ if not out:
     else:
      tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
    # Are we adding an effect?
-   if tEffect := anno["effect"]:
+   if tEffect := anno.get("effect"):
 
     # Set our parent effect (Defaulting to None)
     parent = None
     # If we're parenting the effect to a target, we need to make sure that effect exists
-    if (sEffect := anno["seffect"]) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
+    if (sEffect := anno.get("seffect")) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
      # Are we created one parent effect?
      if not sEffect.get('separate'):
       # If the parent effect doesn't exist yet, lets create it
@@ -444,11 +460,12 @@ if not out:
   # Lets do effects first (only?)
   # If we have an seffect, and wasn't already created
   # and not just not made because everyone passed their save
-  if (sEffect := anno["seffect"]) and not sEffect.get('created') and not 'parent' in sEffect.get('args'):
-   user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
-   sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sName)]
-  for effect in sEffect.get("created"):
-   userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
+  if sEffect := anno.get("seffect"):
+   if not sEffect.get('created') and not 'parent' in sEffect.get('args'):
+    user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
+    sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sName)]
+   for effect in sEffect.get("created"):
+    userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
 
 if userOut:
  userOut = f""" -f "{user.name}|{NewLine.join(userOut)}" """
@@ -498,12 +515,12 @@ if anno.get("phrase"):
 consumeOut = ' '.join(consumeOut)
 
 if out:
- arg_list = ["s", "dc", "h", "b", "pass", "fail", "d", "half", "effect", "max", "title", "phrase", "desc", "thumb", "avoid", "save", "i", "seffect", "xroll", "t", "thp", "n", "effectdesc", "seffectdesc"]
+ arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc"]
  for consum in ["cc", "ccnum", "slot", "slotnum", "item", "itemqty"]:
-  arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1,11)])
+  arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1, 11)])
  quotes='\\"'
- cout = {x : (args.last(x) if x!='t' else args.get(x)) for x in arg_list if x in args} if out else ''
+ cout = {x : (args.last(x) if x not in ['t', 'phrase'] else args.get(x)) for x in arg_list if x in args} if out else ''
  return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_json(cout).replace('"',quotes)}{NewLine}{'`' * 3}" """
 else:
- return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets])}" """
+ return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets] + [f"{ctx.prefix}{ctx.alias} [args] | {ctx.prefix}{ctx.alias} ? | v{VERSION}"])}" """
 </drac2>
