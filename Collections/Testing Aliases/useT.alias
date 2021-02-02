@@ -24,6 +24,7 @@ c     = []
 args  = argparse(a)
 
 out   = args.last('out')
+help  = not a or args.last('?') or args.last('help')
 
 # Loop through our resources uvar/svar
 cgvar = {}
@@ -36,9 +37,9 @@ for gvar in load_json(get_svar('useResources', '[]')) + load_json(get('resources
   return f""" -title "Invalid GVAR: `{gvar}`"
   -desc "Please remove it from either your `resources` uvar, or your `useResources` svar." """
 
-cvar  = args.last('cvar') or (a[0] if a else '{}')
+cvar  = args.last('cvar') or (a[0] if a else {})
 # If we have a cvar, lets add it to our args
-if input := (get(cvar) or cgvar.get(cvar)):
+if not (help or out) and (input := (get(cvar) or cgvar.get(cvar))):
  # If it was a cvar and not in the gvar, load it as a json
  if typeof(input) == "str":
   input = load_json(input)
@@ -80,6 +81,8 @@ scale = scaleNum
 spellDC             = user.spellbook.dc
 spellAB             = user.spellbook.sab
 
+bags = load_json(get('bags', '[]'))
+
 # One Off
 anno["dc"]          = args.last('dc',   "10", str)
 crit                = args.last('crit', False, bool)
@@ -88,6 +91,8 @@ save_type           = args.last('save', args.last('s', 'dex')).lower()[:3]
 # General
 anno["save_bonus"]  = args.get('b')
 anno["damage"]      = args.last('d',           "", str)
+minDamage           = None
+maxDamage           = None
 anno["maxhp"]       = args.last('max',         "", str)
 anno["temphp"]      = args.last('thp',         "", str)
 anno["effect"]      = args.last("effect",      "", str)
@@ -121,7 +126,7 @@ for arg in anno.copy():
 # ---------------------------
 
 mathsep   = "+-()/*[]"
-if not out:
+if not (out or help):
  for annoGroup in [anno, targetsCache]:
   for key, string in annoGroup.items():
    # Get all parts enclosed in {braces}
@@ -163,7 +168,15 @@ if not out:
    if key in ["damage", "maxhp", "temphp", "dc", "roll", "n"]:
     if key in ["dc", "n"]:
      annoGroup[key] =  roll(string)
-    elif key in ["maxhp", "temphp", "roll", "damage"]:
+    elif key in ["maxhp", "temphp", "roll"]:
+     annoGroup[key] = vroll(string)
+    elif key == "damage":
+     if '|' in string:
+      string, minDamage, maxDamage = (string.split('|')+[""])[:3]
+      if minDamage:
+       minDamage    =  roll(minDamage)
+      if maxDamage:
+       maxDamage    =  roll(maxDamage)
      annoGroup[key] = vroll(string, 1 + (crit if key == "damage" else 0))
    else:
     annoGroup[key] = string
@@ -173,7 +186,7 @@ if not out:
 # ----------------------------------
 
 # Ignore Certain Args so we aren't reparsing them in the target loop if not outputting
-if not out:
+if not (out or help):
  args.ignore('d')
  args.ignore('max')
  args.ignore('thp')
@@ -191,7 +204,7 @@ consumeOut      = []
 consumes        = {"cc": {}, "slot": {}, "item": {}}
 invalidConsumes = {"cc": [], "slot": [], "item": []}
 
-# Can only access counters on the active character
+# Can only access counters and items on the active character
 if user and user.name == name:
  for counterNum in [""]+[str(x) for x in range(1,11)]:
   if cc := args.last('cc' + counterNum):
@@ -212,6 +225,19 @@ if user and user.name == name:
    if cc:
     consumes["cc"].update({cc: consumes["cc"].get(cc.name, 0) - ccUses})
 
+ # Item shit here!
+ for itemNum in [""]+[str(x) for x in range(1,11)]:
+  if item := args.last('item' + itemNum):
+   itemUses = args.last('itemqty' + itemNum, 1, int)
+   # If we don't have a specified bag, this is invalid
+   if not "|" in item:
+    break
+   itemBag, item = item.split("|")
+   for index, bag in enumerate(bags):
+    bag, items = bag
+    if itemBag.lower() in bag.lower() and item in items:
+     consumes["item"].update({item: [index, consumes["item"].get(item, [0,0])[1] + itemUses]})
+
 for slotNum in [""]+[str(x) for x in range(1,11)]:
  if slot := args.last('slot' + slotNum):
   slotUses = args.last('slotnum' + slotNum, 1, int)
@@ -220,12 +246,14 @@ for slotNum in [""]+[str(x) for x in range(1,11)]:
    consumes["slot"].update({int(slot): consumes["slot"].get(int(slot), 0) - slotUses})
 
 
-# Make sure all counters won't be made out of bounds (need to add spell slots and items to this too)
+# Make sure all counters won't be made out of bounds
 counterValid = all([1 if cc.min <= (cc.value + ccUses) <= cc.max else invalidConsumes["cc"].append(f"""**{cc.name}** ({ccUses:+}): {str(cc)}""") for cc, ccUses in consumes["cc"].items()])
 slotValid = all([1 if 0 <= (user.spellbook.get_slots(slot) + slotUses) <= user.spellbook.get_max_slots(slot) else invalidConsumes["slot"].append(f"""{user.spellbook.slots_str(slot)} ({slotUses:+})""") for slot, slotUses in consumes["slot"].items()])
+# info[0] is the bag index, info[1] is the quantity
+itemValid = all([1 if 0 <= (bags[info[0]][1].get(item) - info[1]) else invalidConsumes["item"].append(f"""**{item}** in **{bags[info[0]][0]}** ({-info[1]:+}): {bags[info[0]][1].get(item)} remaining""")  for item, info in consumes["item"].items()])
 
-if not args.last('i') and not out:
- if counterValid and slotValid:
+if not args.last('i') and not (out or help):
+ if counterValid and slotValid and itemValid:
   # If everything was valid, go through and modify them all
   for cc, ccUses in consumes["cc"].items():
    cc.set(cc.value + ccUses)
@@ -236,12 +264,19 @@ if not args.last('i') and not out:
    slotOut.append(f"""{user.spellbook.slots_str(slot)} ({slotUses:+})""")
   else:
    consumeOut.append(f"""  -f "Slots Remaining|{NewLine.join(slotOut)}" """) if slotOut else None
+  if consumes["item"]:
+   for item, info in consumes["item"].items():
+    bags[info[0]][1][item] = bags[info[0]][1][item] - info[1]
+    consumeOut.append(f""" -f "Items remaining in `{bags[info[0]][0]}`|{item} ({-info[1]:+}): {bags[info[0]][1][item]}" """)
+   else:
+    character().set_cvar("bags", dump_json(bags))
 
  # Otherwise, something would go out of bounds, cancel everything and inform the user
  else:
   consumeOut.append(f""" -f "Consumable out of Bounds|Unfortunately, one or more of your consumables would be put out of bounds by this action:
    {NewLine.join(invalidConsumes["cc"]) if invalidConsumes["cc"] else ""}
-   {NewLine.join(invalidConsumes["slot"]) if invalidConsumes["slot"] else "" }" """.replace("   ","").replace("\n\n", "\n"))
+   {NewLine.join(invalidConsumes["slot"]) if invalidConsumes["slot"] else "" }
+   {NewLine.join(invalidConsumes["item"]) if invalidConsumes["item"] else "" }" """.replace("   ","").replace("\n\n", "\n").replace("\n\n", "\n"))
   valid = False
 
 # ------------------
@@ -329,7 +364,7 @@ for targ in targetsCache.values():
 # | Main Target Loop |
 # --------------------
 
-if not out:
+if not (out or help):
  for target in targets:
   tOut = []
 
@@ -339,6 +374,10 @@ if not out:
 
   # Figure out our entire damage string
   targDamage = anno["damage"].consolidated() if anno.get("damage") else ""
+  if minDamage and anno.get("damage").total < minDamage:
+   targDamage = str(minDamage)
+  if maxDamage and anno.get("damage").total > maxDamage:
+   targDamage = str(maxDamage)
   if targD := args.get('d'):
    targDamage += "+" + "+".join(targD)
 
@@ -454,7 +493,7 @@ if not out:
 # -------------------
 
 userOut = []
-if not out:
+if not (out or help):
  # Is the user an active combatant?
  if typeof(user) == "SimpleCombatant":
   # Lets do effects first (only?)
@@ -479,7 +518,13 @@ else:
 metaOut = []
 if valid:
  if anno.get("damage"):
-  metaOut.append(f"""**Damage:** {"Hidden" if hide else anno["damage"]}""")
+  metaOut.append(f"""**Damage:** {"Hidden" if hide else f'''{anno["damage"]}'''}""")
+  if minDamage or maxDamage:
+   metaOut[-1] += f""" ({f"min: {minDamage}"}, {f"max: {maxDamage}"}) """.replace("(,", "(")
+   if minDamage and minDamage > anno.get('damage').total:
+    metaOut[-1] += f""" -> {minDamage} """
+   if maxDamage and maxDamage < anno.get('damage').total:
+    metaOut[-1] += f""" -> {maxDamage} """
  if anno.get("maxhp"):
   metaOut.append(f"""**Max HP:** {anno["maxhp"]}""")
  if anno.get("temphp"):
@@ -513,6 +558,9 @@ if anno.get("phrase"):
  flavourOut += f""" -desc "*{anno.get("phrase")}*" """
 
 consumeOut = ' '.join(consumeOut)
+
+if help:
+ return f""" -title "Well shit, son" -desc "You should probably write the help then, shouldn't you?" """
 
 if out:
  arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc"]
