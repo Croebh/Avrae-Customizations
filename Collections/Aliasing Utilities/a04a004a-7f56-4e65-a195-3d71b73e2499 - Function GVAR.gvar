@@ -334,7 +334,7 @@
   "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
  },
  "get(name, default=None)": {
-  "desc": "Gets the value of a name, or returns *default* if the name is not set.",
+  "desc": "Gets the value of a name, or returns *default* if the name is not set.\n\nRetrieves names in the order of local > cvar > uvar. Does not interact with svars.",
   "url": "aliasing.evaluators.ScriptingEvaluator.get",
   "param": [
    {
