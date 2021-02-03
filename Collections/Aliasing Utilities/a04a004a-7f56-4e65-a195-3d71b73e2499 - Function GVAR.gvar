@@ -356,7 +356,7 @@
    "type": "any",
    "desc": "The found name, else *default*."
   },
-  "syntax": ">>> get('thisExists', 'Missing!')\nThe thing!\n>> get('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get('thisDoesNotExist')\nNone"
+  "syntax": ">>> get('thisExists', 'Missing!')\nThe thing!\n>>> get('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get('thisDoesNotExist')\nNone"
  },
  "get_gvar(address)": {
   "desc": "Retrieves and returns the value of a gvar (global variable).",
