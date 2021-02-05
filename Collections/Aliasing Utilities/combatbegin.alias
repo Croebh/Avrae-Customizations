@@ -1,7 +1,7 @@
 multiline {{c = combat()}}{{h = "-h" if "-h" in "&*&" else ""}}
-{{"!i begin\n" if not c else ""}}{{"!i join -p 40\n" if not (c and c.me) else ''}}!i madd orc -n 4 -group Orc -p 3 {{h}}
-!i madd wolf -n 4 -group Wolf -p 2 {{h}}
-!i madd goblin -n 2 -p 1 {{h}}
-!i madd mage {{h}}
-!i add 0 Map
-{{f'!i goto {name}' if c and c.current else '!i n'}}
+{{f"{ctx.prefix}i begin\n" if not c else ""}}{{f"{ctx.prefix}i join -p 40\n" if not (c and c.me) else ''}}{{ctx.prefix}}i madd orc -n 4 -group Orc -p 3 {{h}}
+{{ctx.prefix}}i madd wolf -n 4 -group Wolf -p 2 {{h}}
+{{ctx.prefix}}i madd goblin -n 2 -p 1 {{h}}
+{{ctx.prefix}}i madd mage {{h}}
+{{ctx.prefix}}i add 0 Map
+{{f'{ctx.prefix}i goto {name}' if c and c.current else f'{ctx.prefix}i n'}}
