@@ -561,6 +561,8 @@ if anno.get("desc"):
 if anno.get("phrase"):
  flavourOut += f""" -desc "*{anno.get("phrase")}*" """
 
+
+footerBase = f"{ctx.prefix}{ctx.alias} [args] | {ctx.prefix}{ctx.alias} ? | v{VERSION}"
 consumeOut = ' '.join(consumeOut)
 
 if help:
@@ -629,7 +631,7 @@ The cvar resources should contain a list of gvars, for example:
 > `!cvar resources [\"2a2deaec-180c-4d03-818c-879e465f1c0a\"]`
 You can also set a svar named `useResources` to have a server set as well.
 
-Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """
+Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """ + f"""  -footer "{footerBase}"  """
 
 if out:
  arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc"]
@@ -637,7 +639,7 @@ if out:
   arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1, 11)])
  quotes='\\"'
  cout = {x : (args.last(x) if x not in ['t', 'phrase'] else args.get(x)) for x in arg_list if x in args} if out else ''
- return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_json(cout).replace('"',quotes)}{NewLine}{'`' * 3}" """
+ return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_json(cout).replace('"',quotes)}{NewLine}{'`' * 3}" -footer "{footerBase}" """
 else:
- return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets] + [f"{ctx.prefix}{ctx.alias} [args] | {ctx.prefix}{ctx.alias} ? | v{VERSION}"])}" """
+ return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets] + [footerBase])}" """
 </drac2>
