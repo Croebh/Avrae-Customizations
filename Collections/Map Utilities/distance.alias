@@ -146,17 +146,6 @@ if c:
       _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
       desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
       desc.append("")
-    # # If the overlay was -aim'd at a target, and if that aim target exists still
-    # if out[target.name].get('aim'+overNum):
-    #  aimTarget = out[target.name].get('aim'+overNum)
-    #  aimTargetX = ''.join([i for i in aimTarget if i.isalpha()])
-    #  aimTargetY = int(''.join([i for i in aimTarget if i.isdigit()]) or -1)
-    #  if not (aimTargetX.upper() in alph[:mapX+2] and 0 < aimTargetY <= mapY and not gt(aimTarget)):
-    #   _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
-    #   _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
-    #   _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
-    #   desc.append(f"""Overlay {overNum} removed from `{target.name}` because aim target `{aimTarget}` no longer present.""")
-    #   desc.append("")
   elif target.note:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
@@ -180,8 +169,7 @@ if args.last('distance'):
    prevLoc = note['location']
    height -= int(note.get('height', "0"))
    fName = firstTarget.name + " "
-  else:
-   prevLoc = None
+
  newLoc = argsDist[1] if len(argsDist) > 1 else argsDist[0] if argsDist else ""
  if c and (secondTarget := gt(newLoc)):
   if (note := secondTarget.note) and 'Location: ' in note:
@@ -198,8 +186,7 @@ if args.last('distance'):
      prevLoc = note['location']
      height -= int(note.get('height', "0"))
      fName = firstTarget.name + " "
-  else:
-   newLoc = None
+
  height = height//5
  if prevLoc and newLoc and argsDist:
   prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha()) or 'A'
@@ -207,6 +194,10 @@ if args.last('distance'):
   prevLocY = int(prevLocY or 0)
   newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())or 'A'
   newLocY = int(''.join(y for y in newLoc if y.isdigit()) or 0)
+  if not newLocX in alph:
+    err(f"""{newLocX}{newLocY} is not a valid coordinate/target.""")
+  if not prevLocX in alph:
+    err(f"""{prevLocX}{prevLocY} is not a valid coordinate/target.""")
   deltaX, deltaY = alph.index(newLocX)-alph.index(prevLocX), -1*(int(newLocY)-int(prevLocY))
   distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
   absDeltaX, absDeltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
@@ -220,24 +211,23 @@ if args.last('distance'):
   else:
     degree = 0 if deltaY > 0 else 180 if deltaY < 0 else 90 if deltaX > 0 else 270
   card = cardinal[floor((degree)//22.5)%16]
-  if c:
-   if len(argsColor)>1:
-    colr= argsColor[1]
-   else:
-    colr = f"~62C1BF"
-   # Add the line to the overlay list
-   if fName and sName != "":
-    overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-   elif fName != "" and sName == "":
-    overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-    overlays.append(f"*s5{colr}{newLocX}{newLocY}")
-   elif fName == "" and sName != "":
-    overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-    overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
-   else:
-    overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-    overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
-    overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+ if len(argsColor)>1:
+  colr= argsColor[1]
+ else:
+  colr = f"~62C1BF"
+ # Add the line to the overlay list
+ if fName and sName != "":
+  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+ elif fName != "" and sName == "":
+  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+  overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+ elif fName == "" and sName != "":
+  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+  overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+ else:
+  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+  overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+  overlays.append(f"*s5{colr}{newLocX}{newLocY}")
   heightInfo = f"(Height: {height*5} ft. {'up' if height>0 else 'down' if height else ''})"
   if get_svar('trueDistance') or get('trueDistance') == True:
    distanceDisplay = f"~{distanceT}"
@@ -247,9 +237,9 @@ if args.last('distance'):
 </drac2>
 
 <drac2>
+people = []
 if c:
  # Parse the collected notes and information into the format readable by otfbm.com
- people = []
  for target in out:
   tLocation = out[target].get('location')
   tSize = out[target].get('size','M')[0].upper()
@@ -304,9 +294,9 @@ if c:
  # Then set everyones note again. Kinda a chainsaw instead of a scalpel situation here.
  for target in dataout:
   gt(target).set_note(dataout[target])
- # Join everything together and display the map if we aren't displaying the help
- overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
-if c and not any(args.get(arg) for arg in ('?', 'help')):
+# Join everything together and display the map if we aren't displaying the help
+overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
+if not any(args.get(arg) for arg in ('?', 'help')):
  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
  return f""" -title "**__Distance__**" {'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
@@ -318,7 +308,7 @@ if args.last('distance') == None or args.last('?') or args.last('help'):
             This is an utility that can be used with the `!map` alias or on its own. It shows distance between sets of cartesian coordinates.
 
             __**Distance Commands**__
-            `!distance <coordinate> <coordinate> [height][,color]` - Will measure the distance between two coordinates. Example: `!distance a1:d4`
+            `!distance <coordinate> <coordinate> [height][,color]` - Will measure the distance between two coordinates. Example: `!distance a1 d4`
             If you are in combat, you can also measure between a combatant and a coordinate or between two combatants. As an additional option, you can change the default color of the overlay if needed as well as include height. Example: `!distance prixaris h5` or `!distance prixaris go1,y` or `!distance f9 j10 30`
 
             This calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """
