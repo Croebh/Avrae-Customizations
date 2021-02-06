@@ -3,7 +3,8 @@ embed
 testVersion = False
 argList = &ARGS&
 
-args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-spell'] + argList if argList else [])
+args = argparse(['-spell'] + argList if argList else [])
+# args = argparse(argList)
 
 
 # Set are base variables
@@ -55,7 +56,6 @@ aimPoint = ""
 aimTarget = ""
 targAimPoint = ""
 targAimTarget = ""
-aimStick = False
 targPoint = ""
 aim = ""
 effect = None
@@ -74,14 +74,14 @@ defaultSpells = load_json(get_gvar("d456fdfa-a292-42a1-ab00-b884e79b702f"))
 spellOverlays = defaultSpells.copy()
 # Grab the user selected spells, and update the main dict
 # This allows the user to replace/update items in the original dict
-userOverlays    = load_json(get('mapOverlays','{}'))
+userOverlays = load_json(get('mapOverlays','{}'))
 serverOverlays = load_json(get_svar('mapOverlays') or '{}')
 spellOverlays.update(serverOverlays)
 if typeof(userOverlays) == 'SafeDict':
  spellOverlays.update(userOverlays)
 else:
  [spellOverlays.update(load_json(get_gvar(spells))) for spells in load_json(get('mapOverlays','{}')) if get_gvar(spells)]
- # Iterate over the spell dict, making it a little easier to read.
+# Iterate over the spell dict, making it a little easier to read.
 # Only select the ones they are searching for, if they are searching
 spelllist = []
 for spell, over in spellOverlays.items():
@@ -105,38 +105,49 @@ spellPagin = [spelllist[i:i+20] for i in range(0, len(spelllist), 20)]
 <drac2>
 if c:
   if com:
+    #If user inputs a Player or location coordinate
     if len(argList)>1:
-     aimArg = argList[1]
-     aimed = ["-aim", aimArg]
+     aimed = ["-aim", argList[1]]
     else:
      aimed = ""
+    #Are we targeting a specific player of use default current active character/current character in initiative 
     if args.last('t'):
-      targArg = args.last('t')
+      targArg = ['-t', args.last('t')]
     elif combat().current:
-      targArg = combat().me.name if combat().me else combat().current.name
+      targArg = ['-t', combat().me.name if combat().me else combat().current.name]
     else:
       desc.append(f"You need to have someone selected in combat")
-    if args.get('n'):
-      aimStick = False
-    else:
-      aimStick = True
+    #If you want to clear the overlay of the targeted player  
+    if args.last('none'):
+      args = argparse(['-t', targArg[1]] + ['-over', "none"])
+    #Have Overlays always stick by default  
+    aimStick = True
+    #Here user can decide to not have the overlay stick
+    if args.last('n'):
+     aimStick = False 
     for overNum in [""]+[str(x) for x in range(1,11)]:
-     if args.get('none'):
-      args = argparse(['-t', targArg] + ['-over', "none"])
      if args.last('spell' + overNum):
       # Loop through our users spellOverlays, looking for that spell
       for spell in spellOverlays:
-       if args.last('spell' + overNum).lower() in spell.lower():
+       if argList[0] in spell.lower():
         # If we find it, add the overlay to the args
-        # If its a string, its just a `-over9`
-        if typeof(spellOverlays.get(spell)) == "str":
-         args = argparse(["-over" + overNum, spellOverlays.get(spell)] + ['-t', targArg] + aimed )
-        # If its a list, its starting with a -over9 and then theres other stuff
-        elif typeof(spellOverlays.get(spell)) == "SafeList":
-         adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell  )]
-         args = argparse(["-over" + overNum] + adjustedList + ['-t', targArg] + aimed)
-        # We only care about the first result
-        break
+        if 'under' in spellOverlays[spell]:
+         if typeof(spellOverlays.get(spell)) == "str":
+          args = argparse(["-under", spellOverlays.get(spell)] + targArg[1] + aimed)
+         # If its a list, its starting with a -over9 and then theres other stuff
+         elif typeof(spellOverlays.get(spell)) == "SafeList":
+          adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
+          adjustedList.pop(1)
+          args = argparse(["-under" + overNum] + adjustedList + targArg[1] + aimed)
+        else:
+         if typeof(spellOverlays.get(spell)) == "str":
+          args = argparse(["-over" + overNum, spellOverlays.get(spell)] + targArg[1] + aimed)
+         # If its a list, its starting with a -over9 and then theres other stuff
+         elif typeof(spellOverlays.get(spell)) == "SafeList":
+          adjustedList = [f"{x.strip('0123456789')}{overNum}" if x.startswith('-') else x for x in spellOverlays.get(spell)]
+          args = argparse(["-over" + overNum] + adjustedList + targArg[1] + aimed)
+          # We only care about the first result
+          break
 </drac2>
 
 <drac2>
@@ -209,17 +220,6 @@ if c:
       _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
       desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
       desc.append("")
-    # # If the overlay was -aim'd at a target, and if that aim target exists still
-    # if out[target.name].get('aim'+overNum):
-    #  aimTarget = out[target.name].get('aim'+overNum)
-    #  aimTargetX = ''.join([i for i in aimTarget if i.isalpha()])
-    #  aimTargetY = int(''.join([i for i in aimTarget if i.isdigit()]) or -1)
-    #  if not (aimTargetX.upper() in alph[:mapX+2] and 0 < aimTargetY <= mapY and not gt(aimTarget)):
-    #   _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
-    #   _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
-    #   _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
-    #   desc.append(f"""Overlay {overNum} removed from `{target.name}` because aim target `{aimTarget}` no longer present.""")
-    #   desc.append("")
   elif target.note:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
@@ -248,44 +248,29 @@ if args.last('undo') and prevBack:
 </drac2>
 
 <drac2>
-if c:
- # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  targ=gt(args.last('t', combat().me.name if combat().me else None))
-  # If they don't have a note/location set, add them to the list
-  if not out.get(targ.name):
-   out[targ.name] = {}
-  # If there is a -size arg, change their size
-  if args.last('size'):
-   size=args.last('size')[0].upper()
-   # Confirm that the given size is valid before updating
-   if size in siz:
-    out[targ.name].update({"size":f"{size} ({SIZ[size]})"})
-    # Display the change in size
-    desc.append(f"Changing size of {targ.name} to {SIZ[size]} ({size})")
-   # If the size is None, erase the size, setting them back to Medium
-   elif args.last('size') in (None,"None","none"):
-    if 'size' in out[targ.name]:
-     _ = out[targ.name].pop('size')
-    # Display the change in size
-    desc.append(f"Resetting size of {targ.name} to Medium (M)")
-</drac2>
-
-<drac2>
 # Overlay stuff
 if c:
+  targ=gt(targArg[1])
   for overNum in [""]+[str(x) for x in range(1,11)]:
-   # Is the user trying to set an overlay?
-   if args.last('over'+overNum):
-    # If we have a target, but our -over arg is none, we're trying to delete our overlay
-    if args.last('t') and gt(args.last('t')) and (args.last('over'+overNum) in ("none", "None")):
+   # Is the user trying to set an overlay or underlay?
+   if args.last('over'+overNum) or args.last('under'+overNum):
+    # If we have a target, but our -over or -under arg is none, we're trying to delete our overlay
+    if args.last('t') and gt(args.last('t')) and args.last('over'+overNum) in ("none", "None") or args.last('under'+overNum) in ("none", "None"):
      _ = out[targ.name].pop('overlay'+overNum) if 'overlay'+overNum in out[targ.name] else None
      _ = out[targ.name].pop('aim'+overNum) if 'aim'+overNum in out[targ.name] else None
-     desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
+     if args.last('under'+overNum) in ("none", "None"):
+      desc.append(f"Removed underlay{' '+overNum if overNum else ''} linked to {targ.name}")
+     else:
+      desc.append(f"Removed overlay{' '+overNum if overNum else ''} linked to {targ.name}")
     else: # Split the input by commas
-     overlay = args.last('over'+overNum).split(',')
-     # First argument is always the shape, so lets pop it out
-     oShape = overlay.pop(0).lower()
+     if args.last('under'+overNum):
+      overlay = args.last('under'+overNum).split(',')
+      # First argument is always the shape, so lets pop it out
+      oShape = overlay.pop(0).lower()
+     else:
+      overlay = args.last('over'+overNum).split(',')
+      # First argument is always the shape, so lets pop it out
+      oShape = overlay.pop(0).lower()
 
      # Are we attaching this to an effect?
      if args.last('effect'+overNum):
@@ -302,6 +287,9 @@ if c:
       aim = (args.last('aim'+overNum).split('|')+[""])[:2]
       # aimStick = (aim[1].lower() == "stick") or effect
       # Account for the user putting |stick on the wrong arg. Won't advertise this, as its unintended.
+      # if overlay[-1].endswith("|stick"):
+      #   overlay[-1] = overlay[-1].replace("|stick", "")
+      #   aimStick = True
       # If the target is, well, a target, grab its location
       for target in out:
        if aim[0].lower() in target.lower():
@@ -337,11 +325,11 @@ if c:
      overValid = False
 
      # Did our user try to have the location linked to a target, but failed to supply a target?
-     if "{targ}" in args.last('over'+overNum) and not (args.last('t') and gt(args.last('t'))):
+     if "{targ}" in (args.last('over'+overNum) or args.last('under'+overNum)) and not targArg:
       overlay = None
       desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
      # Same for aiming it at something. If they failed to supply a -aim#
-     elif "{aim}" in args.last('over'+overNum) and not args.last('aim'+overNum):
+     elif "{aim}" in (args.last('over'+overNum) or args.last('under'+overNum)) and not args.last('aim'+overNum):
       overlay = None
       desc.append(f"**Invalid overlay arguments.** {newline}Be sure to have a `-t`/`-aim{overNum}` if using `{targD}` and `{aimD}`")
      else:
@@ -367,9 +355,21 @@ if c:
          else:
           currentOver[shape.args[index]] += overlay[index]
         # Set the overlay for the map
-        overlay = f"""{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        if args.last('under'+overNum):
+         overlay = f"""u{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
+        else:
+         overlay = f"""{currentOver.shape}{currentOver.size}{currentOver.width.rstrip(',')}{currentOver.color}{currentOver.loc}{currentOver.eloc}"""
         # Set the description
-        overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Overlay {overNum}**
+        if args.last('under'+overNum):
+         overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Underlay {overNum}**
+                       - Color: `{currentOver.colorDesc}`
+                       {f"- Size: `{currentOver.size} ft. " + ("radius`" if shape.type in "circletop" else "long`" if shape.type in "coneline" else "wide`") if shape.type != "arrow" else ""}
+                       {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Starting' if shape.type == 'cone' else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
+                       {f"- Width: `{currentOver.width.strip(', ')} ft.`" if shape.type == "line" else ""}
+                       {f"- Aim: `{aimTarget or currentOver.eloc.upper()}`" if shape.type not in "circletop" and (aimTarget or currentOver.eloc) else ""}
+                       {f"- Effect: `{effect.name}` on `{effectTarget.name}`" if effect else ""}"""
+        else:
+         overdesc = f"""**{shape.type.replace("corner"," corner").replace("top"," top").title()} Overlay {overNum}**
                        - Color: `{currentOver.colorDesc}`
                        {f"- Size: `{currentOver.size} ft. " + ("radius`" if shape.type in "circletop" else "long`" if shape.type in "coneline" else "wide`") if shape.type != "arrow" else ""}
                        {f"- {'Top-left' if shape.type in ('circletop','square','squaretop') else 'Starting' if shape.type == 'cone' else 'Centered'}: `{currentOver.loc.upper()}`" if shape.type not in ("arrow", "line") else f"- Start: `{currentOver.loc.upper()}`"}
@@ -387,16 +387,12 @@ if c:
       # Do we have a -aim? If so, replace {aim} with the aimPoint gathered before, and display who you're aiming at
       if aimPoint:
        overdesc = overdesc.replace('{aim}',aimPoint)
-      # Are we attaching this overlay to a target?
-      if args.last('t') and gt(args.last('t')):
-       if not aimPoint or (aimPoint and aimStick) or effect:
-        # If so, and no -aim (or -aim but also stick), lets attach it to the notes
+      if aimStick:
         out[targ.name].update({"overlay"+overNum: overlay})
-        if aimStick:
-         out[targ.name].update({"aim"+overNum: aimTarget})
+        out[targ.name].update({"aim"+overNum: aimTarget})
         if effect:
          out[targ.name].update({f"effect{overNum}": f"{effect.name} / {effectTarget.name}"})
-       else:
+      else:
         # If so, and -aim, lets *not* attach it to the notes, and just display it once
         targPoint = out[targ.name].get('location','A1')
         # Is our target Large or bigger? If so, adjust accordingly
@@ -408,11 +404,7 @@ if c:
          TargY += targOffset
          targPoint = f"{TargX}{TargY}"
         overlays.append(overlay.replace("{targ}", targPoint).replace("{aim}", aimPoint))
-       desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + newline + f"- Attached: `{targ.name}`")
-      else:
-       # Otherwise, lets just display it once
-       overlays.append(overlay.replace("{aim}", aimPoint))
-       desc.append(overdesc)
+      desc.append(overdesc.replace('{targ}', out[targ.name].get('location','A1')) + newline + f"- Attached: `{targ.name}`")
 </drac2>
 
 <drac2>
@@ -420,9 +412,10 @@ if c:
  for aimNum in [""]+[str(x) for x in range(1,11)]:
   # Is the user trying to change a -aim?
   # Make sure they don't have a `-over`
-  if args.last('aim'+aimNum) and not args.last('over'+aimNum):
+  if args.last('aim'+aimNum) and not args.last('over'+aimNum) or args.last('under'+aimNum):
    # Also make sure there is a valid target
-   if (curTarg := args.last('t', combat().me.name if combat().me else None)) and (curTarg := gt(curTarg)):
+   if targArg[1]:
+    curTarg = gt(targArg[1])
     # And that target has an overlay, and an existing aim point
     if out[curTarg.name].get('overlay'+aimNum) and out[curTarg.name].get('aim'+aimNum):
      # If they used |stick, remove it, as its implied at this point
@@ -558,6 +551,6 @@ if args.last('list'):
  paginFooter += " -search [name] to search |"
 </drac2>
 
--footer "!se ? | {{paginFooter}} v1.0"
+-footer "!se ? | {{paginFooter}} v1.2"
 -color <color>
 
