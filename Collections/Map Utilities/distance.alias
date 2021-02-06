@@ -211,23 +211,24 @@ if args.last('distance'):
   else:
     degree = 0 if deltaY > 0 else 180 if deltaY < 0 else 90 if deltaX > 0 else 270
   card = cardinal[floor((degree)//22.5)%16]
- if len(argsColor)>1:
-  colr= argsColor[1]
- else:
-  colr = f"~62C1BF"
- # Add the line to the overlay list
- if fName and sName != "":
-  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
- elif fName != "" and sName == "":
-  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-  overlays.append(f"*s5{colr}{newLocX}{newLocY}")
- elif fName == "" and sName != "":
-  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-  overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
- else:
-  overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
-  overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
-  overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+
+  if len(argsColor)>1:
+   colr= argsColor[1]
+  else:
+   colr = f"~62C1BF"
+  # Add the line to the overlay list
+  if fName and sName != "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+  elif fName != "" and sName == "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+  elif fName == "" and sName != "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+  else:
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+   overlays.append(f"*s5{colr}{newLocX}{newLocY}")
   heightInfo = f"(Height: {height*5} ft. {'up' if height>0 else 'down' if height else ''})"
   if get_svar('trueDistance') or get('trueDistance') == True:
    distanceDisplay = f"~{distanceT}"
