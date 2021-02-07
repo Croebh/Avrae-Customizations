@@ -3,6 +3,7 @@
 __**Valid Arguments: Basics**__
 `-b <to hit bonus>` - adds a bonus to hit 
 `-d <damage bonus>` - adds a bonus to damage
+`nodmg` - causes the attack to not deal any damage
 `-name <custom name>` - gives the weapon a custom name. Use \"quotes\" for multi-word names (for example: \"Frost Brand Shortsword\")
 `-stat <str/dex/con/int/wis/con>` - uses a different ability score for the attack and damage roll 
 `-t <target>` - adds an attack to a target in initiative. Automatically assumes +0 for attack and damage rolls, and must be manually adjusted with `-b` and `-d`
