@@ -792,6 +792,9 @@ if c:
            elif overlaycolor[:2] in COL:
             currentOver[shape.args[index]] += overlaycolor[:2]
             currentOver['colorDesc'] += COL[overlaycolor[:2]]
+           elif overlaycolor[0]+overlaycolor[-1] in COL:
+            currentOver[shape.args[index]] += overlaycolor[0]+overlaycolor[-1]
+            currentOver['colorDesc'] += COL[overlaycolor[0]+overlaycolor[-1]]
            elif overlaycolor[:1] in COL:
             currentOver[shape.args[index]] += overlaycolor[:1]
             currentOver['colorDesc'] += COL[overlaycolor[:1]]
