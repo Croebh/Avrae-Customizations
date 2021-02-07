@@ -7,6 +7,7 @@ curTime = int(time())
 dmTimer = int(get('arenaDm', 0))
 gvar = load_json(get_gvar("1c6c0458-6a52-43ec-8ea8-55e170789f12"))
 sheetDict = {}
+newLine = "\n"
 for char in gvar:
   sheetDict[char.name.replace("’","'")] = char.sheet
 
