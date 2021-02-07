@@ -1,0 +1,682 @@
+[
+    {
+        "player": "47thElement",
+        "name": "Nix",
+        "sheet": "https://www.dndbeyond.com/characters/42117503/lgWmMy"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Art of Vindiction",
+        "sheet": "https://www.dndbeyond.com/characters/41829774/NQKsUW"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Ocie",
+        "sheet": "https://www.dndbeyond.com/characters/42178812"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Saris",
+        "sheet": "https://www.dndbeyond.com/characters/41108313"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Vae",
+        "sheet": "https://ddb.ac/characters/33166947"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Yrell",
+        "sheet": "https://www.dndbeyond.com/characters/43743765/3ihsgq"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Zirr",
+        "sheet": "https://ddb.ac/characters/42270688/NHM98U"
+    },
+    {
+        "player": "Akiddo",
+        "name": "Lillian",
+        "sheet": "https://www.dndbeyond.com/characters/42583284"
+    },
+    {
+        "player": "Anoth",
+        "name": "Aghayon Emberflight",
+        "sheet": "https://www.dndbeyond.com/characters/28682718/88ElhA"
+    },
+    {
+        "player": "Anoth",
+        "name": "Firefeather",
+        "sheet": "https://www.dndbeyond.com/characters/31838537/QuKCsK"
+    },
+    {
+        "player": "Anoth",
+        "name": "Kessan Harazen",
+        "sheet": "https://www.dndbeyond.com/characters/25530538/Wmk8Xf"
+    },
+    {
+        "player": "Anoth",
+        "name": "Kjara Harazen",
+        "sheet": "https://www.dndbeyond.com/characters/30020882/dxtBVM"
+    },
+    {
+        "player": "Anoth",
+        "name": "Kyaio Sparkrune",
+        "sheet": "https://www.dndbeyond.com/characters/43179945/SqREdn"
+    },
+    {
+        "player": "Anoth",
+        "name": "Wave of Sound",
+        "sheet": "https://www.dndbeyond.com/characters/33759899"
+    },
+    {
+        "player": "Archfey",
+        "name": "Light of the Quasar",
+        "sheet": "https://www.dndbeyond.com/characters/36677272/vrPdkS"
+    },
+    {
+        "player": "Boddy",
+        "name": "Arana Tealeaf",
+        "sheet": "https://www.dndbeyond.com/characters/43708252/Lss73x"
+    },
+    {
+        "player": "Boddy",
+        "name": "Faith",
+        "sheet": "https://www.dndbeyond.com/characters/42572418/V8QoCq"
+    },
+    {
+        "player": "Boddy",
+        "name": "Naivara Brightwood",
+        "sheet": "https://www.dndbeyond.com/characters/41163493/o6uB4H"
+    },
+    {
+        "player": "Bond6789",
+        "name": "Barakas",
+        "sheet": "https://www.dndbeyond.com/characters/26555413/o6QXZw"
+    },
+    {
+        "player": "CEasy",
+        "name": "Eire",
+        "sheet": "https://www.dndbeyond.com/characters/43169384/rygeIJ"
+    },
+    {
+        "player": "CEasy",
+        "name": "Felix Fang",
+        "sheet": "https://www.dndbeyond.com/characters/26657886/lsMRnj"
+    },
+    {
+        "player": "Ceasy",
+        "name": "Kylea",
+        "sheet": "https://www.dndbeyond.com/characters/43737268/co3dpn"
+    },
+    {
+        "player": "CEasy",
+        "name": "Talakori Ironscales",
+        "sheet": "http://ddb.ac/characters/26331745/28QO8S"
+    },
+    {
+        "player": "CEasy",
+        "name": "Toefunks",
+        "sheet": "https://www.dndbeyond.com/characters/29497997"
+    },
+    {
+        "player": "Croebh",
+        "name": "Boop",
+        "sheet": "https://www.dndbeyond.com/characters/36788070"
+    },
+    {
+        "player": "Croebh",
+        "name": "Foot’er",
+        "sheet": "https://www.dndbeyond.com/characters/41456750"
+    },
+    {
+        "player": "Croebh",
+        "name": "Gulamarsh",
+        "sheet": "https://www.dndbeyond.com/characters/43213836"
+    },
+    {
+        "player": "Croebh",
+        "name": "Therorth",
+        "sheet": "ddb.ac/characters/27835227/XZ8tAH"
+    },
+    {
+        "player": "Croebh",
+        "name": "Wyld",
+        "sheet": "https://www.dndbeyond.com/characters/39272381"
+    },
+    {
+        "player": "DanDanDanDannn",
+        "name": "Ezekiel \"Zeke\" Aligeros",
+        "sheet": "https://www.dndbeyond.com/characters/39755732"
+    },
+    {
+        "player": "DanDanDanDannn",
+        "name": "Rak Andarol",
+        "sheet": "https://www.dndbeyond.com/characters/42251770"
+    },
+    {
+        "player": "DanDanDanDannn",
+        "name": "Samael \"Sam\" Aligeros",
+        "sheet": "https://www.dndbeyond.com/characters/41633665"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Dew",
+        "sheet": "https://www.dndbeyond.com/characters/31147065"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Em",
+        "sheet": "https://www.dndbeyond.com/profile/DuskArgentum/characters/44204833"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Mountain Peak",
+        "sheet": "https://www.dndbeyond.com/characters/37524288"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Vy",
+        "sheet": "https://www.dndbeyond.com/characters/42569752"
+    },
+    {
+        "player": "Earthling Jer",
+        "name": "Kira Shadowpaws",
+        "sheet": "https://www.dndbeyond.com/profile/jerclarke/characters/25870381"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Firsa Fir",
+        "sheet": "https://ddb.ac/characters/24126230"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Kriviel",
+        "sheet": "https://www.dndbeyond.com/profile/TheSweetBull/characters/30407714"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Magma",
+        "sheet": "https://www.dndbeyond.com/profile/TheSweetBull/characters/24093729"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Mavmir",
+        "sheet": "https://www.dndbeyond.com/profile/TheSweetBull/characters/37514974"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Ritari",
+        "sheet": "https://www.dndbeyond.com/characters/38048751"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Rui Voidspear",
+        "sheet": "https://www.dndbeyond.com/characters/28889781"
+    },
+    {
+        "player": "EpicFedX52",
+        "name": "Calcite Quasar",
+        "sheet": "https://www.dndbeyond.com/characters/41606733/6eBVxZ"
+    },
+    {
+        "player": "EpicFedX52",
+        "name": "Venesa Darkbringer",
+        "sheet": "https://www.dndbeyond.com/characters/41823950/hRUeiD"
+    },
+    {
+        "player": "Falsemind",
+        "name": "Vian Teng",
+        "sheet": "https://www.dndbeyond.com/characters/29942807"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Exia",
+        "sheet": "https://www.dndbeyond.com/characters/39715745"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Raion Blacksteel",
+        "sheet": "https://www.dndbeyond.com/characters/41477271/SQwoyn"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Rose Rubicndior",
+        "sheet": "https://www.dndbeyond.com/characters/36856243"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Sigrun Eisfell",
+        "sheet": "https://www.dndbeyond.com/characters/37389263"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Tannhäuser Eisfell",
+        "sheet": "https://www.dndbeyond.com/characters/37775596"
+    },
+    {
+        "player": "Fotiá",
+        "name": "Faylinx",
+        "sheet": "https://www.dndbeyond.com/characters/28118327/uSAq1g"
+    },
+    {
+        "player": "gophren",
+        "name": "Gomathoin Brawnanvil",
+        "sheet": "https://www.dndbeyond.com/characters/37891710"
+    },
+    {
+        "player": "gophren",
+        "name": "Grimald",
+        "sheet": "https://ddb.ac/characters/37972665"
+    },
+    {
+        "player": "gophren",
+        "name": "Stout Guide",
+        "sheet": "https://www.dndbeyond.com/characters/36849406"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Found in the Rigging",
+        "sheet": "https://www.dndbeyond.com/characters/43331568/NR6KyB"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Keena",
+        "sheet": "https://www.dndbeyond.com/characters/43730822/6NT2Lz"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Orabrix",
+        "sheet": "https://www.dndbeyond.com/characters/42442608/zBHcHX"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Professor Terra Lichenfoot",
+        "sheet": "https://www.dndbeyond.com/characters/39029116/Im5hK5"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Verim",
+        "sheet": "https://www.dndbeyond.com/characters/43959500/jJK5IF"
+    },
+    {
+        "player": "HydraTheatre",
+        "name": "Zyth",
+        "sheet": "https://www.dndbeyond.com/characters/40545849/tj862t"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Cecilin Turrok",
+        "sheet": "https://www.dndbeyond.com/characters/26217860"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Kipla",
+        "sheet": "https://www.dndbeyond.com/characters/27335504/WkX4zY"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Rosk",
+        "sheet": "https://www.dndbeyond.com/characters/43736864"
+    },
+    {
+        "player": "Julia",
+        "name": "Astra Fylawae",
+        "sheet": "https://www.dndbeyond.com/characters/43934461"
+    },
+    {
+        "player": "Julia",
+        "name": "Ursa",
+        "sheet": "https://www.dndbeyond.com/characters/41033506"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "\"Sir\" Baeshra",
+        "sheet": "https://dicecloud.com/character/fqxCbMSe7zizmnX4E/-"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Malark Tallstag",
+        "sheet": "https://dicecloud.com/character/KmkFxnsEdR6aDDFeA/-"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Nesala",
+        "sheet": "https://www.dndbeyond.com/characters/30025291"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Rezni",
+        "sheet": "https://dicecloud.com/character/iYMqNBCfxoR6mW4AW/-"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Sarek",
+        "sheet": "https://www.dndbeyond.com/characters/39485816"
+    },
+    {
+        "player": "Mae",
+        "name": "Pip",
+        "sheet": "https://www.dndbeyond.com/characters/42528839/gR3lrR"
+    },
+    {
+        "player": "morbidGenocide",
+        "name": "Rondord",
+        "sheet": "https://www.dndbeyond.com/characters/41853669/5Ph9AU"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Arizys Nimbosus",
+        "sheet": "https://www.dndbeyond.com/characters/38264230/yZSwYK"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Calm Before the Storm",
+        "sheet": "https://www.dndbeyond.com/characters/29373150/ESUnsJ"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Camille Medarda",
+        "sheet": "https://www.dndbeyond.com/characters/29299749/WvAjQF"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Khada Jhin",
+        "sheet": "https://www.dndbeyond.com/characters/29689133/NJGULg"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Persephone Iasion",
+        "sheet": "https://www.dndbeyond.com/characters/32292830/ZhffE7"
+    },
+    {
+        "player": "Panda The Funky",
+        "name": "Chalk",
+        "sheet": "https://www.dndbeyond.com/characters/43589860"
+    },
+    {
+        "player": "Panda The Funky",
+        "name": "Isaac Madigan",
+        "sheet": "https://www.dndbeyond.com/characters/40993280/PsTmcn"
+    },
+    {
+        "player": "Panda The Funky",
+        "name": "Riros Caerdonel",
+        "sheet": "https://www.dndbeyond.com/characters/41305336/MOpwLq"
+    },
+    {
+        "player": "Panda The Funky",
+        "name": "Velle",
+        "sheet": "https://www.dndbeyond.com/characters/43511021"
+    },
+    {
+        "player": "Pender",
+        "name": "Ashok Argith",
+        "sheet": "https://www.dndbeyond.com/characters/25907688/yZmowB"
+    },
+    {
+        "player": "Pender",
+        "name": "Rhogar Thundertouch Jharthraxyn",
+        "sheet": "https://www.dndbeyond.com/characters/25628495/U7d7Ke"
+    },
+    {
+        "player": "Pender",
+        "name": "Tharnam Hammergaze",
+        "sheet": "https://www.dndbeyond.com/characters/25907685/oOtkxH"
+    },
+    {
+        "player": "Pender",
+        "name": "Xonan",
+        "sheet": "https://www.dndbeyond.com/characters/25436190/ahu1oW"
+    },
+    {
+        "player": "Primelord",
+        "name": "Rirso",
+        "sheet": "https://www.dndbeyond.com/characters/43705751/qajQc8"
+    },
+    {
+        "player": "Sartorial",
+        "name": "Vesa Drun",
+        "sheet": "https://www.dndbeyond.com/characters/37452901/ANgb5b"
+    },
+    {
+        "player": "Skyler Nightwalker",
+        "name": "Fenfi",
+        "sheet": "https://www.dndbeyond.com/characters/37817475/NmkzM9"
+    },
+    {
+        "player": "Skyler Nightwalker",
+        "name": "Kyla",
+        "sheet": "https://www.dndbeyond.com/characters/37804662/gxtAmv"
+    },
+    {
+        "player": "Skyler Nightwalker",
+        "name": "Senedur",
+        "sheet": "https://www.dndbeyond.com/characters/37814448/RJklAU"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Bane",
+        "sheet": "https://www.dndbeyond.com/characters/42462788"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Fadi Lostwood",
+        "sheet": "https://www.dndbeyond.com/characters/42379072"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Mer Ci",
+        "sheet": "https://www.dndbeyond.com/characters/40850107"
+    },
+    {
+        "player": "Staticstasis",
+        "name": "Glenda Resaxet",
+        "sheet": "https://docs.google.com/spreadsheets/d/1p9gnT8Tuj1pKTW_tJLHaM0u9LePAZbWgQXZeewUk8r8/edit#gid=359784640"
+    },
+    {
+        "player": "Staticstasis",
+        "name": "Grance Grani",
+        "sheet": "https://docs.google.com/spreadsheets/d/1GHQjsnYHoO0lpIENL5bf7ltmvHlgDNE0za_jdrHqC7s/edit#gid=359784640"
+    },
+    {
+        "player": "Staticstasis",
+        "name": "Mother Shining",
+        "sheet": "https://docs.google.com/spreadsheets/d/1nf47cR830iaBD5pURlhZz3FUeM1yadOn6lYviae__iY/edit#gid=1011976381"
+    },
+    {
+        "player": "Staticstasis",
+        "name": "Parma Nautilius",
+        "sheet": "https://docs.google.com/spreadsheets/d/1kTZKYsUCFdm0KR6A5qRqueYplY5N0_QQY4orLw5WnQ0/edit#gid=359784640"
+    },
+    {
+        "player": "Staticstasis",
+        "name": "Strix Holly",
+        "sheet": "https://docs.google.com/spreadsheets/d/1sI_HnOburPuDD32VkFmdUFU_Hfm4PWp4uibOe5ZfAII/edit#gid=359784640"
+    },
+    {
+        "player": "Storybored",
+        "name": "Hex",
+        "sheet": "https://www.dndbeyond.com/profile/Storyboarded/characters/40675018"
+    },
+    {
+        "player": "Storybored",
+        "name": "Hyacinth",
+        "sheet": "https://www.dndbeyond.com/profile/Storyboarded/characters/27376109"
+    },
+    {
+        "player": "Storybored",
+        "name": "Kalo",
+        "sheet": "https://www.dndbeyond.com/characters/26329411"
+    },
+    {
+        "player": "Storybored",
+        "name": "Rillyal Lulathem",
+        "sheet": "https://www.dndbeyond.com/characters/31289483"
+    },
+    {
+        "player": "Storybored",
+        "name": "Third Time’s the Charm",
+        "sheet": "https://www.dndbeyond.com/characters/25530207"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Agni Brimstone",
+        "sheet": "https://www.dndbeyond.com/characters/29475423"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Asital",
+        "sheet": "https://www.dndbeyond.com/characters/28086650"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Belgrax",
+        "sheet": "https://www.dndbeyond.com/characters/38465545"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Corris",
+        "sheet": "https://www.dndbeyond.com/characters/29706525"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Gra’Grosh",
+        "sheet": "https://www.dndbeyond.com/characters/25577100"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Tazdhall Arkhan The Second",
+        "sheet": "https://www.dndbeyond.com/characters/30853841"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Xarakas",
+        "sheet": "https://www.dndbeyond.com/profile/SnakeEater007/characters/24101251"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Archie Hangover",
+        "sheet": "https://www.dndbeyond.com/characters/41983142"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Kai",
+        "sheet": "https://www.dndbeyond.com/characters/28201492/1fY0Qp"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Malla",
+        "sheet": "https://www.dndbeyond.com/characters/37622259/0cVyR8"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Melanchonid",
+        "sheet": "https://dicecloud.com/character/zKsayJpqmP5DWQE4q/Melanchonid"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Mistletoe",
+        "sheet": "https://www.dndbeyond.com/characters/38114550/Y1lgEN"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Mycona",
+        "sheet": "https://dicecloud.com/character/GwJs4oeN2FJzBeWiX/Mycona"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Vraklathar",
+        "sheet": "https://www.dndbeyond.com/characters/41005025/f6GTIh"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Yeenie",
+        "sheet": "https://docs.google.com/spreadsheets/d/1K3mt6kUa2SmmgoQqOxJQgBxYTOBKmc9rWHljBd0RF_g/edit?usp=sharing"
+    },
+    {
+        "player": "Wrym",
+        "name": "Asclepius",
+        "sheet": "https://www.dndbeyond.com/characters/28739066/uRzYOx"
+    },
+    {
+        "player": "Wrym",
+        "name": "Zoe",
+        "sheet": "https://docs.google.com/spreadsheets/d/1G57tQupVyHjwgQb4zuvJ22TmarRwENctvAJKQdi4BiY/edit#gid=1011976381"
+    },
+    {
+        "player": "Wyrm",
+        "name": "Jess Abbot",
+        "sheet": "https://docs.google.com/spreadsheets/d/1_2hy8q1hnvrffe-J5rlYtBJxxPNvanS2ZJnTi0CNyNE/edit#gid=1011976381"
+    },
+    {
+        "player": "Wyrm",
+        "name": "Nico",
+        "sheet": "https://www.dndbeyond.com/characters/25530468/6qAWjt"
+    },
+    {
+        "player": "Wyrm",
+        "name": "Patroclus",
+        "sheet": "https://www.dndbeyond.com/characters/26101123"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Moxie",
+        "sheet": "https://www.dndbeyond.com/characters/40302144"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Otto",
+        "sheet": "https://www.dndbeyond.com/characters/41245734"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Parker",
+        "sheet": "https://www.dndbeyond.com/characters/43670098"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Rix",
+        "sheet": "https://www.dndbeyond.com/characters/41801349/0YIemo"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Tome",
+        "sheet": "https://www.dndbeyond.com/characters/26159508/dQ9KFi"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Zykk",
+        "sheet": "https://www.dndbeyond.com/characters/26641541"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Artoria Fairborn",
+        "sheet": "https://www.dndbeyond.com/characters/26649150/9wZCAC"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Arwyn",
+        "sheet": "https://www.dndbeyond.com/characters/26567446/FAyZ4D"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Chloe Springfire",
+        "sheet": "https://www.dndbeyond.com/characters/25553835/GoW7MP"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Demetrius Swiftfield",
+        "sheet": "https://www.dndbeyond.com/characters/25492525/hAFLMG"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Sapphire \"Gadget\"  Glimmerbottom",
+        "sheet": "https://www.dndbeyond.com/characters/25554974/l4lWMp"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Zephyr Windstride",
+        "sheet": "https://www.dndbeyond.com/characters/25903609/MdHVfe"
+    }
+]
