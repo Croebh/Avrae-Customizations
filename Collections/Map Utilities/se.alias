@@ -129,7 +129,7 @@ if c:
      if args.last('spell' + overNum):
       # Loop through our users spellOverlays, looking for that spell
       for spell in spellOverlays:
-       if argList[0] in spell.lower():
+       if argList[0].lower() in spell.lower():
         # If we find it, add the overlay to the args
         if 'under' in spellOverlays[spell]:
          if typeof(spellOverlays.get(spell)) == "str":
