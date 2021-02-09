@@ -111,7 +111,7 @@ anno["image"]       = args.last('image',  "", str)
 anno["title"]       = args.last('title',  '', str)
 
 # We need this to be a dict for the annotating below
-targetsCache        = {i:targ for i, targ in enumerate(args.get('t', [name]))}
+targetsCache        = {i:targ for i, targ in enumerate(args.get('t', [] if args.last('noself') else [name]))}
 # Are we targeting every combatant?
 if args.last('all') and init:
   targetsCache.update({i:f"""{combatant.name}""" for i, combatant
