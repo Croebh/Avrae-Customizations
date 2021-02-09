@@ -68,14 +68,13 @@ anno["ndesc"]       = args.last("ndesc", "", str)
 anno["roll"]        = args.last("roll",  "", str)
 
 # Default to cantrip scaling
-if scale := args.last('scale', {"1" : 1, "5" : 2, "11" : 3, "17" : 4}):
-  if typeof(scale) == "str":
-   scale = load_json(scale)
-scaleNum = 0
-for lvl, value in scale.items():
+if scaleDict := args.last('scale', {"1" : 1, "5" : 2, "11" : 3, "17" : 4}):
+  if typeof(scaleDict) == "str":
+   scaleDict = load_json(scaleDict.replace("'", '"'))
+scale = 0
+for lvl, value in scaleDict.items():
  if user.levels.total_level >= int(lvl):
-  scaleNum = value
-scale = scaleNum
+  scale = value
 
 # Quick access to their default spell stats
 spellDC             = user.spellbook.dc
@@ -156,7 +155,7 @@ if not (out or help):
       else:
        segOut.append(str(anno.get(sep)))
      # If an -arg was provided with this name, add that
-     elif args.last(sep) is not None:
+     elif args.last(sep) is not None and sep != "scale":
       segOut.append(str(args.last(sep)))
      # If a variable exists, add that
      elif get(sep) is not None:
@@ -499,7 +498,8 @@ if not (out or help) and valid:
     tOut.append(targDamage.damage)
 
   # Add our target output to the list
-  targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut) or "*None*"}|inline" """)
+  if tOut:
+   targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut)}|inline" """)
 
   # Reset our context
   args.set_context(None)
@@ -593,6 +593,7 @@ Arguments marked with **†** allow for variable evaluation via `{}`
 `-t \\"[target]\\"` - Sets targets for the save. You can chain multiple targets or do a single target. If you pass no targets, it will roll the save for your active character. `{name}` is replaced with your characters name.
 `-t \\"[target]|[args]\\"` - Sets a target, and also allows for specific args to apply to them. (e.g, `-t \\"OR1|pass\\"` to force `OR1` to succeed.)
 `all` - This will target *all* combatant in the initiative.
+`noself` - This will cause it to not auto-target your active character if no other targets are provided.
 `adv/dis` - Causes the save or saves to be rolled at dis/advantage.
 `-b [conditional bonus]` - Adds (or subtracts) a bonus to the saves (accepts dice). **†**
 
