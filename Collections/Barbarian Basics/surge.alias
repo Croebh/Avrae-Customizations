@@ -27,14 +27,13 @@ surgeTable = [
   "use": "explode"
  },
  {
-  "name": "Light Burst",
+  "name": "Wild Weapon",
   "effect": [
-   "Wild Surge - Light Beam",
+   "Wild Surge - Force Weapon",
    "",
-   "A target you can see within 30 feet of you Con save or take 1d6 radiant damage and be blinded until the start of your next turn.\n - You can use this effect again as a bonus action."
+   "Damage type changes to force\n - Gains the light and thrown (20/60) properties\n - Reappears in your hand at the end of the current turn."
   ],
-  "desc": "A bolt of light shoots from you chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
-  "use": "burst"
+  "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon's damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."
  },
  {
   "name": "Retribution",
@@ -65,13 +64,14 @@ surgeTable = [
   "desc": "Flowers and vines temporarily grow around you; until your rage ends, the ground within 15 feet of you is difficult terrain for your enemies."
  },
  {
-  "name": "Wild Weapon",
+  "name": "Light Burst",
   "effect": [
-   "Wild Surge - Force Weapon",
+   "Wild Surge - Light Beam",
    "",
-   "Damage type changes to force\n - Gains the light and thrown (20/60) properties\n - Reappears in your hand at the end of the current turn."
+   "A target you can see within 30 feet of you Con save or take 1d6 radiant damage and be blinded until the start of your next turn.\n - You can use this effect again as a bonus action."
   ],
-  "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon's damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."
+  "desc": "A bolt of light shoots from you chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
+  "use": "burst"
  }
 ]
 
@@ -106,7 +106,7 @@ else:
  me = character()
  out.append(f""" -f "Surge Roll|{surgeRoll}" """)
  out.append(f""" -f "{surge.name}|{surge.desc}" """)
- if (surgeEffect := surge.get('effect')):
+ if surge.name == "Vampiric Burst":
   tempRoll = vroll(f'1d12+{BarbarianLevel}')
   me.set_temp_hp(tempRoll.total)
   out.append(f""" -f "Vampiric Health|{tempRoll}" """)
