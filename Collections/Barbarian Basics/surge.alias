@@ -75,34 +75,45 @@ surgeTable = [
  }
 ]
 
-
-
-
 surgeRoll = vroll("&*&" or "1d8")
 surge = surgeTable[surgeRoll.total - 1]
 
 c = combat()
 out = []
 
-if c and (me := c.me) and (rageEffect := c.me.get_effect('Rage')):
- me.remove_effect("Wild Surge")
+if c and (me := c.me):
+ if rageEffect := c.me.get_effect('Rage'):
+  me.remove_effect("Wild Surge")
+  out.append(f""" -f "Surge Roll|{surgeRoll}" """)
+  out.append(f""" -f "{surge.name}|{surge.desc}" """)
+  if (surgeEffect := surge.get('effect')):
+   me.add_effect(surgeEffect[0], surgeEffect[1], parent=rageEffect, desc=surgeEffect[2] + (f"\n - !use {surge.get('use')} -t <targ>" if surge.get('use') else ''))
+   surgeEffect = str(me.get_effect(surgeEffect[0])).splitlines()[0]
+   out.append(f""" -f "{name}|{surgeEffect}" """)
+  if (use := surge.get('use')):
+   out.append(f""" -f "Usage|`{ctx.prefix}use {use} -t <targ>`" """)
+  if surge.name == "Vampiric Burst":
+   tempRoll = vroll(f'1d12+{BarbarianLevel}')
+   me.set_temp_hp(tempRoll.total)
+   out.append(f""" -f "Vampiric Health|{tempRoll}" """)
+  out.append('-title "Wild Magic Surge - Rage Edition"')
+  out.append(f'-footer "{me}"')
+  out.append(f'-desc "The magical energy rolling inside you sometimes erupts from you. When you enter your rage, roll on the Wild Magic table to determine the magical effect produced.\n\nIf the effect requires a saving throw, the DC equals {constitutionMod+8+proficiencyBonus}."')
+  return '\n'.join(out)
+ else:
+  return f""" -desc "Bruh, you even raging?" """
+else:
+ me = character()
  out.append(f""" -f "Surge Roll|{surgeRoll}" """)
  out.append(f""" -f "{surge.name}|{surge.desc}" """)
  if (surgeEffect := surge.get('effect')):
-  me.add_effect(surgeEffect[0], surgeEffect[1], parent=rageEffect, desc=surgeEffect[2] + (f"\n - !use {surge.get('use')} -t <targ>" if surge.get('use') else ''))
-  surgeEffect = str(me.get_effect(surgeEffect[0])).splitlines()[0]
-  out.append(f""" -f "{name}|{surgeEffect}" """)
- if (use := surge.get('use')):
-  out.append(f""" -f "Usage|`{ctx.prefix}use {use} -t <targ>`" """)
- if surge.name == "Vampiric Burst":
   tempRoll = vroll(f'1d12+{BarbarianLevel}')
   me.set_temp_hp(tempRoll.total)
   out.append(f""" -f "Vampiric Health|{tempRoll}" """)
  out.append('-title "Wild Magic Surge - Rage Edition"')
- out.append(f'-footer "{me}"')
+ out.append(f'-footer "{name}: {me.hp_str()}"')
  out.append(f'-desc "The magical energy rolling inside you sometimes erupts from you. When you enter your rage, roll on the Wild Magic table to determine the magical effect produced.\n\nIf the effect requires a saving throw, the DC equals {constitutionMod+8+proficiencyBonus}."')
  return '\n'.join(out)
-return f""" -desc "Bruh, you even raging?" """
 </drac2>
 <drac2>
 resources = load_json(get('resources', '[]'))
