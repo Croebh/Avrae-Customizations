@@ -166,7 +166,7 @@ if args.last('undo') and prevBack:
 <drac2>
 if c:
  for massTarg in args.get('t'):
-  mTarg, mGo = (massTarg.split('|') + [""])[:2]
+  mTarg, mGo, mHeight = (massTarg.split('|') + ["", ""])[:3]
   if (mTarg := gt(mTarg)):
    # If they don't have a note/location set, add them to the list
    if not out.get(mTarg.name):
@@ -241,6 +241,17 @@ if c:
      distanceDisplay = f"{distance}"
     desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {newLoc} ({distanceDisplay} ft.)")
     out[mTarg.name].update({"location":newLoc})
+   if mHeight:
+    height = mHeight
+    # If the height is none or 0, remove height from the target
+    if height in ("None","none","0"):
+     if 'height' in out[mTarg.name]:
+      prevHeight = out[mTarg.name].pop('height')
+      if prevHeight:
+       desc.append(f"{mTarg.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
+    else:
+     # Otherwise, set that targets height
+     out[mTarg.name].update({'height':height})
 </drac2>
 
 <drac2>
@@ -419,19 +430,16 @@ if not c or args.get('?') or args.get('help'):
  help = f"""-title "Go for it!"
             -desc "**__Map Utility__**
             This is a utility to use with the `!map` alias. You can move either your current active player in initiative or targeted player as step movements. It will still tally up the total distance after the move.
-
             **__Go Commands__**
             `!go <distance><direction> [-t <target name>]` - Allows you to move your active characters token in different steps depending on the distance and direction given. Direction can be `n, ne, e, se, s, sw, w, nw` Example: `!go 10e10s5e` would move your active players token 10 ft East, then 10 ft South, and then 5 ft East.
-
             As an option, you can target someone else and do the same step movements to them. It just needs to be after the <distance><direction> commands. Example: `!go 15s15e -t go1`
-
             **__Moving Multiple Targets__**
-            `-t <target>|<distance><direction>` - Allows mass moving of targets. Example: `!go -t go1|5n5e5ne -t go2|5s5sw5s`" """
+            `-t <target>|<distance><direction>|[height]` - Allows mass moving of targets and height. Example: `!go -t go1|5n5e5ne -t go2|5s5sw5s|30`" """
 
  if not combat():
   help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
 
  return '\n'.join([i.lstrip() for i in help.split('\n')])
 </drac2>
--footer "!go ? | v1.3"
+-footer "!go ? | v1.4"
 -color <color>
