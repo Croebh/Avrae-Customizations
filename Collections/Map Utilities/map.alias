@@ -428,7 +428,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
  #First option is to create spell overlay
  if args.last('newspell') or args.last('savespell') or args.last('saveoverlay') or args.last('saveunderlay'):
   userOverlays = load_json(get('mapOverlays','{}'))
-  for addNewspell in (args.get('saveoverlay') or args.get('newspell') or args.get('savespell') or args.last('saveunderlay')):
+  for addNewspell in (args.get('saveoverlay') or args.get('newspell') or args.get('savespell') or args.get('saveunderlay')):
    newSpellSplit = addNewspell.split(":")
    if len(newSpellSplit) > 2:
     newSpellName = newSpellSplit[0]
@@ -1682,16 +1682,13 @@ elif not c or args.get('?') or args.get('help'):
              -desc "**__Allow the Walls and Objects to Save__**
              The map attaches these walls and objects automatically to any combatant in the initiative order that's named `DM`, `Map`, or `Lair`. Attaching a map allows every change that's made to it to be saved. We recommend adding a dedicated combatant for this, instead of a player or a monster, to prevent the map from vanishing when a player exits combat, or a monster is killed. Regardless, you can manually attach the map to any other combatant by running `-attach <target>`.
              If these walls and objects are run when they aren't attached to a `-attach` target, then the change will be temporary, and will be removed the next time you run the `!map` command.
-
              **__Walls and Doors__**
              Check our [Walls and Doors Guide](http://docs.otfbm.com/#/wallsanddoors) for detailed explanations of the commands below."
-
              -f "_ _|**__Walls__**
              `-wall <coordinate><coordinate>[,color]` - Draws a wall directly onto the grid, between two coordinates. Example: `!map -wall B3J3` would draw a line from B3 to J3. You can add multiple walls in one command, just separate them by a `_`. Example: `!map -wall M9P9_P9S6`
              When adding walls you can change the color of it. Example: `!map -wall B2B9,r`.
              `-wall none` - Clears all walls added
              `-deletewall <code>` - Allows you to delete an individual wall"
-
              -f "_ _|**__Doors__**
              You can add doors to walls with following arguments:
              `-o` - Open Door.
@@ -1699,11 +1696,9 @@ elif not c or args.get('?') or args.get('help'):
              `-b` - Double Door.
              `-s` - Secret Door.
              Put one of these arguments between two coordinates that make a wall to draw a door in the middle. Example: `!map -wall B3-oD3` would draw an open door between B3 and D3."
-
              -f "_ _|**__Objects__**
              `-object <location>:<object>` - Adds an object to the map. Some objects can be placed over multiple squares, to do so add a second coordinate after the first. Example: `!map -object A1B4:trap` would expand an trap object from A1 to B4.
              `-deleteobject <location>:<object>` - Deletes the specified object from the map
-
              See `!map objectlist` for a list of objects"
              """
  else:
