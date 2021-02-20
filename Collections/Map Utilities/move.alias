@@ -428,7 +428,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
  #First option is to create spell overlay
  if args.last('newspell') or args.last('savespell') or args.last('saveoverlay') or args.last('saveunderlay'):
   userOverlays = load_json(get('mapOverlays','{}'))
-  for addNewspell in (args.get('saveoverlay') or args.get('newspell') or args.get('savespell') or args.last('saveunderlay')):
+  for addNewspell in (args.get('saveoverlay') or args.get('newspell') or args.get('savespell') or args.get('saveunderlay')):
    newSpellSplit = addNewspell.split(":")
    if len(newSpellSplit) > 2:
     newSpellName = newSpellSplit[0]
@@ -792,6 +792,9 @@ if c:
            elif overlaycolor[:2] in COL:
             currentOver[shape.args[index]] += overlaycolor[:2]
             currentOver['colorDesc'] += COL[overlaycolor[:2]]
+           elif overlaycolor[0]+overlaycolor[-1] in COL:
+            currentOver[shape.args[index]] += overlaycolor[0]+overlaycolor[-1]
+            currentOver['colorDesc'] += COL[overlaycolor[0]+overlaycolor[-1]]
            elif overlaycolor[:1] in COL:
             currentOver[shape.args[index]] += overlaycolor[:1]
             currentOver['colorDesc'] += COL[overlaycolor[:1]]
