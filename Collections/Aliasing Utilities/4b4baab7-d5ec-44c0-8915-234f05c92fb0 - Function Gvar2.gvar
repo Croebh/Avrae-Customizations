@@ -348,119 +348,119 @@
    }
   ]
  },
- "AliasContext.author": {
+ "ctx.author": {
   "desc": "The user that ran the alias.",
   "url": "aliasing.api.context.AliasContext.author",
   "returns": {
    "type": "AliasAuthor"
   }
  },
- "AliasContext.channel": {
+ "ctx.channel": {
   "desc": "The channel the alias was run in.",
   "url": "aliasing.api.context.AliasContext.channel",
   "returns": {
    "type": "AliasChannel"
   }
  },
- "AliasContext.guild": {
+ "ctx.guild": {
   "desc": "The discord guild (server) the alias was run in, or None if the alias was run in DMs.",
   "url": "aliasing.api.context.AliasContext.guild",
   "returns": {
    "type": "AliasGuild or None"
   }
  },
- "AliasContext.prefix": {
+ "ctx.prefix": {
   "desc": "The prefix used to run the alias.",
   "url": "aliasing.api.context.AliasContext.prefix",
   "returns": {
    "type": "str"
   }
  },
- "AliasContext.alias": {
+ "ctx.alias": {
   "desc": "The command used to run the alias.",
   "url": "aliasing.api.context.AliasContext.alias",
   "returns": {
    "type": "str"
   }
  },
- "AliasGuild.id": {
+ "ctx.guild.id": {
   "desc": "The ID of the guild.",
   "url": "aliasing.api.context.AliasGuild.id",
   "returns": {
    "type": "int"
   }
  },
- "AliasGuild.name": {
+ "ctx.guild.name": {
   "desc": "The name of the guild.",
   "url": "aliasing.api.context.AliasGuild.name",
   "returns": {
    "type": "str"
   }
  },
- "AliasChannel.id": {
+ "ctx.channel.id": {
   "desc": "The ID of the channel.",
   "url": "aliasing.api.context.AliasChannel.id",
   "returns": {
    "type": "int"
   }
  },
- "AliasChannel.name": {
+ "ctx.channel.name": {
   "desc": "The name of the channel, not including the preceding hash (#).",
   "url": "aliasing.api.context.AliasChannel.name",
   "returns": {
    "type": "str"
   }
  },
- "AliasChannel.topic": {
+ "ctx.channel.topic": {
   "desc": "The channel topic.",
   "url": "aliasing.api.context.AliasChannel.topic",
   "returns": {
    "type": "str"
   }
 },
- "AliasChannel.category": {
+ "ctx.channel.category": {
   "desc": "The category of the channel the alias was run in.",
   "url": "aliasing.api.context.AliasChannel.category",
   "returns": {
    "type": "AliasCategory"
   }
  },
- "AliasCategory.id": {
+ "ctx.category.id": {
   "desc": "The ID of the category.",
   "url": "aliasing.api.context.AliasCategory.id",
   "returns": {
    "type": "int"
   }
  },
- "AliasCategory.name": {
+ "ctx.category.name": {
   "desc": "The name of the category.",
   "url": "aliasing.api.context.AliasCategory.name",
   "returns": {
    "type": "str"
   }
  },
- "AliasAuthor.discriminator": {
+ "ctx.author.discriminator": {
   "desc": "The user’s discriminator (number after the hash).",
   "url": "aliasing.api.context.AliasAuthor.discriminator",
   "returns": {
    "type": "str"
   }
  },
- "AliasAuthor.display_name": {
+ "ctx.author.display_name": {
   "desc": "The user’s display name - nickname if applicable, otherwise same as their name.",
   "url": "aliasing.api.context.AliasAuthor.display_name",
   "returns": {
    "type": "str"
   }
  },
- "AliasAuthor.id": {
+ "ctx.author.id": {
   "desc": "The user’s ID.",
   "url": "aliasing.api.context.AliasAuthor.id",
   "returns": {
    "type": "int"
   }
  },
- "AliasAuthor.name": {
+ "ctx.author.name": {
   "desc": "The user’s username (not including the discriminator).",
   "url": "aliasing.api.context.AliasAuthor.name",
   "returns": {

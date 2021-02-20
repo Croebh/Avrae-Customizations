@@ -274,7 +274,7 @@
   "type": {
    "name": "AliasContext"
   },
-  "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n ctx.prefix\n\\\"!\\\" "
+  "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n>>> ctx.prefix\n\\\"!\\\" "
  },
  "delete_uvar(name)": {
   "desc": "Deletes a user variable. Does nothing if the variable does not exist.",
