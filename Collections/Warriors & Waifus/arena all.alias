@@ -8,6 +8,9 @@ arenaTimer[name] = {"duel":    int(get('arenaDuel', 0)),
                      "monster": int(get('arenaMonster', 0))}
 set_uvar('arenaTimers', dump_json(arenaTimer))
 
+dm     = int(get('arenaDm', 0))
+DMTime = (0, 0, 0, 0)
+
 # Seconds in anything over a minute
 HOUR, DAY, WEEK = 3600, 86_400, 604_800
 
@@ -34,15 +37,38 @@ for char, timers in arenaTimer.items():
 
     # Display the duel timer if there is one
     if duelTime:
-      curOut += "\n**Duel:** ~" + f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] and not duelTime[0] else ''}".strip(', ') or f"{duelTime[2]} Seconds"
+      curOut += "\n**Duel:** " + f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] and not duelTime[0] else ''}".strip(', ') or f"{duelTime[2]} Seconds"
 
     # Display the monster fight timer if there is one
     if monsterTime:
-      curOut += "\n**Monster Fight:** ~" + f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] and not [monsterTime][0] else ''}".strip(', ') or f"{monsterTime[2]} Seconds"
+      curOut += "\n**Monster Fight:** " + f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] and not [monsterTime][0] else ''}".strip(', ') or f"{monsterTime[2]} Seconds"
     curOut += '|inline"'
 
     # Add it to the output
     out.append(curOut)
+
+# If a timer exists, calculate remaining time
+if dm:
+  dm = (dm + WEEK - curTime)
+  # Is the timer still running?
+  if dm > 0:
+    # Calculate human parseable times (Days, Hours, Minutes, Seconds)
+    DMTime = (dm//DAY, (dm%DAY)//HOUR, (dm%HOUR)//60, dm%60)
+# If the timer is running (or just set), lets parse it out to text
+if dm > 0:
+  DMOut = ""
+  if DMTime[0]:
+    DMOut += f'{DMTime[0]} Days, '
+  if DMTime[1]:
+    DMOut += f'{DMTime[1]} Hours, '
+  # We only want to show minutes if theres under a day remaining
+  if DMTime[2] and not DMTime[0]:
+    DMOut += f'{DMTime[2]} Minutes'
+  DMOut = DMOut.strip(", ")
+  # We only want to show seconds if theres under a minute remaining
+  if not DMOut:
+    DMOut = f"{DMTime[3]} Seconds"
+  out.append(f""" -f "DM Experience|{DMOut}|inline" """)
 
 # If any of our characters had timers to display, display em
 if out:
@@ -50,11 +76,11 @@ if out:
 
 # Otherwise, huzzah, do whatcha want
 else:
-  return f""" -f "Lucky You!|None of your characters (that have run the new alias) are on timer!" """
+  return f""" -f "Lucky You!|None of your characters are on timer!" """
 
 </drac2>
 
--desc "This will show all active duel or monster timers for your characters. If a character or timer is missing from this list, either they are off cooldown, or you haven't run the new alias with that character."
+-desc "If a character or timer is missing from this list, they are off cooldown."
 
 -footer "!arena duel - Set your duel timer
 !arena monster - Set your monster fight timer
@@ -62,3 +88,5 @@ else:
 !arena all - View all character timers"
 
 -title "Arena Cooldowns for {{ctx.author.display_name}}"
+
+{{"-t 20" if ctx.channel.id == 687863391083167793 else ""}}

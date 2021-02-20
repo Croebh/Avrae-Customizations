@@ -163,3 +163,6 @@ set_uvar('arenaTimers', dump_json(arenaTimers))
 !arena all - View all character timers"
 
 -title "Arena Cooldowns for <name>"
+
+
+{{"-t 20" if ctx.channel.id == 687863391083167793 and not newTimer else ""}}
