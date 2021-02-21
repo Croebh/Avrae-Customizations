@@ -2,17 +2,28 @@ embed
 <drac2>
 testVersion = False
 argList = &ARGS&
-otherArgs = []
+argOut = []
 
 # Capture args that aren't related to distance
 for i, arg in enumerate(argList):
   if arg.lower() in ['silent', '?', 'help']:
-    otherArgs.append(argList.pop(i))
+    argOut.append(argList.pop(i))
 
-argList = [' '.join(argList)]
+for arg in argList:
+  if "," in arg:
+    splitArg = arg.split(',')
+    if splitArg[0]:
+      argOut.append('-distance')
+      argOut.append(splitArg[0])
+    argOut.append('-color')
+    argOut.append(splitArg[1])
+    continue
+  argOut.append('-distance')
+  argOut.append(arg)
+
 
 # Comment the first line for `!map`, second line for `!move`
-args = argparse(['-distance']+argList+otherArgs if argList else [])
+args = argparse(argOut)
 # args = argparse(argList)
 
 # Set are base variables
@@ -154,12 +165,12 @@ if c:
 
 <drac2>
 # If user wants to measure the distance between two coordinates
-if args.last('distance'):
+if args.get('distance'):
  fName = sName = ""
  cardinal = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW","W", "WNW", "NW", "NNW"]
  tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.1051],[7,0.1228],[8,0.1405],[9,0.1584],[10,0.1763],[11,0.1944],[12,0.2126],[13,0.2309],[14,0.2493],[15,0.2679],[16,0.2867],[17,0.3057],[18,0.3249],[19,0.3443],[20,0.3640],[21,0.3839],[22,0.4040],[23,0.4245],[24,0.4452],[25,0.4663],[26,0.4877],[27,0.5095],[28,0.5317],[29,0.5543],[30,0.5774],[31,0.6009],[32,0.6249],[33,0.6494],[34,0.6745],[35,0.7002],[36,0.7265],[37,0.7536],[38,0.7813],[39,0.8098],[40,0.8391],[41,0.8693],[42,0.9004],[43,0.9325],[44,0.9657],[45,1.0000],[46,1.0355],[47,1.0724],[48,1.1106],[49,1.1504],[50,1.1918],[51,1.2349],[52,1.2799],[53,1.3270],[54,1.3764],[55,1.4281],[56,1.4826],[57,1.5399],[58,1.6003],[59,1.6643],[60,1.7321],[61,1.8040],[62,1.8807],[63,1.9626],[64,2.0503],[65,2.1445],[66,2.2460],[67,2.3559],[68,2.4751],[69,2.6051],[70,2.7475],[71,2.9042],[72,3.0777],[73,3.2709],[74,3.4874],[75,3.7321],[76,4.0108],[77,4.3315],[78,4.7046],[79,5.1446],[80,5.6713],[81,6.3138],[82,7.1154],[83,8.1443],[84,9.5144],[85,11.4301],[86,14.3007],[87,19.0811],[88,28.6363],[89,57.2900]]
- argsColor = args.last('distance').split(',')
- argsDist = argsColor[0].split(':' if ':' in argsColor[0] else None) # Backwards compat
+ argsColor = args.last('color')
+ argsDist = args.get('distance')
  height = int(argsDist[2] if len(argsDist) > 2 else "0")
  prevLoc = argsDist[0] if len(argsDist) > 1 else "A1" if argsDist else ""
  if c and (firstTarget := gt(prevLoc)):
@@ -212,7 +223,7 @@ if args.last('distance'):
     degree = 0 if deltaY > 0 else 180 if deltaY < 0 else 90 if deltaX > 0 else 270
   card = cardinal[floor((degree)//22.5)%16]
 
-  if len(argsColor)>1:
+  if argsColor and len(argsColor)>1:
    colr= argsColor[1]
   else:
    colr = f"~62C1BF"
@@ -319,6 +330,6 @@ elif not c:
  return f""" -title "**__Distance__**" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
--footer "!distance ? | v2.0"
+-footer "{{ctx.prefix}}{{ctx.alias}} ? | v2.0"
 
 -color <color>
