@@ -1095,32 +1095,9 @@ if c:
 
 <drac2>
 if args.last('tokenimport'):
- tokenimport = args.last('tokenimport').encode()
+ tokenimport = args.last('tokenimport')
 
- b64_index = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-
- ascii_bin_str = ""
- tokenoutput = ""
-
- for c in tokenimport:
-     ascii_bin_str += f'{c:08b}'  # construct a binary-representation string
-
- numChunks = int(len(ascii_bin_str) / 6)  # how many 6
- for i in range(numChunks):
-     chunk = ascii_bin_str[i * 6: (i + 1) * 6]
-     tokenoutput += b64_index[int(chunk, base=2)]
-
- leftoverBits = len(ascii_bin_str) % 6  # since the input was a multiple of 8, this must be 2 or 4
- if leftoverBits > 0:
-     leftover = ascii_bin_str[leftoverBits * -1:]
-     if leftoverBits == 2:
-         tokenoutput += b64_index[int(leftover+('0' * 4), base=2)]
-         tokenoutput += ('=' * 2)
-     elif leftoverBits == 4:
-         tokenoutput += b64_index[int(leftover+('0' * 2), base=2)]
-         tokenoutput += '='
-
- desc.append(f"Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`")
+ return f"""-title "Token Import" -desc "Token shortcode for `{tokenimport}` can be found at [This Link](https://token.otfbm.io/meta?url={tokenimport}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`" """
 </drac2>
 
 <drac2>
@@ -1513,7 +1490,7 @@ if c:
  # &cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}
 
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist")):
+ if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist", 'tokenimport')):
   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
