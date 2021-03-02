@@ -15,8 +15,8 @@ if combat():
  for target in combat().combatants:
   if target.level and not (target.levels.get('Monster')):
    sheet = None
-   if target.name in sheetDict:
-    sheet = sheetDict[target.name]
+   if target.name.strip('*') in sheetDict:
+    sheet = sheetDict[target.name.strip('*')]
    out.append(f""" -f "{target.name}|**HP** - {target.hp_str().strip('<>')} | **AC** - {target.ac}\n{' | '.join([f"**{cls}** {level}" for (cls, level) in target.levels])}\n{target.resists}{f"{newLine}[SHEET]({sheet})" if sheet else ""}|inline" """.replace('\n\n','\n') )
    average += target.levels.total_level
    levels[target.levels.total_level] = levels.get(target.levels.total_level, 0)+1
