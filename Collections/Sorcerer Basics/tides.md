@@ -1,0 +1,1 @@
+This snippet is for using the Tides of Chaos ability of the Wild Magic subclass in order to add advantage to a save/attack/check.

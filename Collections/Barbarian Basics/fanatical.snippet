@@ -1,0 +1,6 @@
+{{cc="Fanatical Focus"}}
+{{v=cc_exists(cc) and get_cc(cc)>0}}
+-f "{{cc}}|{{cc_str(cc) if cc_exists(cc) else "*None*"}}
+{{"You do not have this ability." if not cc_exists(cc) else "You must take a short or long rest to regain your expended use." if not v else "If you fail a saving throw while you’re raging, you can reroll it, and you must use the new roll. You can use this ability only once per rage."}}"
+{{mod_cc(cc, -1) if v else ""}}
+{{"pass" if v else ""}}
