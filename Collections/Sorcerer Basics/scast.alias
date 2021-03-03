@@ -1,5 +1,5 @@
 {{args = &ARGS&}}{{'cast' if args else 'embed'}}
-{{spells, spellgvar = [], load_json(get_gvar('f7b29795-167d-49c7-b096-21227db28f04'))}}
+{{spells, spellgvar = [], load_json(get_gvar('5e2c8e11-6ade-4ce2-9ece-562fc9db70c7'))}}
 {{spell_name = args[0] if args else ''}}"{{spell_name}}"
 {{_ = [[spells.append({'name':spell.name, 'level':spell.level}) for spell in spellgvar if spell.level == level] for level in range(10)]}}
 {{spell_level = argparse(args).last('l', default=[i.level for i in spells if spell_name.lower() in i.name.lower()][0], type_=int) if args else 0}}
