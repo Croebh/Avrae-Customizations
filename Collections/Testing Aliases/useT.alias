@@ -131,7 +131,7 @@ for arg in anno.copy():
 # | Annotate all the Things |
 # ---------------------------
 
-mathsep   = "+-()/*[]"
+mathsep   = "+-()/*[]<>="
 if not (out or help):
  for annoGroup in [anno, targetsCache]:
   for key, string in annoGroup.items():
