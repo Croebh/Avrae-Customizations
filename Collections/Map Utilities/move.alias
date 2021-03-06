@@ -1132,13 +1132,47 @@ if c:
     mapoptions = ""
     desc.append(f"Map options reset")
    else:
-    mapoptions = args.last('mapoptions', args.last('options', mapoptions))
+    types = [
+          ('zoom', 'z', '.'),
+          ('size', 'c', ''),
+          ('trans', 'h', ''),
+          ('offset', 'o', ':')
+        ]
+
+    options = {"old": {}, "new": {}}
+    opt = args.last('mapoptions', args.last('options', ''))
+    for ver in options:
+      base = opt if ver == "new" else mapoptions
+      for full, short, add in types:
+        if short in base:
+          options[ver][full] = short
+          for char in base[base.index(short)+1:]:
+            if char.isdigit() or char == add:
+              options[ver][full] += char
+            else:
+              break
+
+    if opt:
+      if opt.startswith(('+', '~', '-')):
+        for type, value in options["new"].items():
+          if type in options["old"]:
+            opt = opt.replace(value, "")
+            mapoptions = mapoptions.replace(options["old"][type],
+              "" if opt.startswith('-') else value)
+        if opt.startswith('-'):
+          mapoptions = mapoptions.replace(opt.lstrip('-'), '')
+        else:
+          mapoptions += opt.lstrip('+~')
+      else:
+        mapoptions = opt
+
     desc.append(f"Map options changed to `{mapoptions}`")
     if 'z' in mapoptions or mapoptions[0].isdigit():
      zoom = ""
      if 'z' in mapoptions:
       zoom = ",".join([char for char in mapoptions.split('z')[1][0:3] if char.isdigit() or char == "."]).replace(",", "")
      else:
+      mapoptions = "z" + mapoptions
       zoom = ",".join([char for char in mapoptions[0:3] if char.isdigit() or char == "."]).replace(",", "")
      desc.append(f' -- Zoom set to {zoom}x')
     if 'd' in mapoptions:
@@ -1607,35 +1641,35 @@ elif not c or args.get('?') or args.get('help'):
              The map attaches these settings automatically to any combatant in the initiative order that's named `DM`, `Map`, or `Lair`. Attaching a map allows every change that's made to it to be saved. We recommend adding a dedicated combatant for this, instead of a player or a monster, to prevent the map from vanishing when a player exits combat, or a monster is killed. Regardless, you can manually attach the map to any other combatant by running `-attach <target>`.
              If these settings are run when they aren't attached to a `-attach` target, then the change will be temporary, and will be switched back to your default the next time you run the `!map` command.
              You can view the current map settings by running `!map status`"
-             -f "_ _|**__Map Size and Background Image__**
+             -f "__Map Size and Background Image__|
              `-mapsize <size>` - Sets the size of the map. Example: `!map -mapsize 20x20`
              `-bg <url>` - Imports an image to use as background. Use `-options c` / `o`, see below, to scale / offset the image to match the grid."
              `-bg none` - Removes the background.
-             -f "_ _|**__Ready-Made Maps__**
+             -f "__Ready-Made Maps__|
              `!map maplist` - Lists all ready-made maps.
              `-savemap <name>` - Saves a map with your current background, options, walls, objects for quick access. Uses your `mapBackgrounds` uvar.
              `-loadmap <name>` - Loads a saved map.
              `-deletemap <name>` - Deletes a saved map."
-             -f "_ _|**__Map views__**
+             -f "__Map views__|
              You can focus on a portion of a map as well as shift that view, expand it, or reduce it. You also have the option to save a view, so later on you can load it quickly.
              To do so use `!view`. Type `!view ?` to see help"
-             -f "_ _|**__Saving, Loading and Deleting Battles__**
+             -f "__Saving, Loading and Deleting Battles__|
              `!map battlelist` - Lists all saved battles.
              `-savebattle <name>` - Saves a battle, for quick access. This will include your map settings, as well as combatants and any overlays that are attached to them.
              `-loadbattle <name>` - Loads a saved battle.
              `-deletebattle <name>` - Deletes a saved battle."
-             -f "_ _|**__Fog of War__**
+             -f "__Fog of War__|
              `-fow <coordinate>[:<coordinate>]` - Turns fog of war on but reveals a single coordinate or what's between a set of coordinates. Example: `!map -fow j5` or `!map -fow b1:e5`
              You can add multiple fog of war coordinates in one command, just seperate them by a `,`. Example: `!map -fow a1:d4,h7:k11`
              `-fow none` - Turns fog of war off and makes everything visible.
              `-addfow <coordinate>[:<coordinate>]` - Conceals a single coordinate or what's between a set of coordinates that has already been revealed. Run `!map status` to see what specific coordinates can be selected. Example: If fog of war has been revelaed at B1:E5 - `!map -addfow b1:e5`"
-             -f "_ _|**__Loading and Deleting Json Files__**
+             -f "__Loading and Deleting Json Files__|
              `-loadjson <url>` - Loads Json file. You can continue to run this command as many times you want, the files will append one after the other.
              `-deletejson <url>` - Deletes A Specific Json File
              `-loadjson reset` - Deletes All Json Files
              See [Predefined Maps and Tokens](http://docs.otfbm.com/#/predefined-maps-and-tokens) for detailed explanation.
              You do need to set `-mapsize json` if you want the JSON file to overwrite the default `-mapsize` settings."
-             -f "_ _|**__Interface Options__**
+             -f "__Interface Options__|
              `-options [args]` - Changes visual options using the following arguments:
              `z<#>` - Changes the map's resolution, range 1-3, accepts fractions. The higher the value the larger the map will be, allowing to zoom in without loosing image quality. Example: `!map -options z1.5`
              `d` - Dark mode
@@ -1645,11 +1679,14 @@ elif not c or args.get('?') or args.get('help'):
              `f` - Use alternative grid/token font
              `c<#>` - Sets the grid's unit size (in px). Default: 60.
              `o<#>:<#>` - Offsets the background image (in px). Example: `!map -options o20:40` would offset it 20px down and 40px to the right.
-             Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change.
-             You can set multiple settings at a time. Example: `!map -options dc70o10:20z2e`"
-             -f "_ _|**__Backup / Restore__**
+             "
+             -f "_ _|Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change.
+             You can set multiple settings at a time. Example: `!map -options dc70o10:20z2e`
+             If you prepend with `+` or `~`, it will add or replace your settings. Example: If your settings are `c40n`, `!map -options +c45d` will set it to `c45nd`.
+             If you prepend with `-`, you can remove settings. Example: If your settings are `c45nd`, `!map -options -nd` will set it to `c45`"
+             -f "__Backup / Restore__|
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
-             -f "_ _|**__Server Settings__**
+             -f "__Server Settings__|
              To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
              `!svar mapDefaults {\\\"size\\\":\\\"\\\", \\\"background\\\":\\\"\\\", \\\"options\\\":\\\"\\\"}`
              You can also copy your `mapOverlays`, `mapPresets`, `mapTokens`, `mapBattles`, `trueDistance` uvars into svars, and they'll be set/available for the whole server."
