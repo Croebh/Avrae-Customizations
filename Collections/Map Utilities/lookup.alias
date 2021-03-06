@@ -7,7 +7,7 @@ for char in gvar:
     if arg in char.name.lower() or arg in char.player.lower():
       out.append(char.copy())
 
-output = [f"""**{char.name.replace('"',"").replace("'",'')}** ({char.player.replace('"',"").replace("'",'')}) - [SHEET]({char.sheet})""" for char in out]
+output = {f"""**{char.name.replace('"',"").replace("'",'')}** ({char.player.replace('"',"").replace("'",'')}) - [SHEET]({char.sheet})""" for char in out}
 return f""" -desc "Search terms `{' '.join(args)}`{n}{n.join(output)}" """ if output else """ -desc "No results found" """ if args else """  """
 </drac2>
 -footer "Search by player names with `!lookup \"player1\" \"player2\"` "
