@@ -315,11 +315,24 @@ if args.last('mapload') or args.last('loadmap'):
  for maps in mapBG:
   if argLoadmap in maps.lower():
    foundMap = mapBG.get(maps)
-   mapbg = foundMap.get('mapbg', "")
-   mapsize = foundMap.get('mapsize', "")
-   mapoptions = foundMap.get('mapoptions', "")
-   walls = foundMap.get('walls')
-   objects = foundMap.get('objects')
+   if 'mapbg' in foundMap:
+    mapbg = foundMap.get('mapbg')
+   else:
+    mapbg = ""
+   if 'mapsize' in foundMap:
+    mapsize = foundMap.get('mapsize')
+   if 'mapoptions' in foundMap:
+    mapoptions = foundMap.get('mapoptions')
+   else:
+    mapoptions = ""
+   if 'walls' in foundMap:
+    walls = foundMap.get('walls')
+   else:
+    walls = []
+   if 'objects' in foundMap:
+    objects = foundMap.get('objects')
+   else:
+    objects = []
    if typeof(foundMap) == 'SafeList':
     mapbg = foundMap[0]
     mapsize = foundMap[1] if len(foundMap)>1 else ""
@@ -1128,7 +1141,6 @@ if c:
 
     options = {"old": {}, "new": {}}
     opt = args.last('mapoptions', args.last('options', ''))
-
     if mapoptions is None:
       mapoptions = ""
 
