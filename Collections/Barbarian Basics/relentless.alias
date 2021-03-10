@@ -36,7 +36,7 @@ if valid:
 
   # Grab our save string and add our bonuses
   saveStr  = char.saves.get('con').d20(adv)
-  saveStr += '+'.join(b).replace('+-', '-')
+  saveStr += '+' + '+'.join(b).replace('+-', '-') if b else ''
 
   # Roll the save and compare against the DC
   save     = vroll(saveStr)
