@@ -1,0 +1,33 @@
+embed -color <color>
+<drac2>
+spellgvar = load_json(get_gvar('f7b29795-167d-49c7-b096-21227db28f04'))
+c = combat()
+t = "&1&"
+spellDict = None
+out = []
+n = "\n"
+
+if c and (target := c.get_combatant(t)):
+  knownSpells = [spell.name for spell in target.spellbook.spells]
+  spellDict = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]}
+  slots = [target.spellbook.slots_str(lvl) for lvl in range(1,10) if target.spellbook.get_max_slots(lvl)]
+  for spell in spellgvar:
+    if spell.name in knownSpells:
+      spellDict[spell.level].append(spell.name)
+  for spell in knownSpells:
+    if (innate := target.spellbook.remaining_casts_of(spell, 0)).startswith("**"):
+      slots.append(innate)
+
+  if spellDict:
+    for lvl, spells in spellDict.items():
+      if spells:
+        out.append(f""" -f "{str(lvl)+("st" if lvl==1 else "nd" if lvl == 2 else "th") if lvl else "Cantrip"}|{", ".join(spells)}|inline" """ )
+
+  return f""" -title "{target.name}'s Spellbook"
+  -desc "{target.name} knows {len(knownSpells)} spells"
+  -f "DC|{target.spellbook.dc}|inline" -f "Spell Attack Bonus|{target.spellbook.sab}|inline"
+  -f "Spell Slots|{n.join(slots) if slots else "No spell slots."}|inline"
+  {' '.join(out)} """
+return f""" -title "Initiative Spell Book" -desc "This alias allows you to quickly and easily view the spellbook for any target in initiative. This is especially helpful for monster casters, or for AFK players who (with their prior permission) another player is taking their turn on."  {f"-f 'Error|Invalid target: `{t}`.'" if not t.startswith('&') and c and target is None else ''} """
+</drac2>
+-footer "{{ctx.prefix}}{{ctx.alias}} [target]"

@@ -1,0 +1,1 @@
+Removes the automatic Rage damage from the effect created by the `!rage` alias, for when you're using non-strength based attacks.

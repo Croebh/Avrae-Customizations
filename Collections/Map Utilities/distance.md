@@ -1,11 +1,12 @@
-Shows distance between sets of cartesian coordinates, assuming origin is the top left, and each unit is 5 feet.
+__**Map Utility**__
+This is an utility that can be used with the !map alias or on its own. It shows distance between sets of cartesian coordinates.
 
-`!distance [x1y1] [x2y2] [z]`
+__**Distance Commands**__
+`!distance <coordinate> <coordinate> [height][,color]` - Will measure the distance between two coordinates. Example:` !distance a1 d4`
+If you are in combat, you can also measure between a combatant and a coordinate or between two combatants. As an additional option, you can change the default color of the overlay if needed as well as include height. Example: `!distance prixaris h5` or `!distance prixaris go1,y` or `!distance f9 j10 30`
 
-If only `x1y1` is provided, it assumes origin is `A1`.
-If `z` is provided, it accounts for vertical height." 
--f "`!map` Support|If you have your initiative set up with the `!map` alias, you can target combatants using this alias instead of just raw coordinates.
-`!distance [target|x1y1] [target2|x2y2] [z]` - If only one argument is provided, and it is a combatant, it will attempt to grab the location of either the users active character in initiative, or whoevers turn it is in init. You can intermix coordinates and targets.
+This calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`
+​
 
 **Support Us**
 You can support this alias at [Ko-Fi](https://ko-fi.com/croebh)

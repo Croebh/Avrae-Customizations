@@ -1,26 +1,47 @@
-<drac2>args,gv,lj=&ARGS&,get_gvar,load_json
-wn,g,a=args[0]if args else"",lj(gv("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")),argparse(args)
-A=a.last
-s,cn,b,d=g.style,A("name"),a.join("b","+"),a.join("d","+")
-for w in g.weapons:
- if wn.lower()in w.name.lower():
+<drac2>
+args = &ARGS&
+wn, g, args = args[0] if args else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(args)
+style, customName, bonus, damage = g.style, args.last("name"), args.join("b", "+"), args.join("d", "+")
+cmd = f"""embed -title "It's dangerous to go alone..." -desc "I'm afraid **&1&** isn't a valid item in my database.\n\nPlease note that with little exception, this alias only has support for weapons found in the PHB." """
+chosenWeapon = None
+for weapon in g.weapons:
+ if wn and wn.lower()in weapon.name.lower():
+  chosenWeapon = weapon
   break
-if w:
- W=w.get
- OH,th,np,p,monk=A("off"),A("2h")and W("vers"),A("noprof")or A('t'),A("prof"),A("monk")
- archery,dueling,gwf,thrown,unarmed,savage=A("archery")and"ran"in w.type,A("dueling")and not th and not"two"in w.desc,A("gwf")and("two"in w.desc or th),A("thrown")and"thrown"in w.desc.lower(),A("uf"),A("savage")and w.type=="Melee"
- mod=g.z[A("stat")]if A("stat")else g.z["dex"]if"Ran"in w.type else f'max({g.z["dex"]}, {g.z["str"]})'if W('finesse')or monk else g.z["str"]
- th=unarmed and th if"Unarm"in w.name else th
- tohit=mod+(""if np or("Imp"in W('class')and not p)else g.prof)+("+2"if archery else"+1"if thrown else"")+("+"+b if b else"")
- dice="1d{{4+2*((int(MonkLevel)+1)//6)}}"if monk else(w.vers if th and W("vers")else"1d6"if"Unarm"in w.name and unarmed else w.dice)+("ro<3"if gwf else"")if W("dice")else""
- dmg=(f'({dice},{dice})kh1'if savage else dice)+"+"+("0"if A("t")or OH else'{{'+mod+'}}')+("+2"if dueling else"")+("+1"if thrown else"")+(f'[{" ".join([x for x in g.at if x in args]+[""])}{w.damage}]'if W("damage")else'')+("+"+d if d else"")
- desc=[f"**{W('class')} {W('type')} Weapon**. "+W('desc')]+([w.special]if W("special")else[])
- for x in s:
-  desc+=[s[x]]if get(x)else""
+if chosenWeapon:
+ offhand = args.last("off")
+ twohanded = args.last("2h") and chosenWeapon.get("vers")
+ noprof = args.last("noprof") or args.last('t')
+ monk = args.last("monk")
+ archery = args.last("archery") and "ranged" in chosenWeapon.type.lower()
+ dueling = args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc
+ gwf     = args.last("gwf") and ("two" in chosenWeapon.desc or twohanded)
+ thrown  = args.last("thrown") and "thrown" in chosenWeapon.desc.lower()
+ unarmed = args.last("uf")
+ savage  = args.last("savage") and chosenWeapon.type=="Melee"
+ criton  = args.last('criton') or ""
+ nodmg   = args.last('nodmg')
+ if criton:
+  criton = f""" -criton "{criton}" """
+ critd   = args.last('c') or ""
+ if critd:
+  critd = f""" -c "{critd}" """
+ proper  = args.last('proper', False, type_=bool)
+ verb    = args.last('verb') or ""
+ if verb:
+  verb = f""" -verb "{verb}" """
+ mod = g.z[args.last("stat")] if args.last("stat") else "dexterityMod"if "ranged" in chosenWeapon.type.lower() else f'max(dexterityMod, strengthMod)'if chosenWeapon.get('finesse') or monk else "strengthMod"
+ twohanded = unarmed and twohanded if "Unarmed" in chosenWeapon.name else twohanded
+ tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else g.prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
+ damageDice = ("1d{{4+2*((int(MonkLevel)+1)//6)}}" if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + ("ro<3" if gwf else "")) if chosenWeapon.get("dice") else ""
+ damageDice = ((f'({damageDice},{damageDice})kh1' if savage else damageDice) + "+" + ("0" if args.last("t") or offhand else '{{' + mod + '}}') + ("+2" if dueling else "") + ("+1" if thrown else "") + (f' [{" ".join([x for x in g.at if x in args]+[""])}{chosenWeapon.damage}]' if chosenWeapon.get("damage")else '') + ("+" + damage if damage else "")) if damageDice and not nodmg else ''
+ desc = [f"**{chosenWeapon.get('class')} {chosenWeapon.get('type')} Weapon**. " + chosenWeapon.get('desc')] + ([chosenWeapon.special] if chosenWeapon.get("special") else [])
+ for x in style:
+  desc += [style[x]] if get(x) else ""
  for x in g.at:
-  desc+=[s[x]]if A(x)else""
- desc+=a.get("desc")
- desc="\n\n".join(desc)
- tag=" (2H)"if th else" (Offhand)"if OH else" (1H)"if W("vers")and not("Unarm"in w.name and not unarmed)else""
- cmd=f'attack add "{cn if cn else w.name}{tag}" -b "{tohit}" -d "{dmg}" -desc "{desc}"'
-return gv(g.help) if not args or A("help")else f'i effect {A("t")} "{cn if cn else w.name}{tag}" -attack "{tohit}|{dmg}|{desc}"'if A('t')else cmd</drac2>
+  desc += [style[x]] if args.last(x) else ""
+ desc += args.get("desc")
+ desc = "\n\n".join(desc)
+ tag = " (2H)" if twohanded else " (Offhand)" if offhand else " (1H)" if chosenWeapon.get("vers") and not("Unarm" in chosenWeapon.name and not unarmed) else ""
+ cmd = f'''attack add "{customName if customName else chosenWeapon.name}{tag}" -b "{tohit}" {f""" -d "{damageDice}" """ if damageDice else ""} -desc "{desc}" {verb} {critd} {criton} {"proper"*proper}'''
+return get_gvar(g.help) if not &ARGS& or args.last("help") else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if args.last('t') else cmd</drac2>

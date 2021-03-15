@@ -1,0 +1,120 @@
+embed
+<drac2>
+defaults = get_svar("threshold", "").split()
+args     = argparse(defaults + &ARGS&)
+
+newline  = "\n"
+help     = not args or "?" in args or "help" in args
+stats    = ["STR","DEX","CON","INT","WIS","CHA"]
+
+# Get our thresholds
+Min      = args.last("min", type_ = int)
+Max      = args.last("max", type_ = int)
+dice     = args.last("dice", "4d6kh3", str)
+rr       = args.last("rr", 1, int)
+straight = 'straight' in args
+
+# Add our -over and -under to dicts
+over = {}
+for x in args.get('over'):
+  value, amount = [int(y) for y in x.split('|')]
+  over[value] = over[value] if over.get(value, amount-1) > amount else amount
+under = {}
+for x in args.get('under'):
+  value, amount = [int(y) for y in x.split('|')]
+  under[value] = under[value] if under.get(value, amount-1) > amount else amount
+
+valid    = 0
+attempts = 0
+
+# Generate our rule text
+rules = []
+rules.append(f"""Rolling {rr} set{'s' if rr>1 else ''}""")
+if Min:
+  rules.append(f"""Minimum of {Min}""")
+if Max:
+  rules.append(f"""Maximum of {Max}""")
+for m, t in over.items():
+  rules.append(f"""Atleast {t} over {m}""")
+for m, t in under.items():
+  rules.append(f"""Atleast {t} under {m}""")
+
+# If we aren't displaying the help, lets roll some dice
+a = []
+if args and not help:
+  for _ in range(200):
+    attempts += 1
+
+    curSet    = []
+    curTot    = []
+    # We need an individual copy per set
+    curOver   = over.copy()
+    curUnder  = under.copy()
+    curSum    = 0
+    for i in range(6):
+      curRoll = vroll(dice)
+      curSet.append(curRoll)
+      curTot.append(curRoll.total)
+      curSum += curRoll.total
+      # If we have a curover and they arent all already met
+      if curOver and all(curOver.values()):
+        for m, t in curOver.items():
+          # If the current roll is over the current -over, mark it off
+          if curRoll.total > m:
+            curOver[m] = max(curOver[m] - 1, 0)
+      # Same here as over for under
+      if curUnder and all(curUnder.values()):
+        for m, t in curUnder.items():
+          if curRoll.total < m:
+            curUnder[m] = max(curUnder[m] - 1, 0)
+    # If every -over and -under are valid
+    overPass  = not curOver  or not all(curOver.values())
+    underPass = not curUnder or not all(curUnder.values())
+    maxPass   = (curSum <= Max) if Max else 1
+    minPass   = (curSum >= Min) if Min else 1
+    # Add it to the set and mark it as valid
+    if underPass and overPass and maxPass and minPass:
+      a.append(curSet)
+      valid += 1
+    # If we have enough valid sets, end the loop
+    if valid == rr:
+      break
+  # If the loop ended with not enough results, tell the user
+  else:
+    return f""" -f "No Results Found|Unfortunately, the thresholds set restricted the results to the point where no valid results were found. Please try again, or consider adjusting your thresholds."  """
+  # Create out stats fields
+  out = []
+  for i, stat in enumerate(a, 1):
+    out.append(f""" -f "Stats {f"#{i}" if len(a)>1 else ""}|
+{newline.join([(f"**{stats[x]}:** "*straight)+str(stat[x]) for x in range(6)])}
+-----
+Total =  `{sum([i.total for i in stat])}`|inline" """)
+  # Return all the things
+  return f""" -desc "Ruling: {', '.join(rules)}" {' '.join(out)} """
+# Display the help
+else:
+  return f""" -desc "**Threshold Statrolls**
+
+Allows for rolling character stats while imposing a set of rules on the outcome.
+
+**__Valid Arguments__**
+
+`-dice <dice>` - The dice to be rolled for each stat. Default: `4d6kh3`
+`-rr <#>` - The number of sets to be displayed. Default: 1
+`straight` - Will assign stats to each score.
+
+`-min <#>` - The minimum total of the combined rolls.
+`-max <#>` - The maximum total of the combined rolls.
+
+`-over <#|amount>` - Requires `amount` of rolls that are above `#`. Can be repeated (i.e. `-over 14|2 -over 16|1` for requiring atleast 2 stats over 14 and 1 over 16).
+`-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
+
+Servers can set a default set of args by setting an svar named `threshold`:
+Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`"
+
+"""
+</drac2>
+
+-title "{{"Ugh, randchar spam" if help else "Generating Random Stats:"}}"
+
+-footer "{{ctx.prefix}}{{ctx.alias}} help{{(f" | Fun Fact: That took {attempts} attempts to find valid stats.") if not help else '' # Some people enjoy this statistic}}"

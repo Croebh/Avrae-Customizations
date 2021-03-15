@@ -1,20 +1,20 @@
-embed 
+embed
 <drac2>
 defaults = (get_svar("threshold") or "").split()
-args = argparse(defaults+&ARGS&)
+args     = argparse(defaults+&ARGS&)
 
-help = not args or "?" in args or "help" in args
+help     = not args or "?" in args or "help" in args
 
-Min = args.last("min", type_ = int)
-Max = args.last("max", type_ = int)
-dice = args.last("dice", "4d6kh3", str)
-rr = args.last("rr", 1, int)
-tries = args.last("tries", 10, int)
-under = [x.split('|') for x in args.get("under", [], str)]
-over = [x.split('|') for x in args.get("over", [], str)]
+Min      = args.last("min", type_ = int)
+Max      = args.last("max", type_ = int)
+dice     = args.last("dice", "4d6kh3", str)
+rr       = args.last("rr", 1, int)
+tries    = args.last("tries", 10, int)
+under    = [x.split('|') for x in args.get("under", [], str)]
+over     = [x.split('|') for x in args.get("over", [], str)]
 straight = 'straight' in args
-stats = ["STR","DEX","CON","INT","WIS","CHA"]
-helptxt = f"""**Threshold Statrolls**
+stats    = ["STR","DEX","CON","INT","WIS","CHA"]
+helptxt  = f"""**Threshold Statrolls**
 
 Allows for rolling character stats while imposing a set of rules on the outcome.
 
@@ -32,7 +32,7 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 `-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
 
 Servers can set a default set of args by setting an svar named `threshold`:
-Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
+Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`
 
 """
 </drac2>
@@ -45,4 +45,4 @@ Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
 
 {{f'-desc "{helptxt}"' if help else '-desc "Ruling: '+((f"Minimum total of {Min}, " if Min else "")+(f"Maximum total of {Max}, " if Max else "")+(', '.join([f"Atleast {x[1]} over {x[0]}" for x in over]) if over else "")+', '+(', '.join([f"Atleast {x[1]} under {x[0]}" for x in under]) if under else "")).strip(' ,')+'"' if Min or Max or over or under else ""}}
 
--footer "!threshold help"{{(f'" | Fun Fact: Of {tries} attempts, {tries-len(a)} were too low"') if not help else ''}}
+-footer "{{ctx.prefix}}{{ctx.alias}} help"{{(f'" | Fun Fact: Of {tries} attempts, {tries-len(a)} were too low"') if not help else ''}}

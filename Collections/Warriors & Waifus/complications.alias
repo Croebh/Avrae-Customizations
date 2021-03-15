@@ -1,0 +1,26 @@
+embed
+<drac2>
+gvar = load_json(get_gvar("d8d6a75e-4176-4f90-a12d-b87a106b0fe4"))
+choice = "&1&"
+args = argparse(&ARGS&[1:])
+desc = not args.last('h')
+out = ""
+for target in args.get('t', [None]):
+ for activity, details in gvar.items():
+  if choice.lower() in activity:
+   chanceRoll = vroll("1d100")
+   if activity == "crime":
+    out += f""" -title "We doin' some CRIME!" -desc "*Oh shit we failed*\n\n{details.desc*desc}" """
+   else:
+    out += f""" -title "Rolling for complications for activity: {details.proper}" -f "Chance Roll {f"for {target}" if target else ""}|{chanceRoll}{"; Oof!" if chanceRoll.total <= 10 else ""}" """ + (f""" -desc "{details.desc}" """*desc)
+   if chanceRoll.total <= 10 or activity == "crime" or args.last('force'):
+    tableRoll = vroll(f"1d{len(details.table)}")
+    tableResult = details.table[tableRoll.total-1]
+    out += f""" -f "Complication {f"for {target}" if target else ""}|{tableRoll}\n {tableResult}" """
+   if activity == "pitfight":
+    out += f""" -f "Fight DCs {f"for {target}" if target else ""}|**Athletics** - {vroll("2d10+5")}\n**Acrobatics** - {vroll("2d10+5")}\n**Constitution** - {vroll("2d10+5"+("+7" if chanceRoll.total <= 10 and tableRoll.total == 1 else ""))}" """
+   if activity == "gambling":
+    out += f""" -f "Gambling DCs {f"for {target}" if target else ""}|**Insight** - {vroll("2d10+5")}\n**Deception** - {vroll("2d10+5")}\n**Intimidation** - {vroll("2d10+5"+("+7" if chanceRoll.total <= 10 and tableRoll.total == 1 else ""))}" """
+   out += f""" -f "XGE Link|[{details.proper}]({details.url})" """
+return f""" -title "Roll for complications?!" -footer "{ctx.prefix}complications [activity]" """ + (out or f""" -desc "`{ctx.prefix}complications [{'|'.join(gvar.keys())}]`\n\n`-t [target]` - Allows you to specify who the rolls are for. Can be chained (example: `-t Therorth -t Valgim -t Boop`)\n`-h` - Don't show the description text for the activity" """)
+</drac2>

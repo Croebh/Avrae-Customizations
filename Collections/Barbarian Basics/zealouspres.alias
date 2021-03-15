@@ -1,0 +1,57 @@
+embed
+
+<drac2>
+# Base variables
+cc      = "Zealous Presence"
+valid   = character().cc_exists(cc) and character().get_cc(cc)
+c       = combat()
+out     = []
+# Account for if, for some weird reason, the user isn't in the initiative
+parent  = None
+
+# Parse our arguments
+args    = argparse(&ARGS&)
+targets = args.get('t')
+ignore  = args.last('i')
+
+# Convert all our targets to combatants
+targets = [target for targ in targets if c and (target := c.get_combatant(targ))]
+
+# Have a valid counter/ignoring reqs?
+if valid or ignore:
+  # If the user is in the initiative, lets add the parent effect
+  if c and (me := c.me):
+    me.add_effect(cc, "", 1, desc="Up to ten other creatures of your choice within 60 feet of you that can hear you gain advantage on attack rolls and saving throws until the start of your next turn.")
+    parent = me.get_effect(cc)
+    # And display it
+    out.append(f""" -f "{me.name}|{str(parent).splitlines()[0]}|inline" """)
+  # Loop through our targets
+  for target in targets:
+    # Add the effect to each one, then display it
+    target.add_effect("Inspired Zealotry", "", 2, parent=parent, desc=f"You gain advantage on attack rolls and saving throws until the start of {name}'s next turn.")
+    out.append(f""" -f "{target.name}|{str(target.get_effect("Inspired Zealotry")).splitlines()[0]}|inline" """)
+  # Mod the CC if we aren't ignoring requirements
+  if not ignore:
+    character().mod_cc(cc, -1)
+  # Display counter information
+  out.append(f""" -f "{cc} {'(-1)'*(not ignore)}|{character().cc_str(cc)}" """)
+# Was the counter not valid?
+elif not (valid or ignore):
+  # Are we out of uses?
+  if character().cc_exists(cc):
+    out.append(f""" -f "No uses remaining|You must finish a long rest before you can use this ability again." -f "{cc}|{character().cc_str(cc)}" """)
+  # Or is the counter missing entirely
+  else:
+    out.append(f""" -f "Missing Counter|You appear to be missing the counter named `{cc}`. Please create it and try again." """)
+
+return '\n'.join(out)
+</drac2>
+
+-title "Zealous Presence"
+-desc "As a bonus action, you unleash a battle cry infused with divine energy. Up to ten other creatures of your choice within 60 feet of you that can hear you gain advantage on attack rolls and saving throws until the start of your next turn.
+
+Once you use this feature, you can't use it again until you finish a long rest."
+
+-thumb <image>
+-color <color>
+-footer "{{ctx.prefix}}{{ctx.alias}} -t [target] [-i]"

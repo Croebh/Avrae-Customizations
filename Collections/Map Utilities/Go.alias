@@ -1,0 +1,448 @@
+embed
+<drac2>
+testVersion = False
+argList = &ARGS&
+
+args = argparse((['-t', combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-go'] + argList if argList else [])
+
+# Set are base variables
+defaults = load_json(get_svar("mapDefaults") or "{}") or {}
+mapsize = defaults.get("size", "10x10") or "10x10"
+maxSize = 99
+if mapsize != "JSON":
+ mapSplitX, mapSplitY = mapsize.lower().split('x')
+ mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
+ mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
+ mapsize = f"{mapX}x{mapY}"
+mapoptions = defaults.get("options","")
+mapbg = defaults.get("background","")
+mapinfo = {}
+mapview = ""
+mapviewsize = ""
+mapviewlocation = ""
+mapattach = ""
+map="http://otfbm.io/"
+walls = []
+objects = []
+loadedjson = []
+fow = []
+targ=None
+out={}
+groupOut={}
+baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+alph = []
+for index in range(maxSize):
+  letter = ""
+  if index // 26:
+    letter = baseAlph[(index // 26) - 1]
+  letter += baseAlph[index % 26]
+  alph.append(letter)
+col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o","pk"), "TSMLHG"
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Statue": "$S", "Open Pit": "$O", "Covered Pit": "$o"}
+overlays=[]
+c = combat()
+com = c.combatants if c else None
+gt = c.get_combatant if c else None
+debug = []
+desc = []
+finalMap = ""
+sizeOffset = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
+# We don't have an aim point/target yet
+aimPoint = ""
+aimTarget = ""
+targAimPoint = ""
+targAimTarget = ""
+aimStick = False
+targPoint = ""
+aim = ""
+effect = None
+effectName = ""
+effectTarget =""
+prevLoc = ""
+# F-Strings like to yell at me for \'s
+newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
+# What characters do we need to strip from names?
+nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
+</drac2>
+
+<drac2>
+# If we're in combat, check all the things
+if c:
+ # Collect information on every combatant
+ for combatant in combat().combatants:
+
+  # Grab map information, if it exists
+  for attack in combatant.attacks:
+   if attack.name == 'map':
+    mapattach=combatant
+    mapinfo=attack.raw.automation[0].text
+</drac2>
+
+<drac2>
+if c:
+ # If we found a `map` attack with information, parse it now
+ if mapinfo:
+  # Split and convert to dict. Couldn't use | here because of how -attack effects are parsed
+  mapinfo=mapinfo.split(' ~ ')
+  mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
+  mapsize=mapinfo.get('size')
+  #If user hasn't set mapsize = "JSON" then continue
+  if mapsize != "JSON":
+   if ":" in mapsize:
+     mapLocSize = mapsize.split(':')
+     mapviewlocation = f"{mapLocSize[0]}:"
+     mapsize = mapviewsize = mapLocSize[1]
+   if mapsize[0].isdigit():
+    mapSplitX, mapSplitY = mapsize.lower().split('x')
+    mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
+    mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+   else:
+    mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+    mapY = int(''.join(y for y in mapsize if y.isdigit()))
+   mapsize = f"{mapX}x{mapY}"
+  mapbg=mapinfo.get('background')
+  mapoptions=mapinfo.get('options')
+  walls = mapinfo.get('walls')
+  walls = walls.split(', ') if walls else []
+  objects = mapinfo.get('objects')
+  objects = objects.split('/') if objects else []
+  loadedjson = mapinfo.get('json')
+  loadedjson = loadedjson.split(', ') if loadedjson else []
+  fow = mapinfo.get('fow')
+  fow = fow.split(', ') if fow else []
+  if mapinfo.get('view'):
+   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
+</drac2>
+
+<drac2>
+if c:
+ # Read each combatants notes for their information
+ for target in com:
+  # If they have a note, perse it into a dict
+  if target.note and ':' in target.note:
+   note=target.note
+   note=note.split(" | ")
+   note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   out[target.name]=note
+   # Check if we have any overlays attached to effects, and then if at effect exists
+   for overNum in [""]+[str(x) for x in range(1,11)]:
+    if out[target.name].get('effect'+overNum):
+     checkEffect, checkEffectTarget = out[target.name].get('effect'+overNum).split(' / ')
+     # If the effect (or the target it was on) are gone, remove the effect
+     if not gt(checkEffectTarget) or not gt(checkEffectTarget).get_effect(checkEffect):
+      _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+      _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+      _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+      desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
+      desc.append("")
+  elif target.note:
+    note=target.note
+    desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
+    out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+</drac2>
+
+<drac2>
+# Lets back up our map each time we run it, why not
+# This will back the entire `out` dictionary containing everyones positions and states
+# to a uvar named mapStates, with the current channels id added as s key inside it.
+# This way you won't accidentally overwrite your backup with the backup from another channel
+
+mapStates = load_json(get('mapStates','{}'))
+prevBack = mapStates.get(chanid())
+mapStates.update({chanid(): out})
+set_uvar('mapStates', dump_json(mapStates))
+# Clean up old uvars that are no longer needed
+delete_uvar("mapState"+chanid())
+delete_uvar("mapSize"+chanid())
+
+# Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
+# and replace out out dict with it. We do this after we set the backup, so we can undo the undo
+if args.last('undo') and prevBack:
+  out = prevBack
+  desc.append("> **Reloaded backup from last time this user ran a map command. The state this erased has now been set as their new backup.**")
+</drac2>
+
+<drac2>
+if c:
+ for massTarg in args.get('t'):
+  mTarg, mGo, mHeight = (massTarg.split('|') + ["", ""])[:3]
+  if (mTarg := gt(mTarg)):
+   # If they don't have a note/location set, add them to the list
+   if not out.get(mTarg.name):
+    out[mTarg.name] = {}
+   if mGo:
+    newLoc = ""
+    prevLoc = out[mTarg.name].get('location')
+    # Fix bad locations?
+    if prevLoc == "TRUE":
+      _ = out[mTarg.name].pop('location')
+      prevLoc = None
+    if prevLoc:
+      # Split previous location from XY to X and Y
+      prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
+      prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
+    pos = 0
+    moveStr = mGo
+    moveList = []
+    # alphanuemricle splitting the movestring into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
+    for i in range(len(moveStr)):
+     if i > pos and moveStr[pos].isdigit() != moveStr[i].isdigit():
+      moveList.append(moveStr[pos:i])
+      pos = i
+    moveList.append(moveStr[pos:i+1])
+    # calculating the distances moved in each direction
+    moveEast = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "e" in moveList[x+1].lower()])//5
+    moveWest = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "w" in moveList[x+1].lower()])//5
+    moveNorth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "n" in moveList[x+1].lower()])//5
+    moveSouth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "s" in moveList[x+1].lower()])//5
+    # getting the new location by applying the distances to the old location
+    newLocX = alph[alph.index(prevLocX)+moveEast-moveWest]
+    newLocY = prevLocY+moveSouth-moveNorth
+    newLoc = f"{newLocX}{newLocY}"
+   # Did they have a previous location? If so, lets calculate distance and draw a line
+   if prevLoc and prevLocX and prevLocY and newLoc and prevLoc != newLoc:
+    # Grab the targets new color if changed, old color if set, or default to dark violet
+    colr = (args.last('color', out[mTarg.name].get('color', '~62C1BF')) + " ").strip("#~").lower()
+    colr = colr[:colr.index(" ")]
+    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+     colr = f"~{colr}"
+    elif len(colr) == 1:
+     getTokenColor = out[mTarg.name].get('color').split('(')
+     colr = getTokenColor[0].replace(" ", "")
+    if args.last('go'):
+     distance = 0
+     distanceT = 0
+     # draw arrows for each movement step
+     for x in range(len(moveList)):
+      if moveList[x].isdigit():
+       # get the location for each step and their distances
+       moveEast = int(moveList[x])//5 if "e" in moveList[x+1].lower() else 0
+       moveWest = int(moveList[x])//5 if "w" in moveList[x+1].lower() else 0
+       moveNorth = int(moveList[x])//5 if "n" in moveList[x+1].lower() else 0
+       moveSouth = int(moveList[x])//5 if "s" in moveList[x+1].lower() else 0
+       deltaX, deltaY = moveEast - moveWest, moveSouth - moveNorth
+       newLocX, newLocY = alph[alph.index(prevLocX) + deltaX] , prevLocY + deltaY
+       # distance for line drawing
+       stepDistance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY))*5,0))
+       # distance for all steps
+       # true distance is a bit strange then the argument assumes 5 ft diags, but eh should be fine
+       distanceT += stepDistance
+       # with 5ft diag's, the distance is just the movement step distance
+       distance += int(moveList[x])
+       # Add the line to the overlay list
+       overlays.append(f"*a{stepDistance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+       prevLocX, prevLocY = newLocX, newLocY
+    # Display the change in location
+    if get_svar('trueDistance') or get('trueDistance') == True:
+     distanceDisplay = f"~{distanceT}"
+    else:
+     distanceDisplay = f"{distance}"
+    desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {newLoc} ({distanceDisplay} ft.)")
+    out[mTarg.name].update({"location":newLoc})
+   if mHeight:
+    height = mHeight
+    # If the height is none or 0, remove height from the target
+    if height in ("None","none","0"):
+     if 'height' in out[mTarg.name]:
+      prevHeight = out[mTarg.name].pop('height')
+      if prevHeight:
+       desc.append(f"{mTarg.name} is no longer {['above','below'][int(prevHeight.strip(' ft.m'))<0] if prevHeight.strip(' -+ft.m').isdigit() else 'above'} the ground.")
+    else:
+     # Otherwise, set that targets height
+     out[mTarg.name].update({'height':height})
+</drac2>
+
+<drac2>
+if c:
+ # If there is a -t argument given, and that target exists as a combatant, modify that target
+ # If no -t, default to current character
+ if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)) or args.get('t'):
+  # If they don't have a note/location set, add them to the list
+
+  if args.last('go')[0].isdigit():
+   targ = gt(args.last('t', combat().me.name if combat().me else None))
+    # If they don't have a note/location set, add them to the list
+   newLoc = ""
+   prevLoc = out[targ.name].get('location')
+   # Fix bad locations?
+   if prevLoc == "TRUE":
+    _ = out[targ.name].pop('location')
+    prevLoc = None
+   if prevLoc:
+    # Split previous location from XY to X and Y
+    prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha())
+    prevLocY = int(''.join(y for y in prevLoc if y.isdigit()))
+   if args.last('go') and args.last('go') not in prevLoc:
+    pos = 0
+    moveStr = args.last('go')
+    moveList = []
+    # alphanuemricle splitting the movestring into a list 15n5nw5w5s -> [15,n,5,nw,5,w,5,s]
+    # needing a for loop and building the list, since we have no regex :(
+    for i in range(len(moveStr)):
+     if i > pos and moveStr[pos].isdigit() != moveStr[i].isdigit():
+      moveList.append(moveStr[pos:i])
+      pos = i
+    moveList.append(moveStr[pos:i+1])
+    # calculating the distances moved in each direction
+    moveEast = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "e" in moveList[x+1].lower()])//5
+    moveWest = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "w" in moveList[x+1].lower()])//5
+    moveNorth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "n" in moveList[x+1].lower()])//5
+    moveSouth = sum([int(moveList[x]) for x in range(len(moveList)) if moveList[x].isdigit() and "s" in moveList[x+1].lower()])//5
+    # getting the new location by applying the distances to the old location
+    newLocX = alph[alph.index(prevLocX)+moveEast-moveWest]
+    newLocY = prevLocY+moveSouth-moveNorth
+    newLoc = f"{newLocX}{newLocY}"
+   # Did they have a previous location? If so, lets calculate distance and draw a line
+   if prevLoc and prevLocX and prevLocY and newLoc and prevLoc != newLoc:
+    # Grab the targets new color if changed, old color if set, or default to dark violet
+    colr = (args.last('color', out[targ.name].get('color', '~62C1BF')) + " ").strip("#~").lower()
+    colr = colr[:colr.index(" ")]
+    if len(colr) in (3, 6) and not colr.strip("abcdef1234567890"):
+     colr = f"~{colr}"
+    elif len(colr) == 1:
+     getTokenColor = out[targ.name].get('color').split('(')
+     colr = getTokenColor[0].replace(" ", "")
+    if args.last('go'):
+     distance = 0
+     distanceT = 0
+     # draw arrows for each movement step
+     for x in range(len(moveList)):
+      if moveList[x].isdigit():
+       # get the location for each step and their distances
+       moveEast = int(moveList[x])//5 if "e" in moveList[x+1].lower() else 0
+       moveWest = int(moveList[x])//5 if "w" in moveList[x+1].lower() else 0
+       moveNorth = int(moveList[x])//5 if "n" in moveList[x+1].lower() else 0
+       moveSouth = int(moveList[x])//5 if "s" in moveList[x+1].lower() else 0
+       deltaX, deltaY = moveEast - moveWest, moveSouth - moveNorth
+       newLocX, newLocY = alph[alph.index(prevLocX) + deltaX] , prevLocY + deltaY
+       # distance for line drawing
+       stepDistance = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY))*5,0))
+       # distance for all steps
+       # true distance is a bit strange then the argument assumes 5 ft diags, but eh should be fine
+       distanceT += stepDistance
+       # with 5ft diag's, the distance is just the movement step distance
+       distance += int(moveList[x])
+       # Add the line to the overlay list
+       overlays.append(f"*a{stepDistance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+       prevLocX, prevLocY = newLocX, newLocY
+    else:
+     # Calculate the delta for X and Y between the two
+     deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), prevLocY-newLocY
+     # Throw them in the pot with some pythag
+     distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+     # We want the positive delta (wish we had abs(), sigh)
+     deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
+     # Doing 5ft diag's, the distance is just the higher delta
+     distance = max(deltaX, deltaY)*5
+     # Add the line to the overlay list
+     overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+    # Display the change in location
+    if get_svar('trueDistance') or get('trueDistance') == True:
+     distanceDisplay = f"~{distanceT}"
+    else:
+     distanceDisplay = f"{distance}"
+    desc.insert(0, f"Moving {targ.name} from {prevLoc} to {newLoc} ({distanceDisplay} ft.)")
+   else:
+    # Display the change in location
+    desc.insert(0, f"Moving {targ.name} to {newLoc}.")
+   out[targ.name].update({"location":newLoc})
+</drac2>
+
+<drac2>
+if c:
+ # Parse the collected notes and information into the format readable by otfbm.com
+ people = []
+ for target in out:
+  tLocation = out[target].get('location')
+  tSize = out[target].get('size','M')[0].upper()
+  tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
+  tColor = tColor[:tColor.index(" ")].strip('#')
+  tToken = out[target].get('token')
+  # Account for hex colors
+  if len(tColor) in (3, 6):
+   tColor = f"~{tColor}".upper()
+  tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  # Only display if they have a location
+  if tLocation:
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
+  # Do they have a height set? If so, display it
+  if out[target].get('height'):
+   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
+  # Do they have overlays?
+  for overNum in [""]+[str(x) for x in range(1,11)]:
+    # Ensure we're not grabbing the previous overlays aim point
+    targAimPoint = ""
+    if out[target].get('overlay'+overNum):
+     targPoint = out[target].get('location','A1')
+     # Is our target Large or bigger? If so, adjust accordingly
+     if out[target].get('size',"M")[0] in "LHG":
+      targOffset = sizeOffset.get(out[target].get('size',"M")[0])
+      TargX = ''.join(x for x in targPoint if x.isalpha())
+      TargY = int(''.join(y for y in targPoint if y.isdigit()))
+      TargX = alph[alph.index(TargX)+targOffset]
+      TargY += targOffset
+      targPoint = f"{TargX}{TargY}"
+     # If the target has an aim point set
+     if out[target].get('aim'+overNum):
+      for aimTarget in out:
+       # We need to check to see if they were targetting a... target
+       if out[target].get('aim'+overNum).lower() in aimTarget.lower():
+        targAimPoint = out[aimTarget]['location']
+        # Is our aimTarget larger than medium? If so, we need to offset to adjust
+        if out[aimTarget].get('size',"M")[0] in "LHG":
+         targAimOffset = sizeOffset.get(out[aimTarget].get('size',"M")[0])
+         targAimTargX = ''.join(x for x in targAimPoint if x.isalpha())
+         targAimTargY = int(''.join(y for y in targAimPoint if y.isdigit()))
+         targAimTargX = alph[alph.index(targAimTargX)+targAimOffset]
+         targAimTargY += targAimOffset
+         targAimPoint = f"{targAimTargX}{targAimTargY}"
+       # If the aimTarget wasn't a target, it was coordinates. Use them.
+       if not targAimPoint:
+        targAimPoint = out[target].get('aim'+overNum).upper()
+     # Add each targets overlay to the overlays list
+     overlays.append(out[target].get('overlay'+overNum).replace("{targ}", targPoint).replace("{aim}", targAimPoint).strip("*"))
+ # Reconvert all of our map information back into the readable note format
+ dataout={x:' | '.join([f"{item[0].title()}: {item[1]}"for item in out[x].items()])for x in out}
+ # Then set everyones note again. Kinda a chainsaw instead of a scalpel situation here.
+ for target in dataout:
+  gt(target).set_note(dataout[target])
+ # If a 'clear' arg is given, clear the entire map (clears everyones notes)
+ if args.last('clear'):
+  [i.set_note(None)for i in combat().combatants]
+  people=[]
+  overlays=[]
+ # Join everything together and display the map if we aren't displaying the help
+
+ # Analytics removed, temporarily:
+ # &cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}
+
+ overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
+ if not any(args.get(arg) for arg in ('?', 'help')):
+  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
+  return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+</drac2>
+
+<drac2>
+
+if not c or args.get('?') or args.get('help'):
+ help = f"""-title "Go for it!"
+            -desc "**__Map Utility__**
+            This is a utility to use with the `!map` alias. You can move either your current active player in initiative or targeted player as step movements. It will still tally up the total distance after the move.
+
+            **__Go Commands__**
+            `!go <distance><direction> [-t <target name>]` - Allows you to move your active characters token in different steps depending on the distance and direction given. Direction can be `n, ne, e, se, s, sw, w, nw` Example: `!go 10e10s5e` would move your active players token 10 ft East, then 10 ft South, and then 5 ft East.
+
+            As an option, you can target someone else and do the same step movements to them. It just needs to be after the <distance><direction> commands. Example: `!go 15s15e -t go1`
+
+            **__Moving Multiple Targets__**
+            `-t <target>|<distance><direction>|[height]` - Allows mass moving of targets and height. Example: `!go -t go1|5n5e5ne -t go2|5s5sw5s|30`" """
+
+ if not combat():
+  help += f""" -f "Important Note|This alias uses the initiative tracker, and as such, won't work outside of init." """
+
+ return '\n'.join([i.lstrip() for i in help.split('\n')])
+</drac2>
+-footer "!go ? | v1.4"
+-color <color>

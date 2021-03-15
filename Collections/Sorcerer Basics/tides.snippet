@@ -1,0 +1,5 @@
+{{cc="Tides of Chaos"}}
+{{v=cc_exists(cc) and get_cc(cc)>0}}
+-f "{{cc}} | {{"You do not have this ability." if not cc_exists(cc) else "You must take a long rest to regain your expended use." if not v else "You can gain advantage on one attack roll, ability check, or saving throw. Any time before you regain the use of this feature, the DM can have you roll on the Wild Magic Surge table immediately after you cast a sorcerer spell of 1st level or higher. You then regain the use of this feature."}}"
+{{mod_cc(cc, -1) if v else ""}}
+-f "{{cc}}|{{cc_str(cc) if cc_exists(cc) else "*None*"}}"

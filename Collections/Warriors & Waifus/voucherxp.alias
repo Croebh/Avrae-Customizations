@@ -1,0 +1,11 @@
+embed -title "How much exp does <name> get over the target level?"
+<drac2>
+chart = {1:0,2:300,3:900,4:2700,5:6500,6:14000,7:23000,8:34000,9:48000,10:64000,11:85000,12:100000,13:120000,14:140000,15:165000,16:195000,17:225000,18:265000,19:305000,20:355000}
+curLevel = chart[level]
+curXp = character().get_cc("Experience")
+targetLevel = chart[int("&1&") if "&1&".isdigit() else 6]
+return f"""-desc "Current Level [{level}] (`{curLevel:,}`) - Current XP (`{curXp:,}`) = `{curXp -curLevel:,} XP`
+Target Level [{int("&1&") if "&1&".isdigit() else 6}] (`{targetLevel:,}`) + `{curXp -curLevel:,}` = `{targetLevel+(curXp -curLevel):,} XP`"
+-f "Command to set it|`!xp set {targetLevel+(curXp -curLevel)}`"
+-footer "!voucherxp [targetLevel] - Defaults to 6" """
+</drac2>

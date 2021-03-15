@@ -1,0 +1,1 @@
+This is for using the Fanatical Focus ability from the Zealot subclass.

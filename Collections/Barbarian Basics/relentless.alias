@@ -1,0 +1,84 @@
+embed
+
+<drac2>
+cc = "Relentless Rage DC"
+
+# Base variables
+char = character()
+c    = combat()
+out  = []
+
+# Arg parsing
+args = argparse(&ARGS&)
+adv  = args.adv(boolwise=True)
+b    = args.get('b')
+
+# Create the DC counter if it doesn't exist, but only if the user is a 11+ Barbarian
+if character().levels.get('Barbarian') >= 11:
+  character().create_cc_nx(cc, minVal=10, reset='short', reset_to="10", title="Relentless Rage", desc="Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you’re raging and don’t die outright, you can make a DC 10 Constitution saving throw. If you succeed, you drop to 1 hit point instead.\n\nEach time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10.")
+
+# If we're in combat, grab save bonuses from effects
+if c and c.me:
+  for effect in c.me.effects:
+    if (sb := effect.effect.get('sb')):
+      b.append(sb)
+  # Lets also base the character of the init. Max HP can be edited in init
+  char = combat().me
+
+# Only proceed if the counter exists, and if you're in combat, that you're raging, and your hp is 0
+valid = character().cc_exists(cc) \
+        and character().hp <= 0 \
+        and (not c or (c.me and c.me.get_effect('Rage')))
+
+if valid:
+  # Grab the DC from our counter
+  dc = character().get_cc(cc)
+
+  # Grab our save string and add our bonuses
+  saveStr  = char.saves.get('con').d20(adv)
+  saveStr += '+' + '+'.join(b).replace('+-', '-') if b else ''
+
+  # Roll the save and compare against the DC
+  save     = vroll(saveStr)
+  success  = save.total >= dc
+
+  # Output the roll
+  out.append(f""" -f "DC {dc}|{save}; {['Failure', 'Success'][success]}!" """)
+
+  # If we succeeded, lets set the hp to 1
+  if success:
+    char.set_hp(1)
+
+  # Output the characters hp
+  out.append(f""" -f "{char.name}|{char.hp_str()} {"(+1)"*success}" """)
+
+  # Increase our DC for next time
+  dc = character().mod_cc(cc, 5)
+  out.append(f""" -f "DC Increased|Next save will be made with a DC of {dc} (+5)" """)
+else:
+  # If the counter doesn't exist, they weren't high enough level
+  if not character().cc_exists(cc):
+    out.append(f""" -f "Missing Levels|You don't appear to be a level 11+ Barbarian." """)
+
+  # If their HP wasn't at 0, they can't use the ability
+  if char.hp:
+    out.append(f""" -f "You aren't at 0 HP|You can only use Relentless Rage if you take a hit that reduced you to 0 HP." """)
+
+  # If they are in initiative, but don't have the Rage effect, they can't use the ability
+  if c and c.me and not c.me.get_effect('Rage'):
+    out.append(f""" -f "Missing Effect: Rage|You can only use this ability if you are raging." """)
+
+# Join our output and return it
+return '\n'.join(out)
+</drac2>
+
+-title "Relentess Rage"
+
+-desc "Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you’re raging and don’t die outright, you can make a DC 10 Constitution saving throw. If you succeed, you drop to 1 hit point instead.
+
+Each time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10."
+
+-thumb <image>
+-color <color>
+
+-footer "{{ctx.prefix}}{{ctx.alias}} -b [bonus] [adv/dis]"

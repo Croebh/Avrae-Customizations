@@ -1,0 +1,6 @@
+<drac2>
+n = '\n'
+if (c := combat()) and c.me and (effect := c.me.get_effect('Readying an Action')):
+  c.me.remove_effect(effect.name)
+  return f""" -f "Readied Action|{n.join(effect.desc.splitlines()[:-1])}" """
+</drac2>

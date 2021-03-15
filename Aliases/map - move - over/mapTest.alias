@@ -1,1 +1,0 @@
-{{args=&ARGS&}}{{defaults='{"size":"", "background":"", "options":""}' }}{{get_gvar("c62f0b58-8fbe-4964-a47f-ce5791ffdddf").replace('"@@@"',str(args)).replace('"&&&"', defaults)}}

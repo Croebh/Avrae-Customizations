@@ -1,9 +1,54 @@
-tembed
+embed
 <drac2>
-c = combat()
-fName = sName = ""
-args = &ARGS&
-maxSize = 150
+testVersion = False
+argList = &ARGS&
+argOut = []
+
+# Capture args that aren't related to distance
+for i, arg in enumerate(argList):
+  if arg.lower() in ['silent', '?', 'help']:
+    argOut.append(argList.pop(i))
+
+for arg in argList:
+  if "," in arg:
+    splitArg = arg.split(',')
+    if splitArg[0]:
+      argOut.append('-distance')
+      argOut.append(splitArg[0])
+    argOut.append('-color')
+    argOut.append(splitArg[1])
+    continue
+  argOut.append('-distance')
+  argOut.append(arg)
+
+
+# Comment the first line for `!map`, second line for `!move`
+args = argparse(argOut)
+# args = argparse(argList)
+
+# Set are base variables
+defaults = load_json(get_svar("mapDefaults") or "{}") or {}
+mapsize = defaults.get("size", "10x10") or "10x10"
+maxSize = 99
+if mapsize != "JSON":
+ mapSplitX, mapSplitY = mapsize.lower().split('x')
+ mapX = max(min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize), 1)
+ mapY = max(min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize), 1)
+ mapsize = f"{mapX}x{mapY}"
+mapoptions = defaults.get("options","")
+mapbg = defaults.get("background","")
+mapinfo = {}
+mapview = ""
+mapviewsize = ""
+mapviewlocation = ""
+mapattach = ""
+map="http://otfbm.io/"
+walls = []
+objects = []
+loadedjson = []
+fow = []
+targ=None
+out={}
 baseAlph = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 alph = []
 for index in range(maxSize):
@@ -12,56 +57,158 @@ for index in range(maxSize):
     letter = baseAlph[(index // 26) - 1]
   letter += baseAlph[index % 26]
   alph.append(letter)
-cardinal = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW","W", "WNW", "NW", "NNW"]
-tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.1051],[7,0.1228],[8,0.1405],[9,0.1584],[10,0.1763],[11,0.1944],[12,0.2126],[13,0.2309],[14,0.2493],[15,0.2679],[16,0.2867],[17,0.3057],[18,0.3249],[19,0.3443],[20,0.3640],[21,0.3839],[22,0.4040],[23,0.4245],[24,0.4452],[25,0.4663],[26,0.4877],[27,0.5095],[28,0.5317],[29,0.5543],[30,0.5774],[31,0.6009],[32,0.6249],[33,0.6494],[34,0.6745],[35,0.7002],[36,0.7265],[37,0.7536],[38,0.7813],[39,0.8098],[40,0.8391],[41,0.8693],[42,0.9004],[43,0.9325],[44,0.9657],[45,1.0000],[46,1.0355],[47,1.0724],[48,1.1106],[49,1.1504],[50,1.1918],[51,1.2349],[52,1.2799],[53,1.3270],[54,1.3764],[55,1.4281],[56,1.4826],[57,1.5399],[58,1.6003],[59,1.6643],[60,1.7321],[61,1.8040],[62,1.8807],[63,1.9626],[64,2.0503],[65,2.1445],[66,2.2460],[67,2.3559],[68,2.4751],[69,2.6051],[70,2.7475],[71,2.9042],[72,3.0777],[73,3.2709],[74,3.4874],[75,3.7321],[76,4.0108],[77,4.3315],[78,4.7046],[79,5.1446],[80,5.6713],[81,6.3138],[82,7.1154],[83,8.1443],[84,9.5144],[85,11.4301],[86,14.3007],[87,19.0811],[88,28.6363],[89,57.2900]]
+col,siz=("w","bk","gy","r","g","b","y","p","c","bn","o","pk"), "TSMLHG"
+COL,SIZ = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
+presetObjects = {"Trap": "$T", "Pillar Round": "$P", "Pillar Square": "$p", "Statue": "$S", "Open Pit": "$O", "Covered Pit": "$o"}
+overlays=[]
+c = combat()
+if c:
+ com = combat().combatants
+gt = c.get_combatant if c else None
+debug = []
+desc = []
+finalMap = ""
+sizeOffset = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
+# We don't have an aim point/target yet
+aimPoint = ""
+aimTarget = ""
+targAimPoint = ""
+targAimTarget = ""
+aimStick = False
+targPoint = ""
+aim = ""
+effect = None
+effectName = ""
+effectTarget =""
+prevLoc = ""
+# F-Strings like to yell at me for \'s
+newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
+# What characters do we need to strip from names?
+nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
+</drac2>
 
-not args or (len(args) in [1, 2, 3]) or err('Invalid arguments. Run `!distance` with no arguments to see help.')
+<drac2>
+# If we're in combat, check all the things
+if c:
+ # Collect information on every combatant
+ for combatant in com:
 
-height = int(args[2] if len(args) > 2 else "0")
+  # Grab map information, if it exists
+  for attack in combatant.attacks:
+   if attack.name == 'map':
+    mapattach=combatant
+    mapinfo=attack.raw.automation[0].text
+</drac2>
 
-prevLoc = args[0] if len(args) > 1 else "A1" if args else ""
-if c and (firstTarget := c.get_combatant(prevLoc)):
+<drac2>
+if c:
+ # If we found a `map` attack with information, parse it now
+ if mapinfo:
+  # Split and convert to dict. Couldn't use | here because of how -attack effects are parsed
+  mapinfo=mapinfo.split(' ~ ')
+  mapinfo={x[0].lower():x[1] for x in [item.split(': ') for item in mapinfo]}
+  mapsize=mapinfo.get('size')
+  #If user hasn't set mapsize = "JSON" then continue
+  if mapsize != "JSON":
+   if ":" in mapsize:
+     mapLocSize = mapsize.split(':')
+     mapviewlocation = f"{mapLocSize[0]}:"
+     mapsize = mapviewsize = mapLocSize[1]
+   if mapsize[0].isdigit():
+    mapSplitX, mapSplitY = mapsize.lower().split('x')
+    mapX = min(int(mapSplitX) if mapSplitX.isdigit() else 1, maxSize)
+    mapY = min(int(mapSplitY) if mapSplitY.isdigit() else 1, maxSize)
+   else:
+    mapX = alph.index(''.join(x.upper() for x in mapsize if x.isalpha()))
+    mapY = int(''.join(y for y in mapsize if y.isdigit()))
+   mapsize = f"{mapX}x{mapY}"
+  mapbg=mapinfo.get('background')
+  mapoptions=mapinfo.get('options')
+  walls = mapinfo.get('walls')
+  walls = walls.split(', ') if walls else []
+  objects = mapinfo.get('objects')
+  objects = objects.split('/') if objects else []
+  loadedjson = mapinfo.get('json')
+  loadedjson = loadedjson.split(', ') if loadedjson else []
+  fow = mapinfo.get('fow')
+  fow = fow.split(', ') if fow else []
+  if mapinfo.get('view'):
+   mapviewlocation, mapviewsize = mapinfo.get('view').replace('::',':').split(':')
+</drac2>
+
+<drac2>
+if c:
+ # Read each combatants notes for their information
+ for target in com:
+  # If they have a note, perse it into a dict
+  if target.note and ':' in target.note:
+   note=target.note
+   note=note.split(" | ")
+   note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   out[target.name]=note
+   # Check if we have any overlays attached to effects, and then if at effect exists
+   for overNum in [""]+[str(x) for x in range(1,11)]:
+    if out[target.name].get('effect'+overNum):
+     checkEffect, checkEffectTarget = out[target.name].get('effect'+overNum).split(' / ')
+     # If the effect (or the target it was on) are gone, remove the effect
+     if not gt(checkEffectTarget) or not gt(checkEffectTarget).get_effect(checkEffect):
+      _ = out[target.name].pop('effect'+overNum) if 'effect'+overNum in out[target.name] else None
+      _ = out[target.name].pop('aim'+overNum) if 'aim'+overNum in out[target.name] else None
+      _ = out[target.name].pop('overlay'+overNum) if 'overlay'+overNum in out[target.name] else None
+      desc.append(f"""Overlay {overNum} removed from `{target.name}` because effect `{checkEffect}` no longer present{f" on {checkEffectTarget}" if checkEffectTarget!=target.name else ""}.""")
+      desc.append("")
+  elif target.note:
+    note=target.note
+    desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
+    out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+</drac2>
+
+<drac2>
+# If user wants to measure the distance between two coordinates
+if args.get('distance'):
+ fName = sName = ""
+ cardinal = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW","W", "WNW", "NW", "NNW"]
+ tan = [[0,0.0000],[1,0.0175],[2,0.0349],[3,0.0524],[4,0.0699],[5,0.0875],[6,0.1051],[7,0.1228],[8,0.1405],[9,0.1584],[10,0.1763],[11,0.1944],[12,0.2126],[13,0.2309],[14,0.2493],[15,0.2679],[16,0.2867],[17,0.3057],[18,0.3249],[19,0.3443],[20,0.3640],[21,0.3839],[22,0.4040],[23,0.4245],[24,0.4452],[25,0.4663],[26,0.4877],[27,0.5095],[28,0.5317],[29,0.5543],[30,0.5774],[31,0.6009],[32,0.6249],[33,0.6494],[34,0.6745],[35,0.7002],[36,0.7265],[37,0.7536],[38,0.7813],[39,0.8098],[40,0.8391],[41,0.8693],[42,0.9004],[43,0.9325],[44,0.9657],[45,1.0000],[46,1.0355],[47,1.0724],[48,1.1106],[49,1.1504],[50,1.1918],[51,1.2349],[52,1.2799],[53,1.3270],[54,1.3764],[55,1.4281],[56,1.4826],[57,1.5399],[58,1.6003],[59,1.6643],[60,1.7321],[61,1.8040],[62,1.8807],[63,1.9626],[64,2.0503],[65,2.1445],[66,2.2460],[67,2.3559],[68,2.4751],[69,2.6051],[70,2.7475],[71,2.9042],[72,3.0777],[73,3.2709],[74,3.4874],[75,3.7321],[76,4.0108],[77,4.3315],[78,4.7046],[79,5.1446],[80,5.6713],[81,6.3138],[82,7.1154],[83,8.1443],[84,9.5144],[85,11.4301],[86,14.3007],[87,19.0811],[88,28.6363],[89,57.2900]]
+ argsColor = args.last('color')
+ argsDist = args.get('distance')
+ height = int(argsDist[2] if len(argsDist) > 2 else "0")
+ prevLoc = argsDist[0] if len(argsDist) > 1 else "A1" if argsDist else ""
+ if c and (firstTarget := gt(prevLoc)):
   if (note := firstTarget.note) and 'Location: ' in note:
-    note=note.split(" | ")
-    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
-    prevLoc = note['location']
-    height -= int(note.get('height', "0"))
-    fName = firstTarget.name + " "
-  else:
-    prevLoc = None
+   note=note.split(" | ")
+   note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   prevLoc = note['location']
+   height -= int(note.get('height', "0"))
+   fName = firstTarget.name + " "
 
-</drac2>
-<drac2>
-newLoc = args[1] if len(args) > 1 else args[0] if args else ""
-if c and (secondTarget := c.get_combatant(newLoc)):
+ newLoc = argsDist[1] if len(argsDist) > 1 else argsDist[0] if argsDist else ""
+ if c and (secondTarget := gt(newLoc)):
   if (note := secondTarget.note) and 'Location: ' in note:
-    note=note.split(" | ")
-    note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
-    newLoc = note['location']
-    height += int(note.get('height', "0"))
-    sName = secondTarget.name + " "
-    if sName and len(args) == 1:
-      firstTarget = c.me or c.current
-      if (note := firstTarget.note) and 'Location: ' in note:
-        note=note.split(" | ")
-        note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
-        prevLoc = note['location']
-        height -= int(note.get('height', "0"))
-        fName = firstTarget.name + " "
-  else: 
-    newLoc = None
+   note=note.split(" | ")
+   note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+   newLoc = note['location']
+   height += int(note.get('height', "0"))
+   sName = secondTarget.name + " "
+   if sName and len(argsDist) == 1:
+    firstTarget = c.me or c.current
+    if (note := firstTarget.note) and 'Location: ' in note:
+     note=note.split(" | ")
+     note={x[0].lower():x[1] for x in [item.split(": ") for item in note]}
+     prevLoc = note['location']
+     height -= int(note.get('height', "0"))
+     fName = firstTarget.name + " "
 
-height = height//5
-
-</drac2>
-<drac2>
-if prevLoc and newLoc and args:
+ height = height//5
+ if prevLoc and newLoc and argsDist:
   prevLocX = ''.join(x.upper() for x in prevLoc if x.isalpha()) or 'A'
   prevLocY = ''.join(y for y in prevLoc if y.isdigit())
-  
   prevLocY = int(prevLocY or 0)
   newLocX = ''.join(x.upper() for x in newLoc if x.isalpha())or 'A'
   newLocY = int(''.join(y for y in newLoc if y.isdigit()) or 0)
+  if not newLocX in alph:
+    err(f"""{newLocX}{newLocY} is not a valid coordinate/target.""")
+  if not prevLocX in alph:
+    err(f"""{prevLocX}{prevLocY} is not a valid coordinate/target.""")
   deltaX, deltaY = alph.index(newLocX)-alph.index(prevLocX), -1*(int(newLocY)-int(prevLocY))
   distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
   absDeltaX, absDeltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
@@ -74,27 +221,115 @@ if prevLoc and newLoc and args:
     degree = (180 - degree) if quad == 1 else (180 + degree) if quad == 2 else (360 - degree) if quad == 3 else degree
   else:
     degree = 0 if deltaY > 0 else 180 if deltaY < 0 else 90 if deltaX > 0 else 270
-
-
   card = cardinal[floor((degree)//22.5)%16]
+
+  if argsColor and len(argsColor)>1:
+   colr= argsColor[1]
+  else:
+   colr = f"~62C1BF"
+  # Add the line to the overlay list
+  if fName and sName != "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+  elif fName != "" and sName == "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+  elif fName == "" and sName != "":
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+  else:
+   overlays.append(f"*a{distance}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
+   overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
+   overlays.append(f"*s5{colr}{newLocX}{newLocY}")
+  heightInfo = f"(Height: {height*5} ft. {'up' if height>0 else 'down' if height else ''})"
+  if get_svar('trueDistance') or get('trueDistance') == True:
+   distanceDisplay = f"~{distanceT}"
+  else:
+   distanceDisplay = f"{distance}"
+  desc.append(f"**{get('fName')}({alph[alph.index(prevLocX)].upper()}{prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}{newLocY}) {heightInfo if height>0 else ''}** \n {distanceDisplay} ft. {card} (~{degree}°)")
 </drac2>
+
 <drac2>
-
-if prevLoc and newLoc and args: 
-  return f""" -f "{get('fName')}({alph[alph.index(prevLocX)].upper()}, {prevLocY}) -> {get('sName')}({alph[alph.index(newLocX)].upper()}, {newLocY}){f" ({height*5} ft. {'up' if height>0 else 'down'})".replace('-','') if height else ''}|{f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft. {card} (~{degree}°)" """
-return f""" -desc "`!distance [x1y1] [x2y2] [z]`
-
-Shows distance between sets of cartesianal coordinates, assuming origin is the top left, and each unit is 5 feet.
-
-If only `x1y1` is provided, it assumes origin is `A1`.
-If `z` is provided, it accounts for vertical height." 
--f "`!map` Support|If you have your initiative set up with the `!map` alias, you can target combatants using this alias instead of just raw coordinates.
-`!distance [target|x1y1] [target2|x2y2] [z]` - If only one argument is provided, and it is a combatant, it will attempt to grab the location of either the users active character in initiative, or whoevers turn it is in init. You can intermix coordinates and targets
-`!distance OR1 B2` would calculate the distance between `OR2`, a combatant, and `B2`, the coordinate.
-`!distance Valgim` would show the distance between your character (or whoevers turn it is) and that of the combatant named Valgim"
-
--f "The alias calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """
+people = []
+if c:
+ # Parse the collected notes and information into the format readable by otfbm.com
+ for target in out:
+  tLocation = out[target].get('location')
+  tSize = out[target].get('size','M')[0].upper()
+  tColor = out[target].get('color', 'b' if '/' in gt(target).hp_str() else 'r') + " "
+  tColor = tColor[:tColor.index(" ")].strip('#')
+  tToken = out[target].get('token')
+  # Account for hex colors
+  if len(tColor) in (3, 6):
+   tColor = f"~{tColor}".upper()
+  tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  # Only display if they have a location
+  if tLocation:
+    people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
+  # Do they have a height set? If so, display it
+  if out[target].get('height'):
+   desc.append(f"{target} is currently {out[target].get('height').strip('-+')} ft. {['above','below'][int(out[target].get('height').strip(' ft.m'))<0] if out[target].get('height').strip(' -+ft.m').isdigit() else 'above'} the ground.")
+  # Do they have overlays?
+  for overNum in [""]+[str(x) for x in range(1,11)]:
+    # Ensure we're not grabbing the previous overlays aim point
+    targAimPoint = ""
+    if out[target].get('overlay'+overNum):
+     targPoint = out[target].get('location','A1')
+     # Is our target Large or bigger? If so, adjust accordingly
+     if out[target].get('size',"M")[0] in "LHG":
+      targOffset = sizeOffset.get(out[target].get('size',"M")[0])
+      TargX = ''.join(x for x in targPoint if x.isalpha())
+      TargY = int(''.join(y for y in targPoint if y.isdigit()))
+      TargX = alph[alph.index(TargX)+targOffset]
+      TargY += targOffset
+      targPoint = f"{TargX}{TargY}"
+     # If the target has an aim point set
+     if out[target].get('aim'+overNum):
+      for aimTarget in out:
+       # We need to check to see if they were targetting a... target
+       if out[target].get('aim'+overNum).lower() in aimTarget.lower():
+        targAimPoint = out[aimTarget]['location']
+        # Is our aimTarget larger than medium? If so, we need to offset to adjust
+        if out[aimTarget].get('size',"M")[0] in "LHG":
+         targAimOffset = sizeOffset.get(out[aimTarget].get('size',"M")[0])
+         targAimTargX = ''.join(x for x in targAimPoint if x.isalpha())
+         targAimTargY = int(''.join(y for y in targAimPoint if y.isdigit()))
+         targAimTargX = alph[alph.index(targAimTargX)+targAimOffset]
+         targAimTargY += targAimOffset
+         targAimPoint = f"{targAimTargX}{targAimTargY}"
+       # If the aimTarget wasn't a target, it was coordinates. Use them.
+       if not targAimPoint:
+        targAimPoint = out[target].get('aim'+overNum).upper()
+     # Add each targets overlay to the overlays list
+     overlays.append(out[target].get('overlay'+overNum).replace("{targ}", targPoint).replace("{aim}", targAimPoint).strip("*"))
+ # Reconvert all of our map information back into the readable note format
+ dataout={x:' | '.join([f"{item[0].title()}: {item[1]}"for item in out[x].items()])for x in out}
+ # Then set everyones note again. Kinda a chainsaw instead of a scalpel situation here.
+ for target in dataout:
+  gt(target).set_note(dataout[target])
+# Join everything together and display the map if we aren't displaying the help
+overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
+if not any(args.get(arg) for arg in ('?', 'help')):
+ finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
+ return f""" -title "**__Distance__**" {'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
--title "Cartesian Coordinate Distance"
--footer "!distance [x1y1] [x2y2] [z] | Example: !distance A3 G15"
+<drac2>
+if args.last('distance') == None or args.last('?') or args.last('help'):
+ help = f"""-title "He's Going the Distance..."
+            -desc "__**Map Utility**__
+            This is an utility that can be used with the `!map` alias or on its own. It shows distance between sets of cartesian coordinates.
+
+            __**Distance Commands**__
+            `!distance <coordinate> <coordinate> [height][,color]` - Will measure the distance between two coordinates. Example: `!distance a1 d4`
+            If you are in combat, you can also measure between a combatant and a coordinate or between two combatants. As an additional option, you can change the default color of the overlay if needed as well as include height. Example: `!distance prixaris h5` or `!distance prixaris go1,y` or `!distance f9 j10 30`
+
+            This calculates distances based on 5ft diagonals. If you would rather 'True' distances, run `!uvar trueDistance true`. To revert back, use `!uvar delete trueDistance`. You can also set this at a server level with `!svar trueDistance true`" """
+
+ return '\n'.join([i.lstrip() for i in help.split('\n')])
+elif not c:
+ return f""" -title "**__Distance__**" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+</drac2>
+
+-footer "{{ctx.prefix}}{{ctx.alias}} ? | v2.0"
+
+-color <color>

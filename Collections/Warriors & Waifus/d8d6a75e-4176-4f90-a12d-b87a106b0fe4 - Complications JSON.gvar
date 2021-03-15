@@ -1,0 +1,198 @@
+{
+ "buy": {
+  "proper": "Buying a Magic Item",
+  "table": [
+   "The item is a fake, planted by an enemy.",
+   "The item is stolen by the party’s enemies.",
+   "The item is cursed by a god.",
+   "The item’s original owner will kill to reclaim it; the party’s enemies spread news of its sale.",
+   "The item is at the center of a dark prophecy.",
+   "The seller is murdered before the sale.",
+   "The seller is a devil looking to make a bargain.",
+   "The item is the key to freeing an evil entity.",
+   "A third party bids on the item, doubling its price.",
+   "The item is an enslaved, intelligent entity.",
+   "The item is tied to a cult.",
+   "The party’s enemies spread rumors that the item is an artifact of evil."
+  ],
+  "desc": "Make a Persuasion check (`!c persuasion`)\n\n**Desired Item**\n```\nRarity    | DC\n----------|-------\nCommon    | 10\nUncommon  | 15\nRare      | 20\nVery Rare | 25\nLegendary | 30\n```\n**Magic Item Tables**\n```\nCheck | Table\n------|---------------\n  1–5 | !mitable A 1d6\n 6–10 | !mitable B 1d4\n11–15 | !mitable C 1d4\n16–20 | !mitable D 1d4\n21–25 | !mitable E 1d4\n26–30 | !mitable F 1d4\n31–35 | !mitable G 1d4\n36–40 | !mitable H 1d4\n   41 | !mitable I 1d4\n```\n**Magic Item Price**\n```\nRarity    | Asking Price\n----------|-------------\nCommon    | !r (1d6 + 1) × 10 gp\nUncommon  | !r 1d6 × 100 gp\nRare      | !r 2d10 × 1,000 gp\nVery rare | !r (1d4 + 1) × 10,000 gp\nLegendary | !r 2d6 × 25,000 gp\n```\n*Halved for a consumable item like a potion or scroll*\n\n**Reminder:** The player can choose to roll on any table at or below their Persuasion check. A roll of 20 can roll on tables A, B *or* C.",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#BuyingaMagicItem"
+ },
+ "lowercarouse": {
+  "proper": "Lower-Class Carousing",
+  "table": [
+   "A pickpocket lifts 1d10 × 5 gp from you.",
+   "A bar brawl leaves you with a scar.",
+   "You have fuzzy memories of doing something very, very illegal, but can’t remember exactly what.",
+   "You are banned from a tavern after some obnoxious behavior.",
+   "After a few drinks, you swore in the town square to pursue a dangerous quest.",
+   "Surprise! You’re married.",
+   "Streaking naked through the streets seemed like a great idea at the time.",
+   "Everyone is calling you by some weird, embarrassing nickname, like Puddle Drinker or Bench Slayer, and no one will say why."
+  ],
+  "desc": "Make a Persuasion check (`!c persuasion`)\n\n**Carousing Table**\n```\nCheck | Table\n------|---------------\n1–5   | Character has made a hostile contact.\n6–10  | Character has made no new contacts.\n11–15 | Character has made an allied contact.\n16–20 | Character has made two allied contacts.\n21+   | Character has made three allied contacts.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Carousing"
+ },
+ "middlecarouse": {
+  "proper": "Middle-Class Carousing",
+  "table": [
+   "You accidentally insulted a guild master, and only a public apology will let you do business with the guild again.",
+   "You swore to complete some quest on behalf of a temple or a guild.",
+   "A social gaffe has made you the talk of the town.",
+   "A particularly obnoxious person has taken an intense romantic interest in you.",
+   "You have made a foe out of a local spellcaster.",
+   "You have been recruited to help run a local festival, play, or similar event.",
+   "You made a drunken toast that scandalized the locals.",
+   "You spent an additional 100 gp trying to impress people."
+  ],
+  "desc": "Make a Persuasion check (`!c persuasion`)\n\n**Carousing Table**\n```\nCheck | Table\n------|---------------\n1–5   | Character has made a hostile contact.\n6–10  | Character has made no new contacts.\n11–15 | Character has made an allied contact.\n16–20 | Character has made two allied contacts.\n21+   | Character has made three allied contacts.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Carousing"
+ },
+ "uppercarouse": {
+  "proper": "Upper-Class Carousing",
+  "table": [
+   "A pushy noble family wants to marry off one of their scions to you.",
+   "You tripped and fell during a dance, and people can’t stop talking about it.",
+   "You have agreed to take on a noble’s debts.",
+   "You have been challenged to a joust by a knight.",
+   "You have made a foe out of a local noble.",
+   "A boring noble insists you visit each day and listen to long, tedious theories of magic.",
+   "You have become the target of a variety of embarrassing rumors.",
+   "You spent an additional 500 gp trying to impress people."
+  ],
+  "desc": "Make a Persuasion check (`!c persuasion`)\n\n**Carousing Table**\n```\nCheck | Table\n------|---------------\n1–5   | Character has made a hostile contact.\n6–10  | Character has made no new contacts.\n11–15 | Character has made an allied contact.\n16–20 | Character has made two allied contacts.\n21+   | Character has made three allied contacts.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Carousing"
+ },
+ "crafting": {
+  "proper": "Crafting an Item",
+  "table": [
+   "Rumors swirl that what you’re working on is unstable and a threat to the community.",
+   "Your tools are stolen, forcing you to buy new ones.",
+   "A local wizard shows keen interest in your work and insists on observing you.",
+   "A powerful noble offers a hefty price for your work and is not interested in hearing no for an answer.",
+   "A dwarf clan accuses you of stealing its secret lore to fuel your work.",
+   "A competitor spreads rumors that your work is shoddy and prone to failure."
+  ],
+  "desc": "**Proficiency Table**\n```\nProficiency           | Items\n----------------------|---------------\nHerbalism kit         | Antitoxin, potion of healing\nLeatherworker’s tools | Leather armor, boots\nSmith’s tools         | Armor, weapons\nWeaver’s tools        | Cloaks, robes\n```\n**Magic Item Ingredients**\n```\nItem Rarity | CR Range\n------------|------------\nCommon      | 1–3\nUncommon    | 4–8\nRare        | 9–12\nVery rare   | 13–18\nLegendary   | 19+\n```\n**Magic Item Crafting Time and Cost**\n```\nItem Rarity | Weeks* | Cost*\n------------|--------|---------\nCommon      | 1      | 50 gp\nUncommon    | 2      | 200 gp\nRare        | 10     | 2,000 gp\nVery rare   | 25     | 20,000 gp\nLegendary   | 50     | 100,000 gp\n*Halved for a consumable item like a potion or scroll\n```\n**Potion of Healing Creation**\n```\nType     | Time        | Cost\n---------|-------------|----------\nHealing  | 1 day       | 25 gp\nGreater  | 1 workweek  | 100 gp\nSuperior | 3 workweeks | 1,000 gp\nSupreme  | 4 workweeks | 10,000 gp\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#CraftinganItem"
+ },
+ "crime": {
+  "proper": "Crime",
+  "table": [
+   "A bounty equal to your earnings is offered for information about your crime.",
+   "An unknown person contacts you, threatening to reveal your crime if you don’t render a service.",
+   "Your victim is financially ruined by your crime.",
+   "Someone who knows of your crime has been arrested on an unrelated matter.",
+   "Your loot is a single, easily identified item that you can’t fence in this region.",
+   "You robbed someone who was under a local crime lord’s protection, and who now wants revenge.",
+   "Your victim calls in a favor from a guard, doubling the efforts to solve the case.",
+   "Your victim asks one of your adventuring companions to solve the crime."
+  ],
+  "desc": "To attempt a crime, the character makes three checks: Stealth (`!c stealth -dc #`), Dexterity using thieves’ tools, and the player’s choice of Investigation (`!c inves -dc #`), Perception (`!c perce -dc #`), or Deception (`!c decep -dc #`).\n\nIf none of the checks are successful, the character is caught and jailed. The character must pay a fine equal to the profit the crime would have earned and must spend one week in jail for each 25 gp of the fine.\n\nIf only one check is successful, the heist fails but the character escapes, but with a complication.\n\nIf two checks are successful, the heist is a partial success, netting the character half the payout.\n\nIf all three checks are successful, the character earns the full value of the loot.\n\n**Loot Value**\n```\nDC | Value\n---|--------------------\n10 | 50 gp, robbery of a struggling merchant\n15 | 100 gp, robbery of a prosperous merchant\n20 | 200 gp, robbery of a noble\n25 | 1,000 gp, robbery of one of the richest figures in town\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Crime"
+ },
+ "gambling": {
+  "proper": "Gambling",
+  "table": [
+   "You are accused of cheating. You decide whether you actually did cheat or were framed.",
+   "The town guards raid the gambling hall and throw you in jail.",
+   "A noble in town loses badly to you and loudly vows to get revenge.",
+   "You won a sum from a low-ranking member of a thieves’ guild, and the guild wants its money back.",
+   "A local crime boss insists you start frequenting the boss’s gambling parlor and no others.",
+   "A high-stakes gambler comes to town and insists that you take part in a game."
+  ],
+  "desc": "Insight (`!c insight`)\nDeception (`!c deception`)\nIntimidation (`!c intimidation`)\nIf you're proficient in an appropriate gaming set, you can use that tool in place of one of the checks.\n**Gambling Results**\n```\nResult | Value\n-------|-----------------\n0      | successes Lose all the money you bet, and accrue a debt equal to that amount.\n1      | success Lose half the money you bet.\n2      | successes Gain the amount you bet plus half again more.\n3      | successes Gain double the amount you bet.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Gambling"
+ },
+ "pitfight": {
+  "proper": "Pit Fighting",
+  "table": [
+   "An opponent swears to take revenge on you.\nThe CON check DC increases by 7",
+   "A crime boss approaches you and offers to pay you to intentionally lose a few matches.\nThe character is found out to be intentionally losing. Subtract 25 gp (50 if all 3 checks pass) as a result of paying fines.",
+   "You defeat a popular local champion, drawing the crowd’s ire.\nThe character has disadvantage on Charisma checks for 1d4+1 IRL days beginning at the end of the downtime.",
+   "You defeat a noble’s servant, drawing the wrath of the noble’s house.\nThe character loses half of their winnings in order to buy the nobles a lavish gift as apology.",
+   "You are accused of cheating. Whether the allegation is true or not, your reputation is tarnished.\nThe character has disadvantage on Charisma checks for 1d4+1 IRL days beginning at the end of the downtime.",
+   "You accidentally deliver a near-fatal wound to a foe.\nThe character is banned from pit fighting briefly, extending the cooldown on this downtime by two days beginning at the end of the time."
+  ],
+  "desc": "A reminder that this downtime activity can only be used once per IRL week by each character.\n\nStrength (Athletics) (`!c athl -dc X`)\nDexterity (Acrobatics) (`!c acro -dc X`)\nConstitution, with a bonus die equal to your highest hit dice (`!c cons -b 1d# -dc X`, where # is the size of your hit die)\n\nYou may replace one check with an attack (`!a ATTACKNAME -ac X`, where X is the DC for the check you replaced)\n\n**Winnings**\n```\nSuccesse(s) | Gold\n------------|-------\n0           | 0\n1           | 50\n2           | 100\n3           | 200\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#PitFighting"
+ },
+ "religious": {
+  "proper": "Religious Service",
+  "table": [
+   "You have offended a priest through your words or actions.",
+   "Blasphemy is still blasphemy, even if you did it by accident.",
+   "A secret sect in the temple offers you membership.",
+   "Another temple tries to recruit you as a spy.",
+   "The temple elders implore you to take up a holy quest.",
+   "You accidentally discover that an important person in the temple is a fiend worshiper."
+  ],
+  "desc": "Choose to make either a Religion (`!c religion`) or Persuasion (`!c persuasion` or `!c persuasion wis`) check.\n\n**Religious Service**\n```\nCheck Total |  Result\n------------|-----------\n1–10        |  No effect. Your efforts fail to make a lasting impression.\n11–20       |  You earn one favor.\n21+         |  You earn two favors.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#ReligiousService"
+ },
+ "research": {
+  "proper": "Research",
+  "table": [
+   "You accidentally damage a rare book.",
+   "You offend a sage, who demands an extravagant gift.",
+   "If you had known that book was cursed, you never would have opened it.",
+   "A sage becomes obsessed with convincing you of a number of strange theories about reality.",
+   "Your actions cause you to be banned from a library until you make reparations.",
+   "You uncovered useful lore, but only by promising to complete a dangerous task in return."
+  ],
+  "desc": "Conducting research requires one workweek of effort and at least 50 gp.\n\nThe character declares the focus of the research — a specific person, place, or thing. After one workweek, the character makes an Intelligence check (`!c intelligence`) with a +1 bonus per 50 gp spent beyond the initial 50 gp, to a maximum of +6 (`-b #`). In addition, a character who has access to a particularly well-stocked library or knowledgeable sages gains advantage on this check. Determine how much lore a character learns using the Research Outcomes table.\n\nThere is also a 10% complication chance.\n\n**Research Outcomes**\n```\nCheck Total |  Result\n------------|-----------\n1–5         | No effect.\n6–10        | You learn one piece of lore.\n11–20       | You learn two pieces of lore.\n21+         | You learn three pieces of lore.\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Research"
+ },
+ "scroll": {
+  "proper": "Scribing a Spell Scroll",
+  "table": [
+   "You bought up the last of the rare ink used to craft scrolls, angering a wizard in town.",
+   "The priest of a temple of good accuses you of trafficking in dark magic.",
+   "A wizard eager to collect one of your spells in a book presses you to sell the scroll.",
+   "Due to a strange error in creating the scroll, it is instead a random spell of the same level.",
+   "The rare parchment you bought for your scroll has a barely visible map on it.",
+   "A thief attempts to break into your workroom."
+  ],
+  "desc": "Scribing a spell scroll takes an amount of time and money related to the level of the spell the character wants to scribe, as shown in the Spell Scroll Costs table. In addition, the character must have proficiency in the Arcana skill and must provide any material components required for the casting of the spell. Moreover, the character must have the spell prepared, or it must be among the character’s known spells, in order to scribe a scroll of that spell.\n\nIf the scribed spell is a cantrip, the version on the scroll works as if the caster were 1st level.\n\nEvery workweek spent scribing brings a 10 percent chance of a complication, examples of which are on the Scribe a Scroll Complications table.\n\n**Spell Scroll Costs**\n```\nLevel   |  Time        | Cost\n--------|--------------|---------\nCantrip | 1 day        | 15 gp\n1st     | 1 day        | 25 gp\n2nd     | 3 days       | 250 gp\n3rd     | 1 workweek   | 500 gp\n4th     | 2 workweeks  | 2,500 gp\n5th     | 4 workweeks  | 5,000 gp\n6th     | 8 workweeks  | 15,000 gp\n7th     | 16 workweeks | 25,000 gp\n8th     | 32 workweeks | 50,000 gp\n9th     | 48 workweeks | 250,000 gp\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#ScribingaSpellScroll"
+ },
+ "sell": {
+  "proper": "Selling a Magic Item",
+  "table": [
+   "Your enemy secretly arranges to buy the item to use it against you.",
+   "A thieves’ guild, alerted to the sale, attempts to steal your item.",
+   "A foe circulates rumors that your item is a fake.",
+   "A sorcerer claims your item as a birthright and demands you hand it over.",
+   "Your item’s previous owner, or surviving allies of the owner, vow to retake the item by force.",
+   "The buyer is murdered before the sale is finalized."
+  ],
+  "desc": "A character can find a buyer for one magic item by spending one workweek and 25 gp, which is used to spread word of the desired sale. A character must pick one item at a time to sell.\n\nA character who wants to sell an item must make a Persuasion check (`!c persuasion`) to determine what kind of offer comes in. The character can always opt not to sell, instead forfeiting the workweek of effort and trying again later. Use the Magic Item Base Prices and Magic Item Offer tables to determine the sale price.\n\nEvery workweek spent scribing brings a 10 percent chance of a complication, examples of which are on the Scribe a Scroll Complications table.\n\n**Magic Item Base Prices**\n```\nRarity    | Base Price*\n----------|--------\nCommon    | 100 gp\nUncommon  | 400 gp\nRare      | 4,000 gp\nVery rare | 40,000 gp\nLegendary | 200,000 gp\n```\n*\\*Halved for a consumable item like a potion or scroll*\n\n**Magic Item Offer**\n```\nCheck | Total Offer\n------|------------------\n1–10  | 50% of base price\n11–20 | 100% of base price\n21+   | 150% of base price\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#SellingaMagicItem"
+ },
+ "training": {
+  "proper": "Training",
+  "table": [
+   "Your instructor disappears, forcing you to spend one workweek finding a new one.",
+   "Your teacher instructs you in rare, archaic methods, which draw comments from others.",
+   "Your teacher is a spy sent to learn your plans.",
+   "Your teacher is a wanted criminal.",
+   "Your teacher is a cruel taskmaster.",
+   "Your teacher asks for help dealing with a threat."
+  ],
+  "desc": "Receiving training in a language or tool typically takes at least ten workweeks, but this time is reduced by a number of workweeks equal to the character’s Intelligence modifier (an Intelligence penalty doesn’t increase the time needed). Training costs 25 gp per workweek. You may altenatively train in one (1) specific weapon, such as a Rapier or a Longbow, and not extend to a class of weapons like Martial or Simple. Also no firearms. Players will need to cover not only the cost of the training, but acquire such a weapon in the first place.\n\nComplications that arise while training typically involve the teacher. Every ten workweeks spent in training brings a 10 percent chance of a complication, examples of which are on the Training Complications table.",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Training"
+ },
+ "work": {
+  "proper": "Work",
+  "table": [
+   "A difficult customer or a fight with a coworker reduces the wages you earn by one category.",
+   "Your employer’s financial difficulties result in your not being paid.",
+   "A coworker with ties to an important family in town takes a dislike to you.",
+   "Your employer is involved with a dark cult or a criminal enterprise.",
+   "A crime ring targets your business for extortion.",
+   "You gain a reputation for laziness (unjustified or not, as you choose), giving you disadvantage on checks made for this downtime activity for the next six workweeks you devote to it."
+  ],
+  "desc": "The player makes an ability check using Athletics (`!c athletics`), Acrobatics (`!c acrobatics`), Intelligence or Wisdom using a set of tools, Performance (`!c performance`), or Charisma with a musical instrument. You earn money based on the wages table below.\n\nThere is also a 10% complication chance.\n\n**Wages**\n```\nCheck Total | Earnings\n------------|----------\n9 or lower  | 4 gp (Poor lifestyle)\n10-14       | 20 gp (Modest lifestyle)\n15-20       | 40 gp (Comfortable lifestyle)\n21+         | 90 gp (Comfortable + 25 gp)\n```",
+  "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#Work"
+ }
+}

@@ -1,0 +1,79 @@
+embed
+
+<drac2>
+# Base variables
+cc    = "Bolstering Magic"
+v     = character().cc_exists(cc) and character().get_cc(cc)
+c     = combat()
+out   = []
+
+# Argument parsing
+args        = argparse(&ARGS&)
+target      = args.last('t')
+ignore      = args.last('i')
+bolsterType = args.adv(custom = {'adv': 'spell', 'dis': 'bonus'})
+
+cTarget = c.get_combatant(target) if c and target else None
+
+# Are we in combat with a valid target? With a valid counter/ignoring reqs?
+if v or ignore:
+  # Is there a valid bolster type? (1 = Spell, -1 = Bonus, 0 = Invalid)
+  # Use the counter and display its value
+  if bolsterType:
+    if not ignore:
+      character().mod_cc(cc, -1)
+    out.append(f""" -f "{cc} {'(-1)'*(not ignore)}|{character().cc_str(cc)}|inline" """)
+  # Are we giving a spell slot?
+  if bolsterType == 1:
+    slotRoll = vroll("1d3 [slot]")
+    out.append(f""" -f "Roll|{slotRoll}|inline" """)
+    # Are we in init/have a valid target?
+    if cTarget:
+      # Go through the targets slots, starting at the highest we can give
+      for slot in range(slotRoll.total, 0, -1):
+        # Is there room on this level?
+        if cTarget.spellbook.get_slots(slot) < cTarget.spellbook.get_max_slots(slot):
+          # Give that slot back
+          cTarget.spellbook.set_slots(slot, cTarget.spellbook.get_slots(slot)+1)
+          out.append(f""" -f "{cTarget.name}|{cTarget.spellbook.slots_str(slot)} (+1)\n Once a creature receives this benefit, that creature can’t receive it again until after a long rest.|inline" """)
+          break
+      else:
+        out.append(f""" -f "{cTarget.name}|Target didn't have any missing spell slots of {slotRoll.total} or lower.|inline" """)
+    # Otherwise, just display that the target can recieve a slot
+    else:
+      out.append(f""" -f "{target or "Regain Slots"}|Target regains one expended spell slot, the level of which equals {slotRoll.total} or lower (the creature’s choice). Once a creature receives this benefit, that creature can’t receive it again until after a long rest." """)
+  # Are we giving them a bonus to their checks?
+  elif bolsterType == -1:
+    # Are we in init/have a valid target?
+    if cTarget:
+      cTarget.add_effect(cc, "-b '1d3 [bolster]'", 100, desc = "For 10 minutes, the creature can roll a d3 whenever making an attack roll or an ability check and add the number rolled to the d20 roll.")
+      out.append(f""" -f "{cTarget.name}|{str(cTarget.get_effect(cc)).splitlines()[0]}|inline" """)
+    # Otherwise, just display that the target can add the bonus to their checks/attacks
+    else:
+      out.append(f""" -f "{target or "Bonus to Rolls"}|For 10 minutes, the target can roll a d3 whenever making an attack roll or an ability check and add the number rolled to the d20 roll. (`-b 1d3[bolstered]`)" """)
+  # Invalid bolster choice
+  else:
+    out.append(f""" -f "Invalid Choice|You need to use `spell` *or* `bonus`." """)
+# Was the counter not valid?
+elif not (v or ignore):
+  # Are we out of uses?
+  if character().cc_exists(cc):
+    out.append(f""" -f "No uses remaining|You must finish a long rest before you can use this ability again." -f "{cc}|{character().cc_str(cc)}" """)
+  # Or is the counter missing entirely
+  else:
+    out.append(f""" -f "Missing Counter|You appear to be missing the counter named `{cc}`. Please create it and try again." """)
+
+return ' '.join(out)
+</drac2>
+
+-title "Bolstering Magic"
+-desc "You can harness your wild magic to bolster yourself or a companion. As an action, you can touch one creature (which can be yourself) and confer one of the following benefits of your choice to that creature:
+
+ - For 10 minutes, the creature can roll a d3 whenever making an attack roll or an ability check and add the number rolled to the d20 roll.
+ - Roll a d3. The creature regains one expended spell slot, the level of which equals the number rolled or lower (the creature’s choice). Once a creature receives this benefit, that creature can’t receive it again until after a long rest.
+
+ You can take this action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest."
+
+-footer "{{ctx.prefix}}{{ctx.alias}} -t [target] [spell|bonus] [-i]"
+-color <color>
+-thumb <image>

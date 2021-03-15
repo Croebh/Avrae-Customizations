@@ -1,0 +1,32 @@
+embed
+
+<drac2>
+c = combat()
+args = argparse(&ARGS&)
+effect = None
+
+target = args.last('t', name)
+self = target == name
+
+if c and (target := c.get_combatant(target)):
+ effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
+ concOut    = f"""-title "{target.name} drops concentration!" """
+ if effect:
+  concOut   = concOut + f""" -desc "You are no longer concentrating on {effect.name} and the effects have been removed." """
+  if "Mind Sharpener" in get("infusions",""):
+   character().set_cvar("lastEffect", dump_json([target.get_effect(effect.name).name, target.get_effect(effect.name).remaining]))
+   concOut   = concOut + f"""-f "Mind Sharpener|Effect stored for Mind Sharpener Infusion." """
+  target.remove_effect(effect.name)
+ else:
+  concOut   = concOut + f""" -desc "You weren't concentrating on a spell in init." """
+elif target == name:
+ target = character()
+ concOut    = f"""-title "{name} drops concentration!" -desc "You aren't in initiative." """
+else:
+ concOut = f"""-title "{ctx.author.name} had a brain fart." -desc "**Invalid target.**\nEither join initiative with `{ctx.prefix}init join`, or select a valid target with `-t <name>`." """
+return concOut
+</drac2>
+
+
+-color <color>
+{{f"-thumb {image}" if self else ""}}

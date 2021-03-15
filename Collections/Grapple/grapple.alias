@@ -1,0 +1,82 @@
+embed
+<drac2>
+# Baseline Variables
+args     = argparse(&ARGS&)
+c        = combat()
+grappler = args.last("c", name)
+target   = args.last("t")
+
+shove    = args.last('shove')
+trip     = args.last('trip')
+
+gtype    = "Grappled" if not (shove or trip) else ' and '.join(i[1] for i in [(shove, "Shoved"), (trip, "Tripped")] if i[0])
+gtitle   = "grapple" if not (shove or trip) else ' and '.join(i[1] for i in [(shove, "shove"), (trip, "trip")] if i[0])
+
+title    = args.last('title', "")
+desc     = args.last('desc', "")
+thumb    = args.last('thumb', "")
+image    = args.last('image', "")
+
+# Are we in combat, and have a target and an grappler?
+if c and target and grappler:
+  # Lets split out our targs for context, for `-t OR1|adv` style args
+  grappler, aArgs  = (grappler.split('|') + [""])[:2]
+  target, tArgs    = (target.split('|') + [""])[:2]
+  grappler, target = c.get_combatant(grappler), c.get_combatant(target)
+else:
+  grappler, target = None, None
+
+# Do we have a *valid* target and grappler
+if grappler and target:
+  # Lets grab args for the grappler
+  if grappler.get_effect("Rage"):
+   aArgs += " adv"
+  args.add_context(grappler.name, argparse(aArgs))
+  args.set_context(grappler.name)
+  aDice  = grappler.skills.athletics.d20(args.adv(boolwise=True))
+  aDice += '+' + args.join('b', '+') if args.last('b') else ''
+
+  # And now for the target
+  args.add_context(target.name, argparse(tArgs))
+  args.set_context(target.name)
+  # Note to self, add `acro` an `athl` for args to select this
+  if target.skills.athletics.value > target.skills.acrobatics.value and not args.last('acro'):
+    if target.get_effect("Rage"):
+      args.add_context(target.name, argparse(tArgs + " adv"))
+      args.set_context(target.name)
+    tDice = target.skills.athletics.d20(args.adv(boolwise=True))
+    tType = "Athletics"
+  else:
+    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True))
+    tType = "Acrobatics"
+  tDice  += '+' + args.join('b', '+') if args.last('b') else ''
+  # Roll the checks
+  aRoll   = vroll(aDice)
+  tRoll   = vroll(tDice)
+  # Success is from the context of the grappler
+  success = tRoll.total < aRoll.total
+  return f"""-title "{title.replace("[grappler]", grappler.name).replace("[target]", target.name) or f"{grappler.name} attempts to {gtitle} {target.name}!"}" -f "{grappler.name}|**Athletics:** {aRoll}" -f "{target.name}|**{tType}:** {tRoll}" -desc "{desc}
+  {[f'Not {gtype}', f'{gtype}'][success]}!" {f"-thumb {thumb}" if thumb else ""} {f"-image {image}" if image else ""} """
+else:
+  return f""" -title "Quick, Wes, jump off this two headed pegacentaur and RKO that three headed pegacentaur, 70 feet in the air!"
+-desc "`{ctx.prefix}{ctx.alias} [args]`
+
+**__Valid Arguments__**
+
+`-c [grappler]` - The person making the grapple. Defaults to active character.
+`-t [target]` - The target of the grapple
+`acro` - Forces the targets check to be acrobatics
+
+`-b #` - Adds a bonus to the grapple check
+`adv`/`dis` - Rolls the check at dis/advantage
+
+You can do target specific, i.e, `-t OR1|dis` or `-c \\\"GO1|-b 5\\\"`
+
+`shove` - Denotes that the grapple is an attempt to shove. Can be combined with `trip`
+`trip` - Denotes that the grapple is an attempt to trip. Can be combined with `shove`
+
+`-desc [description]` - Adds a description
+`-title [title]` - Replaces the title. `[grappler]` and `[target]` get replaced with their respective names.
+`-thumb [url]` - Adds a thumbnail
+`-image [url]` - Adds an image at the bottom" """
+</drac2>

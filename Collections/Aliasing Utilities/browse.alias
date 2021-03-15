@@ -137,7 +137,7 @@ Character = {
                               "min": counter.min,
                               "max": counter.max,
                               "reset_on": counter.reset_on,
-                              "value": counter.value.
+                              "value": counter.value,
                               "reset_by": counter.reset_by,
                               "reset_to": counter.reset_to}
                             for counter in Char.consumables],
@@ -217,7 +217,11 @@ context = {
            "channel": {
             "id": ctx.channel.id,
             "name": ctx.channel.name,
-            "topic": ctx.channel.topic
+            "topic": ctx.channel.topic,
+            "category": {
+             "id": ctx.channel.category.id,
+             "name": ctx.channel.category.name
+            }
            },
            "guild":
             ({"id": ctx.guild.id,
@@ -272,7 +276,7 @@ else:
  if get('loaded'):
   path = f"`load_json({path.strip('`')})"
 
-for item in query:
+for index, item in enumerate(query):
  if typeof(current) == "SafeDict":
   # Loop through keys, priotizing exact matches, then partial matches, then get the first result
   key = (
@@ -285,7 +289,9 @@ for item in query:
   key = int(item)
 
  if key is not None:
-  if Combat and len(query) > 2 and query[1].lower() in 'effects' and query[2].lower() in str(key).lower():
+  if Combat and index == 0:
+    pass
+  elif Combat and len(query) > 2 and query[1].lower() in 'effects' and query[2].lower() in str(key).lower():
     path = path[:-8] + f".get_effect('{key}')"
   elif str(key).isdigit():
    path = path + f"[{key}]"
