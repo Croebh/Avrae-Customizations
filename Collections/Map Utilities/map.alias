@@ -53,6 +53,13 @@ finalMap        = ""
 sizeOffset      = {"T":0, "S":0, "M":0, "L":1, "H":1, "G":2}
 COL,SIZ         = {"w": "white", "bk": "black", "gy": "grey", "r": "red", "g": "green", "b": "blue", "y": "yellow", "p": "purple", "pk": "pink", "c": "cyan", "bn": "brown", "o": "orange"},{"T":"Tiny", "S":"Small", "M":"Medium", "L":"Large", "H":"Huge", "G":"Gargantuan"}
 
+# Command Lists
+helpCmds = ['?', 'help']
+listCmds = ['spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', 'battlelist', 'tokenlist']
+tokenCmds = ['tokenimport']
+overlayCmds = ['newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay', 'saveunderlay', 'deleteunderlay']
+noMapCmds = helpCmds+listCmds+tokenCmds+overlayCmds
+
 # We don't have an aim point/target yet
 aimPoint        = ""
 aimTarget       = ""
@@ -198,7 +205,7 @@ objectlist = f""" -f 'Object Key|```{newline.join(objectTypeOut)}```' -image htt
 # If we're in combat, check all the things
 if c:
  # Collect information on every combatant
- for combatant in combat().combatants:
+ for combatant in c.combatants:
 
   # Grab map information, if it exists
   for attack in combatant.attacks:
@@ -424,7 +431,7 @@ if args.last('newmapbg') or args.last('deletemapbg') or args.last('savemap') or 
 </drac2>
 <drac2>
 #Here we allow the user to save spell overlays in their mapOverlays uvar
-if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay', 'saveunderlay', 'deleteunderlay')):
+if any(args.last(potentialArg) for potentialArg in (overlayCmds)):
  #First option is to create spell overlay
  if args.last('newspell') or args.last('savespell') or args.last('saveoverlay') or args.last('saveunderlay'):
   userOverlays = load_json(get('mapOverlays','{}'))
@@ -468,7 +475,7 @@ if any(args.last(potentialArg) for potentialArg in ('newspell', 'saveoverlay', '
 <drac2>
 if c:
  # Read each combatants notes for their information
- for target in combat().combatants:
+ for target in c.combatants:
   # If they have a note, perse it into a dict
   if target.note and ':' in target.note:
    note=target.note
@@ -525,8 +532,8 @@ if args.last('undo') and prevBack:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  targ=gt(args.last('t', combat().me.name if combat().me else None))
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
+  targ=gt(args.last('t', c.me.name if c.me else None))
   # If they don't have a note/location set, add them to the list
   if not out.get(targ.name):
    out[targ.name] = {}
@@ -549,8 +556,8 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
-  targ=gt(args.last('t', combat().me.name if combat().me else None))
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
+  targ=gt(args.last('t', c.me.name if c.me else None))
   # If they don't have a note/location set, add them to the list
   if not out.get(targ.name):
    out[targ.name] = {}
@@ -572,7 +579,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
   # If there is a -color arg, change their color
   if args.last('color'):
    color = args.last('color').lower().strip('~') + " "
@@ -598,7 +605,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
   # If there is a -height arg, change their height
   if args.last('height'):
    height = args.last('height')
@@ -616,7 +623,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
   # If there is a -group arg, change their group
   if args.last('group'):
    group = args.last('group')
@@ -635,7 +642,7 @@ if c:
 <drac2>
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
   # If there is a -token arg, change their token shortcode
   if args.last('token'):
    token = args.last('token')
@@ -654,7 +661,7 @@ if c:
 if c:
  # If there is a -t argument given, and that target exists as a combatant, modify that target
  # If no -t, default to current character
- if args.last('t', combat().me.name if combat().me else None) and gt(args.last('t', combat().me.name if combat().me else None)):
+ if args.last('t', c.me.name if c.me else None) and gt(args.last('t', c.me.name if c.me else None)):
   prevLoc = out[targ.name].get('location')
   if args.last('move') and args.last('move') not in (True, 't', '-t', "TRUE") and (args.last('move')[0].isalpha() and args.last('move')[-1].isdigit()):
    # Fix bad locations?
@@ -860,7 +867,7 @@ if c:
   # Make sure they don't have a `-over`
   if args.last('aim'+aimNum) and not (args.last('over'+aimNum) or args.last('under'+aimNum)):
    # Also make sure there is a valid target
-   if (curTarg := args.last('t', combat().me.name if combat().me else None)) and (curTarg := gt(curTarg)):
+   if (curTarg := args.last('t', c.me.name if c.me else None)) and (curTarg := gt(curTarg)):
     # And that target has an overlay, and an existing aim point
     if out[curTarg.name].get('overlay'+aimNum) and out[curTarg.name].get('aim'+aimNum):
      # If they used |stick, remove it, as its implied at this point
@@ -1400,13 +1407,13 @@ if c:
      for searchCombatant in foundBattle:
       if searchCombatant not in ("mapattach"):
        foundCombatants = dict(list(foundBattle.items())[1:])
-       currentCombatants = [combat().get_combatant(name)]
+       currentCombatants = [c.get_combatant(name)]
        #Here saved combatant notes are loaded unless combatant isn't in combat
-       if all([combat().get_combatant(searchCombatant) for searchCombatant in foundCombatants.keys()]):
+       if all([c.get_combatant(searchCombatant) for searchCombatant in foundCombatants.keys()]):
         out = dict(list(foundBattle.items())[1:])
        else:
         #Here lets user know what combatants they need to add to load ther info
-        missingCombatants = [combatants for combatants in foundCombatants if not combat().get_combatant(combatants)]
+        missingCombatants = [combatants for combatants in foundCombatants if not c.get_combatant(combatants)]
         desc.append(f'You need to add the Combatant{"s" if len(missingCombatants) > 1 else ""} `{", ".join(missingCombatants)}` to load combatants info')
         break
        break
@@ -1559,7 +1566,7 @@ if c:
  # &cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}
 
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist", 'tokenimport')):
+ if not any(args.get(arg) for arg in (noMapCmds)):
   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
@@ -1584,7 +1591,7 @@ You can support OTFBM on [Patreon](https://www.patreon.com/otfbm) and this alias
 colorhelp = f"""-f "Valid Colors|```{newline.join(colorOut)}```You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
 sizehelp = f"""-f "Valid Sizes|```{newline.join([f"{x[0]} - {x[1]}" for x in SIZ.items()])}```|inline" """
 
-
+# Go through and Add some pizazz for any lists, paginate the ones that are too large - Exclude objectlist from pagination 
 # Are we trying to display the spelllist?
 if args.get('spelllist') or args.get('spellbook'):
  # Only grab the page selected, default to first
@@ -1797,15 +1804,19 @@ elif (not c or args.get('?') or args.get('help')) and not args.get("tokenimport"
 
 <drac2>
 paginFooter = ""
-if any(args.last(arg) for arg in ('maplist','bglist','backgroundlist','viewlist','spelllist','spellbook')):
- paginFooter = f" | Page {args.last('page', 1)} / #### | -page # to change page"
- if any(args.last(arg) for arg in ('spelllist','spellbook')):
-  paginFooter = paginFooter.replace("####", str(len(spellPagin))) if len(spellPagin) > 1 else ""
- elif any(args.last(arg) for arg in ('maplist','bglist','backgroundlist')):
-  paginFooter = paginFooter.replace("####", str(len(mapPagin))) if len(mapPagin) > 1 else ""
- elif args.last("viewlist"):
-  paginFooter = paginFooter.replace("####", str(len(presetPagin))) if len(presetPagin) > 1 else ""
- paginFooter += " | -search [name] to search"
+pageList = [spellPagin, spellPagin, mapPagin, mapPagin, mapPagin, presetPagin, battlePagin, tokenPagin ]
+# listCmds ['spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', 'battlelist', 'tokenlist']
+# Iterate over the lists we paginate
+if any(args.last(arg) for arg in (listCmds)):
+  paginFooter = f" | Page {args.last('page', 1)} / #### | -page # to change page"
+  i = 0
+  for cmd in listCmds:
+    if args.last(cmd):
+      # err(f"{cmd} | {pageList[i]}")
+      paginFooter = paginFooter.replace("####", str(len(pageList[i]))) if pageList[i] and len(pageList[i]) > 1 else ""
+    i += 1
+  paginFooter += " | -search [name] to search"
+
 </drac2>
 -footer "!map ?{{f" | Map settings attached to {mapattach.name}" if mapattach else ""}}{{paginFooter}} | v3.5"
 <drac2>
