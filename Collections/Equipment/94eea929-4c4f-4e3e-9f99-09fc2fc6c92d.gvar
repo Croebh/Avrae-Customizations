@@ -15,7 +15,7 @@
     "dueling": "**Dueling.** When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon.",
     "gwf": "**Great Weapon Fighting.** When you roll a 1 or 2 on a damage die for an attack you make with a melee weapon that you are wielding with two hands, you can reroll the die and must use the new roll, even if the new roll is a 1 or a 2. The weapon must have the two-handed or versatile property for you to gain this benefit.",
     "savage": "**Savage Attacker.** When you roll damage for a melee weapon attack, you can reroll the weapon's damage dice and use either total.",
-    "monk": "**Martial Arts.** You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or wielding a shield:\n- You can use Dexterity instead of Strength for the attack and damage rolls of your unarmed strikes and monk weapons.\n- You can roll a d4 in place of the normal damage of your unarmed strike or monk weapon. This die changes as you gain monk levels, as shown in the Martial Arts column of the Monk table.\n- When you use the Attack action with an unarmed strike or a monk weapon on your turn, you can make one unarmed strike as a bonus action. For example, if you take the Attack action and attack with a quarterstaff, you can also make an unarmed strike as a bonus action, assuming you haven't already taken a bonus action this turn.",
+    "monk": "",
     "adamantine": "**Adamantine.** Whenever an adamantine weapon or piece of ammunition hits an object, the hit is a critical hit.",
     "silvered": "**Silvered.** Some monsters that have immunity or resistance to nonmagical weapons are susceptible to silver weapons.",
     "magical":""
