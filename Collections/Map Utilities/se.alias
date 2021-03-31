@@ -234,8 +234,15 @@ if c:
 
 mapStates = load_json(get('mapStates','{}'))
 prevBack = mapStates.get(chanid())
-mapStates.update({chanid(): out})
-set_uvar('mapStates', dump_json(mapStates))
+checkMS = str(mapStates)
+lengthTotal = len(checkMS) + len(out)
+if lengthTotal >= 10000:
+  delete_uvar("mapStates")
+  set_uvar('mapStates', dump_json(mapStates))
+  desc.append(f"uvar mapStates was full, so it was cleared and current map setup was backed up")
+else:
+ mapStates.update({chanid(): out})
+ set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
 delete_uvar("mapSize"+chanid())
