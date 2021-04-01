@@ -1809,12 +1809,10 @@ pageList = [spellPagin, spellPagin, mapPagin, mapPagin, mapPagin, presetPagin, b
 # Iterate over the lists we paginate
 if any(args.last(arg) for arg in (listCmds)):
   paginFooter = f" | Page {args.last('page', 1)} / #### | -page # to change page"
-  i = 0
-  for cmd in listCmds:
+  for i,cmd in enumerate(listCmds):
     if args.last(cmd):
       # err(f"{cmd} | {pageList[i]}")
       paginFooter = paginFooter.replace("####", str(len(pageList[i]))) if pageList[i] and len(pageList[i]) > 1 else ""
-    i += 1
   paginFooter += " | -search [name] to search"
 
 </drac2>
