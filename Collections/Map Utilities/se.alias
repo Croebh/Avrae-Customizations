@@ -110,21 +110,21 @@ if c:
      aimed = ["-aim", argList[1]]
     else:
      aimed = ""
-    #Are we targeting a specific player of use default current active character/current character in initiative 
+    #Are we targeting a specific player of use default current active character/current character in initiative
     if args.last('t'):
       targArg = ['-t', args.last('t')]
     elif combat().current:
       targArg = ['-t', combat().me.name if combat().me else combat().current.name]
     else:
-      desc.append(f"You need to have someone selected in combat")
-    #If you want to clear the overlay of the targeted player  
+      err("You need to have someone selected in combat")
+    #If you want to clear the overlay of the targeted player
     if args.last('none'):
       args = argparse(['-t', targArg[1]] + ['-over', "none"])
-    #Have Overlays always stick by default  
+    #Have Overlays always stick by default
     aimStick = True
     #Here user can decide to not have the overlay stick
     if args.last('n'):
-     aimStick = False 
+     aimStick = False
     for overNum in [""]+[str(x) for x in range(1,11)]:
      if args.last('spell' + overNum):
       # Loop through our users spellOverlays, looking for that spell
@@ -234,15 +234,8 @@ if c:
 
 mapStates = load_json(get('mapStates','{}'))
 prevBack = mapStates.get(chanid())
-checkMS = str(mapStates)
-lengthTotal = len(checkMS) + len(out)
-if lengthTotal >= 10000:
-  delete_uvar("mapStates")
-  set_uvar('mapStates', dump_json(mapStates))
-  desc.append(f"uvar mapStates was full, so it was cleared and current map setup was backed up")
-else:
- mapStates.update({chanid(): out})
- set_uvar('mapStates', dump_json(mapStates))
+mapStates.update({chanid(): out})
+set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
 delete_uvar("mapSize"+chanid())
@@ -534,11 +527,8 @@ elif not c or args.get('?') or args.get('help'):
             This is a utility to use with the `!map` alias. It allows you can quickly place preset spell effect overlays or ones that you have saved."
             -f "_ _|**__Basic Commands__**
             `!se <name of spell/saved overlay> [aim] [-t <target>] [-n]` - You can place a preset spell effect overlays or ones you have saved. If the name contains multiple words, you need to have it in quotes. It will auto attach the overlay to your active character or current character in initiative. If there is an `{aimD}` in the spell preset, then you can input either a combatant name or location. Example: `!se \\"Circle of Death\\" b9` or `!se burning go1`
-
             If you want to attach the overlay to another combatant than your active character or current character in combat, you can add `-t <combatant name>` at the end of all arguments. Example: `!se colorspray prixaris -t go1`
-
             All overlays will automatically stick and remain if the `!map` alias is called unless `-n` is placed as the last argument. Example: `!se fireball d5 -n`"
-
             -f "_ _|__**Other Commands**__
             `!se -aim <target/location>` - This will change the aim of the overlay of your current active character or current character in initiative.
             `!se none` - Remove the attached overlay to your active character or current character in initiative.
@@ -560,4 +550,3 @@ if args.last('list'):
 
 -footer "!se ? | {{paginFooter}} v1.2"
 -color <color>
-
