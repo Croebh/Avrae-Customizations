@@ -1637,7 +1637,7 @@ elif args.get('tokenlist'):
   tokenPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return tokenPage + f"""-title "Token for your thoughts"  """
-elif any(args.get(arg) for arg in ['battlelist']):
+elif args.get('battlelist'):
  # Only grab the page selected, default to first
  if battlePagin:
    # Add the existing description to handle deletebattle
