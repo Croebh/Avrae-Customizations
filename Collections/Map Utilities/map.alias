@@ -58,7 +58,8 @@ helpCmds = ['?', 'help']
 listCmds = ['spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', 'battlelist', 'tokenlist']
 tokenCmds = ['tokenimport']
 overlayCmds = ['newspell', 'saveoverlay', 'savespell', 'deletespell', 'deleteoverlay', 'saveunderlay', 'deleteunderlay']
-noMapCmds = helpCmds+listCmds+tokenCmds+overlayCmds
+interactCmds = ['deletebattle']
+noMapCmds = helpCmds+listCmds+tokenCmds+overlayCmds+interactCmds
 
 # We don't have an aim point/target yet
 aimPoint        = ""
@@ -177,18 +178,6 @@ serverBattles = load_json(get_svar('mapBattles') or '{}')
 userBattles = load_json(get('mapBattles', "{}"))
 serverBattles.update(userBattles)
 userBattles = serverBattles
-battlelist = []
-for battle, info in userBattles.items():
- if args.last('search', '').lower() in battle.lower():
-  indivBattles = dict(list(info.items())[1:])
-  indivCombatant = []
-  for combatant in indivBattles:
-   if combatant != "mapattach":
-    overs = len([i for i in indivBattles[combatant] if i.startswith('overlay')])
-    indivCombatant.append(f"""`{combatant}`{f" ({overs} Overlay{'s' if overs>1 else ''})" if overs else ""}""")
-  battlelist.append(f"""**{battle}** - Combatants: {', '.join(indivCombatant)}""".strip(",- "))
-# Split the list into groups of 15, to ensure it stays a reasonable size (used to be 20, then I added stuff)
-battlePagin = [battlelist[i:i+15] for i in range(0, len(battlelist), 15)]
 </drac2>
 
 <drac2>
@@ -1142,7 +1131,7 @@ if args.last('tokenimport'):
 <drac2>
 if c:
  # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, -loadbattle, -loadjson, -deletejson, -fow, or -addfow arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'mapload', 'savebattle', 'deletebattle', 'loadbattle', 'loadjson', 'deletejson', 'fow', 'addfow')) and not (args.last('help') or args.last('?')):
+ if any(args.last(thisArg) for thisArg in ('mapsize', 'mapbg', 'bg', 'mapoptions', 'options', 'mapview', 'view', 'mapattach', 'attach', 'wall', 'deletewall', 'object', 'deleteobject', 'loadmap', 'mapload', 'savebattle', 'loadbattle', 'loadjson', 'deletejson', 'fow', 'addfow')) and not (args.last('help') or args.last('?')):
   # If the new mapsize is different from the old one, update and display
   if mapsize != args.last('mapsize', mapsize):
    #If user wants to set mapsize back to default
@@ -1386,17 +1375,6 @@ if c:
    userBattles.update(savedBattle)
    set_uvar("mapBattles",dump_json(userBattles))
    desc.append(f"Saved the battle `{argsBattle}`")
-  if args.last('deletebattle'):
-   inputtedBattle = args.last('deletebattle')
-   foundBattle = None
-   for battle in userBattles:
-    if inputtedBattle.lower() in battle.lower():
-     foundBattle = userBattles.pop(battle)
-     set_uvar("mapBattles", dump_json(userBattles))
-     desc.append(f"Deleted the battle `{inputtedBattle}`")
-     break
-   if not foundBattle:
-    desc.append(f"Did not find the battle you were looking for")
   if args.last('loadbattle'):
    argsBattle = args.last('loadbattle').lower()
    foundBattle = ""
@@ -1460,13 +1438,13 @@ if c:
       desc.append(f"Loaded JSON File {inputtedJson}")
   #If user wants to delete a specific loaded json file
   if args.last('deletejson'):
-    inputtedjson = args.last('deletejson')
-    remjson = [json for json in loadedjson if inputtedjson.lower() != json.lower()]
-    if len(loadedjson) != len(remjson):
-      desc.append(f"JSON removed: `{inputtedjson}`")
-      loadedjson = remjson
-    else:
-      desc.append(f"Could not find JSON: `{inputtedjson}`")
+   inputtedjson = args.last('deletejson')
+   remjson = [json for json in loadedjson if inputtedjson.lower() != json.lower()]
+   if len(loadedjson) != len(remjson):
+    desc.append(f"JSON removed: `{inputtedjson}`")
+    loadedjson = remjson
+   else:
+    desc.append(f"Could not find JSON: `{inputtedjson}`")
   # If there is a -mapattach, and its a valid target in init
   if args.last('mapattach', args.last('attach')) and gt(args.last('mapattach', args.last('attach'))):
    # First check if there is an existing mapattach, and if its the same as the new one, then remove their map effect
@@ -1486,15 +1464,30 @@ if c:
    desc.append(f"Map settings attached to `{mapattach.name}`")
   # Otherwise, show that it was changed, but not saved
   else:
-   # Look for a combatant named DM or Map, auto attach
-   for maptarg in ("map", "dm", "lair"):
+    # Look for a combatant named DM or Map, auto attach
+    for maptarg in ("map", "dm", "lair"):
      if c.get_combatant(maptarg):
-       mapattach = c.get_combatant(maptarg)
-       mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
-       desc.append(f"""Autoattached map settings to {mapattach.name}""")
-       break
-   else:
-    desc.append("Map settings changed, but no map attach target was found. Settings not saved.")
+      mapattach = c.get_combatant(maptarg)
+      mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
+      desc.append(f"""Autoattached map settings to {mapattach.name}""")
+      break
+    else:
+     desc.append("Map settings changed, but no map attach target was found. Settings not saved.")
+# Handle commands that don't require interacting with combat or the map
+if any(args.last(thisArg) for thisArg in interactCmds):
+ if args.last('deletebattle'):
+  #add battlelist for diplaying
+  args.update({"battlelist": "True"})
+  inputtedBattle = args.last('deletebattle')
+  foundBattle = None
+  for battle in userBattles:
+   if inputtedBattle.lower() in battle.lower():
+    foundBattle = userBattles.pop(battle)
+    set_uvar("mapBattles", dump_json(userBattles))
+    desc.append(f"Deleted the battle `{battle}`")
+    break
+  if not foundBattle:
+   desc.append(f"Did not find the battle you were looking for")
 </drac2>
 
 <drac2>
@@ -1591,6 +1584,20 @@ You can support OTFBM on [Patreon](https://www.patreon.com/otfbm) and this alias
 colorhelp = f"""-f "Valid Colors|```{newline.join(colorOut)}```You can also provide 3 or 6 digit hex codes, like `D73` or `D2773f`|inline" """
 sizehelp = f"""-f "Valid Sizes|```{newline.join([f"{x[0]} - {x[1]}" for x in SIZ.items()])}```|inline" """
 
+# Build the Battle list here, as it could have changed before
+battlelist = []
+for battle, info in userBattles.items():
+ if args.last('search', '').lower() in battle.lower():
+  indivBattles = dict(list(info.items())[1:])
+  indivCombatant = []
+  for combatant in indivBattles:
+   if combatant != "mapattach":
+    overs = len([i for i in indivBattles[combatant] if i.startswith('overlay')])
+    indivCombatant.append(f"""`{combatant}`{f" ({overs} Overlay{'s' if overs>1 else ''})" if overs else ""}""")
+  battlelist.append(f"""**{battle}** - Combatants: {', '.join(indivCombatant)}""".strip(",- "))
+# Split the list into groups of 15, to ensure it stays a reasonable size (used to be 20, then I added stuff)
+battlePagin = [battlelist[i:i+15] for i in range(0, len(battlelist), 15)]
+
 # Go through and Add some pizazz for any lists, paginate the ones that are too large - Exclude objectlist from pagination 
 # Are we trying to display the spelllist?
 if args.get('spelllist') or args.get('spellbook'):
@@ -1630,10 +1637,11 @@ elif args.get('tokenlist'):
   tokenPage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
  return tokenPage + f"""-title "Token for your thoughts"  """
-elif args.get('battlelist'):
+elif any(args.get(arg) for arg in ['battlelist']):
  # Only grab the page selected, default to first
  if battlePagin:
-  battlePage = f"""-desc "{newline.join(battlePagin[ min(len(battlePagin),args.last('page', 1, int)-1)] )}" """
+   # Add the existing description to handle deletebattle
+  battlePage = f"""-desc "{newline.join(desc)+newline+newline if desc else ''}{newline.join(battlePagin[ min(len(battlePagin),args.last('page', 1, int)-1)] )}" """
  else:
   battlePage = f"""-desc "No results found{f" for search term `{args.last('search')}`" if args.last('search') else ''}." """
  # Add some pizazz
