@@ -681,7 +681,11 @@
     ],
     "desc": "The description of the counter."
    }
-  ]
+  ],
+  "returns": {
+  "type": "AliasCustomCounter",
+  "desc": "The newly created counter."
+ }
  },
  "character().csettings": {
   "desc": "Gets a copy of the character’s settings dict.",
@@ -1758,7 +1762,7 @@
   "url": "aliasing.api.statblock.AliasSpellbookSpell.name",
   "desc": "The name of the spell.",
   "returns": {
-   "type": "int or None"
+   "type": "str"
   }
  },
  "AliasSpellbookSpell.sab": {

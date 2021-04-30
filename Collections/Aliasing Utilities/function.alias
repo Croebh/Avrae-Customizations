@@ -25,6 +25,9 @@ else:
     # I guess we'll display the basic help, then
     return f""" -desc "`{ctx.prefix}function [search]` to look up a function.\nIf multiple similar, aim for an exact match." """
 
+if not all([gvar[result].get('deprecated') for result in searchResults]):
+    searchResults = [result for result in searchResults if not gvar[result].get('deprecated')]
+
 if len(searchResults) == 1:
     # We found it, bois!
     func = searchResults[0]
