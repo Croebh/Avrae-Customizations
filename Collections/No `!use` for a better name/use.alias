@@ -160,8 +160,14 @@ Arguments marked with **†** allow for variable evaluation via `{}`
 {{CHAR_STATS = {} }}{{_ = [CHAR_STATS.update(get_raw()[x]) for x in  ['stats', 'saves', 'levels', 'cvars', 'skills']]}}
 {{CHAR_STATS['armor'] = armor}}
 {{scale = load_json(argparse(c).last('scale', '{"1" : 1, "5" : 2, "11" : 3, "17" : 4}').replace("'", '"'))}}
-{{_ = [set('scaleNum', scale[x]) for x in scale if x.isdigit() and get("level",0) >= int(x)]}}
-{{CHAR_STATS['scale'] = get('scaleNum',0)}}
+<drac2>
+scaleNum = 0
+for x, y in scale.items():
+    if x.isdigit() and get('level', 0) >= int(x):
+        scaleNum = y
+scale = scaleNum
+CHAR_STATS['scale'] = scaleNum
+</drac2>
 
 {{CHAR_STATS['spellDC'] = get('spellDC', get_raw().spellbook.dc)}}
 {{CHAR_STATS['spellAB'] = get('spellAB', get_raw().spellbook.attackBonus)}}
@@ -205,11 +211,17 @@ if cc and not cc_exists(cc) and get("name"):
 
 {{annotated, mathsep= ["dc", "phrase", "effect", "desc", "title", "save_bonus", "damage", "seffect", "maxhp", "xroll", "temphp", "n", "ndesc", "effectdesc", "seffectdesc"], "+-()/*[]"}}
 
+
+
+
 {{_ = [[set(x, get(x).replace(i[0], i[1])) for i in CHAR_STATS] for x in annotated if get(x)]}}
 {{_ = [[set(items, get(items).replace(repl[0], repl[1])) for repl in {item : str(roll(thing) or thing) for item in [get(items)[x:][get(items)[x:].index('{'):get(items)[x:].index('}')+1] for x in range(len(get(items))) if get(items)[x:].startswith('{') and get(items)[x:].count('}') ] if not set('thing', ''.join([str(args.last(i, get(i, i))) if not i.strip('+.').isdigit() else i for i in "".join([(f" {char} " if char in "+-()/*" else char ) for char in item[1:-1]]).split()]))}.items()] for items in annotated if get(items)]}}
 
+
 {{damage= (damage.split('|')+['']*2)[:3]}}
 {{damage, minDamage, maxDamage = damage[0], roll(damage[1]) if damage[1] and vroll(damage[1]) else None, roll(damage[2]) if damage[2] and vroll(damage[2]) else None}}
+
+
 
 {{dc, save_type, adv, phrase, save_bonus, damage, half, avoid, hidden, effect, seffect, xroll, effectdesc, seffectdesc = sum([int(get(i, i)) for i in dc.split('+')]), args.last('save','').lower() or args.last('s', 'dex').lower() , args.adv(boolwise = True), '*' + phrase + '*' if phrase else '', [vroll(save_bonus) for x in range(len(targets)) if save_bonus], vroll(damage, 1 + crit) if damage else None, 'half' in args, 'avoid' in args, 'h' in args, ([effect.split("|")[0]]+["|".join(effect.split("|")[1:4])]+effect.split("|")[4:] if "-attack" in effect and len(effect.split("|"))>3 else (effect.split('|')+['-1']*2)[:3]) if effect else 0, ([seffect.split("|")[0]]+["|".join(seffect.split("|")[1:4])]+seffect.split("|")[4:] if "-attack" in seffect and len(seffect.split("|"))>3 else (seffect.split('|')+['-1']*2)[:3]) if seffect else 0, vroll(xroll) if xroll else None, effectdesc if effectdesc else None, seffectdesc if seffectdesc else None}}
 
