@@ -88,10 +88,10 @@ crit                = args.last('crit', False, bool)
 save_type           = args.last('save', args.last('s', 'dex')).lower()[:3]
 
 # General
-anno["save_bonus"]  = args.get('b')
-anno["damage"]      = args.last('d',           "", str)
 minDamage           = None
 maxDamage           = None
+anno["save_bonus"]  = args.get('b')
+anno["damage"]      = args.last('d',           "", str)
 anno["maxhp"]       = args.last('max',         "", str)
 anno["temphp"]      = args.last('thp',         "", str)
 anno["effect"]      = args.last("effect",      "", str)
@@ -104,7 +104,8 @@ anno["phrase"]      = args.join('phrase', NewLine, "")
 anno["desc"]        = args.last('desc',   '', str)
 anno["thumb"]       = args.last('thumb',
                                  image if character().name == user.name else
-                                 "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png", str)
+                                 "https://cdn.discordapp.com/attachments/349765584302505985/597101368117035038/246x0w.png",
+                                 str)
 anno["color"]       = args.last('color',  color, str)
 anno["image"]       = args.last('image',  "", str)
 anno["title"]       = args.last('title',  '', str)

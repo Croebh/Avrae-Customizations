@@ -139,7 +139,10 @@ Character = {
                               "reset_on": counter.reset_on,
                               "value": counter.value,
                               "reset_by": counter.reset_by,
-                              "reset_to": counter.reset_to}
+                              "reset_to": counter.reset_to,
+                              "title": counter.title,
+                              "desc": counter.desc,
+                              "display_type": counter.display_type}
                             for counter in Char.consumables],
              "owner": Char.owner,
              "upstream": Char.upstream,
@@ -314,6 +317,6 @@ out = ("\n".join([x for x in display]) if display else str(current)).replace('"'
 </drac2>
 
 -title "{{"I browse on point" if help else path.strip('.').replace('..','.').replace('..','.').replace('..','.')+'`'}}"
--desc "{{helpDesc if help else out if len(out)<2000 else f"{out[:2000]}... [truncated due to length]"}}"
+-desc "{{helpDesc if help else out if len(out)<2000 else f"{out[:1500]}... [truncated due to length]"}}"
 {{f""" -f "[Dashboard Link](https://avrae.io/dashboard/gvars?lookup={gSource})" """ if gvar else ""}}
 -footer "{{'' if help else f"{ctx.prefix}browse ?"}}"
