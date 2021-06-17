@@ -8,6 +8,8 @@
 
 `-b #` - Adds a bonus to the grapple check
 `adv`/`dis` - Rolls the check at dis/advantage
+`-stat [stat]` - Use a different stat mod for the grappler
+`-tstat [stat]` - Use a different stat mod for the target
 
 You can do target specific, i.e, `-t OR1|dis` or `-c "GO1|-b 5"`
 
