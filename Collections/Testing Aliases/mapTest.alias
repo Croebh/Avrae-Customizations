@@ -1617,8 +1617,8 @@ elif not c or args.get('?') or args.get('help'):
              `n` - Hides the grid.
              `e` - Everything outside the map's edges becomes invisible.
              `f` - Use alternative grid/token font
-             `c<#>` - Sets the grid's unit size (in px). Default: 60.
-             `o<#>:<#>` - Offsets the background image (in px). Example: `!map -options o20:40` would offset it 20px down and 40px to the right.
+             `c<#>` - Sets the grid's unit size (in px). Default: 40 Minimum: 20 Maximum: 100
+             `o<#>:<#>` - Offsets the background image by x:y (in px). Example: `!map -options o20:40` would offset it 20px to the right and 40px down.
              Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change.
              You can set multiple settings at a time. Example: `!map -options dc70o10:20z2e`"
              -f "_ _|**__Backup / Restore__**
