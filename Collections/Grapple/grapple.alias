@@ -6,6 +6,9 @@ c        = combat()
 grappler = args.last("c", name)
 target   = args.last("t")
 
+grapplerStatOverride = args.last("stat")
+targetStatOverride = args.last("tstat")
+
 shove    = args.last('shove')
 trip     = args.last('trip')
 
@@ -28,12 +31,16 @@ else:
 
 # Do we have a *valid* target and grappler
 if grappler and target:
+  aOver,tOver = None, None
   # Lets grab args for the grappler
   if grappler.get_effect("Rage"):
    aArgs += " adv"
+  # Handle using different modifier
+  if grapplerStatOverride:
+   aOver = grappler.skills.athletics.value + grappler.stats.get_mod(grapplerStatOverride) - grappler.stats.get_mod('strength')
   args.add_context(grappler.name, argparse(aArgs))
   args.set_context(grappler.name)
-  aDice  = grappler.skills.athletics.d20(args.adv(boolwise=True))
+  aDice  = grappler.skills.athletics.d20(args.adv(boolwise=True),mod_override=aOver)
   aDice += '+' + args.join('b', '+') if args.last('b') else ''
 
   # And now for the target
@@ -44,10 +51,16 @@ if grappler and target:
     if target.get_effect("Rage"):
       args.add_context(target.name, argparse(tArgs + " adv"))
       args.set_context(target.name)
-    tDice = target.skills.athletics.d20(args.adv(boolwise=True))
+    # Handle using different modifier
+    if targetStatOverride:
+     tOver = target.skills.athletics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('strength')
+    tDice = target.skills.athletics.d20(args.adv(boolwise=True),mod_override=tOver)
     tType = "Athletics"
   else:
-    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True))
+    # Handle using different modifier
+    if targetStatOverride:
+     tOver = target.skills.acrobatics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('dexterity')
+    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True),mod_override=tOver)
     tType = "Acrobatics"
   tDice  += '+' + args.join('b', '+') if args.last('b') else ''
   # Roll the checks
@@ -69,6 +82,8 @@ else:
 
 `-b #` - Adds a bonus to the grapple check
 `adv`/`dis` - Rolls the check at dis/advantage
+`-stat [stat]` - Use a different stat mod for the grappler
+`-tstat [stat]` - Use a different stat mod for the target
 
 You can do target specific, i.e, `-t OR1|dis` or `-c \\\"GO1|-b 5\\\"`
 
