@@ -33,7 +33,9 @@ output, n = "", "\n"
 for context in t:
     context = context.split('|')
     if (tar := Com.get_combatant(context[0]) or Com.get_group(context[0])):
+        # context only args
         localargs = argparse(context[1] if len(context)>1 else [])
+
         # Get the local versions of the args we use
         lsources = ', '. join(sources+[x.name if Com.get_combatant(x) else x for x in localargs.get('source')])
         lcrit, ld, lc = localargs.last('crit'), localargs.get('d'), localargs.get('c')
@@ -43,11 +45,12 @@ for context in t:
         lneut, lresist, limmune, lvuln = localargs.get('neutral'),  localargs.get('resist'),  localargs.get('immune'),  localargs.get('vuln')
         rstring = ' '.join([f" -neutral {r}" for r in lneut+neut] + [f" -resist {r}" for r in lresist+resist]
                            + [f" -immune {r}" for r in limmune+immune] + [f" -vuln {r}" for r in lvuln+vuln])
+
+        # handle groups
         if typeof(tar) == 'SimpleGroup':
             tar = tar.combatants
         else:
             tar = [tar]
-        # handle groups
         for target in tar:
             target.add_effect(f'Temporary Resists for {ctx.alias}', rstring)
 
@@ -58,7 +61,7 @@ for context in t:
             output += f""" -f "{target.name}{f' is harmed by {lsources}' if lsources else ''}|{dmg.damage+n+target.hp_str()}" """
 
             # remove added resists
-            #target.remove_effect(f'Temporary Resists for {ctx.alias}')
+            target.remove_effect(f'Temporary Resists for {ctx.alias}')
 
 return f"""embed -title "Damage is Done!" {output}"""
 </drac2>
