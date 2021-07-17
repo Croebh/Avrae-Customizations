@@ -1,0 +1,64 @@
+<drac2>
+args = &ARGS&
+
+if not (args and (Com := combat())) or any(x for x in ['help','?'] if args[0] in x) : # Early out for help
+    desc = f"""{ctx.alias.title()} is a tool for dealing damage that accounts for resistances of a target in combat.
+    `{ctx.prefix+ctx.alias} <dice> [args]` - dice is damage dice to apply to all targets
+
+    **__Valid Arguments__**
+    `-t <name>` - adds a target for the damage, accepts groups. If not targets are given it will use the current combatant
+    `-t "<name>|<args>"` - allows for target specific args
+    `-source <name>` - adds a source for the damage. Matches to a combatant or use the text as-is if not found
+    `crit` - deal critical damage
+    `-crit dice <num>` - bonus dice to add to each dice group on critical
+    `-c "<dice>"` - bonus damage to deal on critical
+    `-d "<dice>"` - extra dice to add, most useful for applying to specific targets
+    `-resist <type>` - Gives the combatant resistance to the given damage type.
+    `-immune <type>` - Gives the combatant immunity to the given damage type.
+    `-vuln <type>` - Gives the combatant vulnerability to the given damage type.
+    `-neutral <type>` - Removes the combatants' immunity, resistance, or vulnerability to the given damage type.
+    `overheal` - allows negative damage to heal past a target's max hp
+    """
+    return f"""embed -title "Looking to Do Some Damage?" -desc "{desc}" """
+dice = args.pop(0) # Pull out the dice
+args = argparse(args) # Parse the rest
+
+t = args.get('t') or Com.current # Can be empty, apply to current instead
+sources = [Com.get_combatant(x).name if Com.get_combatant(x) else x for x in args.get('source')] # can be none, or those who did the damage
+crit, d, c = args.last('crit'), args.get('d'), args.get('c')
+critdice, overheal = args.get('critdice', type_=int), args.last('overheal')
+neut, resist, immune, vuln = args.get('neutral'),  args.get('resist'),  args.get('immune'),  args.get('vuln')
+output, n = "", "\n"
+
+for context in t:
+    context = context.split('|')
+    if (tar := Com.get_combatant(context[0]) or Com.get_group(context[0])):
+        localargs = argparse(context[1] if len(context)>1 else [])
+        # Get the local versions of the args we use
+        lsources = ', '. join(sources+[x.name if Com.get_combatant(x) else x for x in localargs.get('source')])
+        lcrit, ld, lc = localargs.last('crit'), localargs.get('d'), localargs.get('c')
+        lcritdice, loverheal = localargs.get('critdice', type_=int), localargs.last('overheal')
+        
+        # adding resistances requires a temporary effect
+        lneut, lresist, limmune, lvuln = localargs.get('neutral'),  localargs.get('resist'),  localargs.get('immune'),  localargs.get('vuln')
+        rstring = ' '.join([f" -neutral {r}" for r in lneut+neut] + [f" -resist {r}" for r in lresist+resist]
+                           + [f" -immune {r}" for r in limmune+immune] + [f" -vuln {r}" for r in lvuln+vuln])
+        if typeof(tar) == 'SimpleGroup':
+            tar = tar.combatants
+        else:
+            tar = [tar]
+        # handle groups
+        for target in tar:
+            target.add_effect(f'Temporary Resists for {ctx.alias}', rstring)
+
+            # apply it all to a damage
+            dmg = target.damage(dice, crit=crit or lcrit, d='+'.join(d+ld),
+                        c='+'.join(c+lc), critdice=sum(critdice+lcritdice),
+                        overheal=overheal or loverheal)
+            output += f""" -f "{target.name}{f' is harmed by {lsources}' if lsources else ''}|{dmg.damage+n+target.hp_str()}" """
+
+            # remove added resists
+            #target.remove_effect(f'Temporary Resists for {ctx.alias}')
+
+return f"""embed -title "Damage is Done!" {output}"""
+</drac2>
