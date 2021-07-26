@@ -66,6 +66,7 @@ prevLoc = ""
 newline, targD, aimD, quote = "\n", "{targ}", "{aim}", '\\"'
 # What characters do we need to strip from names?
 nameStrip = r"""'"()[]{}*?^%$&#/-~“”‘’"""
+targArg = None
 </drac2>
 
 <drac2>
@@ -224,6 +225,8 @@ if c:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
     out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+  else:
+    out[target.name]={}
 </drac2>
 
 <drac2>
@@ -257,7 +260,7 @@ if args.last('undo') and prevBack:
 
 <drac2>
 # Overlay stuff
-if c:
+if c and targArg:
   targ=gt(targArg[1])
   for overNum in [""]+[str(x) for x in range(1,11)]:
    # Is the user trying to set an overlay or underlay?

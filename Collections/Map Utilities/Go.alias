@@ -140,6 +140,8 @@ if c:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
     out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+  else:
+    out[target.name]={}
 </drac2>
 
 <drac2>
