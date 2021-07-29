@@ -133,10 +133,14 @@ for arg in anno.copy():
 # ---------------------------
 
 mathsep   = "+-()/*[]<>="
+wasList   = False
 if not (out or help):
  for annoGroup in [anno, targetsCache]:
   for key, string in annoGroup.items():
    # Get all parts enclosed in {braces}
+   if typeof(string) == 'SafeList':
+    string  = '&&&'.join(string)
+    wasList = True
    bracedSegments = [(part := part.split('{')[0])[:part.index('}')] for part in string.split('{') if '}' in part]
    stringOut = []
    # Iterate over each one
@@ -172,9 +176,12 @@ if not (out or help):
    for i, origin in enumerate(bracedSegments):
     string = string.replace("{"+origin+"}", str(stringOut[i]))
    # Roll our rollables
+   if wasList:
+    string  = string.split('&&&')
+    wasList = False
    if key in ["damage", "maxhp", "temphp", "dc", "roll", "n"]:
     if key in ["dc", "n"]:
-     annoGroup[key] =  roll(string)
+     annoGroup[key] = roll(string)
     elif key in ["maxhp", "temphp", "roll"]:
      annoGroup[key] = vroll(string)
     elif key == "damage":
@@ -199,6 +206,7 @@ if not (out or help):
  args.ignore('thp')
  args.ignore('pass')
  args.ignore('fail')
+ args.ignore('b')
 
 # ---------------
 # | Consumables |
@@ -364,6 +372,7 @@ if anno.get('seffect'):
 
 targets   = []
 targetOut = []
+targetArg = {}
 if init:
  for targ in targetsCache.values():
    targName, targArgs = (targ.split("|")+[""])[:2]
@@ -371,10 +380,12 @@ if init:
    if curTarg := init.get_combatant(targName.replace('{name}', name)):
     targets.append(curTarg)
     args.add_context(curTarg.name, targArgs)
+    targetArg[curTarg.name] = targArgs
    elif curTarg := init.get_group(targName):
     for gTarg in curTarg.combatants:
      targets.append(gTarg)
      args.add_context(gTarg.name, targArgs)
+     targetArg[gTarg.name] = targArgs
 
 # --------------------
 # | Main Target Loop |
@@ -411,15 +422,29 @@ if not (out or help) and valid:
   if not (gAutoPass or autoPass):
 
    # Figure out all of our save bonuses
-   save_bonus = anno.get("save_bonus", [])
-   adv = args.adv(boolwise=True)
+   save_bonus = anno.get("save_bonus", []) + args.get('b', [])
+   save_adv   = []
+   save_dis   = []
    for effect in target.effects:
     if (sb := effect.effect.get('sb')):
-      save_bonus.append(sb)
+     save_bonus.append(sb)
+    if (sadv := effect.effect.get('sadv')):
+     save_adv.extend(sadv)
+    if (sdis := effect.effect.get('sdis')):
+     save_dis.extend(sdis)
+
+   if save_type in save_adv or 'all' in save_adv:
+    args.add_context(target.name, argparse(targetArg[target.name] + ' adv'))
+   if save_type in save_dis or 'all' in save_dis:
+    args.add_context(target.name, argparse(targetArg[target.name] + ' dis'))
+
+   args.set_context(target.name)
+   adv = args.adv(boolwise=True)
 
    # Grab our save string and add our bonuses
    saveStr  = target.saves.get(save_type).d20(adv)
-   saveStr += '+'.join(save_bonus).replace('+-', '-')
+   if save_bonus:
+    saveStr += '+' + '+'.join(save_bonus).replace('+-', '-')
 
    # Roll the save and compare against the DC
    save     = vroll(saveStr)
