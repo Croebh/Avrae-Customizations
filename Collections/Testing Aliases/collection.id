@@ -1,9 +1,10 @@
 {
   "collection": "5f79188590e415e96a23ca58", 
   "aliases": {
+    "mapTest spelllist": "5ffaa722052554a14d396c17", 
     "equipT": "5f9db522bb7663bfd855a226", 
-    "thresh": "60022b94deab056568e69023", 
     "mapTest": "5f7fcc80f2d59b271872109d", 
+    "thresh": "60022b94deab056568e69023", 
     "dist": "5f8f0ee345ecc74b79b8e4bb"
   }, 
   "snippets": {}, 
