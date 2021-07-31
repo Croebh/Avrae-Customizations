@@ -1277,6 +1277,69 @@
   "alias": "targets",
   "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().get_combatant('or1')\n<AliasStatBlock name=OR1>"
  },
+ "combat().delete_metadata(k: str) → Optional[str]": {
+  "desc": "Removes a key from the metadata.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to remove."
+   }
+  ],
+  "returns": {
+   "type": "str or None",
+   "desc": "The removed value or `None` if the key is not found."
+  },
+  "url": "aliasing.api.combat.SimpleCombat.delete_metadata"
+ },
+ "combat().get_metadata(k: str, default=None) → str": {
+  "desc": "Gets a metadata value for the passed key or returns default if the name is not set.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to remove."
+   },
+   {
+    "name": "default",
+    "type": [
+     "any"
+    ],
+    "desc": "What to return if the name is not set."
+   }
+  ],
+  "returns": {
+   "type": "str or default",
+   "desc": "The removed value or `None` if the key is not found."
+  },
+  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+  "syntax": ">>> combat().get_metadata(\\\"Test\\\")\n'{\\\"Status\\\": [\\\"Mario\\\", 1, 2]}'"
+ },
+ "combat().set_metadata(k: str, v: str)": {
+  "desc": "Assigns a metadata key to the passed value. Maximum size of the metadata is 100k characters, key and item inclusive.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to set."
+   },
+   {
+    "name": "v",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata value to set."
+   }
+  ],
+  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+  "syntax": ">>> combat().set_metadata(\\\"Test\\\", dump_json({\\\"Status\\\": [\\\"Mario\\\", 1, 2]}))"
+ },
  "combat().get_group(name)": {
   "desc": "Gets a `SimpleGroup`, fuzzy searching (partial match) on name.",
   "param": [
@@ -1626,6 +1689,21 @@
   "desc": "The ID of the combatant's controller.",
   "url": "aliasing.api.combat.SimpleCombatant.controller",
   "returns": {"type":"int"}
+ },
+ "SimpleCombatant.creature_type": {
+  "desc": "The creature type of the combatant. Will return None for players or combatants with no creature type.",
+  "url": "aliasing.api.combat.SimpleCombatant.creature_type",
+  "returns": {"type":"str or None"}
+ },
+ "SimpleCombatant.monster_name": {
+  "desc": "The monster name of the combatant. Will return None for players.",
+  "url": "aliasing.api.combat.SimpleCombatant.monster_name",
+  "returns": {"type":"str or None"}
+ },
+ "SimpleCombatant.race": {
+  "desc": "The race of the combatant. Will return None for monsters or combatants with no race.",
+  "url": "aliasing.api.combat.SimpleCombatant.race",
+  "returns": {"type":"str or None"}
  },
  "SimpleCombatant.group": {
   "desc": "The name of the group the combatant is in, or `None` if the combatant is not in a group.",
