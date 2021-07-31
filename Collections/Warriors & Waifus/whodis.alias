@@ -5,7 +5,7 @@ average = 0
 levels = {}
 curTime = int(time())
 dmTimer = int(get('arenaDm', 0))
-gvar = load_json(get_gvar("1c6c0458-6a52-43ec-8ea8-55e170789f12"))
+gvar = load_json(get_gvar("5e8f9f82-616b-4828-b201-f0f9ea9368af"))
 sheetDict = {}
 newLine = "\n"
 for char in gvar:

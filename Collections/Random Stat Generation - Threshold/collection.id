@@ -1,1 +1,8 @@
-5f73c8df192fdca3888bc2f6
+{
+  "collection": "5f73c8df192fdca3888bc2f6", 
+  "aliases": {
+    "threshold": "5f73c8f4192fdca3888bc2f7"
+  }, 
+  "snippets": {}, 
+  "name": "Random Stat Generation - Threshold"
+}

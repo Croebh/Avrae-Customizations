@@ -1,1 +1,10 @@
-5f73d0c0647bb0a416316d3d
+{
+  "collection": "5f73d0c0647bb0a416316d3d", 
+  "aliases": {
+    "mitable": "5f73d0c8192fdca3888bc303", 
+    "hoard": "5f73d0d2647bb0a416316d3f", 
+    "treasure": "5f73d0cc647bb0a416316d3e"
+  }, 
+  "snippets": {}, 
+  "name": "Random Treasure Tables"
+}

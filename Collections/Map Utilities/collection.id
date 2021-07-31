@@ -1,1 +1,15 @@
-5f6a4623f4c89c324d6a5cd3
+
+{
+  "collection": "5f6a4623f4c89c324d6a5cd3", 
+  "aliases": {
+    "map": "5f6a462cf4c89c324d6a5cd4", 
+    "move": "5f6a52df192fdca3888bc237", 
+    "go": "5fcfe8fd30b59cacdc58b07b", 
+    "view": "5fcfea1f30b59cacdc58b07c", 
+    "distance": "5f6a54ef41432a679d1cddfb", 
+    "tokenimport": "5f6a55b641432a679d1cddfc", 
+    "se": "5fe1db9badefbcb30a94372b"
+  }, 
+  "snippets": {}, 
+  "name": "Map Utilities"
+}

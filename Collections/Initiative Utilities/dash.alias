@@ -1,4 +1,4 @@
-embed
+embed 
 <drac2>
 target, combatTarget = name if "&1"+"&"=="&1&" else "&1&", ""
 if combat() and combat().get_combatant(target):

@@ -45,6 +45,9 @@ Combat={combatant.name: {
          "note": combatant.note,
          "hp_str": combatant.hp_str(),
          "type": combatant.type,
+         "race": combatant.race,
+         "creature_type": combatant.creature_type,
+         "monster_name": combatant.monster_name,
          "levels": dict([("total_level", combatant.levels.total_level)] +
                         [(f'get(\\\"{clas[0]}\\\")',clas[1]) for clas in dict(combatant.levels).items()]),
          "resistances": {rType[0]: [{"dtype": rResist.dtype,

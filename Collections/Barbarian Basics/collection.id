@@ -1,1 +1,23 @@
-5f73c28d647bb0a416316d32
+{
+  "collection": "5f73c28d647bb0a416316d32", 
+  "aliases": {
+    "bolster": "5ff7ff07052554a14d396a02", 
+    "rage end": "5f7d6da6bbee1bca82ad2a59", 
+    "relentless": "5ff8251fdeab056568e688b2", 
+    "rage": "5f73c2a8647bb0a416316d33", 
+    "zealouspres": "5ff96f55052554a14d396b04", 
+    "rage nodmg": "5f7d6c36bbee1bca82ad2a57", 
+    "surge": "5f76e75f90e415e96a23c683", 
+    "rage bear": "5f76e79a4ded026d119cfb11"
+  }, 
+  "snippets": {
+    "bolster": "5ff7ff8bdeab056568e6888f", 
+    "furyn": "5f77628d90e415e96a23c73a", 
+    "fanatical": "603fe184f472696618204ea7", 
+    "reckless": "5f73c65e647bb0a416316d35", 
+    "rage": "5f73c642192fdca3888bc2f2", 
+    "furyr": "5f7762934ded026d119cfc02", 
+    "norage": "603fe2201e2241970bbef785"
+  }, 
+  "name": "Barbarian Basics"
+}
