@@ -280,7 +280,7 @@ if not args.last('i') and not (out or help):
   # If everything was valid, go through and modify them all
   for cc, ccUses in consumes["cc"].items():
    cc.set(cc.value + ccUses)
-   consumeOut.append(f""" -f "{cc.name} ({-ccUses:+})|{str(cc)}" """)
+   consumeOut.append(f""" -f "{cc.name} ({ccUses:+})|{str(cc)}" """)
   slotOut = []
   for slot, slotUses in consumes["slot"].items():
    user.spellbook.set_slots(slot, user.spellbook.get_slots(slot) + slotUses)
