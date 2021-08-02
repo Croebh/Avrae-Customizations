@@ -660,7 +660,7 @@ Arguments marked with **†** allow for variable evaluation via `{}`
 `-n #` - A set number, such as damage taken or a minimum total. Can be called with `{n}` **†**
 `-ndesc "[desc]"` - The description text used when `-n` is displayed in the meta field. Default is `Number`. **†**"
 
--f "Special Cvars|`{scale}` - Is replaced with cantrip scaling by default (1 till 5, then 2 till 11, etc). This scale can be overriden in a cvar loaded with `-cvar`, as follows: `{\\\"scale\\\": {\\\"1\\\":10, \\\"5\\\":20, \\\"11\\\":30, \\\"17\\\":40}}`
+-f "Special Cvars|`{scale}` - Is replaced with cantrip scaling by default (1 till 5, then 2 till 11, etc). This scale can be overriden as follows: `-scale '{\\\"1\\\":10, \\\"5\\\":20, \\\"11\\\":30, \\\"17\\\":40}'`
 `{spellDC}` - Is replaced with your sheets default Spell DC.
 `{spellAB}` - Is replaced with your sheets default Spell Attack Bonus."
 
