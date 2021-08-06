@@ -3,6 +3,7 @@ embed
 <drac2>
 
 VERSION = "5.0a"
+debug   = get('useDebug')
 
 # ------------------
 # | Constants, etc |
@@ -514,7 +515,7 @@ if not (out or help) and valid:
 
   else:
    # Do we have damage and half/avoid? If so, apply it and add to total
-   if targDamage:
+   if targDamage and (args.last('avoid') or args.last('half')):
     if args.last('avoid'):
      targDamage = f"""({targDamage})*0"""
     elif args.last('half'):
