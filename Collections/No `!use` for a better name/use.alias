@@ -2,7 +2,7 @@ embed
 
 <drac2>
 
-VERSION = "5.0a"
+VERSION = "5.0.1"
 debug   = get('useDebug')
 
 # ------------------
