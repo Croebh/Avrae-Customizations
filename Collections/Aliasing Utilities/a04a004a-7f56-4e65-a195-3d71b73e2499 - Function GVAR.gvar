@@ -207,7 +207,7 @@
     "type": [
      "any"
     ],
-    "The value to convert.": null
+    "desc": "The value to convert."
    }
   ],
   "returns": {
