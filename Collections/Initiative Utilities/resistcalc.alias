@@ -28,7 +28,7 @@ args = argparse(args)  # Parse the rest
 t = args.get('t') or Com.current  # Can be empty, apply to current instead
 # can be none or a combatant
 globalsources = [Com.get_combatant(x).name if Com.get_combatant(x) else x for x in args.get('source')]
-globalcrit = args.last('crit')
+globalcrit = args.last('crit', False, bool)
 globald = args.get('d')
 globalc = args.get('c')
 globalcritdice = args.get('critdice', type_=int)
@@ -44,7 +44,7 @@ for context in t:
         localargs = argparse(context[1] if len(context) > 1 else [])
         # Get the local versions of the args we use
         sources = ', '. join(globalsources+[x.name if Com.get_combatant(x) else x for x in localargs.get('source')])
-        crit = localargs.last('crit') + globalcrit
+        crit = localargs.last('crit', False, bool) + globalcrit
         d = '+'.join(localargs.get('d') + globald)
         c = '+'.join(localargs.get('c') + globalc)
         critdice = sum(localargs.get('critdice', type_=int) + globalcritdice)
