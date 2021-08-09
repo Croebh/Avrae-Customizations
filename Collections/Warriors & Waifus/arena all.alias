@@ -4,8 +4,8 @@ embed
 # Load the current values, and update for the current character
 # On the off chance they ran `!arena all` before running the new `!arena`
 arenaTimer = load_json(get('arenaTimers','{}'))
-arenaTimer[name] = {"duel":    int(get('arenaDuel', 0)),
-                     "monster": int(get('arenaMonster', 0))}
+arenaTimer[name] = {"duel":    int(get('arenaDuel',    0)),
+                    "monster": int(get('arenaMonster', 0))}
 set_uvar('arenaTimers', dump_json(arenaTimer))
 
 dm     = int(get('arenaDm', 0))
@@ -25,23 +25,21 @@ for char, timers in arenaTimer.items():
 
   # Calculate their duel timer
   duel    = timers['duel'] + DAY - curTime
-  duelTime = (duel//HOUR, (duel%HOUR)//60, duel%60) if duel > 0 else 0
 
   # Calculate their monster fight timer
   monster = timers['monster'] + WEEK - curTime
-  monsterTime = (monster//HOUR, (monster%HOUR)//60, monster%60) if monster>0 else 0
 
   # If either of the timers aren't up, do things
-  if duelTime or monsterTime:
+  if duel > 0 or monster > 0:
     curOut = f""" -f "{char}|"""
 
     # Display the duel timer if there is one
-    if duelTime:
-      curOut += "\n**Duel:** " + f"{f'{duelTime[0]} Hours, ' if duelTime[0] else ''}{f'{duelTime[1]} Minutes, ' if duelTime[1] and not duelTime[0] else ''}".strip(', ') or f"{duelTime[2]} Seconds"
+    if duel > 0:
+      curOut += f"\n**Duel:** <t:{timers['duel'] + DAY}:R>"
 
     # Display the monster fight timer if there is one
-    if monsterTime:
-      curOut += "\n**Monster Fight:** " + f"{f'{monsterTime[0]//24} Days, ' if monsterTime[0]//24 else ''}{f'{monsterTime[0]%24} Hours, ' if monsterTime[0]%24 else ''}{f'{monsterTime[1]} Minutes, ' if monsterTime[1] and not [monsterTime][0] else ''}".strip(', ') or f"{monsterTime[2]} Seconds"
+    if monster > 0:
+      curOut += f"\n**Monster Fight:** <t:{timers['monster'] + WEEK}:R>"
     curOut += '|inline"'
 
     # Add it to the output
@@ -49,26 +47,10 @@ for char, timers in arenaTimer.items():
 
 # If a timer exists, calculate remaining time
 if dm:
-  dm = (dm + WEEK - curTime)
-  # Is the timer still running?
-  if dm > 0:
-    # Calculate human parseable times (Days, Hours, Minutes, Seconds)
-    DMTime = (dm//DAY, (dm%DAY)//HOUR, (dm%HOUR)//60, dm%60)
-# If the timer is running (or just set), lets parse it out to text
-if dm > 0:
-  DMOut = ""
-  if DMTime[0]:
-    DMOut += f'{DMTime[0]} Days, '
-  if DMTime[1]:
-    DMOut += f'{DMTime[1]} Hours, '
-  # We only want to show minutes if theres under a day remaining
-  if DMTime[2] and not DMTime[0]:
-    DMOut += f'{DMTime[2]} Minutes'
-  DMOut = DMOut.strip(", ")
-  # We only want to show seconds if theres under a minute remaining
-  if not DMOut:
-    DMOut = f"{DMTime[3]} Seconds"
-  out.append(f""" -f "DM Experience|{DMOut}|inline" """)
+  # If the timer is running, display output
+  if (dm + WEEK - curTime) > 0:
+    DMOut = f"<t:{dm + WEEK}:R>"
+    out.append(f""" -f "DM Experience|{DMOut}|inline" """)
 
 # If any of our characters had timers to display, display em
 if out:
