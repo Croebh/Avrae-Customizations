@@ -1,11 +1,13 @@
 {
   "collection": "5f6bf59f647bb0a416316ca6", 
   "aliases": {
-    "vroll": "5f798bae90e415e96a23caef", 
     "function": "5f6bf5e3647bb0a416316ca8", 
+    "vroll": "5f798bae90e415e96a23caef", 
     "combatbegin": "5f73d02e647bb0a416316d3c", 
     "gvarcopy": "5f798b9890e415e96a23caed", 
-    "browse": "5f6e95b7647bb0a416316cde"
+    "browse": "5f6e95b7647bb0a416316cde", 
+    "workshop": "611773326d4679c05cbe0155"
   }, 
+  "snippets": {}, 
   "name": "Aliasing Utilities"
 }

@@ -1,0 +1,46 @@
+embed
+-title "Alias Lookup"
+-color 0000FF
+<drac2>
+gvar = load_json(get_gvar('af2fd307-8ab2-4e97-97f5-459d11fccc62'))
+newline = "\n"
+term = "&*&"
+terms = &ARGS&
+Results = []
+out = []
+
+if term:
+  for alias in gvar:
+    if term.lower() == alias.lower():
+      Results = [alias]
+      break
+    if term.lower() in alias.lower() or all([term.lower() in alias.lower() for term in terms]):
+      Results.append(alias)
+else:
+  return f""" -desc "`{ctx.prefix}workshop [search]` to look up an alias.\nIf multiple similar, aim for an exact match." """
+
+if not all([gvar[result].get('deprecated') for result in Results]):
+  Results = [result for result in Results if not gvar[result].get('deprecated')]
+
+if len(Results) == 1:
+  alias = Results[0]
+  aliasInfo = gvar[alias]
+  aliasDesc = newline.join([f"> {i}" for i in aliasInfo.desc.splitlines()])
+  aliasTags = ", ".join(aliasInfo.tags)
+  if len(aliasDesc) > 1024:
+    aliasDesc = newline.join(aliasDesc[:900].splitlines()[:-1])[:900] + "\n... [description truncated due to length]"
+  out.append(f""" -title "{alias}"
+  -f "Information|Author: {"<@" + aliasInfo.o + ">"}{newline}Tags: {aliasTags}{newline}[Workshop Link](https://avrae.io/dashboard/workshop/{aliasInfo.id})" 
+  -f "Description|{aliasDesc }" """)
+  return newline.join(out)
+else:
+  out = f""" -title "List of aliases containing {f'`{term}`' if len(terms)==1 else '`' + '` and `'.join(terms) + '`'  if len(terms)<=2 else ', '.join(terms[:-1]) + f'`, and `{terms[-1]}`'} ({len(Results)} Found) "  """
+  Results = [f"""[{result}](https://avrae.io/dashboard/workshop/{gvar[result].id})""" for result in Results]
+  if len(Results):
+    out += f""" -desc "{newline.join(Results[:41])}
+    {f"({len(Results)-41} results not shown)" if len(Results)>41 else ""}" """
+  else:
+    out += """ -desc "*No Results Found*" """
+  return out + " -color 00FF00"
+</drac2>
+-f "Workshop Information Last Updated: {{"<t:" + "1628925174" + ":R>"}}"
