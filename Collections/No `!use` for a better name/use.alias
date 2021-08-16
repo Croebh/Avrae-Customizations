@@ -524,6 +524,11 @@ if not (out or help) and valid:
     totalDamage += targDamage.total
     tOut.append(targDamage.damage)
 
+  # Check for concentration
+  targConc = any([i for i in target.effects if i.conc])
+  if targDamage and targConc:
+    tOut.append(f"""**Concentration:** DC {max(10,(targDamage.total//2))}""")
+
   # Add our target output to the list
   if tOut:
    targetOut.append(f""" -f "{target.name}|{NewLine.join(tOut)}|inline" """)

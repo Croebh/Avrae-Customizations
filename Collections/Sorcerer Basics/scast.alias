@@ -52,7 +52,7 @@ Allows the user to cast spells and use meta magic appropriately.
 Unfortunately, due to the nature of both meta magic and Avrae, there's no real way to actually apply any of the effects automatically. This alias mostly exists to display the text and subtract Sorcery Points.
 
 For Careful and Heightened meta magic, use target specific args.
-For example: `-t or1|pass careful`, or `-t or2|dis heighten`
+For example: `-t or1|pass careful`, or `-t or2|sdis heighten`
 
 For Empowered, you'll need to reroll and apply the difference in damage separately. The alias can't detect the dice rolls of the spells. Sorry.
 
