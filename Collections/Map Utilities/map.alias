@@ -690,7 +690,7 @@ if c:
       # Add the line to the overlay list
       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
       # Display the change in location
-      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
+      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if bool(get_svar('trueDistance') or get('trueDistance')) else distance} ft.).")
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
@@ -1020,7 +1020,10 @@ if c:
        # Calculate the delta for X and Y between the two
        deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
        # Throw them in the pot with some pythag
-       distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+       distanceT = round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0)
+       if (height := out[mTarg.name].get('height')):
+        distanceT = (round(sqrt((distanceT*distanceT) + (height*height)),2))
+       distanceT *= 5
        # We want the positive delta (wish we had abs(), sigh)
        deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
        # Doing 5ft diag's, the distance is just the higher delta
@@ -1033,7 +1036,7 @@ if c:
        # Add the line to the overlay list
        overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
        # Display the change in location
-       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
+       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if bool(get_svar('trueDistance') or get('trueDistance')) else distance} ft.).")
     else:
      # Display the change in location
      desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
