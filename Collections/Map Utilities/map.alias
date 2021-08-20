@@ -1021,7 +1021,7 @@ if c:
        deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
        # Throw them in the pot with some pythag
        distanceT = round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0)
-       if (height := out[mTarg.name].get('height')):
+       if (height := int(out[mTarg.name].get('height', 0))):
         distanceT = (round(sqrt((distanceT*distanceT) + (height*height)),2))
        distanceT *= 5
        # We want the positive delta (wish we had abs(), sigh)
