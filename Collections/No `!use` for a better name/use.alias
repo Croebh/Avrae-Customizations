@@ -526,7 +526,7 @@ if not (out or help) and valid:
 
   # Check for concentration
   targConc = any([i for i in target.effects if i.conc])
-  if targDamage and targConc:
+  if targDamage and typeof(targDamage) != 'str' and targConc:
     tOut.append(f"""**Concentration:** DC {max(10,(targDamage.total//2))}""")
 
   # Add our target output to the list

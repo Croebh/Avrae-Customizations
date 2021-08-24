@@ -34,7 +34,7 @@ if len(Results) == 1:
   if len(aliasDesc) > 1024:
     aliasDesc = newline.join(aliasDesc[:900].splitlines()[:-1])[:900] + "\n... [description truncated due to length]"
   out.append(f""" -title "{alias}"
-  -f "Information|**Author:** {"<@" + aliasInfo.o + ">"}{newline}**Tags:** {aliasTags}{newline}[Workshop Link](https://avrae.io/dashboard/workshop/{aliasInfo.id})" 
+  -f "Information|**Author:** {"<@" + aliasInfo.o + ">"}{newline}**Tags:** {aliasTags}{newline}[Workshop Link](https://avrae.io/dashboard/workshop/{aliasInfo.id}){newline}`{ctx.prefix}alias subscribe https://avrae.io/dashboard/workshop/{aliasInfo.id}`" 
   """)
   if not hide:
     out.append(f""" -f "Description|{aliasDesc}" """)
