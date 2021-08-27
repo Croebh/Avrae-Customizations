@@ -322,7 +322,7 @@ if anno.get('effect'):
  # If its two, its args and duration
  elif len(eSplit) == 2:
    effect["args"] = eSplit.pop(0)
-   effect["dur"]  = eSplit.pop(0)
+   effect["dur"]  = eSplit.pop(0) or -1
  # If its 3 or more, and has -attack, account for that
  elif len(eSplit) >= 3 and '-attack' in anno.get('effect'):
    # Count how many -attack are in the args
