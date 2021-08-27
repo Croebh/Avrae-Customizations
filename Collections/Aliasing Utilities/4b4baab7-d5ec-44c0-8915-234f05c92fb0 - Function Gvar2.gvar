@@ -142,10 +142,6 @@
    "type": "str"
   }
  },
- "SimpleRollResult.__str__()": {
-  "desc": "Equivalent to result.full.",
-  "url": "aliasing.api.functions.SimpleRollResult.__str__"
- },
  "argparse(args).add_context(context, args)": {
   "desc": "Adds contextual parsed arguments (arguments that only apply in a given context)",
   "url": "utils.argparser.ParsedArguments.add_context",
