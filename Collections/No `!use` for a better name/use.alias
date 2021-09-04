@@ -551,7 +551,7 @@ if not (out or help) and valid:
    if not sEffect.get('created') and not 'parent' in sEffect.get('args'):
     user.add_effect(sEffect["name"], sEffect["args"], sEffect["dur"], sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"))
     sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sEffect["name"])]
-   for effect in sEffect.get("created"):
+   for effect in sEffect.get("created", []):
     userOut.append(f"""**Effect:** {str(effect).splitlines()[0]}""")
 
 if userOut:
