@@ -114,7 +114,7 @@
    "You are accused of cheating. Whether the allegation is true or not, your reputation is tarnished.\nThe character has disadvantage on Charisma checks for 1d4+1 IRL days beginning at the end of the downtime.",
    "You accidentally deliver a near-fatal wound to a foe.\nThe character is banned from pit fighting briefly, extending the cooldown on this downtime by two days beginning at the end of the time."
   ],
-  "desc": "A reminder that this downtime activity can only be used once per IRL week by each character.\n\nStrength (Athletics) (`!c athl -dc X`)\nDexterity (Acrobatics) (`!c acro -dc X`)\nConstitution, with a bonus die equal to your highest hit dice (`!c cons -b 1d# -dc X`, where # is the size of your hit die)\n\nYou may replace one check with an attack (`!a ATTACKNAME -ac X`, where X is the DC for the check you replaced)\n\n**Winnings**\n```\nSuccesse(s) | Gold\n------------|-------\n0           | 0\n1           | 50\n2           | 100\n3           | 200\n```",
+  "desc": "Strength (Athletics) (`!c athl -dc X`)\nDexterity (Acrobatics) (`!c acro -dc X`)\nConstitution, with a bonus die equal to your highest hit dice (`!c cons -b 1d# -dc X`, where # is the size of your hit die)\n\nYou may replace one check with an attack (`!a ATTACKNAME -ac X`, where X is the DC for the check you replaced)\n\n**Winnings**\n```\nSuccesse(s) | Gold\n------------|-------\n0           | 0\n1           | 50\n2           | 100\n3           | 200\n```",
   "url": "https://www.dndbeyond.com/sources/xgte/downtime-revisited#PitFighting"
  },
  "religious": {
