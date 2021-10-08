@@ -5,21 +5,48 @@
  },
  "SimpleGroup.type": {
   "desc": "The type of the object (\\\"group\\\"), to determine whether this is a group or not.",
-  "url": "aliasing.api.combat.SimpleGroup.combatants.type",
+  "url": "aliasing.api.combat.SimpleGroup.type",
+  "type": {
+   "name": "str"
+  }
+ },
+ "SimpleGroup.id": {
+  "desc": "The group’s unique identifier.",
+  "url": "aliasing.api.combat.SimpleGroup.id",
   "type": {
    "name": "str"
   }
  },
  "SimpleGroup.name": {
   "desc": "The name of the group.",
-  "url": "aliasing.api.combat.SimpleGroup.combatants.name",
+  "url": "aliasing.api.combat.SimpleGroup.name",
   "type": {
    "name": "str"
   }
  },
+ "SimpleGroup.init": {
+  "desc": "What the group rolled for initiative.",
+  "url": "aliasing.api.combat.SimpleGroup.init",
+  "type": {
+   "name": "int"
+  }
+ },
+ "SimpleGroup.set_init(init: int)": {
+  "desc": "Sets the group’s initiative roll.",
+  "url": "aliasing.api.combat.SimpleGroup.set_init",
+  "param": [
+   {
+    "name": "init",
+    "type": [
+     "int"
+    ],
+    "desc": "The new initiative."
+   }
+  ]
+ },
  "SimpleGroup.get_combatant(name)": {
   "desc": "Gets a SimpleCombatant, fuzzy searching (partial match) on name.",
-  "url": "aliasing.api.combat.SimpleGroup.combatants.get_combatant",
+  "url": "aliasing.api.combat.SimpleGroup.get_combatant",
   "param": [
    {
     "name": "name",
@@ -439,6 +466,13 @@
   "url": "aliasing.api.context.AliasChannel.topic",
   "returns": {
    "type": "str"
+  }
+},
+ "ctx.channel.parent": {
+  "desc": "If this channel is a thread, the thread’s parent channel, or None otherwise.",
+  "url": "aliasing.api.context.AliasChannel.parent",
+  "returns": {
+   "type": "AliasChannel"
   }
 },
  "ctx.channel.category": {

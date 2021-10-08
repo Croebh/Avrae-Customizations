@@ -1358,6 +1358,23 @@
   "url": "aliasing.api.combat.SimpleCombat.get_group",
   "syntax": ">>> combat().get_group('Gobbos')\nGobbos (3 combatants)\n>>> combat().get_group('Gobbos').combatants\n[<AliasStatBlock name=GO1>, <AliasStatBlock name=GO2>, <AliasStatBlock name=GO3>]"
  },
+ "combat().set_round(round_num: int)": {
+  "desc": "Sets the current round.\nSetting the round will not tick any events with durations.",
+  "param": [
+   {
+    "name": "round_num",
+    "type": [
+     "int"
+    ],
+    "desc": "The new round number"
+   }
+  ],
+  "url": "aliasing.api.combat.SimpleCombat.set_round"
+ },
+ "combat().end_round()": {
+  "desc": "Moves initiative to just before the next round (no active combatant or group).\nEnding the round will not tick any events with durations.",
+  "url": "aliasing.api.combat.SimpleCombat.end_round"
+ },
  "SimpleCombatant.effects": {
   "url": "aliasing.api.combat.SimpleCombatant.effects",
   "desc": "A list of SimpleEffect active on the combatant.",
@@ -1373,6 +1390,14 @@
    "name": "int"
   },
   "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
+ },
+ "SimpleCombatant.id": {
+  "url": "aliasing.api.combat.SimpleCombatant.id",
+  "desc": "The combatant’s unique identifier.",
+  "type": {
+   "name": "str"
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.id\n'd7c8e9fc-3531-44d8-8608-f42e03881d19'"
  },
  "SimpleCombatant.initmod": {
   "url": "aliasing.api.combat.SimpleCombatant.initmod",

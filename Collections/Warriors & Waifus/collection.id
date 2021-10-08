@@ -1,20 +1,21 @@
 {
-  "collection": "5fe2a8fe032beeab196950dd", 
+  "name": "Warriors & Waifus", 
   "aliases": {
-    "complications": "5fe2cf8e032beeab19695103", 
-    "whatrace": "5fe2aeee032beeab196950e1", 
-    "magicinit": "5ff55f66adefbcb30a9446e3", 
-    "insightful": "5fecec50adefbcb30a94402e", 
-    "dtcalc": "60da4012b10134897864b15e", 
-    "shadowcast": "5ff47b91adefbcb30a9445da", 
-    "arena": "5fe2a926adefbcb30a9437fc", 
-    "feycast": "5ff28650032beeab19695c50", 
     "arena all": "5fe2b13a032beeab196950e4", 
     "whatclass": "5fe2b488032beeab196950eb", 
+    "insightful": "5fecec50adefbcb30a94402e", 
+    "feycast": "5ff28650032beeab19695c50", 
+    "whatrace": "5fe2aeee032beeab196950e1", 
     "pearl": "5fe6a94d032beeab196953b7", 
+    "magicinit": "5ff55f66adefbcb30a9446e3", 
+    "complications": "5fe2cf8e032beeab19695103", 
+    "lookup": "613d343409a9904197d2833a", 
+    "dtcalc": "60da4012b10134897864b15e", 
+    "shadowcast": "5ff47b91adefbcb30a9445da", 
     "whatyeen": "5fe82648adefbcb30a943bf8", 
+    "arena": "5fe2a926adefbcb30a9437fc", 
     "whodis": "5fe2bdffadefbcb30a943810"
   }, 
-  "snippets": {}, 
-  "name": "Warriors & Waifus"
+  "collection": "5fe2a8fe032beeab196950dd", 
+  "snippets": {}
 }

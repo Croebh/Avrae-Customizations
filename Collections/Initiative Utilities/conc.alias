@@ -24,7 +24,7 @@ if c and (target := c.get_combatant(target)):
              (f' + {max(1, (target.stats.get_mod("int")))} [bladesong]' if bladesong else '')
  concRoll   = vroll(rollString)
  success    = concRoll.total >= dc
- concOut    = f"""-title "{target.name} makes a Concentration check!"
+ concOut    = f"""-title "{target.name} makes a Concentration Save!"
  -desc "**DC {dc}**
  {concRoll}; {["Failure! Concentration Dropped", "Success!"][success]}" """
  if not success:
@@ -43,7 +43,7 @@ elif target == name:
              (f' + {max(1, (target.stats.constitution-10)//2)} [bladesong]' if bladesong else '')
  concRoll   = vroll(rollString)
  success    = concRoll.total >= dc
- concOut    = f"""-title "{name} makes a Concentration check!"
+ concOut    = f"""-title "{name} makes a Concentration Save!"
  -desc "**DC {dc}**
  {concRoll}; {["failure!", "success!"][success]}" """
 else:

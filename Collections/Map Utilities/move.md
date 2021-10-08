@@ -1,5 +1,7 @@
 This alias exists as a shortcut for players moving their token with the `!map` alias. `!move A3` is the equivalent to `!map -t ActiveCharacter -move A3`
 
+If you want, you can override the default target with a `-t`: `!map A3 -t SomeoneElse`
+
 More detailed help can be found inside the alias:
 
 `!map help` - Basic Commands and Tokens

@@ -74,6 +74,8 @@ else:
     else:
         # We aint find shit, bois :-(
         out += """ -desc "*No Results Found*" """
+    if searchTerm.endswith('()'):
+        out += """ -f "Closed Parentheses|You ended your search term with `()`, but if the function you're looking for takes arguments, this won't catch them. Try omitting the `)` to allow for arguments." """
     return out + " -color 00FF00"
 </drac2>
 

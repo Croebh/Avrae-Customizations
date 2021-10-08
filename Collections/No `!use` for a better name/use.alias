@@ -681,7 +681,7 @@ You can also set a svar named `useResources` to have a server set as well.
 Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """ + f"""  -footer "{footerBase}"  """
 
 if out:
- arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc", "scale", "nosave"]
+ arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc", "scale", "nosave", "noself"]
  for consum in ["cc", "ccnum", "slot", "slotnum", "item", "itemqty"]:
   arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1, 11)])
  quotes='\\"'

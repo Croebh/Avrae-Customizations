@@ -1,0 +1,17 @@
+embed <drac2>
+gvar = load_json(get_gvar("5e8f9f82-616b-4828-b201-f0f9ea9368af"))
+if not &ARGS& and str(topic := ctx.channel.topic).startswith("Characters: "):
+  args = [i.strip() for i in topic[12:].lower().split(',')]
+else:
+  args = [arg.lower().replace("'","’") for arg in &ARGS&]
+out, n = [], "\n"
+for char in gvar:
+  for arg in args:
+    if arg in char.name.lower() or arg in char.player.lower():
+      out.append(char.copy())
+
+output = {f"""**{char.name.replace('"',"").replace("'",'')}** ({char.player.replace('"',"").replace("'",'')}) - [SHEET]({char.sheet})""" for char in out}
+return (f""" -desc "Search terms `{' '.join(args)}`{n}{n.join(output) or "No results found."}" """ if args else "")
+</drac2>
+-footer "Search by player names with `!lookup \"player1\" \"player2\"`
+If the channel description is `Characters: Name1, Name2, Name3`, it will default to searching for them."

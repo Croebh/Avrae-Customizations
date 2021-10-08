@@ -1135,7 +1135,7 @@ if args.last('tokenimport'):
          tokenoutput += b64_index[int(leftover+('0' * 2), base=2)]
          tokenoutput += '='
 
- return f"""-title "Token Import" -desc "Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`" """
+ return f"""-title "Token Import" -desc "Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`\nBy default it tries to focus in on the face of the token, you can disable this by using `-token [shortcode]~`." """
 </drac2>
 
 <drac2>
@@ -1782,7 +1782,7 @@ elif (not c or args.get('?') or args.get('help')) and not args.get("tokenimport"
              -f "_ _|**__Customizing tokens__**
              `-color <color>` - Sets the token's colour. `-color none` will reset it. Valid colours below.
              `-tokenimport <url>` - Takes an image url and prints its shortcode.
-             `-token <shortcode>` - Places an image on a targeted token.
+             `-token <shortcode>` - Places an image on a targeted token. By default it tries to focus in on the face of the token, if it detects one. You can disable this by using `-token [shortcode]~`.
              `-size <size>` - Sets the token's size. `-size none` will reset it. Valid sizes below.
              `-height <+/-#>` - Sets the target's position relative to the ground, which will be displayed above the map. `-height none` will reset it."
              -f "_ _|**__Other commands__**
