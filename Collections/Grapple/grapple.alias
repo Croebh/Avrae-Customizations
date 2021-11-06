@@ -3,7 +3,7 @@ embed
 # Baseline Variables
 args     = argparse(&ARGS&)
 c        = combat()
-grappler = args.last("c", name)
+grappler = args.last("c", name if not c or not c.current or c.me else c.current.name)
 target   = args.last("t")
 
 grapplerStatOverride = args.last("stat")
