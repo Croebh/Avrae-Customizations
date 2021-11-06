@@ -1,0 +1,78 @@
+embed
+-title "Automation Reference"
+-color 0000FF
+<drac2>
+gvar = load_json(get_gvar('36400b92-ee54-4005-a413-eb57863edf8c'))
+newline = "\n"
+searchTerm = "&*&"
+searchTerms = &ARGS&
+searchResults = []
+out = []
+
+# If we have a search term
+if searchTerm:
+    # Loop through our gvar
+    for func in gvar:
+        # Is it an exact match?
+        if searchTerm.lower() == func.lower():
+            searchResults = [func]
+            break
+        # Or does it fuzzy match all our terms
+        elif searchTerm.lower() in func.lower() or all([term.lower() in func.lower() for term in searchTerms]):
+            searchResults.append(func)
+else:
+    # I guess we'll display the basic help, then
+    return f""" -desc "`{ctx.prefix}{ctx.alias} [search]` to look up an automation effect/variables.\nIf multiple similar, aim for an exact match.
+
+**Options:**
+{newline.join([f'''[`{i}`](https://avrae.rtfd.io/en/stable/automation_ref.html#{gvar[i].url})''' for i in gvar])}" """
+
+if not all([gvar[result].get('deprecated') for result in searchResults]):
+    searchResults = [result for result in searchResults if not gvar[result].get('deprecated')]
+
+if len(searchResults) == 1:
+    # We found it, bois!
+    func = searchResults[0]
+    funcInfo = gvar[func]
+    if (opt := funcInfo.get('opt')):
+        for opt_name, opt_info in opt.items():
+            if typeof(opt_info) == 'SafeDict':
+                opt_out = [f"""**{i_name}** - {i_info}""" for i_name, i_info in opt_info.items()]
+            else:
+                opt_out = [opt_info]
+            out.append(f""" -f "{opt_name.title()}|{newline.join(opt_out)}" """)
+    if (var := funcInfo.get("variables")):
+        var_out = [f"""`{var_name}` (*{var_info.type}*) - {var_info.desc}""" for var_name, var_info in var.items()]
+        out.append(f""" -f "Variables|{newline.join(var_out)}" """)
+    # And for syntax
+    if (syntax := funcInfo.get("syntax")):
+        out.append(f""" -f "Syntax|```yaml
+{syntax}
+```" """)
+    ts = ""
+    if funcInfo.get('ts'):
+        ts = f"""
+    ```yaml
+{funcInfo.ts}
+```"""
+    out.append(f""" -title "{func}"
+    -desc "{funcInfo.desc}{ts}"
+    -f "[Link](https://avrae.rtfd.io/en/stable/automation_ref.html#{funcInfo.url})" """)
+    return newline.join(out)
+else:
+    # I guess we didn't find what we're looking for
+    searchResults = [f"[~~`{result}`~~](https://avrae.rtfd.io/en/stable/automation_ref.html#{gvar[result].url})" if gvar[result].get('deprecated') else f"[`{result}`](https://avrae.rtfd.io/en/stable/automation_ref.html#{gvar[result].url})" for result in searchResults]
+    out = f""" -title "List of automation effects/variables containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
+    if len(searchResults):
+        # We found possibilities, bois!
+        num = 41
+        out += f""" -desc "{newline.join(searchResults[:41])}
+        {f"({len(searchResults)-41} results not shown)" if len(searchResults)>41 else ""}" """
+    else:
+        # We aint find shit, bois :-(
+        out += """ -desc "*No Results Found*" """
+    return out + " -color 00FF00"
+</drac2>
+
+-f "ReadTheDocs|A full list of Automation Effects can be found at [avrae.rtfd.io](https://avrae.rtfd.io/en/stable/automation_ref.html)"
+-footer "All of these effects and variables are for *Automation*, and will not work inside of aliases/snippets."

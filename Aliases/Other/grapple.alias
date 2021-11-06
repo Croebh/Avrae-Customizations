@@ -1,8 +1,0 @@
-{{a=&ARGS&}}{{G=a[a.index('-m')+1] if '-m' in a and len(a)>=a.index('-m') else None}}{{f"""mc "{G}" """ if G else 'c'}} {{dc=([int(i) for i in a if i.isdigit()]+[None])[0]}}{{c=(["acrobatics" if a[i] in "acrobatics" else "athletics" for i in range(len(a)) if a[i-1]=="-c" and a[i].lower() in 'acrobaticsathletics']+[None])[0]}}{{g=get_raw().skills if not G else None}}{{s=(c if c else 'athletics') if G else('athletics' if not dc else ('athletics' if g.athletics>g.acrobatics else 'acrobatics'))}}{{s}}
--title "{{name if not G else 'An unknown creature' if '-h' in a else G.title()}} makes an {{s.title()}} check! (Grapple{{' Contest' if dc else ''}})" 
--phrase "{{"The target must make an opposed Strength (Athletics) or Dexterity (Acrobatics) check. If you succeed, it is subjected to the grappled condition." if not dc else "On failure, you are subjected to the grappled condition."}}"
-{{'' if not dc else  f"-dc {dc}"}}
-{{' '.join(a)}}
--f "Help|`-m [name​]` to choose a monster
-`-c [check​]` to choose a skill for a monster
-`[number​]` to set the dc for a contest"

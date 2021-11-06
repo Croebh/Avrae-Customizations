@@ -15,7 +15,7 @@ if c and (target := c.get_combatant(t) or c.current):
     if spell.name in knownSpells:
       spellDict[spell.level].append(spell.name)
   for spell in knownSpells:
-    if (innate := target.spellbook.remaining_casts_of(spell, 0)).startswith("**"):
+    if (innate := target.spellbook.remaining_casts_of(spell, 1)).startswith("**"):
       slots.append(innate)
 
   if spellDict:
