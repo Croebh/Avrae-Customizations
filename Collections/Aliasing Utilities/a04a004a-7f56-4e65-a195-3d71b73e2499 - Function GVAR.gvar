@@ -251,13 +251,20 @@
   "syntax": ">>> args = argparse(\\\"adv -rr 2 -b 1d4[bless]\\\")\n>>> args.adv()\n1\n>>> args.last('rr')\n'2'\n>>> args.get('b')\n['1d4[bless]']"
  },
  "character()": {
-  "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
+  "desc": "The character’s actions. These do not include attacks - see the `attacks` property.",
   "url": "aliasing.evaluators.ScriptingEvaluator.character",
   "returns": {
    "type": "AliasCharacter",
    "desc": "The active character."
   },
   "syntax": ">>> char = character()\n>>> char.sheet_type\n\\\"beyond\\\"\n>>> str(char)\n<AliasStatBlock name=Croebh>"
+ },
+ "character().actions": {
+  "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
+  "url": "aliasing.evaluators.ScriptingEvaluator.AliasCharacter.actions",
+  "returns": {
+   "type": "list[AliasAction]"
+  }
  },
  "combat()": {
   "desc": "Returns the combat active in the channel if one is. Otherwise, returns `None`.",
@@ -1258,8 +1265,8 @@
   },
   "syntax": ">>> combat().turn_num\n17"
  },
- "combat().get_combatant(name)": {
-  "desc": "Gets a `SimpleCombatant`, fuzzy searching (partial match) on name.",
+ "combat().get_combatant(name, strict=None)": {
+  "desc": "Gets a `SimpleCombatant` by its name or ID.",
   "param": [
    {
     "name": "name",
@@ -1267,11 +1274,18 @@
      "str"
     ],
     "desc": "The name of the combatant to get."
+   },
+   {
+    "name": "strict",
+    "type": [
+     "bool"
+    ],
+    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
    }
   ],
   "returns": {
-   "type": "SimpleCombatant",
-   "desc": "The combatant."
+   "type": "SimpleCombatant or SimpleGroup or None",
+   "desc": "The combatant or group or None."
   },
   "url": "aliasing.api.combat.SimpleCombat.get_combatant",
   "alias": "targets",
@@ -1340,8 +1354,8 @@
   "url": "aliasing.api.combat.SimpleCombat.get_metadata",
   "syntax": ">>> combat().set_metadata(\\\"Test\\\", dump_json({\\\"Status\\\": [\\\"Mario\\\", 1, 2]}))"
  },
- "combat().get_group(name)": {
-  "desc": "Gets a `SimpleGroup`, fuzzy searching (partial match) on name.",
+ "combat().get_group(name, strict=None)": {
+  "desc": "Gets a `SimpleGroup` that matches on name.",
   "param": [
    {
     "name": "name",
@@ -1349,10 +1363,17 @@
      "str"
     ],
     "desc": "The name of the group to get."
+   },
+   {
+    "name": "strict",
+    "type": [
+     "bool"
+    ],
+    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
    }
   ],
   "returns": {
-   "type": "SimpleGroup",
+   "type": "SimpleGroup or None",
    "desc": "The group."
   },
   "url": "aliasing.api.combat.SimpleCombat.get_group",
@@ -1374,6 +1395,14 @@
  "combat().end_round()": {
   "desc": "Moves initiative to just before the next round (no active combatant or group).\nEnding the round will not tick any events with durations.",
   "url": "aliasing.api.combat.SimpleCombat.end_round"
+ },
+ "combat().name": {
+  "desc": "Returns the name of the combat, or None if a name is not set.",
+  "url": "aliasing.api.combat.SimpleCombat",
+  "returns": {
+   "type": "Str or None",
+   "desc": "The name of the combat."
+  }
  },
  "SimpleCombatant.effects": {
   "url": "aliasing.api.combat.SimpleCombatant.effects",

@@ -1,0 +1,26 @@
+embed
+<drac2>
+signature_id = "&*&"
+if signature_id:
+    sig = verify_signature(signature_id)
+
+    url = f"""https://discord.com/channels/{sig.guild_id}/{sig.channel_id}/{sig.message_id}"""
+    workshop = f"""| **[Workshop URL](https://avrae.io/dashboard/workshop/{sig.workshop_collection_id})**""" if sig.workshop_collection_id else ""
+
+    return f""" -title "Verifying Signature"
+    -desc "**Author**: <@!{sig.author_id}>
+    **Time:** <t:{int(sig.timestamp)}> <t:{int(sig.timestamp)}:R>
+    **Scope:** {sig.scope}
+    **User Data:** {sig.user_data}
+    **[Link to Message]({url})** {workshop}
+
+    **Channel:** {sig.channel}
+    **Server:** {sig.guild}
+    "
+
+    -footer "Signature: {signature_id}
+    {ctx.prefix}{ctx.alias} <signature>" """
+return f""" -title "Signature Verification" -desc "`{ctx.prefix}{ctx.alias} <signature>`
+
+Verifies a given signature, outputting the data stored within it for easy parsing." """
+</drac2>

@@ -16,6 +16,9 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 Servers can set a default set of args by setting an svar named `threshold`:
 Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
 
+
+In the footer of the alias when it rolls stats, it will show a signature. You can use `!threshold verify <signature>` to verify that a stat roll was made using the server alias.
+
 **Support Us**
 You can support me and this alias at [Ko-Fi](https://ko-fi.com/croebh)
 

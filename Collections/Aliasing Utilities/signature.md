@@ -1,0 +1,1 @@
+Verifies a given signature, outputting the data stored within it for easy parsing.

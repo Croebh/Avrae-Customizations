@@ -29,9 +29,9 @@ help  = not a or args.last('?') or args.last('help')
 
 # Loop through our resources uvar/svar
 cgvar = {}
-for gvar in load_json(get_svar('useResources', '[]')) + load_json(get('resources','[]')):
+for gvar in load_yaml(get_svar('useResources', '[]')) + load_yaml(get('resources','[]')):
  # If its a valid gvar, add it to the list
- if (gvarLoad := get_gvar(gvar)) and typeof((gvarLoad := load_json(gvarLoad)))=="SafeDict":
+ if (gvarLoad := get_gvar(gvar)) and typeof((gvarLoad := load_yaml(gvarLoad)))=="SafeDict":
   cgvar.update(gvarLoad)
  # Otherwise, inform the user that it was invalid
  else:
@@ -43,16 +43,16 @@ cvar  = args.last('cvar') or (a[0] if a else {})
 if not (help or out) and (input := (get(cvar) or cgvar.get(cvar))):
  # If it was a cvar and not in the gvar, load it as a json
  if typeof(input) == "str":
-  input = load_json(input)
+  input = load_yaml(input)
  # Loop over each item in the var
  for arg, item in input.items():
   # If it was a list (such as preset targets), add them all
   if typeof(item) == "SafeList":
    for iterItem in item:
-    c.extend([f"-{arg}", iterItem])
+    c.extend([f"-{arg}", str(iterItem)])
   # Otherwise just add it
   else:
-   c.extend([f"-{arg}", item])
+   c.extend([f"-{arg}", str(item)])
 
 # Reparse with the new arg list
 args = argparse(c + a)
@@ -71,7 +71,7 @@ anno["roll"]        = args.last("roll",  "", str)
 # Default to cantrip scaling
 if scaleDict := args.last('scale', {"1" : 1, "5" : 2, "11" : 3, "17" : 4}):
   if typeof(scaleDict) == "str":
-   scaleDict = load_json(scaleDict.replace("'", '"'))
+   scaleDict = load_yaml(scaleDict.replace("'", '"'))
 scale = 0
 for lvl, value in scaleDict.items():
  if user.levels.total_level >= int(lvl):
@@ -81,7 +81,7 @@ for lvl, value in scaleDict.items():
 spellDC             = user.spellbook.dc
 spellAB             = user.spellbook.sab
 
-bags = load_json(get('bags', '[]'))
+bags = load_yaml(get('bags', '[]'))
 
 # One Off
 anno["dc"]          = args.last('dc',   "10", str)
@@ -293,7 +293,7 @@ if not args.last('i') and not (out or help):
     bags[info[0]][1][item] = bags[info[0]][1][item] - info[1]
     consumeOut.append(f""" -f "Items remaining in `{bags[info[0]][0]}`|{item} ({-info[1]:+}): {bags[info[0]][1][item]}" """)
    else:
-    character().set_cvar("bags", dump_json(bags))
+    character().set_cvar("bags", dump_yaml(bags))
 
  # Otherwise, something would go out of bounds, cancel everything and inform the user
  else:
@@ -359,6 +359,8 @@ if anno.get('seffect'):
    aCount = anno.get('effect').count('-attack')*3
    effect["args"] = '|'.join(eSplit[:aCount])
    effect["dur"]  = (eSplit[aCount:] or [-1])[0]
+ if effect["dur"] == "":
+   effect["dur"] = -1
 
  # Handle our special arguments
  effectArgs = argparse(effect["args"])
@@ -678,7 +680,7 @@ The cvar resources should contain a list of gvars, for example:
 > `!cvar resources [\\"2a2deaec-180c-4d03-818c-879e465f1c0a\\"]`
 You can also set a svar named `useResources` to have a server set as well.
 
-Those gvars should consist of a JSON dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """ + f"""  -footer "{footerBase}"  """
+Those gvars should consist of a JSON/YAML dictionary. Each item would contain a cvar. You can look up the above example gvar (`!gvar 2a2deaec-180c-4d03-818c-879e465f1c0a`) to see exactly how. It contains two cvars, `smite` and `lay`." """ + f"""  -footer "{footerBase}"  """
 
 if out:
  arg_list = ["s", "save", "dc", "h", "b", "pass", "fail", "t", "d", "half", "title", "phrase", "desc", "thumb", "color", "image", "avoid", "i", "xroll", "thp", "max", "n", "effect", "effectdesc", "seffect", "seffectdesc", "scale", "nosave", "noself"]
@@ -686,7 +688,7 @@ if out:
   arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1, 11)])
  quotes='\\"'
  cout = {x : (args.last(x) if x not in ['t', 'phrase'] else args.get(x)) for x in arg_list if x in args} if out else ''
- return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_json(cout).replace('"',quotes)}{NewLine}{'`' * 3}" -footer "{footerBase}" """
+ return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_yaml(cout).replace('"',quotes)}{NewLine}{'`' * 3}" -footer "{footerBase}" """
 else:
  return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets] + [footerBase])}" """
 </drac2>

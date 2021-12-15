@@ -16,6 +16,9 @@ if "bear" == get("l3totem", "").lower():
          "force",   "lightning", "cold",
          "poison",  "radiant",   "acid"]
 
+image = args.last('image', '')
+thumb = args.last('thumb', '')
+
 C   = c.get_combatant(r) if c else""
 v   = (cc_exists(cc) and get_cc(cc)>0) or i or lvl >= 20
 
@@ -41,3 +44,5 @@ if C and v:
 -desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if cc_exists(cc) else f"""You do not have this ability {'(Missing a **c**ustom **c**ounter named `Rage`. See `!help cc create` for how to make one manually, or run the `!level` alias as a Barbarian and it will make one for you.)' if lvl else ''}"""}}{{out}}"
 {{f""" -f "Rages{f" (-1)" if v and not i and lvl<20 else ""}|{"Unlimited"if lvl>=20 else cc_str(cc) if cc_exists(cc) else"*None*"}" """ if not args.last("t") else ""}}
 -footer "Barbarian | PHB 48" -color <color>
+{{f"-image {image}" if image else ''}}
+{{f"-thumb {thumb}" if thumb else ''}}
