@@ -24,8 +24,8 @@ else:
     # I guess we'll display the basic help, then
     return f""" -desc "`{ctx.prefix}{ctx.alias} [search]` to look up an automation effect/variables.\nIf multiple similar, aim for an exact match.
 
-**Options:**
-{newline.join([f'''[`{i}`](https://avrae.rtfd.io/en/stable/automation_ref.html#{gvar[i].url})''' for i in gvar])}" """
+    **Options:**
+    {newline.join([f'''[`{i}`](https://avrae.rtfd.io/en/stable/automation_ref.html#{gvar[i].url})''' for i in gvar])}" """
 
 if not all([gvar[result].get('deprecated') for result in searchResults]):
     searchResults = [result for result in searchResults if not gvar[result].get('deprecated')]
@@ -65,7 +65,6 @@ else:
     out = f""" -title "List of automation effects/variables containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
     if len(searchResults):
         # We found possibilities, bois!
-        num = 41
         out += f""" -desc "{newline.join(searchResults[:41])}
         {f"({len(searchResults)-41} results not shown)" if len(searchResults)>41 else ""}" """
     else:

@@ -1,15 +1,16 @@
 {
-  "aliases": {
-    "autoref": "616e5d563252c1a86b70f9a6", 
-    "vroll": "5f798bae90e415e96a23caef", 
-    "gvarcopy": "5f798b9890e415e96a23caed", 
-    "signature": "619d3fe72b6f629b63ba132b", 
-    "combatbegin": "5f73d02e647bb0a416316d3c", 
-    "function": "5f6bf5e3647bb0a416316ca8", 
-    "browse": "5f6e95b7647bb0a416316cde", 
-    "workshop": "611773326d4679c05cbe0155"
-  }, 
   "collection": "5f6bf59f647bb0a416316ca6", 
+  "aliases": {
+    "vroll": "5f798bae90e415e96a23caef", 
+    "autoref": "616e5d563252c1a86b70f9a6", 
+    "combatbegin": "5f73d02e647bb0a416316d3c", 
+    "gvarcopy": "5f798b9890e415e96a23caed", 
+    "browse": "5f6e95b7647bb0a416316cde", 
+    "exportAttack": "61bb214b56999f9b483612bd", 
+    "workshop": "611773326d4679c05cbe0155", 
+    "function": "5f6bf5e3647bb0a416316ca8", 
+    "signature": "619d3fe72b6f629b63ba132b"
+  }, 
   "name": "Aliasing Utilities", 
   "snippets": {}
 }
