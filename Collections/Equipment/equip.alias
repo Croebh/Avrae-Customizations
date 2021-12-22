@@ -44,4 +44,4 @@ if chosenWeapon:
  desc = "\n\n".join(desc)
  tag = " (2H)" if twohanded else " (Offhand)" if offhand else " (1H)" if chosenWeapon.get("vers") and not("Unarm" in chosenWeapon.name and not unarmed) else ""
  cmd = f'''attack add "{customName if customName else chosenWeapon.name}{tag}" -b "{tohit}" {f""" -d "{damageDice}" """ if damageDice else ""} -desc "{desc}" {verb} {critd} {criton} {"proper"*proper}'''
-return get_gvar(g.help) if not &ARGS& or args.last("help") else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if args.last('t') else cmd</drac2>
+return get_gvar(g.help) if not &ARGS& or args.last("help") or not chosenWeapon else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if args.last('t') else cmd</drac2>

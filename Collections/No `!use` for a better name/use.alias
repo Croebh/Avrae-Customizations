@@ -31,7 +31,7 @@ help  = not a or args.last('?') or args.last('help')
 cgvar = {}
 for gvar in load_yaml(get_svar('useResources', '[]')) + load_yaml(get('resources','[]')):
  # If its a valid gvar, add it to the list
- if (gvarLoad := get_gvar(gvar)) and typeof((gvarLoad := load_yaml(gvarLoad)))=="SafeDict":
+ if (gvarLoad := get_gvar(gvar)) and typeof((gvarLoad := load_yaml(gvarLoad.replace('\t','  '))))=="SafeDict":
   cgvar.update(gvarLoad)
  # Otherwise, inform the user that it was invalid
  else:
@@ -293,7 +293,7 @@ if not args.last('i') and not (out or help):
     bags[info[0]][1][item] = bags[info[0]][1][item] - info[1]
     consumeOut.append(f""" -f "Items remaining in `{bags[info[0]][0]}`|{item} ({-info[1]:+}): {bags[info[0]][1][item]}" """)
    else:
-    character().set_cvar("bags", dump_yaml(bags))
+    character().set_cvar("bags", dump_json(bags))
 
  # Otherwise, something would go out of bounds, cancel everything and inform the user
  else:
