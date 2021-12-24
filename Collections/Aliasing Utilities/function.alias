@@ -69,7 +69,7 @@ else:
     out = f""" -title "List of functions/methods containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
     if len(searchResults):
         # We found possibilities, bois!
-        num=35
+        num=32
         out += f""" -desc "{newline.join(searchResults[:num])}
         {f"({len(searchResults)-num} results not shown)" if len(searchResults)>num else ""}" """
     else:
