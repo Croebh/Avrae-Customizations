@@ -34,7 +34,7 @@ EMOJI = {
         }
 
 stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]
-number = int(([2] + [i for i in &ARGS& if i.isdigit()])[-1])
+number = int(([20] + [i for i in &ARGS& if i.isdigit()])[-1])
 
 if not stats:
   return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob." """
@@ -60,7 +60,7 @@ for i in range(1, 21):
   cur = randchoice(classes) 
   out[cur] = out.get(cur, 0) + 1
   OUT.append(EMOJI[cur])
-return f"""-title "{" ".join(title)} Multiclass Stupidity (Maximum {len(out)})" 
+return f"""-title "{"/".join(title)} {"Multiclass" if len(out) != 1 else "Class"} Stupidity (Maximum {len(out)})" 
            -f "Totals|{" ".join([f"{x[0]} {x[1]}" for x in out.items()])}" 
            -f "Choices|{N.join(["".join(OUT[i:i+5]) for i in range(0, 20, 5)])}"
            -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob." """
@@ -68,4 +68,6 @@ return f"""-title "{" ".join(title)} Multiclass Stupidity (Maximum {len(out)})"
 
 -f "Testimonials|croebh pls no that's pain. - Mima
 oh dear god it's hideous - Matt
-what even is that for... \<explains\> ...*why* - Kermit"
+what even is that for... \<explains\> ...*why* - Kermit
+A suitable replacement for `!randchar` - zhu.exe, creator of Avrae (and `!randchar`)
+This feature saved my marriage 10/10 - Felix"
