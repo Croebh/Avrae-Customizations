@@ -1,0 +1,71 @@
+embed
+<drac2>
+STATS = {
+          "str": "Strength",
+          "dex": "Dexterity",
+          "int": "Intelligence",
+          "wis": "Wisdom",
+          "cha": "Charisma"
+        }
+
+CLASSES = {
+            "str": ["Fighter", "Barbarian", "Paladin"],
+            "dex": ["Rogue", "Monk", "Ranger", "Fighter"],
+            "int": ["Wizard", "Artificer"],
+            "wis": ["Cleric", "Druid", "Monk", "Ranger"],
+            "cha": ["Sorcerer", "Bard", "Warlock", "Paladin"]
+          }
+
+EMOJI = {
+          "Sorcerer": "<:sorcerer:908398771652685915>", 
+          "Bard": "<:bard:908398771304562769>", 
+          "Warlock": "<:warlock:908398772218888202>", 
+          "Paladin": "<:paladin:908398771723980830>",
+          "Cleric": "<:Cleric:908398770818023434>",
+          "Artificer": "<:artificer:908398770373398538>",
+          "Barbarian": "<:barbarian:908398771237437562>",
+          "Blood Hunter": "<:bloodhunter:908398771648466994>",
+          "Druid": "<:druid:908398771677843516>",
+          "Fighter": "<:fighter:908398771958874132>",
+          "Monk": "<:monk:908398771749126174>",
+          "Ranger": "<:ranger:908398771782692924>",
+          "Rogue": "<:rogue:908398771812040724>",
+          "Wizard": "<:wizard:908398771979821066>"
+        }
+
+stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]
+number = int(([2] + [i for i in &ARGS& if i.isdigit()])[-1])
+
+if not stats:
+  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob." """
+
+set_classes = []
+title = []
+for stat in stats:
+  set_classes.extend(CLASSES[stat])
+  title.append(STATS[stat])
+set_classes = list({c for c in set_classes})
+
+classes = []
+for i in range(number):
+  classes.append(set_classes.pop(roll(f"1d{len(set_classes)}-1")))
+  if not set_classes:
+    break
+
+out = {} 
+OUT = []
+N   = "\n"
+
+for i in range(1, 21):
+  cur = randchoice(classes) 
+  out[cur] = out.get(cur, 0) + 1
+  OUT.append(EMOJI[cur])
+return f"""-title "{" ".join(title)} Multiclass Stupidity (Maximum {len(out)})" 
+           -f "Totals|{" ".join([f"{x[0]} {x[1]}" for x in out.items()])}" 
+           -f "Choices|{N.join(["".join(OUT[i:i+5]) for i in range(0, 20, 5)])}"
+           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob." """
+</drac2>
+
+-f "Testimonials|croebh pls no that's pain. - Mima
+oh dear god it's hideous - Matt
+what even is that for... \<explains\> ...*why* - Kermit"
