@@ -126,10 +126,18 @@
       "end": "*optional, default false* - Whether the effect timer should tick on the end of the turn, rather than start.",
       "conc": "*optional, default false* - Whether the effect requires concentration.",
       "desc": "*optional* - The description of the effect (displays on combatant’s turn).",
-      "stacking": "*optional, default false* - If true, if another effect with the same name is found on the target, instead of overwriting, add a child effect with name `{name} x{count}` and no description, duration, or concentration."
+      "stacking": "*optional, default false* - If true, if another effect with the same name is found on the target, instead of overwriting, add a child effect with name `{name} x{count}` and no description, duration, or concentration.",
+      "save_as": "*optional, default None* - If supplied, saves an `IEffectMetaVar` to the automation runtime, which can be used in another IEffect’s `parent` key to set its parent to this effect. Must be a valid identifier.",
+      "parent": "*optional, default None* - If supplied, sets the created effect’s parent to the given effect. This must be the name of an existing `IEffectMetaVar`.\n - If `parent` is supplied but the parent effect does not exist, will not set a parent.\n - If `conc` is true, the given parent effect will take priority over the concentration effect.\n - If `stacking` is true and a valid stack parent exists, the stack parent will take priority over the given parent."
     },
     "url": "ieffect",
-    "ts": "{\n  type: \\\"ieffect\\\";\n  name: string;\n  duration: int | IntExpression;\n  effects: AnnotatedString;\n  end?: boolean;\n  conc?: boolean;\n  desc?: AnnotatedString;\n  stacking?: boolean;\n}"
+    "ts": "{\n  type: \\\"ieffect\\\";\n  name: string;\n  duration: int | IntExpression;\n  effects: AnnotatedString;\n  end?: boolean;\n  conc?: boolean;\n  desc?: AnnotatedString;\n  stacking?: boolean;\n  save_as?: string;\n  parent?: string;\n}",
+    "variables": {
+      "(supplied save_as)": {
+        "type": "IEffectMetaVar or None",
+        "desc": "A reference to the effect that was added to the target. Use this in another IEffect’s `parent` key to set that IEffect’s parent to the given one."
+      }
+    }
   },
   "Roll": {
     "desc": "Rolls some dice and saves the result in a variable. Displays the roll and its name in a Meta field, unless `hidden` is `true`.",
