@@ -18,7 +18,9 @@ if searchTerm:
             searchResults = [func]
             break
         # Or does it fuzzy match all our terms
-        elif searchTerm.lower() in func.lower() or all([term.lower() in func.lower() for term in searchTerms]):
+        elif searchTerm.lower() in func.lower() or \
+             all([term.lower() in func.lower() for term in searchTerms]) or \
+             any([True for var in gvar[func].get('variables', []) if searchTerm.lower() in var.lower()]):
             searchResults.append(func)
 else:
     # I guess we'll display the basic help, then

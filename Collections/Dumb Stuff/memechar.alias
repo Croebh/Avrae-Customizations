@@ -3,10 +3,10 @@ embed
 STATS = {
           "str": "Strength",
           "dex": "Dexterity",
+          "con": f"Constitution ({ctx.author.display_name} is a GOOB)",
           "int": "Intelligence",
           "wis": "Wisdom",
-          "cha": "Charisma",
-          "con": "Constitution"
+          "cha": "Charisma"
         }
 
 CLASSES = {
@@ -15,7 +15,7 @@ CLASSES = {
             "int": ["Wizard", "Artificer"],
             "wis": ["Cleric", "Druid", "Monk", "Ranger"],
             "cha": ["Sorcerer", "Bard", "Warlock", "Paladin"],
-            "con": ["Fighter", "Barbarian", "Paladin", "Rogue", 
+            "con": ["Fighter", "Barbarian", "Paladin", "Rogue", "Blood Hunter", 
                     "Monk", "Ranger", "Wizard", "Artificer", 
                     "Cleric", "Druid", "Sorcerer", "Bard", "Warlock"]
           }
@@ -37,20 +37,24 @@ EMOJI = {
           "Wizard": "<:wizard:908398771979821066>"
         }
 
-testimonials = ["croebh pls no that's pain. - Mima",
+TESTIMONIALS = ["croebh pls no that's pain. - Mima",
                 "oh dear god it's hideous - Matt",
                 "what even is that for... \<explains\> ...why - Kermit",
                 "A suitable replacement for `!randchar` - zhu.exe, creator of Avrae (and `!randchar`)",
                 "This feature saved my marriage 10/10 - Felix",
                 "hey man all im saying is it's a good way to bet on who wins connect four - Quentin",
                 "I paid nothing but I want my money back. - Zmeya",
-                "is ~~no longer~~ ashamed of `!memechar...` - Kori"]
+                "is ~~no longer~~ ashamed of `!memechar...` - Kori",
+                "I puked a little - Zmeya",
+                "You're a testimonial - Zmeya"]
+
+testimonial = f"""({TESTIMONIALS.index(testimonial := randchoice(TESTIMONIALS))+1}/{len(TESTIMONIALS)})|{testimonial}"""
 
 stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]
 number = int(([20] + [i for i in &ARGS& if i.isdigit()])[-1])
 
 if not stats:
-  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob." """
+  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!" """
 
 set_classes = []
 title = []
@@ -107,11 +111,18 @@ for dline in diag:
   if len(cur) == 1:
     possible_wins.append(f"Win for {cur[0]}, Diagonal")
 
+# Stats!
+statrolls = []
+if argparse(&ARGS&).last('stats'):
+  dice = "1d20"
+  statrolls = '\n'.join([f"""**{stat.upper()}:** {vroll(dice)}""" for stat in STATS])
+
 return f"""-title "{"/".join(title)} {"Multiclass" if len(out) != 1 else "Class"} Stupidity (Maximum {len(out)})" 
            -f "Totals|{" ".join([f"{x[0]} {x[1]}" for x in out.items()])}" 
            -f "Choices|{N.join(["".join(i) for i in board])}"
-           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob."
-           -f "Connect 4|{N.join(possible_wins) if possible_wins else "No wins!"}" """
+           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!"
+           -f "Connect 4|{"You only got one class!" if len(out)==1 else N.join(possible_wins) if possible_wins else "No wins!"}"
+           {f''' -f "Stats|{statrolls}" ''' if statrolls else ""} """
 </drac2>
 
--f "Testimonials (1/{{len(testimonials)}})|{{randchoice(testimonials)}}"
+-f "Testimonials {{testimonial}}"
