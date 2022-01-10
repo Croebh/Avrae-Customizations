@@ -4,6 +4,7 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 
 `-dice <dice>` - The dice to be rolled for each stat. Default: `4d6kh3`
 `-rr <#>` - The number of sets to be displayed. Default: 1
+`-stats <#>` - The number of stats to roll.  Default: 6
 `-tries <#>` - The number of attempts it will try to find sets matching the rules.
 `straight` - Will assign stats to each score.
 
@@ -12,6 +13,7 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 
 `-over <#|amount>` - Requires `amount` of rolls that are above `#`. Can be repeated 
 `-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
+
 
 Servers can set a default set of args by setting an svar named `threshold`:
 Example: `!svar threshold -min 70 -over 14|1 -under 11|1`
