@@ -1,0 +1,7 @@
+test {{err("You must enter arguments of some kind, otherwise it's going to try to pass some blank braces into an f-string and it doesn't like that. Enter something contained in 'help?' to get the minimal help there is for the alias or enter a formula using `level` as a variable in it to get right into testing formulas.") if not "&*&" else ""}}
+**Formula Test by Level** <drac2>
+if '&*&' in 'help?':
+ return '''\nThis alias is for checking the math of level based formulas. Use `level` in the formula where it would go, like `!formtest 1+floor((level+1)/6)` is cantrip scaling while `!formtest floor((level+7)/4)` is proficiency bonus scaling.'''
+else:
+ return '''\n**Entered Formula:** &*&\n'''+'\n'.join([f"**{level}:** {&*&}" for level in range(1,21)])
+</drac2>
