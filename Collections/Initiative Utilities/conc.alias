@@ -2,9 +2,9 @@ embed
 
 <drac2>
 c = combat()
+args = argparse(&ARGS&)
 target = args.last('t', name)
 self = target == name
-args = argparse(&ARGS&)
 
 warcaster = 'warcaster' in get('feats', '').lower().replace(' ', '') and self
 mind = 'eldritch mind' in get('invocations', '').lower() and self
