@@ -42,12 +42,14 @@ if grappler and target:
   # Note to self, add `acro` an `athl` for args to select this
   if target.skills.athletics.value > target.skills.acrobatics.value and not args.last('acro'):
     if target.get_effect("Rage"):
-      args.add_context(target.name, argparse(tArgs + " adv"))
+      args.add_context(target.name, argparse(tArgs + " tadv"))
       args.set_context(target.name)
-    tDice = target.skills.athletics.d20(args.adv(boolwise=True))
+    # use tadv/tdis for grappler adv/dis
+    tDice = target.skills.athletics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}))
     tType = "Athletics"
   else:
-    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True))
+    # use tadv/tdis for grappler adv/dis
+    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}))
     tType = "Acrobatics"
   tDice  += '+' + args.join('b', '+') if args.last('b') else ''
   # Roll the checks
