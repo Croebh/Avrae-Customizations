@@ -35,9 +35,9 @@ if Min:
 if Max:
   rules.append(f"""Maximum of {Max}""")
 for m, t in over.items():
-  rules.append(f"""Atleast {t} over {m}""")
+  rules.append(f"""At least {t} over {m}""")
 for m, t in under.items():
-  rules.append(f"""Atleast {t} under {m}""")
+  rules.append(f"""At least {t} under {m}""")
 
 # If we aren't displaying the help, lets roll some dice
 a = []
