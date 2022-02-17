@@ -117,4 +117,5 @@ Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`"
 
 -title "{{"Ugh, randchar spam" if help else "Generating Random Stats:"}}"
 
--footer "{{ctx.prefix}}{{ctx.alias}} help{{(f" | Fun Fact: That took {attempts} attempts to find valid stats.") if not help else '' # Some people enjoy this statistic}}"
+-footer "{{ctx.prefix}}{{ctx.alias}} help{{(f" | Fun Fact: That took {attempts} attempts to find valid stats.") if not help else '' # Some people enjoy this statistic}}
+{{"Signature: " + signature(bool(defaults and &ARGS&)) if not help else ''}}"

@@ -8,7 +8,8 @@
         "int": "Affects the Nth target (1-indexed)",
         "\\\"self\\\"": "Affects the caster"
       },
-      "effects": "A list of effects that each targeted creature will be subject to."
+      "effects": "A list of effects that each targeted creature will be subject to.",
+      "sortBy": "optional - Whether to sort the target list. If not given, targets are processed in the order the `-t` arguments are seen. This does not affect `self` targets.\n\n`hp_asc`: Sorts the targets in order of remaining hit points ascending (lowest HP first, None last).\n`hp_desc`: Sorts the targets in order of remaining hit points descending (highest HP first, None last)."
     },
     "variables": {
       "target": {
@@ -18,10 +19,18 @@
       "targetIteration": {
         "type": "int",
         "desc": "If running multiple iterations (i.e. `-rr`), the current iteration (1-indexed)."
+      },
+      "targetIndex": {
+        "type": "int",
+        "desc": "The index of the target in the list of targets processed by this effect (0-indexed - first target = `0`, second = `1`, etc.). Self targets and nth-targets (`target: \\\"self\\\"` and `target: int`) will always be 0."
+      },
+      "targetNumber": {
+        "type": "int",
+        "desc": "Same as `targetIndex`, but 1-indexed (equivalent to `targetIndex + 1`)."
       }
     },
     "url": "target",
-    "ts": "{\n  type: \\\"target\\\";\n  target: \\\"all\\\"|\\\"each\\\"|int|\\\"self\\\";\n  effects: Effect[];\n}"
+    "ts": "{\n  type: \\\"target\\\";\n  target: \\\"all\\\"|\\\"each\\\"|int|\\\"self\\\";\n  effects: Effect[];\n  sortBy?: \\\"hp_asc\\\" | \\\"hp_desc\\\";\n}"
   },
   "Attack": {
     "desc": "An Attack effect makes an attack roll against a targeted creature. It must be inside a Target effect.",
@@ -149,6 +158,10 @@
       "hidden": "*optional* - If `true`, won’t display the roll in the Meta field, or apply any bonuses from `-d`."
     },
     "variables": {
+      "(supplied name)": {
+        "type": "RollEffectMetaVar",
+        "desc": "The result of the roll. You can use this in an AnnotatedString to retrieve the simplified result of the roll, or in an IntExpression to retrieve the roll total. Note that using this variable in an AnnotatedString will always return a string that itself can be rolled."
+      },
       "lastRoll": {
         "type": "int",
         "desc": "The total of the roll."
