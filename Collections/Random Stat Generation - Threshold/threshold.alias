@@ -13,6 +13,7 @@ Max      = args.last("max", type_ = int)
 dice     = args.last("dice", "4d6kh3", str)
 rr       = args.last("rr", 1, int)
 straight = 'straight' in args
+amt      = args.last('stats', 6, int)
 
 # Add our -over and -under to dicts
 over = {}
@@ -51,7 +52,7 @@ if args and not help:
     curOver   = over.copy()
     curUnder  = under.copy()
     curSum    = 0
-    for i in range(6):
+    for i in range(amt):
       curRoll = vroll(dice)
       curSet.append(curRoll)
       curTot.append(curRoll.total)
@@ -86,7 +87,7 @@ if args and not help:
   out = []
   for i, stat in enumerate(a, 1):
     out.append(f""" -f "Stats {f"#{i}" if len(a)>1 else ""}|
-{newline.join([(f"**{stats[x]}:** "*straight)+str(stat[x]) for x in range(6)])}
+{newline.join([(f"**{stats[x]}:** " if straight and amt == 6 else f'**Stat {x+1}:** ')+str(stat[x]) for x in range(amt)])}
 -----
 Total =  `{sum([i.total for i in stat])}`|inline" """)
   # Return all the things
@@ -101,7 +102,8 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 
 `-dice <dice>` - The dice to be rolled for each stat. Default: `4d6kh3`
 `-rr <#>` - The number of sets to be displayed. Default: 1
-`straight` - Will assign stats to each score.
+`-stats <#>` - The number of stats to roll.  Default: 6
+`straight` - Will assign stats to each score. Only works if `-stats` is missing or is 6.
 
 `-min <#>` - The minimum total of the combined rolls.
 `-max <#>` - The maximum total of the combined rolls.
