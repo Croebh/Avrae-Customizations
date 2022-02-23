@@ -19,11 +19,13 @@ amt      = args.last('stats', 6, int)
 over = {}
 for x in args.get('over'):
   value, amount = [int(y) for y in x.split('|')]
-  over[value] = over[value] if over.get(value, amount-1) > amount else amount
+  over[value] = amount
 under = {}
 for x in args.get('under'):
   value, amount = [int(y) for y in x.split('|')]
-  under[value] = under[value] if under.get(value, amount-1) > amount else amount
+  under[value] = amount
+
+
 
 valid    = 0
 attempts = 0
@@ -39,6 +41,8 @@ for m, t in over.items():
   rules.append(f"""At least {t} over {m}""")
 for m, t in under.items():
   rules.append(f"""At least {t} under {m}""")
+
+debug = []
 
 # If we aren't displaying the help, lets roll some dice
 a = []
@@ -58,19 +62,19 @@ if args and not help:
       curTot.append(curRoll.total)
       curSum += curRoll.total
       # If we have a curover and they arent all already met
-      if curOver and all(curOver.values()):
+      if curOver and any(curOver.values()):
         for m, t in curOver.items():
           # If the current roll is over the current -over, mark it off
-          if curRoll.total > m:
-            curOver[m] = max(curOver[m] - 1, 0)
+          if t and curRoll.total > m:
+            curOver[m] -= 1
       # Same here as over for under
-      if curUnder and all(curUnder.values()):
+      if curUnder and any(curUnder.values()):
         for m, t in curUnder.items():
-          if curRoll.total < m:
-            curUnder[m] = max(curUnder[m] - 1, 0)
+          if t and curRoll.total < m:
+            curUnder[m] -= 1
     # If every -over and -under are valid
-    overPass  = not curOver  or not all(curOver.values())
-    underPass = not curUnder or not all(curUnder.values())
+    overPass  = not curOver  or not any(curOver.values())
+    underPass = not curUnder or not any(curUnder.values())
     maxPass   = (curSum <= Max) if Max else 1
     minPass   = (curSum >= Min) if Min else 1
     # Add it to the set and mark it as valid
