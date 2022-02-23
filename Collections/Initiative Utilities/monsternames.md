@@ -1,0 +1,1 @@
+Provides a list of all the actual names of monsters in the initiative.

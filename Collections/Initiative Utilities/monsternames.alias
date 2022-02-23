@@ -1,0 +1,18 @@
+embed -title Combatants 
+<drac2>
+c = combat()
+
+n = '\n'
+if c and c.combatants:
+  monster_dict = {}
+  for monster in c.combatants:
+    if monster.levels.get('Monster'):
+      monster_dict[monster.monster_name] = monster_dict.get(monster.monster_name, []) + [monster.name]
+  sorted_names = list(monster_dict)
+  sorted_names.sort()
+  sorted_dict = {name: monster_dict[name] for name in sorted_names}
+  return '\n'.join([f""" -f "{base}|{', '.join(mons)}|inline" """ for base, mons in sorted_dict.items()])
+elif c:
+  return """ -desc "There are no monster in the current combat. " """
+return """ -desc "This channel is not currently in combat. " """
+</drac2>

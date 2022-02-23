@@ -1,0 +1,45 @@
+embed 
+-title "Renaming Combatants"
+<drac2>
+c = combat()
+monster_dict = {}
+if c:
+  for monster in c.combatants:
+    if monster.monster_name:
+      if not monster_dict.get(monster.name[:2]):
+        monster_dict[monster.name[:2]] = {}
+      monster_dict[monster.name[:2]][monster.name] = {'name': monster.monster_name, 
+                                                      'old_id':monster.name} 
+  out = []
+  fancyOut = {}
+  for mon_type, monsters in monster_dict.copy().items():
+    if not all([i== list(monsters.values())[0] for i in monsters.copy().values()]) or mon_type == "EA":
+      for combat_name, monster in monsters.copy().items():
+        if len(monster.name.split()) > 1:
+          new_name = ''.join([i[0] for i in monster.name.split()])
+        else:
+          new_name = monster.name[:3].upper()
+        old_info = monster_dict[mon_type].pop(combat_name)
+        if not monster_dict[mon_type]:
+          monster_dict.pop(mon_type)
+        if not monster_dict.get(new_name):
+          monster_dict[new_name] = {}
+        monster_dict[new_name][new_name+str(len(monster_dict[new_name])+1)] = old_info
+        out.append(f""" `{combat_name}` => `{new_name+str(len(monster_dict[new_name]))}` """)
+        fancyOut[monster.name] = fancyOut.get(monster.name, []) + [out[-1]]
+
+
+  for _, monsters in monster_dict.items():
+    for new_name, old_info in monsters.items():
+      c.get_combatant(old_info.old_id).set_name(new_name)
+  n = '\n'
+  out = f""" -desc "{n.join(out)}" """
+  sorted_names = list(fancyOut)
+  sorted_names.sort()
+  fancyOut = {name: fancyOut[name] for name in sorted_names}
+  fancyOut = ' '.join([f"""-f "{base}|{n.join([f'{mon}' for mon in mons])}|inline" """ for base, mons in fancyOut.items()])
+  return fancyOut if 'show' in '&*&' else out
+return f""" -desc "Channel is not currently in combat!" """
+</drac2>
+
+-footer "{{ctx.prefix+ctx.alias}} [show]"
