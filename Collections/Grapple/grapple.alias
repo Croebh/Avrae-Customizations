@@ -49,18 +49,18 @@ if grappler and target:
   # Note to self, add `acro` an `athl` for args to select this
   if target.skills.athletics.value > target.skills.acrobatics.value and not args.last('acro'):
     if target.get_effect("Rage"):
-      args.add_context(target.name, argparse(tArgs + " adv"))
+      args.add_context(target.name, argparse(tArgs + " tadv"))
       args.set_context(target.name)
     # Handle using different modifier
     if targetStatOverride:
      tOver = target.skills.athletics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('strength')
-    tDice = target.skills.athletics.d20(args.adv(boolwise=True),mod_override=tOver)
+    tDice = target.skills.athletics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}),mod_override=tOver)
     tType = "Athletics"
   else:
     # Handle using different modifier
     if targetStatOverride:
      tOver = target.skills.acrobatics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('dexterity')
-    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True),mod_override=tOver)
+    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"},mod_override=tOver)
     tType = "Acrobatics"
   tDice  += '+' + args.join('b', '+') if args.last('b') else ''
   # Roll the checks
@@ -81,7 +81,8 @@ else:
 `acro` - Forces the targets check to be acrobatics
 
 `-b #` - Adds a bonus to the grapple check
-`adv`/`dis` - Rolls the check at dis/advantage
+`adv`/`dis` - Rolls the checks for the grappler at dis/advantage
+`tadv`/`tdis` - Rolls the checks for the target at dis/advantage
 `-stat [stat]` - Use a different stat mod for the grappler
 `-tstat [stat]` - Use a different stat mod for the target
 
