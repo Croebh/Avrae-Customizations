@@ -2,34 +2,41 @@ embed
 
 <drac2>
 c = combat()
-warcaster = 'warcaster' in get('feats', '').lower().replace(' ', '')
-args = argparse(&ARGS& + (["adv"] if warcaster else []))
-effect = None
-
+args = argparse(&ARGS&)
 target = args.last('t', name)
 self = target == name
+
+warcaster = 'warcaster' in get('feats', '').lower().replace(' ', '') and self
+mind = 'eldritch mind' in get('invocations', '').lower() and self
+if warcaster or mind:
+    args['adv'] = True
+effect = None
+
 dc = args.last('dc', 10, int)
 b = args.join("b", ' + ')
 adv = args.adv(boolwise=True)
-bladesong = args.last('bs') if target == name else None
+bladesong = args.last('bs') if self else None
+transmuter = args.last('ts') if self else None
 
 if c and (target := c.get_combatant(target)):
  effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
  bladesong  = bladesong or target.get_effect("Bladesong")
+ transmuter = transmuter or target.get_effect("Transmuter's Stone")
  sb         = ' + '.join([eff.effect.sb for eff in target.effects if 'sb' in eff.effect])
  rollString = f"{target.saves.get('constitution').d20(adv)}" +  \
              (f' + {b}' if b else '') +  \
              (f' + {sb}' if sb else '') + \
-             (f' + {max(1, (target.stats.get_mod("int")))} [bladesong]' if bladesong else '')
+             (f' + {max(1, (target.stats.get_mod("int")))} [bladesong]' if bladesong else '') + \
+             (f' + {(target.stats.prof_bonus)} [transmuter stone]' if transmuter else '')
  concRoll   = vroll(rollString)
  success    = concRoll.total >= dc
- concOut    = f"""-title "{target.name} makes a Concentration check!"
+ concOut    = f"""-title "{target.name} makes a Concentration Save!"
  -desc "**DC {dc}**
  {concRoll}; {["Failure! Concentration Dropped", "Success!"][success]}" """
  if not success:
   if effect:
    concOut   = concOut[:-2] + f"""\nYou are no longer concentrating on {effect.name} and the effects have been removed." """
-   if "Mind Sharpener" in get("infusions",""):
+   if "Mind Sharpener" in get("infusions","") and self:
     character().set_cvar("lastEffect", dump_json([target.get_effect(effect.name).name, target.get_effect(effect.name).remaining]))
     concOut   = concOut + f"""-f "Mind Sharpener|Effect stored for Mind Sharpener Infusion." """
    target.remove_effect(effect.name)
@@ -42,7 +49,7 @@ elif target == name:
              (f' + {max(1, (target.stats.constitution-10)//2)} [bladesong]' if bladesong else '')
  concRoll   = vroll(rollString)
  success    = concRoll.total >= dc
- concOut    = f"""-title "{name} makes a Concentration check!"
+ concOut    = f"""-title "{name} makes a Concentration Save!"
  -desc "**DC {dc}**
  {concRoll}; {["failure!", "success!"][success]}" """
 else:

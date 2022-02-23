@@ -1,20 +1,104 @@
 embed
 <drac2>
-defaults = (get_svar("threshold") or "").split()
-args     = argparse(defaults+&ARGS&)
+defaults = get_svar("threshold", "").split()
+args     = argparse(defaults + &ARGS&)
 
+newline  = "\n"
 help     = not args or "?" in args or "help" in args
+stats    = ["STR","DEX","CON","INT","WIS","CHA"]
 
+# Get our thresholds
 Min      = args.last("min", type_ = int)
 Max      = args.last("max", type_ = int)
 dice     = args.last("dice", "4d6kh3", str)
 rr       = args.last("rr", 1, int)
-tries    = args.last("tries", 10, int)
-under    = [x.split('|') for x in args.get("under", [], str)]
-over     = [x.split('|') for x in args.get("over", [], str)]
 straight = 'straight' in args
-stats    = ["STR","DEX","CON","INT","WIS","CHA"]
-helptxt  = f"""**Threshold Statrolls**
+amt      = args.last('stats', 6, int)
+
+# Add our -over and -under to dicts
+over = {}
+for x in args.get('over'):
+  value, amount = [int(y) for y in x.split('|')]
+  over[value] = amount
+under = {}
+for x in args.get('under'):
+  value, amount = [int(y) for y in x.split('|')]
+  under[value] = amount
+
+
+
+valid    = 0
+attempts = 0
+
+# Generate our rule text
+rules = []
+rules.append(f"""Rolling {rr} set{'s' if rr>1 else ''}""")
+if Min:
+  rules.append(f"""Minimum of {Min}""")
+if Max:
+  rules.append(f"""Maximum of {Max}""")
+for m, t in over.items():
+  rules.append(f"""At least {t} over {m}""")
+for m, t in under.items():
+  rules.append(f"""At least {t} under {m}""")
+
+debug = []
+
+# If we aren't displaying the help, lets roll some dice
+a = []
+if args and not help:
+  for _ in range(400):
+    attempts += 1
+
+    curSet    = []
+    curTot    = []
+    # We need an individual copy per set
+    curOver   = over.copy()
+    curUnder  = under.copy()
+    curSum    = 0
+    for i in range(amt):
+      curRoll = vroll(dice)
+      curSet.append(curRoll)
+      curTot.append(curRoll.total)
+      curSum += curRoll.total
+      # If we have a curover and they arent all already met
+      if curOver and any(curOver.values()):
+        for m, t in curOver.items():
+          # If the current roll is over the current -over, mark it off
+          if t and curRoll.total > m:
+            curOver[m] -= 1
+      # Same here as over for under
+      if curUnder and any(curUnder.values()):
+        for m, t in curUnder.items():
+          if t and curRoll.total < m:
+            curUnder[m] -= 1
+    # If every -over and -under are valid
+    overPass  = not curOver  or not any(curOver.values())
+    underPass = not curUnder or not any(curUnder.values())
+    maxPass   = (curSum <= Max) if Max else 1
+    minPass   = (curSum >= Min) if Min else 1
+    # Add it to the set and mark it as valid
+    if underPass and overPass and maxPass and minPass:
+      a.append(curSet)
+      valid += 1
+    # If we have enough valid sets, end the loop
+    if valid == rr:
+      break
+  # If the loop ended with not enough results, tell the user
+  else:
+    return f""" -f "No Results Found|Unfortunately, the thresholds set restricted the results to the point where no valid results were found. Please try again, or consider adjusting your thresholds."  """
+  # Create out stats fields
+  out = []
+  for i, stat in enumerate(a, 1):
+    out.append(f""" -f "Stats {f"#{i}" if len(a)>1 else ""}|
+{newline.join([(f"**{stats[x]}:** " if straight and amt == 6 else f'**Stat {x+1}:** ')+str(stat[x]) for x in range(amt)])}
+-----
+Total =  `{sum([i.total for i in stat])}`|inline" """)
+  # Return all the things
+  return f""" -desc "Ruling: {', '.join(rules)}" {' '.join(out)} """
+# Display the help
+else:
+  return f""" -desc "**Threshold Statrolls**
 
 Allows for rolling character stats while imposing a set of rules on the outcome.
 
@@ -22,8 +106,8 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 
 `-dice <dice>` - The dice to be rolled for each stat. Default: `4d6kh3`
 `-rr <#>` - The number of sets to be displayed. Default: 1
-`-tries <#>` - The number of attempts it will try to find sets matching the rules.
-`straight` - Will assign stats to each score.
+`-stats <#>` - The number of stats to roll.  Default: 6
+`straight` - Will assign stats to each score. Only works if `-stats` is missing or is 6.
 
 `-min <#>` - The minimum total of the combined rolls.
 `-max <#>` - The maximum total of the combined rolls.
@@ -32,17 +116,12 @@ Allows for rolling character stats while imposing a set of rules on the outcome.
 `-under <#|amount>` - Requires `amount` of rolls that are below `#`. Can be repeated.
 
 Servers can set a default set of args by setting an svar named `threshold`:
-Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`
+Example: `{ctx.prefix}svar threshold -min 70 -over 14|1 -under 11|1`"
 
 """
 </drac2>
 
-{{a=[y for x in range(tries) if set('y',[vroll(dice) for i in range(6)]) or (all([sum([1 for i in y if i.total<int(x[0])])>=int(x[1]) for x in under]) and all([sum([1 for i in y if i.total>int(x[0])])>=int(x[1]) for x in over]) and (sum([i.total for i in y])<=Max if Max else 1) and (sum([i.total for i in y])>=Min if Min else 1)) ] if not help else ""}}
+-title "{{"Ugh, randchar spam" if help else "Generating Random Stats:"}}"
 
-{{help or (' '.join([f'-f "Stats {f"#{x+1}" if len(a[:rr])>1 else ""}|' + '\n'.join([(f"**{stats[i]}:** "*straight)+str(a[x][i]) for i in range(len(a[x]))])+f"\n-----\nTotal =  `{sum([i.total for i in a[x]])}`"+'"' for x in range(len(a[:rr]))]) if len(a)>=rr else err('Not enough sets following the given rules. Try again, or increase the number of attempts using `-tries #`.'))}}
-
--title "{{"Ugh, randchar spam" if help else "Generating random stats:"}}"
-
-{{f'-desc "{helptxt}"' if help else '-desc "Ruling: '+((f"Minimum total of {Min}, " if Min else "")+(f"Maximum total of {Max}, " if Max else "")+(', '.join([f"Atleast {x[1]} over {x[0]}" for x in over]) if over else "")+', '+(', '.join([f"Atleast {x[1]} under {x[0]}" for x in under]) if under else "")).strip(' ,')+'"' if Min or Max or over or under else ""}}
-
--footer "{{ctx.prefix}}{{ctx.alias}} help"{{(f'" | Fun Fact: Of {tries} attempts, {tries-len(a)} were too low"') if not help else ''}}
+-footer "{{ctx.prefix}}{{ctx.alias}} help{{(f" | Fun Fact: That took {attempts} attempts to find valid stats.") if not help else '' # Some people enjoy this statistic}}
+{{"Signature: " + signature(bool(defaults and &ARGS&)) if not help else ''}}"

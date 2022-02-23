@@ -23,7 +23,10 @@ if searchTerm:
             searchResults.append(func)
 else:
     # I guess we'll display the basic help, then
-    return f""" -desc "`{ctx.prefix}function [search]` to look up a function.\nIf multiple similar, aim for an exact match." """
+    return f""" -desc "`{ctx.prefix}{ctx.alias} [search]` to look up a function.\nIf multiple similar, aim for an exact match." """
+
+if not all([gvar[result].get('deprecated') for result in searchResults]):
+    searchResults = [result for result in searchResults if not gvar[result].get('deprecated')]
 
 if len(searchResults) == 1:
     # We found it, bois!
@@ -32,7 +35,7 @@ if len(searchResults) == 1:
     # If we have parameters, lets show them *off*
     if (params := funcInfo.get("param")):
         paramOut = [f"""**{param.name}** (*{'* or *'.join(param.type) if len(param.type)<=2 else '*, *'.join(param.type[:-1]) + f'*, or *{param.type[-1]}'}*) - {param.desc}""" for param in params]
-        out.append(f""" -f "Paramaters|{newline.join(paramOut)}" """)
+        out.append(f""" -f "Parameters|{newline.join(paramOut)}" """)
     # Same for any return
     if (returns := funcInfo.get("returns")):
         out.append(f""" -f "Returns|**{returns.type}**{f" - {returns.desc}" if returns.get('desc') else ''}" """)
@@ -58,21 +61,24 @@ if len(searchResults) == 1:
         -thumb https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Stop_hand.svg/1024px-Stop_hand.svg.png """)
     out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`"
     -desc "{funcInfo.desc}"
-    -f "[Link](https://avrae.readthedocs.io/en/stable/aliasing/api.html#{funcInfo.url})" """)
+    -f "[Link](https://bit.ly/3Cuzupy#{funcInfo.url})" """)
     return newline.join(out)
 else:
     # I guess we didn't find what we're looking for
-    searchResults = [f"~~`{result}`~~" if gvar[result].get('deprecated') else f"`{result}`" for result in searchResults]
+    searchResults = [f"[~~`{result}`~~](https://bit.ly/3Cuzupy#{gvar[result].url})" if gvar[result].get('deprecated') else f"[`{result}`](https://bit.ly/3Cuzupy#{gvar[result].url})" for result in searchResults]
     out = f""" -title "List of functions/methods containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else ', '.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
     if len(searchResults):
         # We found possibilities, bois!
-        out += f""" -desc "{newline.join(searchResults[:41])}
-        {f"({len(searchResults)-41} results not shown)" if len(searchResults)>41 else ""}" """
+        num=32
+        out += f""" -desc "{newline.join(searchResults[:num])}
+        {f"({len(searchResults)-num} results not shown)" if len(searchResults)>num else ""}" """
     else:
         # We aint find shit, bois :-(
         out += """ -desc "*No Results Found*" """
+    if searchTerm.endswith('()'):
+        out += """ -f "Closed Parentheses|You ended your search term with `()`, but if the function you're looking for takes arguments, this won't catch them. Try omitting the `)` to allow for arguments." """
     return out + " -color 00FF00"
 </drac2>
 
--f "ReadTheDocs|A full list of Functions can be found at [avrae.readthedocs.io](https://avrae.readthedocs.io/en/stable/aliasing/api.html)"
+-f "ReadTheDocs|A full list of Functions can be found at [avrae.rtfd.io](https://avrae.rtfd.io/en/stable/aliasing/api.html)"
 -footer "All of these functions require being wrapped in double curly brackets, and will only function inside snippets, aliases, and the `{{ctx.prefix}}test` or `{{ctx.prefix}}tembed` commands."

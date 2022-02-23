@@ -13,7 +13,7 @@ embed
 
 {{character().spellbook.set_slots(usedSlots[0],character().spellbook.get_slots(usedSlots[0])+1) if not lookup and surge.type=='slots' and usedSlots and (chanceRoll.total==1 or tides) else ''}}
 
-{{character.set_cc('Sorcery Points', character.get_cc_max('Sorcery Points')) if not lookup and surge.type=='cc' and (chanceRoll.total==1 or tides) else ''}}
+{{character().set_cc('Sorcery Points', character().get_cc_max('Sorcery Points')) if not lookup and surge.type=='cc' and (chanceRoll.total==1 or tides) else ''}}
 
 {{Combat.me.add_effect(surge.effect[0],surge.effect[2],surge.effect[1]) if not lookup and surge.type=='effect' and Combat and Combat.me and (chanceRoll.total==1 or tides) else ''}}
 

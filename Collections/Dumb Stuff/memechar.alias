@@ -1,0 +1,119 @@
+embed
+<drac2>
+STATS = {
+          "str": "Strength",
+          "dex": "Dexterity",
+          "con": f"Constitution ({ctx.author.display_name} is a GOOB)",
+          "int": "Intelligence",
+          "wis": "Wisdom",
+          "cha": "Charisma"
+        }
+
+CLASSES = {
+            "str": ["Fighter", "Barbarian", "Paladin"],
+            "dex": ["Rogue", "Monk", "Ranger", "Fighter"],
+            "int": ["Wizard", "Artificer"],
+            "wis": ["Cleric", "Druid", "Monk", "Ranger"],
+            "cha": ["Sorcerer", "Bard", "Warlock", "Paladin"],
+            "con": ["Fighter", "Barbarian", "Paladin", "Rogue", "Blood Hunter", 
+                    "Monk", "Ranger", "Wizard", "Artificer", 
+                    "Cleric", "Druid", "Sorcerer", "Bard", "Warlock"]
+          }
+
+EMOJI = {
+          "Sorcerer": "<:sorcerer:908398771652685915>", 
+          "Bard": "<:bard:908398771304562769>", 
+          "Warlock": "<:warlock:908398772218888202>", 
+          "Paladin": "<:paladin:908398771723980830>",
+          "Cleric": "<:Cleric:908398770818023434>",
+          "Artificer": "<:artificer:908398770373398538>",
+          "Barbarian": "<:barbarian:908398771237437562>",
+          "Blood Hunter": "<:bloodhunter:908398771648466994>",
+          "Druid": "<:druid:908398771677843516>",
+          "Fighter": "<:fighter:908398771958874132>",
+          "Monk": "<:monk:908398771749126174>",
+          "Ranger": "<:ranger:908398771782692924>",
+          "Rogue": "<:rogue:908398771812040724>",
+          "Wizard": "<:wizard:908398771979821066>"
+        }
+
+TESTIMONIALS = get_gvar("4f10340c-203d-4386-b853-83ceb3ffc02f").splitlines()
+quotes = '\\"'
+testimonial = f"""({TESTIMONIALS.index(testimonial := randchoice(TESTIMONIALS))+1}/{len(TESTIMONIALS)})|{testimonial.replace('"',quotes)}"""
+
+stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]
+number = int(([20] + [i for i in &ARGS& if i.isdigit()])[-1])
+
+if not stats:
+  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!" """
+
+set_classes = []
+title = []
+for stat in stats:
+  set_classes.extend(CLASSES[stat])
+  title.append(STATS[stat])
+set_classes = list({c for c in set_classes})
+
+classes = []
+for i in range(number):
+  classes.append(set_classes.pop(roll(f"1d{len(set_classes)}-1")))
+  if not set_classes:
+    break
+
+out = {} 
+OUT = []
+N   = "\n"
+
+for i in range(1, 21):
+  cur = randchoice(classes) 
+  out[cur] = out.get(cur, 0) + 1
+  OUT.append(EMOJI[cur])
+
+# Connect 4
+board = [OUT[i:i+5] for i in range(0, 20, 5)]
+possible_wins = []
+
+# Horizontal Wins
+for i, hline in enumerate(board, 1):
+  cur = list({item for item in hline})
+  if len(cur) == 1:
+    possible_wins.append(f"**JACKPOT for {cur[0]}, Horizontal line {i}**") 
+  else: 
+    cur = list({item for item in hline[:4]})
+    if len(cur) == 1:
+      possible_wins.append(f"Win for {cur[0]}, Horizontal line {i}")
+    cur = list({item for item in hline[1:]})
+    if len(cur) == 1:
+      possible_wins.append(f"Win for {cur[0]}, Horizontal line {i}")
+
+# Vertical Wins
+for i, vline in enumerate(range(5), 1):
+  cur = list({hline[vline] for hline in board})
+  if len(cur) == 1:
+    possible_wins.append(f"Win for {cur[0]}, Vertical line {i}")
+
+# Diagonal Wins
+diag = [[0, 1, 2, 3], 
+        [1, 2, 3, 4],
+        [4, 3, 2, 1],
+        [3, 2, 1, 0]]
+for dline in diag:
+  cur = list({board[hline][i] for hline, i in enumerate(dline)})
+  if len(cur) == 1:
+    possible_wins.append(f"Win for {cur[0]}, Diagonal")
+
+# Stats!
+statrolls = []
+if argparse(&ARGS&).last('stats'):
+  dice = "1d20"
+  statrolls = '\n'.join([f"""**{stat.upper()}:** {vroll(dice)}""" for stat in STATS])
+
+return f"""-title "{"/".join(title)} {"Multiclass" if len(out) != 1 else "Class"} Stupidity (Maximum {len(out)})" 
+           -f "Totals|{" ".join([f"{x[0]} {x[1]}" for x in out.items()])}" 
+           -f "Choices|{N.join(["".join(i) for i in board])}"
+           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!"
+           -f "Connect 4|{"You only got one class!" if len(out)==1 else N.join(possible_wins) if possible_wins else "No wins!"}"
+           {f''' -f "Stats|{statrolls}" ''' if statrolls else ""} """
+</drac2>
+
+-f "Testimonials {{testimonial}}"

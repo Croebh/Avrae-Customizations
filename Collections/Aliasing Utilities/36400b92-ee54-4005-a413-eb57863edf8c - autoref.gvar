@@ -1,0 +1,308 @@
+{
+  "Target": {
+    "desc": "A Target effect should only show up as a top-level effect. It designates what creatures to affect.",
+    "opt": {
+      "target": {
+        "\\\"all\\\"": "Affects all targets (usually save spells)",
+        "\\\"each\\\"": " Affects each target (usually attack spells)",
+        "int": "Affects the Nth target (1-indexed)",
+        "\\\"self\\\"": "Affects the caster"
+      },
+      "effects": "A list of effects that each targeted creature will be subject to.",
+      "sortBy": "optional - Whether to sort the target list. If not given, targets are processed in the order the `-t` arguments are seen. This does not affect `self` targets.\n\n`hp_asc`: Sorts the targets in order of remaining hit points ascending (lowest HP first, None last).\n`hp_desc`: Sorts the targets in order of remaining hit points descending (highest HP first, None last)."
+    },
+    "variables": {
+      "target": {
+        "type": "AliasStatBlock",
+        "desc": "The current target"
+      },
+      "targetIteration": {
+        "type": "int",
+        "desc": "If running multiple iterations (i.e. `-rr`), the current iteration (1-indexed)."
+      },
+      "targetIndex": {
+        "type": "int",
+        "desc": "The index of the target in the list of targets processed by this effect (0-indexed - first target = `0`, second = `1`, etc.). Self targets and nth-targets (`target: \\\"self\\\"` and `target: int`) will always be 0."
+      },
+      "targetNumber": {
+        "type": "int",
+        "desc": "Same as `targetIndex`, but 1-indexed (equivalent to `targetIndex + 1`)."
+      }
+    },
+    "url": "target",
+    "ts": "{\n  type: \\\"target\\\";\n  target: \\\"all\\\"|\\\"each\\\"|int|\\\"self\\\";\n  effects: Effect[];\n  sortBy?: \\\"hp_asc\\\" | \\\"hp_desc\\\";\n}"
+  },
+  "Attack": {
+    "desc": "An Attack effect makes an attack roll against a targeted creature. It must be inside a Target effect.",
+    "opt": {
+      "hit": "A list of effects to execute on a hit.",
+      "miss": "A list of effects to execute on a miss.",
+      "attackBonus": "*optional* - An IntExpression that details what attack bonus to use (defaults to caster’s spell attack mod)."
+    },
+    "variables": {
+      "lastAttackDidHit": {
+        "type": "bool",
+        "desc": "Whether the attack hit."
+      },
+      "lastAttackDidCrit": {
+        "type": "bool",
+        "desc": "If the attack hit, whether it crit."
+      },
+      "lastAttackRollTotal": {
+        "type": "int",
+        "desc": "The result of the last to-hit roll (0 if no roll was made)."
+      },
+      "lastAttackNaturalRoll": {
+        "type": "int",
+        "desc": "The natural roll of the last to-hit roll (e.g. 10 in 1d20 (10) + 5 = 15; 0 if no roll was made)."
+      }
+    },
+    "url": "attack",
+    "ts": "{\n  type: \\\"attack\\\";\n  hit: Effect[];\n  miss: Effect[];\n  attackBonus?: IntExpression;\n}"
+  },
+  "Save": {
+    "desc": "A Save effect forces a targeted creature to make a saving throw. It must be inside a Target effect.",
+    "opt": {
+      "stat": "The type of saving throw.",
+      "fail": "A list of effects to execute on a failed save.",
+      "success": "A list of effects to execute on a successful save.",
+      "dc": "*optional* - An IntExpression that details what DC to use (defaults to caster’s spell DC)."
+    },
+    "variables": {
+      "lastSaveDidPass": {
+        "type": "bool",
+        "desc": "Whether the target passed the save."
+      },
+      "lastSaveDC": {
+        "type": "int",
+        "desc": "The DC of the last save roll."
+      },
+      "lastSaveRollTotal": {
+        "type": "int",
+        "desc": "The result of the last save roll (0 if no roll was made)."
+      },
+      "lastSaveNaturalRoll": {
+        "type": "int",
+        "desc": "The natural roll of the last save roll (e.g. `10` in `1d20 (10) + 5 = 15`; 0 if no roll was made)."
+      },
+      "lastSaveAbility": {
+        "type": "str",
+        "desc": "The title-case full name of the ability the save was made with (e.g. `\\\"Strength\\\"`, `\\\"Wisdom\\\"`, etc)."
+      }
+    },
+    "url": "save",
+    "ts": "{\n  type: \\\"save\\\";\n  stat: \\\"str\\\"|\\\"dex\\\"|\\\"con\\\"|\\\"int\\\"|\\\"wis\\\"|\\\"cha\\\";\n  fail: Effect[];\n  success: Effect[];\n  dc?: IntExpression;\n}"
+  },
+  "Damage": {
+    "desc": "Deals damage to a targeted creature. It must be inside a Target effect.",
+    "opt": {
+      "damage": "How much damage to deal. Can use variables defined in a Meta tag.",
+      "overheal": "*optional* - Whether this damage should allow a target to exceed its hit point maximum.",
+      "higher": "*optional* - How much to add to the damage when a spell is cast at a certain level.",
+      "cantripScale": "*optional* - Whether this roll should scale like a cantrip."
+    },
+    "variables": {
+      "lastDamage": {
+        "type": "int",
+        "desc": "The amount of damage dealt."
+      }
+    },
+    "url": "damage",
+    "ts": "{\n  type: \\\"damage\\\";\n  damage: AnnotatedString;\n  overheal?: boolean;\n  higher?: {int: string};\n  cantripScale?: boolean;\n}"
+  },
+  "TempHP": {
+    "desc": "Sets the target’s THP. It must be inside a Target effect.",
+    "opt": {
+      "amount": "How much temp HP the target should have. Can use variables defined in a Meta tag.",
+      "higher": "*optional* - How much to add to the THP when a spell is cast at a certain level.",
+      "cantripScale": "*optional* - Whether this roll should scale like a cantrip."
+    },
+    "variables": {
+      "lastTempHp": {
+        "type": "int",
+        "desc": "The amount of temp HP granted."
+      }
+    },
+    "url": "temphp",
+    "ts": "{\n  type: \\\"temphp\\\";\n  amount: AnnotatedString;\n  higher?: {int: string};\n  cantripScale?: boolean;\n}"
+  },
+  "IEffect": {
+    "desc": "Adds an InitTracker Effect to a targeted creature, if the automation target is in combat. It must be inside a Target effect.",
+    "opt": {
+      "name": "The name of the effect to add.",
+      "duration": "The duration of the effect, in rounds of combat. Can use variables defined in a Meta tag.",
+      "effects": "The effects to add (see `add_effect()`). Can use variables defined in a Meta tag.",
+      "end": "*optional, default false* - Whether the effect timer should tick on the end of the turn, rather than start.",
+      "conc": "*optional, default false* - Whether the effect requires concentration.",
+      "desc": "*optional* - The description of the effect (displays on combatant’s turn).",
+      "stacking": "*optional, default false* - If true, if another effect with the same name is found on the target, instead of overwriting, add a child effect with name `{name} x{count}` and no description, duration, or concentration.",
+      "save_as": "*optional, default None* - If supplied, saves an `IEffectMetaVar` to the automation runtime, which can be used in another IEffect’s `parent` key to set its parent to this effect. Must be a valid identifier.",
+      "parent": "*optional, default None* - If supplied, sets the created effect’s parent to the given effect. This must be the name of an existing `IEffectMetaVar`.\n - If `parent` is supplied but the parent effect does not exist, will not set a parent.\n - If `conc` is true, the given parent effect will take priority over the concentration effect.\n - If `stacking` is true and a valid stack parent exists, the stack parent will take priority over the given parent."
+    },
+    "url": "ieffect",
+    "ts": "{\n  type: \\\"ieffect\\\";\n  name: string;\n  duration: int | IntExpression;\n  effects: AnnotatedString;\n  end?: boolean;\n  conc?: boolean;\n  desc?: AnnotatedString;\n  stacking?: boolean;\n  save_as?: string;\n  parent?: string;\n}",
+    "variables": {
+      "(supplied save_as)": {
+        "type": "IEffectMetaVar or None",
+        "desc": "A reference to the effect that was added to the target. Use this in another IEffect’s `parent` key to set that IEffect’s parent to the given one."
+      }
+    }
+  },
+  "Roll": {
+    "desc": "Rolls some dice and saves the result in a variable. Displays the roll and its name in a Meta field, unless `hidden` is `true`.",
+    "opt": {
+      "dice": "An AnnotatedString detailing what dice to roll.",
+      "name": "What to save the result as.",
+      "higher": "*optional* - How much to add to the roll when a spell is cast at a certain level.",
+      "cantripScale": "*optional* - Whether this roll should scale like a cantrip.",
+      "hidden": "*optional* - If `true`, won’t display the roll in the Meta field, or apply any bonuses from `-d`."
+    },
+    "variables": {
+      "(supplied name)": {
+        "type": "RollEffectMetaVar",
+        "desc": "The result of the roll. You can use this in an AnnotatedString to retrieve the simplified result of the roll, or in an IntExpression to retrieve the roll total. Note that using this variable in an AnnotatedString will always return a string that itself can be rolled."
+      },
+      "lastRoll": {
+        "type": "int",
+        "desc": "The total of the roll."
+      }
+    },
+    "url": "roll",
+    "ts": "{\n  type: \\\"roll\\\";\n  dice: AnnotatedString;\n  name: string;\n  higher?: {int: string};\n  cantripScale?: boolean;\n  hidden?: boolean;\n}"
+  },
+  "Text": {
+    "desc": "Outputs a short amount of text in the resulting embed.",
+    "opt": {
+      "text": "Either:\n\nAn AnnotatedString (the text to display).\n\nAn AbilityReference (see [AbilityReference](https://avrae.readthedocs.io/en/stable/automation_ref.html#abilityreference)). Displays the ability’s description in whole."
+    },
+    "url": "text",
+    "ts": "{\n  type: \\\"text\\\";\n  text: AnnotatedString | AbilityReference;\n}"
+  },
+  "Set Variable": {
+    "desc": "Saves the result of an `IntExpression` to a variable without displaying anything.",
+    "opt": {
+      "name": "The name of the variable to save.",
+      "value": "The value to set the variable to.",
+      "higher": "*optional* - What to set the variable to instead when a spell is cast at a higher level.",
+      "onError": "*optional* - If provided, what to set the variable to if the normal value would throw an error."
+    },
+    "url": "set-variable",
+    "ts": "{\n  type: \\\"variable\\\";\n  name: string;\n  value: IntExpression;\n  higher?: {int: IntExpression};\n  onError?: IntExpression;\n}"
+  },
+  "Condition": {
+    "desc": "Run certain effects if a special condition is met, or other effects otherwise.",
+    "opt": {
+      "condition": "The condition to check.",
+      "onTrue": "The effects to run if `condition` is `True` or any non-zero value.",
+      "onFalse": "The effects to run if `condition` is `False` or `0`.",
+      "errorBehaviour": "How to behave if the condition raises an error:\n`\\\"true\\\"`: Run the `onTrue` effects.\n`\\\"false\\\"`: Run the `onFalse` effects. (*default*)\n`\\\"both\\\"`: Run both the `onTrue` and `onFalse` effects, in that order.\n`\\\"neither\\\"`: Skip this effect.\n`\\\"raise\\\"`: Raise the error and halt execution."
+    },
+    "url": "condition",
+    "ts": "{\n  type: \\\"condition\\\";\n  condition: IntExpression;\n  onTrue: Effect[];\n  onFalse: Effect[];\n  errorBehaviour?: \\\"true\\\" | \\\"false\\\" | \\\"both\\\" | \\\"neither\\\" | \\\"raise\\\";\n}"
+  },
+  "Use Counter": {
+    "desc": "Uses a number of charges of the given counter, and displays the remaining amount and delta.\n\n**Note:** Regardless of the current target, this effect will always use the *caster’s* counter/spell slots!",
+    "opt": {
+      "counter": "The name of the counter to use (case-sensitive, full match only), or a reference to a spell slot (see [SpellSlotReference](https://avrae.readthedocs.io/en/stable/automation_ref.html#spellslotreference)).",
+      "amount": "The number of charges to use. If negative, will add charges instead of using them.",
+      "allowOverflow": "*optional, default False* - If False, attempting to overflow/underflow a counter (i.e. use more charges than available or add charges exceeding max) will error instead of clipping to bounds.",
+      "errorBehaviour": "*optional, default \\\"warn\\\"* - How to behave if modifying the counter raises an error:\n`null`: All errors are silently consumed.\n`\\\"warn\\\"`: Automation will continue to run, and any errors will appear in the output. (default)\n`\\\"raise\\\"`: Raise the error and halt execution.\nSome, but not all, possible error conditions are:\nThe target does not have counters (e.g. they are a monster)\nThe counter does not exist\n`allowOverflow` is false and the new value is out of bounds"
+    },
+    "variables": {
+      "lastCounterName": {
+      "type": "str",
+      "desc": "The name of the last used counter. If it was a spell slot, the level of the slot (safe to cast to int, i.e. `int(lastCounterName)`). (`None` on error)."
+      },
+      "lastCounterRemaining": {
+      "type": "int",
+      "desc": "The remaining charges of the last used counter (0 on error)."
+      },
+      "lastCounterUsedAmount": {
+      "type": "int",
+      "desc": "The amount of the counter successfully used."
+      },
+      "lastCounterRequestedAmount": {
+      "type": "int",
+      "desc": "The amount of the counter requested to be used (i.e. the amount specified by automation or requested by `-amt`, regardless of the presence of the `-i` arg)."}
+    },
+    "url": "use-counter",
+    "ts": "{\n  type: \\\"counter\\\";\n  counter: string | SpellSlotReference | AbilityReference;\n  amount: IntExpression;\n  allowOverflow?: boolean;\n  errorBehaviour?: null | \\\"warn\\\" | \\\"raise\\\";\n}"
+  },
+  "SpellSlotReference": {
+    "desc": "Used to reference a spell slot in a Use Counter effect.",
+    "opt": {
+      "slot": "The level of the spell slot to reference (`[1..9]`)."
+    },
+    "url": "spellslotreference",
+    "ts": "{\n  slot: number | IntExpression;\n}"
+  },
+  "AbilityReference": {
+    "desc": "In most cases, an `AbilityReference` should not be constructed manually; use the Automation editor to select an ability instead. A list of valid abilities can be retrieved from the API at `/gamedata/limiteduse`.\n\n**Note:** The Automation Engine will make a best effort at discovering the appropriate counter to use for the given ability - in most cases this won’t affect the chosen counter, but in some cases, it may lead to some unexpected behaviour. Some examples of counter discovery include:\n\nChoosing `Channel Divinity (Paladin)` may discover a counter granted by the Cleric’s Channel Divinity feature\nChoosing `Breath Weapon (Gold)` may discover a counter for a breath weapon of a different color\nChoosing `Sorcery Points (Sorcerer)` may discover a counter granted by the Metamagic Adept feat",
+    "opt": {
+      "id": "The ID of the ability referenced.",
+      "typeId": "The DDB entity type ID of the ability referenced."
+    },
+    "url": "abilityreference",
+    "ts": "{\n  id: number;\n  typeId: number;\n}"
+  },
+  "Cast Spell": {
+    "desc": "Executes the given spell’s automation as if it were immediately cast. Does not use a spell slot to cast the spell. Can only be used at the root of automation. Cannot be used inside a spell’s automation.\n\nThis is usually used in features that cast spells using alternate resources (i.e. Use Counter, Cast Spell).",
+    "opt": {
+      "id": "The DDB entity id of the spell to cast. Use the `/gamedata/spells` API endpoint to retrieve a list of valid IDs.",
+      "level": "*optional* - The (slot) level to cast the spell at.",
+      "dc": "*optional* - The saving throw DC to use when casting the spell. If not provided, defaults to the caster’s default spellcasting DC (or any DC specified in the spell automation).",
+      "attackBonus": "*optional* - The spell attack bonus to use when casting the spell. If not provided, defaults to the caster’s default spell attack bonus (or any attack bonus specified in the spell automation).",
+      "castingMod": "*optional* - The spellcasting modifier to use when casting the spell. If not provided, defaults to the caster’s default spellcasting modifier."
+    },
+    "url": "cast-spell",
+    "ts": "{\n  type: \\\"spell\\\";\n  id: int;\n  level?: int;\n  dc?: IntExpression;\n  attackBonus?: IntExpression;\n  castingMod?: IntExpression;\n}"
+  },
+  "AnnotatedString": {
+    "desc": "An AnnotatedString is a string that can access saved variables. To access a variable, surround the name in brackets (e.g. `{damage}`). Available variables include:\n\n• Implicit variables from Effects (see relevant effect for a list of variables it provides)\n• Any defined in a `Roll` or `Set Variable` effect\n• All variables from the [Cvar Table](https://avrae.readthedocs.io/en/stable/aliasing/api.html#cvar-table)\n\nThis will replace the bracketed portion with the value of the meta variable.\n\nTo perform math inside an AnnotatedString, surround the formula with two curly braces (e.g. `{{floor(dexterityMod+spell)}}`).",
+    "url": "annotatedstring"
+  },
+  "IntExpression": {
+    "desc": "An IntExpression is similar to an AnnotatedString in its ability to use variables and functions. However, it has the following differences:\n\nCurly braces around the expression are not required\n\nAn IntExpression can only contain one expression\n\nThe result of an IntExpression must be an integer.\n\nThese are valid IntExpressions:\n\n• `8 + proficiencyBonus + dexterityMod`\n• `12`\n• `floor(level / 2)`\n\nThese are *not* valid IntExpressions:\n\n• `1d8`\n• `DC {8 + proficiencyBonus + dexterityMod}`",
+    "url": "intexpression"
+  },
+  "Example - Basic Attack": {
+    "desc": "A normal attack",
+    "url": "id19",
+    "syntax": "- type: target\n  target: each\n  effects:\n  - type: attack\n  attackBonus: dexterityMod + proficiencyBonus\n  hit:\n  - type: damage\n    damage: 1d10[piercing]\n  miss: []"
+  },
+  "Example - Basic Save": {
+    "desc": "A spell that requires a Dexterity save for half damage",
+    "url": "id20",
+    "syntax": "- type: roll\n  dice: 8d6[fire]\n  name: damage\n  higher:\n  '4': 1d6[fire]\n  '5': 2d6[fire]\n  '6': 3d6[fire]\n  '7': 4d6[fire]\n  '8': 5d6[fire]\n  '9': 6d6[fire]\n- type: target\n  target: all\n  effects:\n  - type: save\n  stat: dex\n  fail:\n  - type: damage\n    damage: '{damage}'\n  success:\n  - type: damage\n    damage: ({damage})/2\n- type: text\n  text: Each creature in a 20-foot radius must make a Dexterity saving throw. A target takes 8d6 fire damage on a failed save, or half as much damage on a successful one."
+  },
+  "Example - Attack & Save": {
+    "desc": "An attack from a poisoned blade",
+    "url": "attack-save",
+    "syntax": "- type: target\n  target: each\n  effects:\n  - type: attack\n  attackBonus: strengthMod + proficiencyBonus\n  hit:\n  - type: damage\n    damage: 1d10[piercing]\n  - type: save\n    stat: con\n    dc: '12'\n    fail:\n    - type: damage\n    damage: 1d6[poison]\n    success: []\n  miss: []\n- type: text\n  text: On a hit, a target must make a DC 12 Constitution saving throw or take 1d6 poison damage."
+  },
+  "Example - Draining Attack": {
+    "desc": "An attack that heals the caster for half the amount of damage dealt",
+    "url": "draining-attack",
+    "syntax": "- type: variable\n  name: lastDamage\n  value: '0'\n- type: target\n  target: each\n  effects:\n  - type: attack\n  attackBonus: charismaMod + proficiencyBonus\n  hit:\n  - type: damage\n    damage: 3d6[necrotic]\n  miss: []\n- type: target\n  target: self\n  effects:\n  - type: damage\n  damage: -{lastDamage}/2 [heal]\n- type: text\n  text: On a hit, the target takes 3d6 necrotic damage, and you regain hit points equal to half the amount of necrotic damage dealt."
+  },
+  "Example - Target Health-Based": {
+    "desc": "A spell that does different amounts of damage based on whether or not the target is damaged",
+    "url": "target-health-based",
+    "syntax": "- type: target\n  target: each\n  effects:\n  - type: save\n  stat: wis\n  fail:\n  - type: condition\n    condition: target.hp < target.max_hp\n    onTrue:\n    - type: damage\n    damage: 1d8 [necrotic]\n    onFalse:\n    - type: damage\n    damage: 1d4 [necrotic]\n    errorBehaviour: both\n  success: []\n- type: text\n  text: The target must succeed on a Wisdom saving throw or take 1d4 necrotic damage. If the target is missing any of its hit points, it instead takes 1d8 necrotic damage."
+  },
+  "Example - Area Draining Effect": {
+    "desc": "An effect that heals the caster for the total damage dealt",
+    "url": "area-draining-effect",
+    "syntax": "- type: variable\n  name: totalDamage\n  value: '0'\n- type: target\n  target: each\n  effects:\n  - type: damage\n  damage: 1d6 [necrotic]\n  - type: variable\n  name: totalDamage\n  value: totalDamage + lastDamage\n- type: target\n  target: self\n  effects:\n  - type: damage\n  damage: -{totalDamage} [heal]\n- type: text\n  text: Each creature within 10 feet of you takes 1d6 necrotic damage. You regain hit points equal to the sum of the necrotic damage dealt."
+  },
+  "Example - Auto Self-Targetting": {
+    "desc": "This will automatically target the caster if no `-t` target is provided. Useful for spells like Mage Armor, which is commonly used on yourself but *can* be used on others.",
+    "url": "examples",
+    "syntax": "- type: condition\n  condition: any(targets)\n  onTrue:\n  - type: target\n    target: each\n    effects:\n    - type: ieffect\n      name: Mage Armor\n      duration: 4800\n      effects: -ac +3\n  onFalse:\n  - type: target\n    target: self\n    effects:\n    - type: ieffect\n      name: Mage Armor\n      duration: 4800\n      effects: -ac +3\n  errorBehaviour: 'false'"
+  },
+  "Example - Various Class Calculations": {
+    "desc": "Here are some examples of various class calculations: Bardic Die, Monk Die, Sneak Attack, and Warlock Slot",
+    "url": "examples",
+    "syntax": "- type: variable\n  name: bardLevel\n  value: caster.levels.get('Bard')\n  onError: '0'\n- type: variable\n  name: scaleValue\n  value: 6 + 2 * ((bardLevel>=5)+(bardLevel>=10)+(bardLevel>=15))\n  onError: '6'\n```\n```yaml\n- type: variable\n  name: MonkLevel\n  value: caster.levels.get('Monk')\n  onError: '0'\n- type: variable\n  name: scaleValue\n  value: 4+2*(MonkLevel+1)//6\n  onError: '4'\n```\n```yaml\n- type: variable\n  name: RogueLevel\n  value: caster.levels.get('Rogue')\n  onError: '0'\n- type: variable\n  name: scaleValue\n  value: ceil(RogueLevel)/2\n  onError: ''\n```\n```yaml\n- type: variable\n  name: WarlockLevel\n  value: caster.levels.get('Warlock')\n  onError: '0'\n- type: counter\n  counter:\n    slot: (WarlockLevel >= 9) + (WarlockLevel >= 7) + (WarlockLevel >= 5) + (WarlockLevel>= 3) + 1\n  amount: '1'\n  errorBehaviour: raise\n"
+  }
+}

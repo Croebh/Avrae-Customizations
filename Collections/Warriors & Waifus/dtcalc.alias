@@ -20,8 +20,8 @@ TIMEZONE   = float(get('timezone', -6)) # Default to Central US, like arena time
 
 # Calculate the current time and when downtime would be done
 TIME       = time() + (TIMEZONE * HOUR)
-DOWNTIME   = TIME + ((DAY*2) + (HOUR*7) + (60*12)) * workweeks
-# 2 days, 7 hours, 12 minutes for each in game work week
+DOWNTIME   = TIME + ((DAY*2) + (HOUR*8)) * workweeks
+# 2 days, 8 hours for each in game work week
 
 
 for i, iterTime in enumerate([TIME, DOWNTIME]):
@@ -57,8 +57,8 @@ for i, iterTime in enumerate([TIME, DOWNTIME]):
       suffix = 'rd' #3rd
 
   # Output our time
-  out.append(f""" -f "{f"After Downtime ({workweeks} workweek{'s' if workweeks>1 else ''})" if i else "Current Time"}|{f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"}, {f"{weekday} the {day}{suffix} day of " if calendar.months[month-1].length != 1 else ''}{monthNames[month-1]}" """)
-  desc.append(f"""**IRL {['Start','End'][i]} Date and Local Time:** {day}/{month}/21 {f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"} - UTC {TIMEZONE:+}""")
+  out.append(f""" -f "{f"After Downtime ({workweeks} workweek{'s' if workweeks>1 else ''})" if i else "Current Time"}|{f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"}, {f"{weekday} the {day}{suffix} day of " if calendar.months[month-1].length != 1 else ''}{monthNames[month-1]} `{f"<t:{int(DOWNTIME - (TIMEZONE * HOUR))}:R>"}`" """)
+  desc.append(f"""**IRL {['Start','End'][i]} Date and Local Time:** {day}/{month}/21 {f"{round(hour%12.1) or 12:02d}:{minute:02d} {['AM','PM'][int((hour+1)//12.1)]}"} - UTC {TIMEZONE:+} {f"<t:{int(DOWNTIME - (TIMEZONE * HOUR))}:R>" if i==1 else ''}""")
 
 return '\n'.join(out)
 

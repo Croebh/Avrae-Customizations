@@ -1,1 +1,12 @@
-5f7a186290e415e96a23cbd9
+{
+  "collection": "5f7a186290e415e96a23cbd9", 
+  "aliases": {
+    "wmsurge": "5f7a187790e415e96a23cbda", 
+    "font": "5f7a18804ded026d119d00e9", 
+    "scast": "5f7a18704ded026d119d00e8"
+  }, 
+  "snippets": {
+    "tides": "603fe1301e2241970bbef783"
+  }, 
+  "name": "Sorcerer Basics"
+}

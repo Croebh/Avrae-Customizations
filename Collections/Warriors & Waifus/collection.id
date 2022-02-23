@@ -1,1 +1,21 @@
-5fe2a8fe032beeab196950dd
+{
+  "collection": "5fe2a8fe032beeab196950dd", 
+  "aliases": {
+    "lookup": "613d343409a9904197d2833a", 
+    "dtcalc": "60da4012b10134897864b15e", 
+    "arena": "5fe2a926adefbcb30a9437fc", 
+    "shadowcast": "5ff47b91adefbcb30a9445da", 
+    "feycast": "5ff28650032beeab19695c50", 
+    "insightful": "5fecec50adefbcb30a94402e", 
+    "whatclass": "5fe2b488032beeab196950eb", 
+    "pearl": "5fe6a94d032beeab196953b7", 
+    "whatyeen": "5fe82648adefbcb30a943bf8", 
+    "complications": "5fe2cf8e032beeab19695103", 
+    "whatrace": "5fe2aeee032beeab196950e1", 
+    "whodis": "5fe2bdffadefbcb30a943810", 
+    "magicinit": "5ff55f66adefbcb30a9446e3", 
+    "arena all": "5fe2b13a032beeab196950e4"
+  }, 
+  "snippets": {}, 
+  "name": "Warriors & Waifus"
+}

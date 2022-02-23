@@ -1,1 +1,17 @@
-5f6bf59f647bb0a416316ca6
+{
+  "snippets": {}, 
+  "aliases": {
+    "autoref": "616e5d563252c1a86b70f9a6", 
+    "vroll": "5f798bae90e415e96a23caef", 
+    "gvarcopy": "5f798b9890e415e96a23caed", 
+    "combatbegin": "5f73d02e647bb0a416316d3c", 
+    "formtest": "61dc93ad039e2e56939666b4", 
+    "workshop": "611773326d4679c05cbe0155", 
+    "exportAttack": "61bb214b56999f9b483612bd", 
+    "function": "5f6bf5e3647bb0a416316ca8", 
+    "signature": "619d3fe72b6f629b63ba132b", 
+    "browse": "5f6e95b7647bb0a416316cde"
+  }, 
+  "collection": "5f6bf59f647bb0a416316ca6", 
+  "name": "Aliasing Utilities"
+}

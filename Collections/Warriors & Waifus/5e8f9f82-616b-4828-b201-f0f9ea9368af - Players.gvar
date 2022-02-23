@@ -1,0 +1,827 @@
+[
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Art of Vindication",
+        "sheet": "https://www.dndbeyond.com/characters/41829774/NQKsUW",
+        "gender": "Male"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Eye of Jasper",
+        "sheet": "https://ddb.ac/characters/57588340",
+        "gender": "Female"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Two Tailed Robin",
+        "sheet": "https://ddb.ac/characters/45621321/KHGMcc",
+        "gender": "Male"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Vae Sictanise",
+        "sheet": "https://ddb.ac/characters/33166947",
+        "gender": "Male"
+    },
+    {
+        "player": "Actual E-Gremlin",
+        "name": "Z78",
+        "sheet": "https://ddb.ac/characters/52932212/KXl5a8",
+        "gender": "Male"
+    },
+    {
+        "player": "Akiddo",
+        "name": "Lillian",
+        "sheet": "https://www.dndbeyond.com/characters/42583284",
+        "gender": "Female"
+    },
+    {
+        "player": "Anoth",
+        "name": "Aghayon Emberflight",
+        "sheet": "https://www.dndbeyond.com/characters/28682718/88ElhA",
+        "gender": "Male"
+    },
+    {
+        "player": "Anoth",
+        "name": "Fey’ha Leafnibbler",
+        "sheet": "https://www.dndbeyond.com/characters/39980418",
+        "gender": "Male"
+    },
+    {
+        "player": "Anoth",
+        "name": "Kessan Harazen",
+        "sheet": "https://www.dndbeyond.com/characters/25530538/Wmk8Xf",
+        "gender": "Male"
+    },
+    {
+        "player": "Anoth",
+        "name": "Kjara Harazen",
+        "sheet": "https://www.dndbeyond.com/characters/30020882/dxtBVM",
+        "gender": "Female"
+    },
+    {
+        "player": "Anoth",
+        "name": "Wave of Sound Sictanise",
+        "sheet": "https://www.dndbeyond.com/characters/33759899",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Anoth",
+        "name": "Lightning & Tempest",
+        "sheet": "https://www.dndbeyond.com/characters/58550191"
+    },
+    {
+        "player": "Apple Eyes",
+        "name": "Freya Lovedin",
+        "sheet": "https://www.dndbeyond.com/characters/44667972",
+        "gender": "Female"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Ami Ulayra",
+        "sheet": "https://www.dndbeyond.com/characters/47496721",
+        "gender": "N/A"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Fervor",
+        "sheet": "https://www.dndbeyond.com/characters/47258513",
+        "gender": "Male"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Iraster",
+        "sheet": "https://www.dndbeyond.com/characters/47251740",
+        "gender": "Male"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Ivellios Durthane",
+        "sheet": "https://ddb.ac/characters/47282127",
+        "gender": "Male"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Nileth Arkenghym",
+        "sheet": "https://www.dndbeyond.com/characters/47261637",
+        "gender": "Male"
+    },
+    {
+        "player": "ApteronArratay",
+        "name": "Saek",
+        "sheet": "https://ddb.ac/characters/47402409",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Archfey",
+        "name": "Light of the Quasar",
+        "sheet": "https://www.dndbeyond.com/characters/36677272/vrPdkS",
+        "gender": "N/A"
+    },
+    {
+        "player": "Bond6789",
+        "name": "Barakas",
+        "sheet": "https://www.dndbeyond.com/characters/26555413/o6QXZw",
+        "gender": "Male"
+    },
+    {
+        "player": "CEasy",
+        "name": "Felix Fang",
+        "sheet": "https://www.dndbeyond.com/characters/26657886/lsMRnj",
+        "gender": "Male"
+    },
+    {
+        "player": "CEasy",
+        "name": "Smoke",
+        "sheet": "https://www.dndbeyond.com/characters/49295295/Hf0moe",
+        "gender": "Female"
+    },
+    {
+        "player": "CEasy",
+        "name": "Talakori Ironscales",
+        "sheet": "http://ddb.ac/characters/26331745/28QO8S",
+        "gender": "Female"
+    },
+    {
+        "player": "CEasy",
+        "name": "Toefunks",
+        "sheet": "https://www.dndbeyond.com/characters/29497997",
+        "gender": "Male"
+    },
+    {
+        "player": "Croebh",
+        "name": "Chef Dante",
+        "sheet": "https://ddb.ac/characters/51177838/RvbfvY",
+        "gender": "Male"
+    },
+    {
+        "player": "Croebh",
+        "name": "Muprund",
+        "sheet": "https://www.dndbeyond.com/characters/58537783"
+    },
+    {
+        "player": "Croebh",
+        "name": "Orufix",
+        "sheet": "https://www.dndbeyond.com/profile/Croebh/characters/57792449",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Croebh",
+        "name": "Wyld",
+        "sheet": "https://ddb.ac/characters/39272381",
+        "gender": "Male"
+    },
+    {
+        "player": "Dan",
+        "name": "B044, The Lightbringer",
+        "sheet": "https://www.dndbeyond.com/characters/57263590/3NZ0kD",
+        "gender": "Other"
+    },
+    {
+        "player": "Dan",
+        "name": "Boss, The Guardian Angel",
+        "sheet": "https://www.dndbeyond.com/characters/58062162/AYZMMT",
+        "gender": "Male"
+    },
+    {
+        "player": "Dan",
+        "name": "Entropy, The Wayward Soul",
+        "sheet": "https://www.dndbeyond.com/characters/57712715/yvEaO0",
+        "gender": "Male"
+    },
+    {
+        "player": "Dan",
+        "name": "Fuu, The Dreamy Wanderer",
+        "sheet": "https://www.dndbeyond.com/characters/53845151",
+        "gender": "Male"
+    },
+    {
+        "player": "Dan",
+        "name": "MBU, The Personified Artillery",
+        "sheet": "https://www.dndbeyond.com/characters/52865224/7EF6Xm",
+        "gender": "Male"
+    },
+    {
+        "player": "Dedmnwlkn",
+        "name": "Irvek Metalmuncher",
+        "sheet": "https://www.dndbeyond.com/characters/58119407/tnqQEf",
+        "gender": "Male"
+    },
+    {
+        "player": "Dedmnwlkn",
+        "name": "Kelzyr",
+        "sheet": "https://ddb.ac/characters/50620953/AGR1zr",
+        "gender": "Male"
+    },
+    {
+        "player": "Dedmnwlkn",
+        "name": "Marjorie Cryptkeeper Norkoris",
+        "sheet": "https://www.dndbeyond.com/characters/30600904/3GKglp",
+        "gender": "Female"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Caw",
+        "sheet": "https://www.dndbeyond.com/characters/49644270",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Dew",
+        "sheet": "https://www.dndbeyond.com/characters/31147065",
+        "gender": "Female"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Eez",
+        "sheet": "https://www.dndbeyond.com/profile/DuskArgentum/characters/45571057",
+        "gender": "Male"
+    },
+    {
+        "player": "Dusk Argentum",
+        "name": "Wynd",
+        "sheet": "https://www.dndbeyond.com/characters/55960522",
+        "gender": "Male"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Firsa Fir",
+        "sheet": "https://ddb.ac/characters/24126230",
+        "gender": "Female"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Mavmir",
+        "sheet": "https://www.dndbeyond.com/profile/TheSweetBull/characters/37514974",
+        "gender": "Female"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Mélanos",
+        "sheet": "https://www.dndbeyond.com/characters/52229152",
+        "gender": "Female"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Rui Voidspear",
+        "sheet": "https://www.dndbeyond.com/characters/28889781",
+        "gender": "Female"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Sonny Harcourt",
+        "sheet": "https://www.dndbeyond.com/characters/57237950"
+    },
+    {
+        "player": "Emonster002",
+        "name": "Vezyn",
+        "sheet": "https://ddb.ac/characters/49510796",
+        "gender": "Female"
+    },
+    {
+        "player": "Falsemind",
+        "name": "Summer",
+        "sheet": "https://www.dndbeyond.com/characters/33442605",
+        "gender": "Male"
+    },
+    {
+        "player": "Falsemind",
+        "name": "Vian Teng",
+        "sheet": "https://www.dndbeyond.com/characters/29942807",
+        "gender": "Male"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Exia",
+        "sheet": "https://www.dndbeyond.com/characters/39715745",
+        "gender": "Female"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Raion Blacksteel",
+        "sheet": "https://www.dndbeyond.com/characters/41477271/SQwoyn",
+        "gender": "Female"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Rosa Rubicundior",
+        "sheet": "https://www.dndbeyond.com/characters/36856243",
+        "gender": "Female"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Sigrun Eisfell",
+        "sheet": "https://www.dndbeyond.com/characters/37389263",
+        "gender": "Female"
+    },
+    {
+        "player": "fazadragonhart",
+        "name": "Tannhäuser Eisfell",
+        "sheet": "https://www.dndbeyond.com/characters/37775596",
+        "gender": "Male"
+    },
+    {
+        "player": "Fimbulvetr",
+        "name": "Kalaganawatu",
+        "sheet": "https://www.dndbeyond.com/characters/49361472",
+        "gender": "Male"
+    },
+    {
+        "player": "Hart",
+        "name": "Tam",
+        "sheet": "https://www.dndbeyond.com/characters/56153921/y41De0",
+        "gender": "Male"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Cecilin Turrok",
+        "sheet": "https://www.dndbeyond.com/characters/26217860",
+        "gender": "Male"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Kipla",
+        "sheet": "https://www.dndbeyond.com/characters/27335504/WkX4zY",
+        "gender": "Female"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Rosk",
+        "sheet": "https://www.dndbeyond.com/characters/43736864",
+        "gender": "Male"
+    },
+    {
+        "player": "IndecisiveHalfling",
+        "name": "Solivyn Maetris",
+        "sheet": "https://ddb.ac/characters/44885142/MZtHAG",
+        "gender": "Male"
+    },
+    {
+        "player": "Julia",
+        "name": "Astra Fylawae",
+        "sheet": "https://www.dndbeyond.com/characters/43934461",
+        "gender": "Female"
+    },
+    {
+        "player": "Julia",
+        "name": "Ursa",
+        "sheet": "https://www.dndbeyond.com/characters/41033506",
+        "gender": "Female"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "\"Sir\" Baeshra",
+        "sheet": "https://dicecloud.com/character/fqxCbMSe7zizmnX4E/-",
+        "gender": "Male"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Illias Clip-Clop",
+        "sheet": "https://ddb.ac/characters/45645208",
+        "gender": "Male"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Malark Tallstag",
+        "sheet": "https://dicecloud.com/character/KmkFxnsEdR6aDDFeA/-",
+        "gender": "Male"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Nesala",
+        "sheet": "https://www.dndbeyond.com/characters/30025291",
+        "gender": "Female"
+    },
+    {
+        "player": "LeoMatheus",
+        "name": "Rezni",
+        "sheet": "https://dicecloud.com/character/iYMqNBCfxoR6mW4AW/-",
+        "gender": "Male"
+    },
+    {
+        "player": "Mel",
+        "name": "Ippo",
+        "sheet": "https://www.dndbeyond.com/characters/48837642/9u1Os5",
+        "gender": "Male"
+    },
+    {
+        "player": "Mel",
+        "name": "Jane",
+        "sheet": "https://www.dndbeyond.com/characters/45043720/KhOcHf",
+        "gender": "Female"
+    },
+    {
+        "player": "Mel",
+        "name": "Kevin Arblaster",
+        "sheet": "https://www.dndbeyond.com/characters/44472591/iPUi9u",
+        "gender": "Male"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Arizys Nimbosus",
+        "sheet": "https://www.dndbeyond.com/characters/38264230/yZSwYK",
+        "gender": "Female"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Calm Before the Storm",
+        "sheet": "https://www.dndbeyond.com/characters/29373150/ESUnsJ",
+        "gender": "Male"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Camille Medarda",
+        "sheet": "https://www.dndbeyond.com/characters/29299749/WvAjQF",
+        "gender": "Female"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Khada Jhin",
+        "sheet": "https://www.dndbeyond.com/characters/29689133/NJGULg",
+        "gender": "Male"
+    },
+    {
+        "player": "Mythirios",
+        "name": "Persephone Iasion",
+        "sheet": "https://www.dndbeyond.com/characters/32292830/ZhffE7",
+        "gender": "Female"
+    },
+    {
+        "player": "Panda The Funky",
+        "name": "Chance Yaotal",
+        "sheet": "https://www.dndbeyond.com/characters/55331225",
+        "gender": "Male"
+    },
+    {
+        "player": "Pender",
+        "name": "Ashok Argith",
+        "sheet": "https://www.dndbeyond.com/characters/25907688/yZmowB",
+        "gender": "Male"
+    },
+    {
+        "player": "Pender",
+        "name": "Rhogar Thundertouch Jharthraxyn",
+        "sheet": "https://www.dndbeyond.com/characters/25628495/U7d7Ke",
+        "gender": "Male"
+    },
+    {
+        "player": "Pender",
+        "name": "Tharnam Hammergaze",
+        "sheet": "https://www.dndbeyond.com/characters/25907685/oOtkxH",
+        "gender": "Male"
+    },
+    {
+        "player": "Pender",
+        "name": "Xonan",
+        "sheet": "https://www.dndbeyond.com/characters/25436190/ahu1oW",
+        "gender": "Male"
+    },
+    {
+        "player": "Potatotwat",
+        "name": "Faye Iounmourn",
+        "sheet": "https://www.dndbeyond.com/characters/55684224",
+        "gender": "Male"
+    },
+    {
+        "player": "Potatotwat",
+        "name": "Kain",
+        "sheet": "https://www.dndbeyond.com/characters/53334787",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Potatotwat",
+        "name": "Koral",
+        "sheet": "https://www.dndbeyond.com/characters/55752096",
+        "gender": "Male"
+    },
+    {
+        "player": "Potatotwat",
+        "name": "Korrin",
+        "sheet": "https://www.dndbeyond.com/characters/54392934",
+        "gender": "Male"
+    },
+    {
+        "player": "Potatotwat",
+        "name": "Minerva of Zakhara",
+        "sheet": "https://www.dndbeyond.com/characters/58434227"
+    },
+    {
+        "player": "Primelord",
+        "name": "Dimmestir",
+        "sheet": "https://www.dndbeyond.com/characters/47338561/D59QU8",
+        "gender": "Male"
+    },
+    {
+        "player": "Primelord",
+        "name": "Idirr",
+        "sheet": "https://www.dndbeyond.com/characters/58329311"
+    },
+    {
+        "player": "Primelord",
+        "name": "Jake",
+        "sheet": "https://www.dndbeyond.com/characters/50301463",
+        "gender": "Male"
+    },
+    {
+        "player": "Primelord",
+        "name": "Jimtiem",
+        "sheet": "https://ddb.ac/characters/51091442/hQPXVb",
+        "gender": "Male"
+    },
+    {
+        "player": "Primelord",
+        "name": "Kirjel Hiroth",
+        "sheet": "https://www.dndbeyond.com/characters/48698587/cnzcSG",
+        "gender": "Male"
+    },
+    {
+        "player": "Primelord",
+        "name": "Rirso",
+        "sheet": "https://www.dndbeyond.com/characters/43705751/qajQc8",
+        "gender": "N/A"
+    },
+    {
+        "player": "Sartorial",
+        "name": "Vesa Drun",
+        "sheet": "https://www.dndbeyond.com/characters/37452901/ANgb5b",
+        "gender": "Female"
+    },
+    {
+        "player": "Seeker of Static",
+        "name": "Glenda Resaxet",
+        "sheet": "https://docs.google.com/spreadsheets/d/1Wuj_SfPHPPA10VkwMkOj6WKEmBlWvSWfC6gDZsU6kNo/edit?usp=sharing",
+        "gender": "Female"
+    },
+    {
+        "player": "Seeker of Static",
+        "name": "Grance Grani",
+        "sheet": "https://docs.google.com/spreadsheets/d/1AADBNaFg8W88FHDls3vsPXVqhrE3ilkbbiZvCZKD1pg",
+        "gender": "Female"
+    },
+    {
+        "player": "Seeker of Static",
+        "name": "Mother Shining",
+        "sheet": "https://docs.google.com/spreadsheets/d/1Puqe1W8B-p0CdqeZ1B1XF2xjb0e2NjNETMCUmaTqHv0",
+        "gender": "Female"
+    },
+    {
+        "player": "Seeker of Static",
+        "name": "Parma Nautilius",
+        "sheet": "https://docs.google.com/spreadsheets/d/1z9o41TFMZTexfjZgSaP5IOeOmITJucsoZLhvHFCllfM",
+        "gender": "Female"
+    },
+    {
+        "player": "Seeker of Static",
+        "name": "Strix Holly",
+        "sheet": "https://docs.google.com/spreadsheets/d/1rjfV6ijQFQQkk_BEmSf3Zb8H8kY0L32Mcv8jYF91th0",
+        "gender": "Female"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Bane",
+        "sheet": "https://www.dndbeyond.com/characters/42462788",
+        "gender": "Male"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Fadi Lostwood",
+        "sheet": "https://www.dndbeyond.com/characters/42379072",
+        "gender": "Female"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Gonzales the Great",
+        "sheet": "https://www.dndbeyond.com/characters/48700531",
+        "gender": "Male"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Gretchin longlegs",
+        "sheet": "https://www.dndbeyond.com/profile/Star_Ocean562/characters/50608895",
+        "gender": "Female"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Joan mitchell",
+        "sheet": "https://ddb.ac/characters/53909900/6ti4WI",
+        "gender": "Female"
+    },
+    {
+        "player": "Star_Ocean56",
+        "name": "Terra Misu",
+        "sheet": "https://www.dndbeyond.com/characters/46941220",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Agni Brimstone",
+        "sheet": "https://www.dndbeyond.com/characters/29475423",
+        "gender": "Male"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Asital",
+        "sheet": "https://www.dndbeyond.com/characters/28086650",
+        "gender": "Male"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Brad Lee",
+        "sheet": "https://www.dndbeyond.com/profile/SnakeEater007/characters/45484996",
+        "gender": "Male"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Cain Lazarus",
+        "sheet": "https://www.dndbeyond.com/characters/46145361",
+        "gender": "Male"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Inferno",
+        "sheet": "https://www.dndbeyond.com/profile/SnakeEater007/characters/55239666",
+        "gender": "Male"
+    },
+    {
+        "player": "Tech-Priest Johnny",
+        "name": "Xarakas",
+        "sheet": "https://ddb.ac/characters/24101251",
+        "gender": "Male"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Archie Hangover",
+        "sheet": "https://www.dndbeyond.com/characters/41983142",
+        "gender": "Male"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Kai",
+        "sheet": "https://www.dndbeyond.com/characters/28201492/1fY0Qp",
+        "gender": "Female"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Loch RonDeur",
+        "sheet": "https://ddb.ac/characters/49521860/gQlpTe",
+        "gender": "Male"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Oathkeeper",
+        "sheet": "https://www.dndbeyond.com/characters/56147805/rBujgF",
+        "gender": "Nonbinary"
+    },
+    {
+        "player": "Thantos26",
+        "name": "Opal ’Tankard’",
+        "sheet": "https://ddb.ac/characters/50305929/6DAYOs",
+        "gender": "Female"
+    },
+    {
+        "player": "The Great Vaporwave",
+        "name": "Stolas",
+        "sheet": "https://www.dndbeyond.com/characters/58436308"
+    },
+    {
+        "player": "The Great Vaporwave",
+        "name": "Gideon Albright",
+        "sheet": "https://www.dndbeyond.com/characters/53714197",
+        "gender": "Male"
+    },
+    {
+        "player": "The Great Vaporwave",
+        "name": "Stolas",
+        "sheet": "https://www.dndbeyond.com/characters/58436308"
+    },
+    {
+        "player": "Tryce Vanshell",
+        "name": "Komo",
+        "sheet": "https://www.dndbeyond.com/characters/49254014"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Malla",
+        "sheet": "https://www.dndbeyond.com/characters/37622259/LcyX1H",
+        "gender": "Female"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Mistole",
+        "sheet": "https://www.dndbeyond.com/characters/38114550/ReYSKA",
+        "gender": "Female"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Mycona",
+        "sheet": "https://dicecloud.com/character/GwJs4oeN2FJzBeWiX/Mycona",
+        "gender": "Female"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Sonari Shadowmourn",
+        "sheet": "https://docs.google.com/spreadsheets/d/15i3tvN1SCaWtYApgL-bsMAuzXBE2AnH7NYtg09G0fTY/edit#gid=359784640",
+        "gender": "Female"
+    },
+    {
+        "player": "WithertheBold",
+        "name": "Velkaria",
+        "sheet": "https://docs.google.com/spreadsheets/d/1WvM8BtqZFIk3u1CwnXWXi3cbv79hIQLpI2BTjBIhPHA/edit?usp=sharing",
+        "gender": "Female"
+    },
+    {
+        "player": "Wyrm",
+        "name": "Nico",
+        "sheet": "https://www.dndbeyond.com/characters/25530468/6qAWjt",
+        "gender": "Male"
+    },
+    {
+        "player": "xKillj0y",
+        "name": "Crown of Vultures",
+        "sheet": "https://www.dndbeyond.com/profile/Xkillj0y/characters/58109023",
+        "gender": "Male"
+    },
+    {
+        "player": "xKillj0y",
+        "name": "Onyx Shadowprowler",
+        "sheet": "https://www.dndbeyond.com/characters/52497786",
+        "gender": "Female"
+    },
+    {
+        "player": "xKillj0y",
+        "name": "Runa Laufeyson",
+        "sheet": "https://www.dndbeyond.com/characters/54876203",
+        "gender": "Female"
+    },
+    {
+        "player": "xKillj0y",
+        "name": "Sora Presrora",
+        "sheet": "https://www.dndbeyond.com/characters/54794559",
+        "gender": "Female"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Higrax Daardendrian",
+        "sheet": "https://www.dndbeyond.com/characters/58011193/XqUlGg"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Otto",
+        "sheet": "https://www.dndbeyond.com/profile/Ydo/characters/41245734",
+        "gender": "N/A"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Rix",
+        "sheet": "https://www.dndbeyond.com/characters/41801349/0YIemo",
+        "gender": "Male"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Tome",
+        "sheet": "https://www.dndbeyond.com/characters/26159508/dQ9KFi",
+        "gender": "Male"
+    },
+    {
+        "player": "Ydomat",
+        "name": "Zykk",
+        "sheet": "https://www.dndbeyond.com/characters/26641541",
+        "gender": "Male"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Artoria Fairborn",
+        "sheet": "https://www.dndbeyond.com/characters/26649150/9wZCAC",
+        "gender": "Female"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Arwyn",
+        "sheet": "https://www.dndbeyond.com/characters/26567446/FAyZ4D",
+        "gender": "Female"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Chloe Springfire",
+        "sheet": "https://www.dndbeyond.com/characters/25553835/GoW7MP",
+        "gender": "Female"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Forte",
+        "sheet": "https://www.dndbeyond.com/profile/ZeterZero/characters/57045528",
+        "gender": "Female"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Gadget Glimmerbottom",
+        "sheet": "https://ddb.ac/characters/25554974/aPIIX1",
+        "gender": "Female"
+    },
+    {
+        "player": "Zeterzero",
+        "name": "Zephyr Windstride",
+        "sheet": "https://www.dndbeyond.com/characters/25903609/MdHVfe",
+        "gender": "Male"
+    }
+]

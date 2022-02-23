@@ -155,6 +155,8 @@ if c:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
     out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+  else:
+    out[target.name]={}
 </drac2>
 <drac2>
 # Lets back up our map each time we run it, why not
@@ -165,7 +167,15 @@ if c:
 mapStates = load_json(get('mapStates','{}'))
 prevBack = mapStates.get(chanid())
 mapStates.update({chanid(): out})
-set_uvar('mapStates', dump_json(mapStates))
+lengthTotal = len(dump_json(mapStates))
+if lengthTotal >= 8000:
+  delete_uvar("mapStates")
+  mapStates = {chanid(): out}
+  set_uvar('mapStates', dump_json(mapStates))
+  desc.append(f"The uvar `mapStates`, which contains information for `!map undo`, was full, so it was cleared and current map setup was backed up.")
+else:
+ mapStates.update({chanid(): out})
+ set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
 delete_uvar("mapState"+chanid())
 delete_uvar("mapSize"+chanid())

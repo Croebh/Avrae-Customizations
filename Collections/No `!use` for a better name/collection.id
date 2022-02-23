@@ -1,1 +1,10 @@
-5f7691af90e415e96a23c5e8
+{
+  "collection": "5f7691af90e415e96a23c5e8", 
+  "aliases": {
+    "resourcepacker": "5f76c0bc4ded026d119cfabb", 
+    "usenamer": "5f76c1004ded026d119cfabd", 
+    "use": "5f7691cb4ded026d119cfa4e"
+  }, 
+  "snippets": {}, 
+  "name": "No `!use` for a better name"
+}

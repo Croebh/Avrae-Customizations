@@ -241,7 +241,7 @@ if args.get('distance'):
    overlays.append(f"*s5{colr}{prevLocX}{prevLocY}")
    overlays.append(f"*s5{colr}{newLocX}{newLocY}")
   heightInfo = f"(Height: {height*5} ft. {'up' if height>0 else 'down' if height else ''})"
-  if get_svar('trueDistance') or get('trueDistance') == True:
+  if bool(get_svar('trueDistance') or get('trueDistance')):
    distanceDisplay = f"~{distanceT}"
   else:
    distanceDisplay = f"{distance}"

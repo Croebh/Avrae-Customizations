@@ -1,0 +1,1 @@
+Provides an easily edited list of targets in the initiatives.

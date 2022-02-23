@@ -7,8 +7,11 @@
 `acro` - Forces the targets check to be acrobatics
 
 `-b #` - Adds a bonus to the grapple check
+
 `adv`/`dis` - Rolls the checks for the grappler at dis/advantage
 `tadv`/`tdis` - Rolls the checks for the target at dis/advantage
+`-stat [stat]` - Use a different stat mod for the grappler
+`-tstat [stat]` - Use a different stat mod for the target
 
 You can do target specific, i.e, `-t OR1|tdis` or `-c "GO1|-b 5"`
 

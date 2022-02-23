@@ -1,0 +1,19 @@
+embed <drac2>
+gvar = load_json(get_gvar('b2c26347-5aa8-4432-89e7-80b4e0a6ccee'))
+slevel = "&1&" if "&1&".isdigit() and 0 <= int("&1&") < 10 else '0' if "&1&".lower() == 'cantrip' else None
+verbose = "Cantrip" if slevel == "0" else ('1st' if slevel == '1' else '2nd' if slevel == '2' else '3rd' if slevel == '3' else f"{slevel}th") + " Level"
+num = int("&2&") if "&2&".isdigit() else 1
+n = "\n"
+if slevel:
+  out = {}
+  for i in range(num):
+    scroll = randchoice(gvar[slevel])
+    out[scroll] = out.get(scroll, 0) + 1
+  out = [f"""{num}x {scroll}""" for scroll, num in out.items()]
+  return f""" -title "{num} Random Spell Scroll{'s' if num>1 else ''} - {verbose}" -desc "{n.join(out)}" """
+else:
+  return f""" -title "Roll for Random Spell Scrolls" -desc "`{ctx.prefix+ctx.alias} [level] [number]`
+  You can roll for random scrolls by telling this alias what level of spell scroll and how many to roll for. If the spell isn't found in the Basic Rules/SRD, it will tell you what book its from in parentheses after the spell name." """
+</drac2>
+
+-footer "{{ctx.prefix+ctx.alias}} [level] [number]"

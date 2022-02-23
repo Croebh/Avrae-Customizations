@@ -129,7 +129,7 @@
  "min(iterable, *[, key, default]) | min(arg1, arg2, *args[, key])": {
   "desc": "Return the smallest item in an iterable or the smallest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The smallest item in the iterable is returned. If two or more positional arguments are provided, the smallest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are minimal, the function returns the first one encountered.",
   "url": "min",
-  "syntax": ">>> max(2, 6, 7, 1)\n1"
+  "syntax": ">>> min(2, 6, 7, 1)\n1"
  },
  "range(stop) | range(start, stop[, step])": {
   "desc": "Returns a list of numbers in the specified range.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, `ValueError` is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.\n\nA range object will be empty if `r[0]` does not meet the value constraint. Ranges do support negative indices, but these are interpreted as indexing from the end of the sequence determined by the positive indices.",
@@ -207,7 +207,7 @@
     "type": [
      "any"
     ],
-    "The value to convert.": null
+    "desc": "The value to convert."
    }
   ],
   "returns": {
@@ -251,13 +251,20 @@
   "syntax": ">>> args = argparse(\\\"adv -rr 2 -b 1d4[bless]\\\")\n>>> args.adv()\n1\n>>> args.last('rr')\n'2'\n>>> args.get('b')\n['1d4[bless]']"
  },
  "character()": {
-  "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
+  "desc": "The character’s actions. These do not include attacks - see the `attacks` property.",
   "url": "aliasing.evaluators.ScriptingEvaluator.character",
   "returns": {
    "type": "AliasCharacter",
    "desc": "The active character."
   },
   "syntax": ">>> char = character()\n>>> char.sheet_type\n\\\"beyond\\\"\n>>> str(char)\n<AliasStatBlock name=Croebh>"
+ },
+ "character().actions": {
+  "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
+  "url": "aliasing.evaluators.ScriptingEvaluator.AliasCharacter.actions",
+  "returns": {
+   "type": "list[AliasAction]"
+  }
  },
  "combat()": {
   "desc": "Returns the combat active in the channel if one is. Otherwise, returns `None`.",
@@ -404,23 +411,55 @@
   },
   "syntax": ">>> json = '{\\\"Test\\\": 1}'\n>>> typeof(json)\n\\\"str\\\"\n>>> json = load_json(json)\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json\n{\\\"Test\\\": 1}"
  },
- "randint(x)": {
-  "desc": "Returns a random integer in the range `[0..x]`.",
+ "randint(stop)`\n`randint(start, stop[, step])": {
+  "desc": "Returns a random integer in the range `[start..stop)`.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, ValueError is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.",
   "url": "randint",
   "param": [
    {
-    "name": "x",
+    "name": "start",
     "type": [
      "int"
     ],
-    "desc": "The upper limit (non-inclusive)"
+    "desc": "The lower limit (inclusive)."
+   },
+   {
+    "name": "stop",
+    "type": [
+     "int"
+    ],
+    "desc": "The upper limit (non-inclusive)."
+   },
+   {
+    "name": "step",
+    "type": [
+     "int"
+    ],
+    "desc": "The step value."
    }
   ],
   "returns": {
    "type": "int",
    "desc": "A random integer."
   },
-  "syntax": "# This will return an int from 0-19 (and never 20)\n>>> randint(20)\n8"
+  "syntax": "# This will return an int from 0-19 (and never 20)\n>>> randint(20)\n8\n# This will return an int from 1-9 (Spell levels!)\n>>> randint(1, 10)\n3\n# This will return an int from 1-20, but only odd numbers\n>>> randint(1, 21, 2)\n11"
+ },
+ "randchoice(seq)": {
+  "desc": "Returns a random item from `seq`.",
+  "url": "randchoice",
+  "param": [
+   {
+    "name": "seq",
+    "type": [
+     "iterable"
+    ],
+    "desc": "The iterable to choose a random item from."
+   }
+  ],
+  "returns": {
+   "type": "any",
+   "desc": "A random item from the iterable."
+  },
+  "syntax": "# This will return a random item from the list\n>>> randchoice([1, 1, 3, 5, 8])\n8"
  },
  "roll(dice)": {
   "desc": "Rolls dice and returns the output.\n\nSee `!help roll` for syntax.",
@@ -1226,8 +1265,8 @@
   },
   "syntax": ">>> combat().turn_num\n17"
  },
- "combat().get_combatant(name)": {
-  "desc": "Gets a `SimpleCombatant`, fuzzy searching (partial match) on name.",
+ "combat().get_combatant(name, strict=None)": {
+  "desc": "Gets a `SimpleCombatant` by its name or ID.",
   "param": [
    {
     "name": "name",
@@ -1235,18 +1274,88 @@
      "str"
     ],
     "desc": "The name of the combatant to get."
+   },
+   {
+    "name": "strict",
+    "type": [
+     "bool"
+    ],
+    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
    }
   ],
   "returns": {
-   "type": "SimpleCombatant",
-   "desc": "The combatant."
+   "type": "SimpleCombatant or SimpleGroup or None",
+   "desc": "The combatant or group or None."
   },
   "url": "aliasing.api.combat.SimpleCombat.get_combatant",
   "alias": "targets",
   "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().get_combatant('or1')\n<AliasStatBlock name=OR1>"
  },
- "combat().get_group(name)": {
-  "desc": "Gets a `SimpleGroup`, fuzzy searching (partial match) on name.",
+ "combat().delete_metadata(k: str) → Optional[str]": {
+  "desc": "Removes a key from the metadata.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to remove."
+   }
+  ],
+  "returns": {
+   "type": "str or None",
+   "desc": "The removed value or `None` if the key is not found."
+  },
+  "url": "aliasing.api.combat.SimpleCombat.delete_metadata"
+ },
+ "combat().get_metadata(k: str, default=None) → str": {
+  "desc": "Gets a metadata value for the passed key or returns default if the name is not set.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to remove."
+   },
+   {
+    "name": "default",
+    "type": [
+     "any"
+    ],
+    "desc": "What to return if the name is not set."
+   }
+  ],
+  "returns": {
+   "type": "str or default",
+   "desc": "The removed value or `None` if the key is not found."
+  },
+  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+  "syntax": ">>> combat().get_metadata(\\\"Test\\\")\n'{\\\"Status\\\": [\\\"Mario\\\", 1, 2]}'"
+ },
+ "combat().set_metadata(k: str, v: str)": {
+  "desc": "Assigns a metadata key to the passed value. Maximum size of the metadata is 100k characters, key and item inclusive.",
+  "param": [
+   {
+    "name": "k",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata key to set."
+   },
+   {
+    "name": "v",
+    "type": [
+     "str"
+    ],
+    "desc": "The metadata value to set."
+   }
+  ],
+  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+  "syntax": ">>> combat().set_metadata(\\\"Test\\\", dump_json({\\\"Status\\\": [\\\"Mario\\\", 1, 2]}))"
+ },
+ "combat().get_group(name, strict=None)": {
+  "desc": "Gets a `SimpleGroup` that matches on name.",
   "param": [
    {
     "name": "name",
@@ -1254,14 +1363,46 @@
      "str"
     ],
     "desc": "The name of the group to get."
+   },
+   {
+    "name": "strict",
+    "type": [
+     "bool"
+    ],
+    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
    }
   ],
   "returns": {
-   "type": "SimpleGroup",
+   "type": "SimpleGroup or None",
    "desc": "The group."
   },
   "url": "aliasing.api.combat.SimpleCombat.get_group",
   "syntax": ">>> combat().get_group('Gobbos')\nGobbos (3 combatants)\n>>> combat().get_group('Gobbos').combatants\n[<AliasStatBlock name=GO1>, <AliasStatBlock name=GO2>, <AliasStatBlock name=GO3>]"
+ },
+ "combat().set_round(round_num: int)": {
+  "desc": "Sets the current round.\nSetting the round will not tick any events with durations.",
+  "param": [
+   {
+    "name": "round_num",
+    "type": [
+     "int"
+    ],
+    "desc": "The new round number"
+   }
+  ],
+  "url": "aliasing.api.combat.SimpleCombat.set_round"
+ },
+ "combat().end_round()": {
+  "desc": "Moves initiative to just before the next round (no active combatant or group).\nEnding the round will not tick any events with durations.",
+  "url": "aliasing.api.combat.SimpleCombat.end_round"
+ },
+ "combat().name": {
+  "desc": "Returns the name of the combat, or None if a name is not set.",
+  "url": "aliasing.api.combat.SimpleCombat",
+  "returns": {
+   "type": "Str or None",
+   "desc": "The name of the combat."
+  }
  },
  "SimpleCombatant.effects": {
   "url": "aliasing.api.combat.SimpleCombatant.effects",
@@ -1278,6 +1419,14 @@
    "name": "int"
   },
   "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
+ },
+ "SimpleCombatant.id": {
+  "url": "aliasing.api.combat.SimpleCombatant.id",
+  "desc": "The combatant’s unique identifier.",
+  "type": {
+   "name": "str"
+  },
+  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.id\n'd7c8e9fc-3531-44d8-8608-f42e03881d19'"
  },
  "SimpleCombatant.initmod": {
   "url": "aliasing.api.combat.SimpleCombatant.initmod",
@@ -1594,6 +1743,21 @@
   "desc": "The ID of the combatant's controller.",
   "url": "aliasing.api.combat.SimpleCombatant.controller",
   "returns": {"type":"int"}
+ },
+ "SimpleCombatant.creature_type": {
+  "desc": "The creature type of the combatant. Will return None for players or combatants with no creature type.",
+  "url": "aliasing.api.combat.SimpleCombatant.creature_type",
+  "returns": {"type":"str or None"}
+ },
+ "SimpleCombatant.monster_name": {
+  "desc": "The monster name of the combatant. Will return None for players.",
+  "url": "aliasing.api.combat.SimpleCombatant.monster_name",
+  "returns": {"type":"str or None"}
+ },
+ "SimpleCombatant.race": {
+  "desc": "The race of the combatant. Will return None for monsters or combatants with no race.",
+  "url": "aliasing.api.combat.SimpleCombatant.race",
+  "returns": {"type":"str or None"}
  },
  "SimpleCombatant.group": {
   "desc": "The name of the group the combatant is in, or `None` if the combatant is not in a group.",

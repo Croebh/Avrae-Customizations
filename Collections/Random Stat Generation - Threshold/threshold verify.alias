@@ -1,0 +1,28 @@
+embed
+<drac2>
+PROPER_COLLECTION = "5f73c8df192fdca3888bc2f6"
+N = "\n"
+signature_id = "&*&"
+if signature_id:
+    sig = verify_signature(signature_id)
+    workshop = sig.workshop_collection_id != PROPER_COLLECTION
+    url = f"""https://discord.com/channels/{sig.guild_id}/{sig.channel_id}/{sig.message_id}"""
+
+    return f""" -title "Threshold Verification"
+    -desc "**Author**: <@!{sig.author_id}>
+**Time:** <t:{int(sig.timestamp)}> <t:{int(sig.timestamp)}:R>
+**Scope:** {sig.scope}
+**User Data:** {sig.user_data}
+**[Link to Message]({url})**
+
+Alias was {"NOT "*workshop}run from the proper collection.{f'{N}**Arguments:** {" "*sig.user_data or "No "}Extra Arguments Provided' if get_svar('threshold') else ''}
+
+**Channel:** {sig.channel}
+**Server:** {sig.guild}"
+
+    -footer "{ctx.prefix}{ctx.alias} verify <signature>" """
+return f""" -title "Threshold Verification" -desc "`{ctx.prefix}{ctx.alias} verify <signature>`
+
+Verifies a given signature, outputting the data stored within it for easy parsing." """
+</drac2>
+

@@ -1,0 +1,1 @@
+Attempts to rename monster combatants to reduce ambiguity.

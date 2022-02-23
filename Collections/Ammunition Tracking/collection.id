@@ -1,1 +1,13 @@
-5f73cc73192fdca3888bc2fe
+{
+  "collection": "5f73cc73192fdca3888bc2fe", 
+  "aliases": {
+    "collect": "5f73ccc4192fdca3888bc2ff"
+  }, 
+  "snippets": {
+    "ammo": "5f73cd95192fdca3888bc302", 
+    "bullet": "5f73cd79192fdca3888bc301", 
+    "bolt": "5f73cd3d192fdca3888bc300", 
+    "arrow": "5f73cd1f647bb0a416316d3b"
+  }, 
+  "name": "Ammunition Tracking"
+}

@@ -3,7 +3,7 @@ Allows the user to cast spells and use meta magic appropriately.
 `!scast <"spell name"> [args]`
 
 For Careful and Heightened meta magic, use target specific args. 
-For example: `-t or1|pass careful`, or `-t or2|dis heighten`
+For example: `-t or1|pass careful`, or `-t or2|sdis heighten`
 
 For Empowered, you'll need to reroll and apply the difference in damage separately, sorry.
 

@@ -492,6 +492,8 @@ if c:
     note=target.note
     desc.append(f"Found a incorrectly formatted note on {target.name}, reformatted as a `-note`. ")
     out[target.name] = {"note": note.replace(':',' ').replace('|',' ')}
+  else:
+    out[target.name]={}
 </drac2>
 
 <drac2>
@@ -502,12 +504,13 @@ if c:
 
 mapStates = load_json(get('mapStates','{}'))
 prevBack = mapStates.get(chanid())
-checkMS = str(mapStates)
-lengthTotal = len(checkMS) + len(out)
-if lengthTotal >= 10000:
+mapStates.update({chanid(): out})
+lengthTotal = len(dump_json(mapStates))
+if lengthTotal >= 8000:
   delete_uvar("mapStates")
+  mapStates = {chanid(): out}
   set_uvar('mapStates', dump_json(mapStates))
-  desc.append(f"uvar mapStates was full, so it was cleared and current map setup was backed up")
+  desc.append(f"The uvar `mapStates`, which contains information for `!map undo`, was full, so it was cleared and current map setup was backed up.")
 else:
  mapStates.update({chanid(): out})
  set_uvar('mapStates', dump_json(mapStates))
@@ -687,7 +690,7 @@ if c:
       # Add the line to the overlay list
       overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
       # Display the change in location
-      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
+      desc.insert(0, f"Moving {targ.name} from {prevLoc} to {args.last('move').upper()} ({f'~{distanceT}' if bool(get_svar('trueDistance') or get('trueDistance')) else distance} ft.).")
    else:
     # Display the change in location
     desc.insert(0, f"Moving {targ.name} to {args.last('move').upper()}.")
@@ -1017,7 +1020,10 @@ if c:
        # Calculate the delta for X and Y between the two
        deltaX, deltaY = alph.index(prevLocX)-alph.index(newLocX), int(prevLocY)-int(newLocY)
        # Throw them in the pot with some pythag
-       distanceT = int(round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0))*5
+       distanceT = round(sqrt((deltaX*deltaX)+(deltaY*deltaY)),0)
+       if (height := int(out[mTarg.name].get('height', 0))):
+        distanceT = (round(sqrt((distanceT*distanceT) + (height*height)),2))
+       distanceT *= 5
        # We want the positive delta (wish we had abs(), sigh)
        deltaX, deltaY = deltaX if deltaX>=0 else deltaX*-1,deltaY if deltaY>=0 else deltaY*-1
        # Doing 5ft diag's, the distance is just the higher delta
@@ -1030,7 +1036,7 @@ if c:
        # Add the line to the overlay list
        overlays.append(f"*a{distanceT}{colr}{prevLocX}{prevLocY}{newLocX}{newLocY}")
        # Display the change in location
-       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if get_svar('trueDistance') or get('trueDistance') else distance} ft.).")
+       desc.insert(0, f"Moving {mTarg.name} from {prevLoc} to {mMove.upper()} ({f'~{distanceT}' if bool(get_svar('trueDistance') or get('trueDistance')) else distance} ft.).")
     else:
      # Display the change in location
      desc.insert(0, f"Moving {mTarg.name} to {mMove.upper()}.")
@@ -1129,7 +1135,7 @@ if args.last('tokenimport'):
          tokenoutput += b64_index[int(leftover+('0' * 2), base=2)]
          tokenoutput += '='
 
- return f"""-title "Token Import" -desc "Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`" """
+ return f"""-title "Token Import" -desc "Token shortcode for `{args.last('tokenimport')}` can be found at [This Link](https://token.otfbm.io/meta/{tokenoutput}){newline}{newline}You can attach that shortcode to a target with `-token [shortcode]`\nBy default it tries to focus in on the face of the token, you can disable this by using `-token [shortcode]~`." """
 </drac2>
 
 <drac2>
@@ -1712,8 +1718,8 @@ elif (not c or args.get('?') or args.get('help')) and not args.get("tokenimport"
              `n` - Hides the grid.
              `e` - Everything outside the map's edges becomes invisible.
              `f` - Use alternative grid/token font
-             `c<#>` - Sets the grid's unit size (in px). Default: 60.
-             `o<#>:<#>` - Offsets the background image (in px). Example: `!map -options o20:40` would offset it 20px down and 40px to the right.
+             `c<#>` - Sets the grid's unit size (in px). Default: 40 Minimum: 20 Maximum: 100
+             `o<#>:<#>` - Offsets the background image by x:y (in px). Example: `!map -options o20:40` would offset it 20px to the right and 40px down.
              "
              -f "_ _|Run `-options` without a specific argument to revert its change. With no arguments it'll reset every change.
              You can set multiple settings at a time. Example: `!map -options dc70o10:20z2e`
@@ -1776,7 +1782,7 @@ elif (not c or args.get('?') or args.get('help')) and not args.get("tokenimport"
              -f "_ _|**__Customizing tokens__**
              `-color <color>` - Sets the token's colour. `-color none` will reset it. Valid colours below.
              `-tokenimport <url>` - Takes an image url and prints its shortcode.
-             `-token <shortcode>` - Places an image on a targeted token.
+             `-token <shortcode>` - Places an image on a targeted token. By default it tries to focus in on the face of the token, if it detects one. You can disable this by using `-token [shortcode]~`.
              `-size <size>` - Sets the token's size. `-size none` will reset it. Valid sizes below.
              `-height <+/-#>` - Sets the target's position relative to the ground, which will be displayed above the map. `-height none` will reset it."
              -f "_ _|**__Other commands__**
