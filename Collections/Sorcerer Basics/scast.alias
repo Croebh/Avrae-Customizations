@@ -36,7 +36,7 @@ if not character().cc_exists(cc) and meta_cost:
 elif meta_cost:
   if character().cc_exists(cc) and character().get_cc(cc) >= meta_cost:
     # If the character cannot cast the spell at the level specified, safely error before expending sorcery points
-    if character().spellbook.get_slots(spell_level) == 0:
+    if character().spellbook.get_slots(spell_level) == 0 and not argparse(args).last('i'):
       return f"""embed -title "Cannot cast spell!" -desc "You don't have enough level {spell_level} slots left! Use `-l <level>` to cast at a different level, `!g lr` to take a long rest, or `-i` to ignore spell slots!" """
 
     character().mod_cc(cc, -meta_cost)
