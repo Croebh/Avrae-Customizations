@@ -1,18 +1,21 @@
 {
-  "collection": "5f88d637f2d59b2718721a9a", 
+  "name": "Initiative Utilities", 
   "aliases": {
-    "resistcalc": "6104d425e4a331a06e146e52", 
-    "ready": "5f88e3e4bbee1bca82ad367f", 
-    "ispellbook": "5fea826b032beeab196956f2", 
     "conc": "5f88d654bbee1bca82ad365f", 
     "conc drop": "5f88d65cf2d59b2718721a9c", 
-    "assist": "5f88de58bbee1bca82ad3676", 
+    "resistcalc": "6104d425e4a331a06e146e52", 
+    "dodge": "5f88da78f2d59b2718721aa4", 
+    "combatrename": "6216989f2e83e5a624101782", 
+    "ispellbook": "5fea826b032beeab196956f2", 
     "dash": "5f88d9d7bbee1bca82ad366d", 
-    "disengage": "5f88da3fbbee1bca82ad366f", 
-    "dodge": "5f88da78f2d59b2718721aa4"
+    "assist": "5f88de58bbee1bca82ad3676", 
+    "monsternames": "62167f192e83e5a624101768", 
+    "combatants": "62167bec70fab12b99f97371", 
+    "ready": "5f88e3e4bbee1bca82ad367f", 
+    "disengage": "5f88da3fbbee1bca82ad366f"
   }, 
+  "collection": "5f88d637f2d59b2718721a9a", 
   "snippets": {
     "readied": "5fffeea2deab056568e68e87"
-  }, 
-  "name": "Initiative Utilities"
+  }
 }

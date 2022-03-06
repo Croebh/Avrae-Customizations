@@ -60,7 +60,7 @@ if grappler and target:
     # Handle using different modifier
     if targetStatOverride:
      tOver = target.skills.acrobatics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('dexterity')
-    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"},mod_override=tOver)
+    tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}),mod_override=tOver)
     tType = "Acrobatics"
   tDice  += '+' + args.join('b', '+') if args.last('b') else ''
   # Roll the checks
