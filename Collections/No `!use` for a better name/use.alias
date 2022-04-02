@@ -688,7 +688,7 @@ if out:
   arg_list.extend([f"""{consum}{n}""" for n in [""]+range(1, 11)])
  quotes='\\"'
  cout = {x : (args.last(x) if x not in ['t', 'phrase'] else args.get(x)) for x in arg_list if x in args} if out else ''
- return f""" -title "U wanna cvar?" -desc "{'`' * 3}{NewLine}!cvar {out} {dump_yaml(cout).replace('"',quotes)}{NewLine}{'`' * 3}" -footer "{footerBase}" """
+ return f""" -title "U wanna cvar?" -desc "Copy and paste this into Discord in order to create a cvar for `{ctx.prefix+ctx.alias}`:\n{'`' * 3}{NewLine}{ctx.prefix}cvar {out} {dump_yaml(cout).replace('"',quotes)}{NewLine}{'`' * 3}" -footer "{footerBase}" """
 else:
  return metaOut + userOut + NewLine.join(targetOut) + consumeOut + flavourOut + f""" -footer "{NewLine.join([str(targ) for targ in targets] + [footerBase])}" """
 </drac2>

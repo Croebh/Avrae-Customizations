@@ -1904,5 +1904,213 @@
   "dump_yaml(self, obj, indent=2)": {
     "url": "aliasing.evaluators.ScriptingEvaluator.load_yaml",
     "desc": "Serializes an object to a YAML string. See [yaml.safe_dump](https://pyyaml.org/wiki/PyYAMLDocumentation)."
+  },
+  "character().coinpurse": {
+    "url": "aliasing.api.character.AliasCharacter.coinpurse",
+    "desc": "The coinpurse of the character.",
+    "returns": {
+      "type": "AliasCoinpurse"
+    }
+  },
+  "str(character().coinpurse)": {
+    "url": "aliasing.api.character.AliasCoinpurse",
+    "desc": "Returns a string representation of the entire coinpurse. If the csetting for Compact Coins is enabled, this will only return your float gold, otherwise will return all 5 coin types.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "character().coinpurse[cointype]": {
+    "url": "aliasing.api.character.AliasCoinpurse",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.pp": {
+    "url": "aliasing.api.character.AliasCoinpurse.pp",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.gp": {
+    "url": "aliasing.api.character.AliasCoinpurse.gp",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.ep": {
+    "url": "aliasing.api.character.AliasCoinpurse.ep",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.sp": {
+    "url": "aliasing.api.character.AliasCoinpurse.sp",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.cp": {
+    "url": "aliasing.api.character.AliasCoinpurse.cp",
+    "desc": "The value of the given coin type.",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character().coinpurse.total": {
+    "url": "aliasing.api.character.AliasCoinpurse.total",
+    "desc": "Returns the total amount of coins in your bag, converted to float gold.",
+    "returns": {
+      "type": "float"
+    }
+  },
+  "character().coinpurse.autoconvert()": {
+    "url": "aliasing.api.character.AliasCoinpurse.autoconvert",
+    "desc": "Converts all of your coins into the lowest amount of coins possible. 100cp turns into 1gp, 5sp turns into 1ep, etc."
+  },
+  "character().coinpurse.coin_str(cointype: str)": {
+    "url": "aliasing.api.character.AliasCoinpurse.coin_str",
+    "desc": "Returns a string representation of the chosen coin type.",
+    "returns": {
+      "type": "str"
+    },
+    "param": [
+      {
+        "name": "cointype",
+        "type": [
+          "str"
+        ],
+        "desc": "The type of coin to return. `\\\"pp\\\"`, `\\\"gp\\\"`, `\\\"ep\\\"`, `\\\"sp\\\"`, and `\\\"cp\\\"`"
+      }
+    ]
+  },
+  "character().coinpurse.compact_str()": {
+    "url": "aliasing.api.character.AliasCoinpurse.compact_str",
+    "desc": "Returns a string representation of the compacted coin value.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "character().coinpurse.get_coins()": {
+    "url": "aliasing.api.character.AliasCoinpurse.get_coins",
+    "desc": "Returns a dict of your current coinpurse.",
+    "returns": {
+      "type": "dict",
+      "desc": "A dict of your current coinpurse, e.g. `{\\\"pp\\\":0, \\\"gp\\\":1, \\\"ep\\\":0, \\\"sp\\\":2, \\\"cp\\\":3, \\\"total\\\": 1.23}`"
+    }
+  },
+  "character().coinpurse.modify_coins(pp: int = 0, gp: int = 0, ep: int = 0, sp: int = 0, cp: int = 0, autoconvert: bool = True)": {
+    "url": "aliasing.api.character.AliasCoinpurse.modify_coins",
+    "desc": "Modifies your coinpurse based on the provided values. If `autoconvert` is enabled, it will convert down higher value coins if necessary to handle the transaction. Returns a dict representation of the deltas.",
+    "returns": {
+      "type": "dict",
+      "desc": "A dict representation of the delta changes for each coin type."
+    },
+    "param": [
+      {
+        "name": "pp",
+        "type": [
+          "int"
+        ],
+        "desc": "Platinum Pieces. Defaults to 0."
+      },
+      {
+        "name": "gp",
+        "type": [
+          "int"
+        ],
+        "desc": "Gold Pieces. Defaults to 0."
+      },
+      {
+        "name": "ep",
+        "type": [
+          "int"
+        ],
+        "desc": "Electrum Pieces. Defaults to 0."
+      },
+      {
+        "name": "sp",
+        "type": [
+          "int"
+        ],
+        "desc": "Silver Pieces. Defaults to 0."
+      },
+      {
+        "name": "cp",
+        "type": [
+          "int"
+        ],
+        "desc": "Copper Pieces. Defaults to 0."
+      },
+      {
+        "name": "autoconvert",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether it should attempt to convert down higher value coins. Defaults to True"
+      }
+    ]
+  },
+  "character().coinpurse.set_coins(pp: int, gp: int, ep: int, sp: int, cp: int)": {
+    "url": "aliasing.api.character.AliasCoinpurse.set_coins",
+    "desc": "Sets your coinpurse to the provided values.",
+    "param": [
+      {
+        "name": "pp",
+        "type": [
+          "int"
+        ],
+        "desc": "Platinum Pieces"
+      },
+      {
+        "name": "gp",
+        "type": [
+          "int"
+        ],
+        "desc": "Gold Pieces"
+      },
+      {
+        "name": "ep",
+        "type": [
+          "int"
+        ],
+        "desc": "Electrum Pieces"
+      },
+      {
+        "name": "sp",
+        "type": [
+          "int"
+        ],
+        "desc": "Silver Pieces"
+      },
+      {
+        "name": "cp",
+        "type": [
+          "int"
+        ],
+        "desc": "Copper Pieces"
+      }
+    ]
+  },
+  "parse_coins(args: str)": {
+    "url": "aliasing.api.functions.parse_coins",
+    "desc": "Parses a coin string into a representation of each currency. If the user input is a decimal number, assumes gold pieces. Otherwise, allows the user to specify currencies in the form ‘+1gp -2sp 3cp’",
+    "param": [
+      {
+        "name": "args",
+        "type": [
+          "str"
+        ],
+        "desc": "The coins you want to parse."
+      }
+    ],
+    "returns": {
+      "type": "dict",
+      "desc": "A dict of the coin changes, e.g. `{\\\"pp\\\":0, \\\"gp\\\":1, \\\"ep\\\":0, \\\"sp\\\":-2, \\\"cp\\\":3, \\\"total\\\": 0.83}`"
+    }
   }
 }
