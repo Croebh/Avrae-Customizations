@@ -50,7 +50,7 @@ for cls, lvl in raw.levels:
   # If they are high enough level in a class to have a subclass, ensure its set via `!level`
   if lvl >= sub_levels.get(cls):
     if not (sub := subclasses.get(cls.replace(' ', '')+'Level')):
-      # Otherwise, raise it an an issue
+      # Otherwise, raise it as an issue
       issues.append(f"""{cls} subclass not set.""")
       sub = "Not Set"
     cur_cls += f" *({sub})*"
