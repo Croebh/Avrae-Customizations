@@ -1,0 +1,82 @@
+embed <drac2>
+
+
+# Constants
+GVAR        = load_json(get_gvar("ceb2fca6-925f-4df6-aa73-a7b54bb70f15"))
+SCROLL_GVAR = load_json(get_gvar('b2c26347-5aa8-4432-89e7-80b4e0a6ccee'))
+TIERS       = load_yaml(get_svar("HoardTierList"))
+MITEM       = load_yaml(get_svar("HoardItemRatio"))
+CONSUMABLES = load_yaml(get_svar("HoardConsumableRatio"))
+URL         = "https://www.dndbeyond.com/"
+
+
+# Tier Selection
+tier   = "&1&".strip('&')
+chosen = TIERS[tier]
+
+
+# Gold, Gems and Art
+gold       = vroll(chosen.gold)
+
+num_gems   = vroll(chosen.gems[0])
+value_gems = vroll(chosen.gems[1])
+gem_out    = f"{num_gems} gemstones, valued at {value_gems:} gp each"
+
+num_art    = vroll(chosen.art[0])
+art_out    = f"{num_art} pieces of art, valued at `{chosen.art[1]}` gp each"
+
+total      = gold.total + (num_gems.total * value_gems.total) + (num_art.total * chosen.art[1])
+total_out  = f"Total Gold Value: `{total:,}` gp"
+
+gold_out   = '\n'.join([str(gold) + ' gp', gem_out, art_out, '-----', total_out])
+
+# Consumables
+consumables_out = []
+for cons in chosen.consumables:
+  consumables    = []
+  consumable_num = vroll(cons[0])
+  for i in range(consumable_num.total):
+    type_roll   = roll('1d100')
+    consum_type = [value for key, value in CONSUMABLES.items() if int(key) >= type_roll][0]
+    consum      = randchoice(GVAR.Consumables[cons[1]][consum_type])
+    if consum_type == "Scroll":
+      lvl = [i for i in consum.n if i.isdigit()]
+      if lvl:
+        scroll = randchoice(SCROLL_GVAR[lvl[0]])
+        consumables.append(f"[{consum.n}]({URL}{consum.u}) - {scroll}")
+        continue
+    consumables.append(f"[{consum.n}]({URL}{consum.u})")
+  consumables.sort(key=str)
+  consumables_out.append(f"""{consumable_num} {cons[1].title()} Consumable{'s' if consumable_num.total >1 else ''}:\n""" + '\n'.join(consumables))
+
+consumables_out = '\n'.join(consumables_out)
+
+
+# Magical Items
+items_out = []
+for b in chosen.bonus:
+  bonus = vroll('1d100')
+  if bonus.total >= b[2]:
+    chosen.magic.append(b)
+for itm in chosen.magic:
+  items    = []
+  item_num = vroll(itm[0])
+  for i in range(item_num.total):
+    type_roll = roll('1d100')
+    item_type = [value for key, value in MITEM.items() if int(key) >= type_roll][0]
+    item      = randchoice(GVAR[item_type][itm[1]])
+    items.append(f"""[{item.n}]({URL}{item.u}){f' (A)' * bool(item.a)}{' **(Bonus!)**' * (len(itm) == 3)}""")
+  items.sort(key=str)
+  items_out.append(f"""{item_num} {itm[1].title()} Magical Item{'s' if item_num.total >1 else ''}:\n""" + '\n'.join(items))
+
+items_out = '\n'.join(items_out)
+
+</drac2>
+
+-title "Tier {tier} Hoard"
+
+-f "Gold|{{gold_out}}"
+-f "Consumables|{{consumables_out}}"
+-f "Items|{{items_out}}"
+
+-footer "{{ctx.prefix + ctx.alias}} [tier]"

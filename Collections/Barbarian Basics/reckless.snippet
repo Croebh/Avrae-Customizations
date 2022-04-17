@@ -7,17 +7,17 @@ BL = "BarbarianLevel"
 subs = load_json(get('subclass', '{}'))
 out = []
 
-if combat() and (me := combat().me):
+if combat() and (current := combat().current):
   # Add reminder text for the DM
-  me.add_effect("Attacked Recklessly", "", 1, desc="All attacks made against you until the start of your next turn have advantage.")
+  current.add_effect("Attacked Recklessly", "", 1, desc="All attacks made against you until the start of your next turn have advantage.")
   # Support for Reckless Abandon for the Battlerager sub
   # Requires level 6+ and to be raging
-  if int(get(BL, 0)) >= 6 and subs.get(BL) == "Battlerager" and me.get_effect('Rage'):
-    temp = me.temp_hp
+  if int(get(BL, 0)) >= 6 and subs.get(BL) == "Battlerager" and current.get_effect('Rage') and combat().me and current.name == combat().me.name:
+    temp = current.temp_hp
     # We don't want to override any THP that is higher
     if not (temp >= constitutionMod):
-      me.set_temp_hp(constitutionMod)
+      current.set_temp_hp(constitutionMod)
     # Add some helpful text
     return f""" -f "Reckless Abandon|Beginning at 6th level, when you use Reckless Attack while raging, you also gain temporary hit points equal to your Constitution modifier (minimum of 1). They vanish if any of them are left when your rage ends.
-     {me}" """
+     {current}" """
 </drac2>

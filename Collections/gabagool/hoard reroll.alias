@@ -1,0 +1,23 @@
+embed <drac2>
+
+
+# Constants
+GVAR        = load_json(get_gvar("ceb2fca6-925f-4df6-aa73-a7b54bb70f15"))
+MITEM       = load_yaml(get_svar("HoardItemRatio"))
+URL         = "https://www.dndbeyond.com/"
+
+item_num = 1
+rarity = "&*&".lower().replace('-', ' ') or 'rare'
+
+# Magical Items
+items_out = []
+items = []
+
+type_roll = roll('1d100')
+item_type = [value for key, value in MITEM.items() if int(key) >= type_roll][0]
+item      = randchoice(GVAR[item_type][rarity])
+
+return f""" -f "{rarity.title()} Magical Item|[{item.n}]({URL}{item.u}){f' (A)' * bool(item.a)}" """
+</drac2>
+
+-footer "{{ctx.prefix+ctx.alias}} reroll [rarity]"

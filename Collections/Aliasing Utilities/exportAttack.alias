@@ -3,7 +3,7 @@ echo Export Raw Attacks
 a = '&1&'.lower() if &ARGS& else 'list'
 graves = "`"*3
 n = '\n'
-target = argparse(&ARGS&).last('t', character(), combat().get_combatant if combat() else str)
+target = character()
 attacks = target.attacks
 lenAttacks = len(str(len(attacks)))
 attack = None

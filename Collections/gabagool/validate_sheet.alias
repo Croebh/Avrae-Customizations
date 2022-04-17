@@ -1,0 +1,131 @@
+embed
+<drac2>
+out = f""" -title "Validating Sheet for: {name}" -footer "!validate_sheet" """
+n   = "\n"
+
+currT = int(time())
+character().set_cvar_nx("LastTime", currT)
+character().set_cvar_nx("DTime", "0")
+
+issues = []
+
+sub_levels = {
+              "Barbarian": 3,
+              "Bard": 3,
+              "Cleric": 2,
+              "Druid": 2,
+              "Fighter": 3,
+              "Monk": 3,
+              "Paladin": 3,
+              "Ranger": 3,
+              "Rogue": 3,
+              "Sorcerer": 1,
+              "Warlock": 1,
+              "Wizard": 2,
+              "Blood Hunter": 3,
+              "Artificer": 3
+            }
+
+types={
+ "beyond":"https://ddb.ac/characters/",
+ "dicecloud":"https://dicecloud.com/character/",
+ "google":"https://docs.google.com/spreadsheets/d/"
+}
+raw=character()
+sheet_url=types[raw.sheet_type]+raw.upstream.replace(raw.sheet_type+'-','')
+
+feats_out = get("feats", "*None*")
+attacks = [i.name for i in raw.attacks]
+subclasses = load_json(get('subclass', '{}'))
+class_out = []
+for cls, lvl in raw.levels:
+  cur_cls = f"{cls} {lvl}"
+  if lvl >= sub_levels.get(cls):
+    if not (sub := subclasses.get(cls.replace(' ', '')+'Level')):
+      issues.append(f"""{cls} subclass not set.""")
+      sub = "Not Set"
+    cur_cls += f" *({sub})*"
+  class_out.append(cur_cls)
+
+class_out = ', '.join(class_out)
+
+prepped_spells = [i.name for i in raw.spellbook.spells if i.prepared]
+
+out += f""" -f "Misc.|{str(raw.stats)}
+**Saves:** {str(raw.saves)}
+**Skills:** {str(raw.skills)}
+
+**Attacks:** {', '.join(attacks)}
+
+**Race:** {raw.race}
+**Background:** {raw.background}
+**Classes:** {class_out}
+**Feats:** {feats_out}
+
+**[Sheet Link]({sheet_url})**" """
+
+banned_content = load_yaml(get_svar('banned_content', '{}'))
+
+if any([i for i in banned_content.get('races', []) if i.lower() in raw.race.lower()]):
+  issues.append(f"We don't allow the {raw.race} race.")
+for feat in feats_out.split(', '):
+  if any([i for i in banned_content.get('feats', []) if i.lower() in feat.lower()]):
+    issues.append(f"We don't allow the {feat} feat.")
+for spell in prepped_spells:
+  if spell in banned_content.get('spells', []):
+    issues.append(f"We don't allow the {spell} spell.")
+if any([i for i in banned_content.get('backgrounds', []) if raw.background and i.lower() in raw.background.lower()]):
+  issues.append(f"We don't allow the {raw.background} background.")
+if raw.background is None:
+  issues.append("Background is not set.")
+for sub in subclasses.values():
+  if sub in banned_content.get('subclasses', []):
+    issues.append(f"We don't allow the {sub} subclass.")
+
+if description:
+  description = description.replace('"', '\\"')
+
+  desc = [i.strip('*_> ') for i in description.splitlines() if i]
+  desc_valid = {"Personality Traits": 0, "Ideals": 0, "Bonds": 0, "Flaws": 0}
+  for i, desc_v in enumerate(desc_valid):
+    next_ = list(desc_valid)[i+1] if i != 3 else 'Alignment'
+    index = desc.index(f"{desc_v}")
+    next_index = desc.index(f"{next_}")
+    desc_valid[desc_v] = next_index-index-1
+  desc_valid['Description Length'] = len(sum(desc[1:desc.index(f"Personality Traits")]))
+  if "height | weight |" in description:
+    issues.append(f"""You have not set your height and weight.""")
+  if "Write a bit about" in description:
+    issues.append(f"""You still need to write a description.""")
+  elif desc_valid['Description Length'] < 75:
+    issues.append(f"""Your description is fairly short. Consider expanding on it.""")
+  if "Enter your " in description:
+    issues.append(f"""You are missing {description.count("Enter your ")} traits/bonds/etc.""")
+  out += f""" -desc "{description}" 
+              -f "Description Validation|{n.join([f"**{x}**: {desc_valid[x]}" for x in desc_valid])}|inline" """
+else:
+  out += f""" -desc "No description set." """
+  issues.append(f"""You have not set up a description.""")
+
+out += f""" -f "Coin Purse|{raw.coinpurse.compact_str()}|inline" """
+
+dt_enabled = exists('LastTime')
+out += f""" -f "Downtime Enabled?|{dt_enabled}{n+f"<t:{get('LastTime')}>"*dt_enabled}|inline" """
+
+bags = dict(load_json(get('bags', '[]')))
+bag_out = [f""" -f "Bags: {bag_name}|{n.join([f"{item} {f'x{quantity}'*(quantity>1)}" for item, quantity in items.items()]) or '*Empty*'}|inline" """ for bag_name, items in bags.items()]
+out += n.join(bag_out)
+
+
+if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
+  issues.append(f"""You are missing your starting 200 gold.""")
+if len(bag_out) <= 2:
+  issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)>1 else ''}.""")
+
+issues = [f"- {issue}" for issue in issues]
+
+if issues:
+  out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid." """
+
+return out
+</drac2>

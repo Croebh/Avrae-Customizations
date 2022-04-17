@@ -1,0 +1,20 @@
+embed
+{{n,o,u,U,E,I,H,D=not combat(),["P","M"],0,0,"Easy","Medium","Hard","Deadly"}}
+{{g,i,m,p=load_json(get_gvar("85f9a201-72c6-4c6e-9669-f43f06e20c11")),[] if n else "&*&".split("|"),0,{E:0,I:0,H:0,D:0} }}
+{{P = [str(i.levels.total_level) for i in combat().combatants if not i.levels.get('Monster') and i.levels.total_level] if combat() else []}}
+{{M = [str(i.levels.total_level).replace('0.5', '1/2').replace('0.25', '1/4').replace('0.125', '1/8').replace('.0','') for i in combat().combatants if i.monster_name] if combat() else []}}
+{{n=n or not (P and M)}}
+{{[[[z.insert(z.index(y)+1,y.split("*")[1]) for x in range(int(y.split("*")[0]))] for y in z if "*" in y]for z in[P,M]]}}
+{{[[y.remove(x) for x in y if "*" in x]for y in [P,M]]}}
+{{[set("u",u if u else P[x]!=P[x-1])for x in range(len(P))]}}
+{{[set("U",U if U else M[x]!=M[x-1])for x in range(len(M))]}}
+{{[p.update({E:p[E]+g.T[x][E],I:p[I]+g.T[x][I],H:p[H]+g.T[x][H],D:p[D]+g.T[x][D]}) for x in P]}}
+{{[set("m",m+g.X[x]) for x in M]}}
+{{N=g.N[1 if len(P)<3 else 0:]}}
+{{mod=[g.M[1 if len(P)>5 else 0:][N.index(x)] for x in N if len(M)>=x][0]}}
+{{t=m*mod}}
+{{Y=t>=p.Easy}}
+{{d=[x for x in p if t>=p[x]][-1] if Y else "Inconsequential"}}
+{{ecr = ([0]+[cr for cr, xp in g.X.items() if t >= xp])[-1]}}
+-title  "Auto Combat Encounter Calculator"
+{{f""" -desc "You ain't in COMBAT FOOL!" """ if n else f'-desc "Party of {len(P)}'+(f' characters (levels: '+', '.join(P)+')' if u else f' level {P[0]} character{"s"*(len(P)!=1)}')+f' vs. {len(M)}'+(f' enemies (CRs: '+', '.join(M)+')' if U else f' CR {M[0]} enem{"ies" if len(M)!=1 else "y"}')+f'." -f "Encounter CR|{ecr}"'}} -color <color> -thumb <image>
