@@ -116,6 +116,8 @@ for sub in subclasses.values():
 
 if description:
   description = description.replace('"', '\\"')
+  if any([i not in description for i in ['__', '**', "> "]]):
+    issues.append("Your description may be missing some formatting.")
   desc = [i.strip('*_> ') for i in description.splitlines() if i]
 
   # Find the various character traits and tally them
