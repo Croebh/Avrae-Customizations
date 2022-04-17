@@ -116,8 +116,9 @@ for sub in subclasses.values():
 
 if description:
   description = description.replace('"', '\\"')
-
   desc = [i.strip('*_> ') for i in description.splitlines() if i]
+
+  # Find the various character traits and tally them
   desc_valid = {"Personality Traits": 0, "Ideals": 0, "Bonds": 0, "Flaws": 0}
   for i, desc_v in enumerate(desc_valid):
     next_ = list(desc_valid)[i+1] if i != 3 else 'Alignment'
@@ -125,6 +126,8 @@ if description:
     next_index = desc.index(f"{next_}")
     desc_valid[desc_v] = next_index-index-1
   desc_valid['Description Length'] = len(sum(desc[1:desc.index(f"Personality Traits")]))
+
+  # Look for issues
   if "height | weight |" in description:
     issues.append(f"""You have not set your height and weight.""")
   if "Write a bit about" in description:
