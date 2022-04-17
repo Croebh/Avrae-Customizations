@@ -3,12 +3,14 @@ embed
 out = f""" -title "Validating Sheet for: {name}" -footer "!validate_sheet" """
 n   = "\n"
 
+# Our server uses downtime, this ensures its set up
 currT = int(time())
 character().set_cvar_nx("LastTime", currT)
 character().set_cvar_nx("DTime", "0")
 
 issues = []
 
+# What level should we expect subclasses from each class
 sub_levels = {
               "Barbarian": 3,
               "Bard": 3,
@@ -31,17 +33,24 @@ types={
  "dicecloud":"https://dicecloud.com/character/",
  "google":"https://docs.google.com/spreadsheets/d/"
 }
-raw=character()
-sheet_url=types[raw.sheet_type]+raw.upstream.replace(raw.sheet_type+'-','')
 
+raw=character()
+
+# Grab some info on our character
+sheet_url=types[raw.sheet_type]+raw.upstream.replace(raw.sheet_type+'-','')
 feats_out = get("feats", "*None*")
 attacks = [i.name for i in raw.attacks]
+prepped_spells = [i.name for i in raw.spellbook.spells if i.prepared]
 subclasses = load_json(get('subclass', '{}'))
+
+# Figure out class output
 class_out = []
 for cls, lvl in raw.levels:
   cur_cls = f"{cls} {lvl}"
+  # If they are high enough level in a class to have a subclass, ensure its set via `!level`
   if lvl >= sub_levels.get(cls):
     if not (sub := subclasses.get(cls.replace(' ', '')+'Level')):
+      # Otherwise, raise it an an issue
       issues.append(f"""{cls} subclass not set.""")
       sub = "Not Set"
     cur_cls += f" *({sub})*"
@@ -49,8 +58,7 @@ for cls, lvl in raw.levels:
 
 class_out = ', '.join(class_out)
 
-prepped_spells = [i.name for i in raw.spellbook.spells if i.prepared]
-
+# Basic output of stats and stuff
 out += f""" -f "Misc.|{str(raw.stats)}
 **Saves:** {str(raw.saves)}
 **Skills:** {str(raw.skills)}
@@ -64,6 +72,11 @@ out += f""" -f "Misc.|{str(raw.stats)}
 
 **[Sheet Link]({sheet_url})**" """
 
+
+# Do our best to ensure no banned content is being used
+# The svar should be a yaml dict with 'races', 'feats', 'spells', and 'subclasses' as the keys
+# each with a list of content that is not allowed.
+# Allows for partial matching: "Mark of" in races will catch all of the Ebberon Marked races
 banned_content = load_yaml(get_svar('banned_content', '{}'))
 
 if any([i for i in banned_content.get('races', []) if i.lower() in raw.race.lower()]):
@@ -81,6 +94,25 @@ if raw.background is None:
 for sub in subclasses.values():
   if sub in banned_content.get('subclasses', []):
     issues.append(f"We don't allow the {sub} subclass.")
+
+
+# Our server uses a template for character descriptions that we require:
+
+# __**height | weight | race | class**__
+# > Write a bit about attitude, appearance, and background here.
+# **Personality Traits**
+# Enter your dndbeyond rolled trait(s) here
+# Enter your dndbeyond rolled trait(s) here
+# **Ideals**
+# Enter your dndbeyond rolled ideal(s) here
+# **Bonds**
+# Enter your dndbeyond rolled bond(s) here
+# **Flaws**
+# Enter your dndbeyond rolled flaw(s) here
+# **Alignment**
+# Enter your alignment
+
+# This code goes in and ensures everything is set
 
 if description:
   description = description.replace('"', '\\"')
@@ -107,23 +139,28 @@ else:
   out += f""" -desc "No description set." """
   issues.append(f"""You have not set up a description.""")
 
+# Coin Stuff
 out += f""" -f "Coin Purse|{raw.coinpurse.compact_str()}|inline" """
 
-dt_enabled = exists('LastTime')
-out += f""" -f "Downtime Enabled?|{dt_enabled}{n+f"<t:{get('LastTime')}>"*dt_enabled}|inline" """
+if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
+  issues.append(f"""You are missing your starting 200 gold.""")
 
+
+# Downtime Stuff
+dt_enabled = exists('LastTime')
+out += f""" -f "Downtime|{dt_enabled}{n+f"<t:{get('LastTime')}>"*dt_enabled}|inline" """
+
+
+# Bag Stuff
 bags = dict(load_json(get('bags', '[]')))
 bag_out = [f""" -f "Bags: {bag_name}|{n.join([f"{item} {f'x{quantity}'*(quantity>1)}" for item, quantity in items.items()]) or '*Empty*'}|inline" """ for bag_name, items in bags.items()]
 out += n.join(bag_out)
 
-
-if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
-  issues.append(f"""You are missing your starting 200 gold.""")
 if len(bag_out) <= 2:
   issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)>1 else ''}.""")
 
+# Do we have issues? Output it and warn them against pinging the support team until the issues are resolved
 issues = [f"- {issue}" for issue in issues]
-
 if issues:
   out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid." """
 
