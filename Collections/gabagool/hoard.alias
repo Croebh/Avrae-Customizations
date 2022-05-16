@@ -39,12 +39,13 @@ for cons in chosen.consumables:
     type_roll   = roll('1d100')
     consum_type = [value for key, value in CONSUMABLES.items() if int(key) >= type_roll][0]
     consum      = randchoice(GVAR.Consumables[cons[1]][consum_type])
-    if consum_type == "Scroll":
-      lvl = [i for i in consum.n if i.isdigit()]
-      if lvl:
-        scroll = randchoice(SCROLL_GVAR[lvl[0]])
-        consumables.append(f"[{consum.n}]({URL}{consum.u}) - {scroll}")
-        continue
+    # Regularly pushes the character limit too far on T3/4 hoards
+    # if consum_type == "Scroll":
+    #   lvl = [i for i in consum.n if i.isdigit()]
+    #   if lvl:
+    #     scroll = randchoice(SCROLL_GVAR[lvl[0]])
+    #     consumables.append(f"[{consum.n}]({URL}{consum.u}) - {scroll}")
+    #     continue
     consumables.append(f"[{consum.n}]({URL}{consum.u})")
   consumables.sort(key=str)
   consumables_out.append(f"""{consumable_num} {cons[1].title()} Consumable{'s' if consumable_num.total >1 else ''}:\n""" + '\n'.join(consumables))
@@ -54,6 +55,7 @@ consumables_out = '\n'.join(consumables_out)
 
 # Magical Items
 items_out = []
+bonus_out = []
 for b in chosen.bonus:
   bonus = vroll('1d100')
   if bonus.total >= b[2]:
@@ -64,12 +66,23 @@ for itm in chosen.magic:
   for i in range(item_num.total):
     type_roll = roll('1d100')
     item_type = [value for key, value in MITEM.items() if int(key) >= type_roll][0]
-    item      = randchoice(GVAR[item_type][itm[1]])
-    items.append(f"""[{item.n}]({URL}{item.u}){f' (A)' * bool(item.a)}{' **(Bonus!)**' * (len(itm) == 3)}""")
+    if typeof(itm[1]) == "str":
+      item = randchoice(GVAR[item_type][itm[1]])
+    else:
+      item = randchoice(itm[1])
+    items.append(f"""[{item.n}]({URL}{item.u}){f' (A)' * bool(item.a)}""".replace(f'{URL}%2', 'https://5e.tools/items.html#%2b1%20weapon_dmg,flsttype:martial%20weapon=2~melee%20weapon=2~rod=1~shield=2~simple%20weapon=2~wand=1~wondrous%20item=1,floptype:extend,fbsr:%2'))
   items.sort(key=str)
-  items_out.append(f"""{item_num} {itm[1].title()} Magical Item{'s' if item_num.total >1 else ''}:\n""" + '\n'.join(items))
+  if len(itm) == 3:
+    i_out = bonus_out
+  else:
+    i_out = items_out
+  if typeof(itm[1]) == "str":
+    i_out.append(f"""{item_num} {itm[1].title()} Magical Item{'s' if item_num.total >1 else ''}:\n""" + '\n'.join(items))
+  else:
+    i_out.append(f"""{item_num} Set Magical Item{'s' if item_num.total >1 else ''}:\n""" + '\n'.join(items))
 
 items_out = '\n'.join(items_out)
+bonus_out = f""" -f "Bonus Items|""" + '\n'.join(bonus_out) + '" ' if bonus_out else ''
 
 </drac2>
 
@@ -78,5 +91,6 @@ items_out = '\n'.join(items_out)
 -f "Gold|{{gold_out}}"
 -f "Consumables|{{consumables_out}}"
 -f "Items|{{items_out}}"
+{{bonus_out}}
 
 -footer "{{ctx.prefix + ctx.alias}} [tier]"

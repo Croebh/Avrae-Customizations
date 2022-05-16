@@ -1,4 +1,4 @@
-This alias allows you to 'browse' `character()`, `get_raw()`, gvars, cvars, and combat.
+This alias allows you to 'browse' `character()`, gvars, cvars, and combat.
 Once you're in the mode you want, you can make a search through different levels of the selected object using space separated search terms. This alias has fuzzy-search-like behaviour.
 
 **__Examples__**
@@ -13,7 +13,6 @@ Once you're in the mode you want, you can make a search through different levels
 **__Modes__**
 
 `!browse [search]` - Browses your characters `character()`
-`!browse get_raw` - Browses your characters `get_raw()`
 `!browse <gvarid> [search]` - Browses that gvar, and loads it as a json if it is one
 `!browse cvar <cvarname> [search]` - Browses that cvar, and loads it as a json if it is one
 `!browse combat [search]` - Browses the channels `!init` by combatant.

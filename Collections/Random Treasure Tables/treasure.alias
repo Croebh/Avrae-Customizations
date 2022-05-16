@@ -5,4 +5,18 @@ embed {{cr,r=max(0,int("&*&")) if "&*&".isdigit() else 1,vroll('1d100')}}{{b,g=0
 
 -title "Treasure Table for CR {{cr}} ({{'0-4' if b==0 else '5-10' if b==1 else '11-16' if b==2 else '17+'}}) - {{r.dice}}"
 -desc "{{'\n'.join([f"{c[i].dice} = `{c[i].total:,} {i.upper()}`" for i in c])}}
-{{k=[set('t',t+(c[x].total*(0.01 if x=='cp' else 0.1 if x=='sp' else 0.5 if x=='ep' else 10 if x=='pp' else 1))) for x in c]}}Total = `{{f"{round(t,2):,}"}} GP`"
+<drac2>
+total = 0
+for coin, r in c.items():
+  match coin:
+    case 'pp':
+      total += r.total * 10
+    case 'gp':
+      total += r.total
+    case 'ep':
+      total += r.total * 0.5
+    case 'sp':
+      total += r.total * 0.1
+    case 'cp':
+      total += r.total * 0.01
+</drac2>Total = `{{f"{round(total,2):,}"}} GP`"

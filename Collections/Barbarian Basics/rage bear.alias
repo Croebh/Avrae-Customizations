@@ -15,7 +15,7 @@ ff  = "Fanatical Focus"
 i   = args.get("i") or args.last('t')
 fre = args.get("frenzy")
 c   =  combat()
-cc  = "Rages" if cc_exists("Rages") else "Rage"
+cc  = "Rages" if character().cc_exists("Rages") else "Rage"
 lvl = int(get("BarbarianLevel", 0)) if not args.last('t') else 1
 r   = args.last("t") if "t" in args else name
 b   = ["bludgeoning", "piercing", "slashing"]
@@ -28,16 +28,16 @@ image = args.last('image', '')
 thumb = args.last('thumb', '')
 
 C   = c.get_combatant(r) if c else""
-v   = (cc_exists(cc) and get_cc(cc)>0) or i or lvl >= 20
+v   = (character().cc_exists(cc) and character().get_cc(cc)>0) or i or lvl >= 20
 
 dmg = not (get('dexBarb') or args.last('dex') or args.last('nodmg'))
 dmgBonus = args.last('d', 2+(lvl>8)+(lvl>15))
 
 tname = C.name if C else r
-mod_cc(cc,-1) if v and not i and lvl<20 else ""
-mod_cc(ff,1) if cc_exists(ff) else ""
-f"-f '{ff}|{cc_str(ff)}'" if cc_exists(ff) else ""
-t=C.resists.immune if C else ""
+character().mod_cc(cc,-1) if v and not i and lvl<20 else ""
+character().mod_cc(ff,1) if character().cc_exists(ff) else ""
+f"-f '{ff}|{character().cc_str(ff)}'" if character().cc_exists(ff) else ""
+t=[i.dtype for i in C.resistances.immune] if C else ""
 T=["-resist "+x for x in b if x not in t]
 
 if C and v:
@@ -49,8 +49,8 @@ if C and v:
 </drac2>
 
 -title "{{f'{tname} {"Rages" if v else "tries to Rage"}!'}}"
--desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if cc_exists(cc) else f"""You do not have this ability {'(Missing a **c**ustom **c**ounter named `Rage`. See `!help cc create` for how to make one manually, or run the `!level` alias as a Barbarian and it will make one for you.)' if lvl else ''}"""}}{{out}}"
-{{f""" -f "Rages{f" (-1)" if v and not i and lvl<20 else ""}|{"Unlimited"if lvl>=20 else cc_str(cc) if cc_exists(cc) else"*None*"}" """ if not args.last("t") else ""}}
+-desc "{{"You have advantage on Strength checks and Strength saving throws, and are unable to cast or concentrate on spells. Your rage ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then, or as a bonus action on your turn." if v else "You must finish a long rest before you can use this ability again." if character().cc_exists(cc) else f"""You do not have this ability {'(Missing a **c**ustom **c**ounter named `Rage`. See `!help cc create` for how to make one manually, or run the `!level` alias as a Barbarian and it will make one for you.)' if lvl else ''}"""}}{{out}}"
+{{f""" -f "Rages{f" (-1)" if v and not i and lvl<20 else ""}|{"Unlimited"if lvl>=20 else character().cc_str(cc) if character().cc_exists(cc) else"*None*"}" """ if not args.last("t") else ""}}
 -footer "Barbarian | PHB 48" -color <color>
 {{f"-image {image}" if image else ''}}
 {{f"-thumb {thumb}" if thumb else ''}}

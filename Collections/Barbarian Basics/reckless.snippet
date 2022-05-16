@@ -7,7 +7,7 @@ BL = "BarbarianLevel"
 subs = load_json(get('subclass', '{}'))
 out = []
 
-if combat() and (current := combat().current):
+if combat() and (current := combat().current) and typeof(current) != "SimpleGroup":
   # Add reminder text for the DM
   current.add_effect("Attacked Recklessly", "", 1, desc="All attacks made against you until the start of your next turn have advantage.")
   # Support for Reckless Abandon for the Battlerager sub

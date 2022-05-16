@@ -1,5 +1,5 @@
 embed {{discard="&1&"=='discard'}}
-{{c=[x for x in get_raw().consumables.get('custom',{})]}}{{c.sort()}}
+{{c=[x.name for x in character().consumables]}}{{c.sort()}}
 {{U,u=[x for x in c if "Used " in x],[x for x in c if character().cc_exists(f"Used {x}")]}}
 {{A=[[u[i],U[i]] for i in range(len(u))]}}
 {{[(i.append(vroll(f"{character().get_cc(i[0])}"+(f"+({max(0,character().get_cc(i[1]))}/2)" if character().get_cc(i[1]) and not discard else ""))),i.append(character().get_cc(i[1]))) for i in A]}}

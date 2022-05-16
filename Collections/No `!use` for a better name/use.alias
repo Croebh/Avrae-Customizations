@@ -429,11 +429,11 @@ if not (out or help) and valid:
    save_adv   = []
    save_dis   = []
    for effect in target.effects:
-    if (sb := effect.effect.get('sb')):
+    if (sb := effect.effect.get('sb', effect.effect.get('save_bonus'))):
      save_bonus.append(sb)
-    if (sadv := effect.effect.get('sadv')):
+    if (sadv := effect.effect.get('sadv', effect.effect.get('save_adv'))):
      save_adv.extend(sadv)
-    if (sdis := effect.effect.get('sdis')):
+    if (sdis := effect.effect.get('sdis', effect.effect.get('save_dis'))):
      save_dis.extend(sdis)
 
    if save_type in save_adv or 'all' in save_adv:

@@ -42,6 +42,9 @@ feats_out = get("feats", "*None*")
 attacks = [i.name for i in raw.attacks]
 prepped_spells = [i.name for i in raw.spellbook.spells if i.prepared]
 subclasses = load_json(get('subclass', '{}'))
+languages = get('languages', '')
+pTools = get('pTools', '')
+eTools = get('eTools', '')
 
 # Figure out class output
 class_out = []
@@ -64,14 +67,21 @@ out += f""" -f "Misc.|{str(raw.stats)}
 **Skills:** {str(raw.skills)}
 
 **Attacks:** {', '.join(attacks)}
+**Spells:** {len([i for i in raw.spellbook.spells if i.prepared])} Prepared / {len(raw.spellbook.spells)} Known 
 
 **Race:** {raw.race}
 **Background:** {raw.background}
 **Classes:** {class_out}
 **Feats:** {feats_out}
 
+**Languages:** {languages or "None"}
+**Tool Proficiencies:** {pTools or "None"}
+**Tool Expertises:** {eTools or "None"}
+
 **[Sheet Link]({sheet_url})**" """
 
+if not languages:
+  issues.append("You have no languages set (??get_languages [url]")
 
 # Do our best to ensure no banned content is being used
 # The svar should be a yaml dict with 'races', 'feats', 'spells', and 'subclasses' as the keys
@@ -124,10 +134,14 @@ if description:
   desc_valid = {"Personality Traits": 0, "Ideals": 0, "Bonds": 0, "Flaws": 0}
   for i, desc_v in enumerate(desc_valid):
     next_ = list(desc_valid)[i+1] if i != 3 else 'Alignment'
+    if desc_v not in desc:
+      issues.append(f"Missing {desc_v} from your description.")
+      continue
+
     index = desc.index(f"{desc_v}")
     next_index = desc.index(f"{next_}")
     desc_valid[desc_v] = next_index-index-1
-  desc_valid['Description Length'] = len(sum(desc[1:desc.index(f"Personality Traits")]))
+  desc_valid['Description Length'] = len(sum(desc[1:desc.index("Personality Traits")])) if "Personality Traits" in desc else len(sum(desc))
 
   # Look for issues
   if "height | weight |" in description:
@@ -142,13 +156,11 @@ if description:
               -f "Description Validation|{n.join([f"**{x}**: {desc_valid[x]}" for x in desc_valid])}|inline" """
 else:
   out += f""" -desc "No description set." """
-  issues.append(f"""You have not set up a description.""")
+  issues.append(f"""You have not set up a description. (??get_desc [url])""")
 
 # Coin Stuff
 out += f""" -f "Coin Purse|{raw.coinpurse.compact_str()}|inline" """
 
-if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
-  issues.append(f"""You are missing your starting 200 gold.""")
 
 
 # Downtime Stuff
@@ -161,13 +173,19 @@ bags = dict(load_json(get('bags', '[]')))
 bag_out = [f""" -f "Bags: {bag_name}|{n.join([f"{item} {f'x{quantity}'*(quantity>1)}" for item, quantity in items.items()]) or '*Empty*'}|inline" """ for bag_name, items in bags.items()]
 out += n.join(bag_out)
 
-if len(bag_out) <= 2:
-  issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)>1 else ''}.""")
+
+if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
+  issues.append(f"""You are missing your starting 200 gold. (!coins +200)""")
+if not bag_out:
+  issues.append("You have not set up your bags at all. (??get_bags [url])")
+elif len(bag_out) <= 2:
+  issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)!=1 else ''}. (??get_bags [url])""")
 
 # Do we have issues? Output it and warn them against pinging the support team until the issues are resolved
 issues = [f"- {issue}" for issue in issues]
 if issues:
   out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid." """
-
+else:
+  out += f""" -f "**__Looks Good!__**|If you feel your sheet is ready, ping <@&903482330117705759> about your ticket being completed!" """
 return out
 </drac2>

@@ -20,7 +20,7 @@ if character().levels.get('Barbarian') >= 11:
 # If we're in combat, grab save bonuses from effects
 if c and c.me:
   for effect in c.me.effects:
-    if (sb := effect.effect.get('sb')):
+    if (sb := effect.effect.get('sb', effect.effect.get('save_bonus'))):
       b.append(sb)
   # Lets also base the character of the init. Max HP can be edited in init
   char = combat().me

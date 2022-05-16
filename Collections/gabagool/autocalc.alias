@@ -6,10 +6,17 @@ embed
 {{n=n or not (P and M)}}
 {{[[[z.insert(z.index(y)+1,y.split("*")[1]) for x in range(int(y.split("*")[0]))] for y in z if "*" in y]for z in[P,M]]}}
 {{[[y.remove(x) for x in y if "*" in x]for y in [P,M]]}}
-{{[set("u",u if u else P[x]!=P[x-1])for x in range(len(P))]}}
-{{[set("U",U if U else M[x]!=M[x-1])for x in range(len(M))]}}
-{{[p.update({E:p[E]+g.T[x][E],I:p[I]+g.T[x][I],H:p[H]+g.T[x][H],D:p[D]+g.T[x][D]}) for x in P]}}
-{{[set("m",m+g.X[x]) for x in M]}}
+<drac2>
+for x in range(len(P)):
+  u = u if u else P[x]!=P[x-1]
+
+for x in range(len(M)):
+  U = U if U else M[x]!=M[x-1]
+
+[p.update({E:p[E]+g.T[x][E],I:p[I]+g.T[x][I],H:p[H]+g.T[x][H],D:p[D]+g.T[x][D]}) for x in P]
+for x in M:
+  m += g.X[x]  
+</drac2>
 {{N=g.N[1 if len(P)<3 else 0:]}}
 {{mod=[g.M[1 if len(P)>5 else 0:][N.index(x)] for x in N if len(M)>=x][0]}}
 {{t=m*mod}}

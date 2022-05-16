@@ -4,14 +4,16 @@ a = '&1&'.lower() if &ARGS& else 'list'
 graves = "`"*3
 n = '\n'
 target = character()
+if combat() and (t := argparse(&ARGS&).last('t', type_=combat().get_combatant)):
+  target = t
 attacks = target.attacks
 lenAttacks = len(str(len(attacks)))
 attack = None
 if (not &ARGS& ) or a == 'list':
   return f"""{graves}swift\n{n.join([f"[{i:>{lenAttacks}}] - {x.name}" for i, x in enumerate(attacks)])}{graves}\n> `{ctx.prefix+ctx.alias} [index|name|list] [yaml|json] [-t <target>]` """
 else:
-  if a.isdigit() and (len(character().attacks) - 1) >= int(a):
-    attack = character().attacks[int(a)]
+  if a.isdigit() and (len(attacks) - 1) >= int(a):
+    attack = attacks[int(a)]
   else:
     attack = ([i for i in attacks if a in i.name.lower()] + [None])[0]
 

@@ -22,7 +22,7 @@ if c and (target := c.get_combatant(target)):
  effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
  bladesong  = bladesong or target.get_effect("Bladesong")
  transmuter = transmuter or target.get_effect("Transmuter's Stone")
- sb         = ' + '.join([eff.effect.sb for eff in target.effects if 'sb' in eff.effect])
+ sb         = ' + '.join([sb_ for eff in target.effects if (sb_ := eff.effect.get('sb', eff.effect.get('save_bonus')))])
  rollString = f"{target.saves.get('constitution').d20(adv)}" +  \
              (f' + {b}' if b else '') +  \
              (f' + {sb}' if sb else '') + \

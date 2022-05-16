@@ -151,20 +151,20 @@ if c:
 # This way you won't accidentally overwrite your backup with the backup from another channel
 
 mapStates = load_json(get('mapStates','{}'))
-prevBack = mapStates.get(chanid())
-mapStates.update({chanid(): out})
+prevBack = mapStates.get(str(ctx.channel.id))
+mapStates.update({str(ctx.channel.id): out})
 lengthTotal = len(dump_json(mapStates))
 if lengthTotal >= 8000:
   delete_uvar("mapStates")
-  mapStates = {chanid(): out}
+  mapStates = {str(ctx.channel.id): out}
   set_uvar('mapStates', dump_json(mapStates))
   desc.append(f"The uvar `mapStates`, which contains information for `!map undo`, was full, so it was cleared and current map setup was backed up.")
 else:
- mapStates.update({chanid(): out})
+ mapStates.update({str(ctx.channel.id): out})
  set_uvar('mapStates', dump_json(mapStates))
 # Clean up old uvars that are no longer needed
-delete_uvar("mapState"+chanid())
-delete_uvar("mapSize"+chanid())
+delete_uvar("mapState"+str(ctx.channel.id))
+delete_uvar("mapSize"+str(ctx.channel.id))
 
 # Then, if we have an undo in the arguments, we'll grab that backup (if it exists)
 # and replace out out dict with it. We do this after we set the backup, so we can undo the undo
