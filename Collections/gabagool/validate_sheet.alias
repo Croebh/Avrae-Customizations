@@ -54,7 +54,7 @@ for cls, lvl in raw.levels:
   if lvl >= sub_levels.get(cls):
     if not (sub := subclasses.get(cls.replace(' ', '')+'Level')):
       # Otherwise, raise it as an issue
-      issues.append(f"""{cls} subclass not set.""")
+      issues.append(f"""{cls} subclass not set. (!level {cls} <subclass>)""")
       sub = "Not Set"
     cur_cls += f" *({sub})*"
   class_out.append(cur_cls)
@@ -81,7 +81,7 @@ out += f""" -f "Misc.|{str(raw.stats)}
 **[Sheet Link]({sheet_url})**" """
 
 if not languages:
-  issues.append("You have no languages set (??get_languages [url]")
+  issues.append("You have no languages set (??get_languages [url])")
 
 # Do our best to ensure no banned content is being used
 # The svar should be a yaml dict with 'races', 'feats', 'spells', and 'subclasses' as the keys
@@ -127,7 +127,7 @@ for sub in subclasses.values():
 if description:
   description = description.replace('"', '\\"')
   if any([i not in description for i in ['__', '**', "> "]]):
-    issues.append("Your description may be missing some formatting.")
+    issues.append("Your description may be missing some formatting (??get_desc [url])")
   desc = [i.strip('*_> ') for i in description.splitlines() if i]
 
   # Find the various character traits and tally them
@@ -151,7 +151,7 @@ if description:
   elif desc_valid['Description Length'] < 75:
     issues.append(f"""Your description is fairly short. Consider expanding on it.""")
   if "Enter your " in description:
-    issues.append(f"""You are missing {description.count("Enter your ")} traits/bonds/etc.""")
+    issues.append(f"""You are missing {description.count("Enter your ")} traits/bonds/flaws/alignments""")
   out += f""" -desc "{description}" 
               -f "Description Validation|{n.join([f"**{x}**: {desc_valid[x]}" for x in desc_valid])}|inline" """
 else:
@@ -184,7 +184,7 @@ elif len(bag_out) <= 2:
 # Do we have issues? Output it and warn them against pinging the support team until the issues are resolved
 issues = [f"- {issue}" for issue in issues]
 if issues:
-  out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid." """
+  out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid.\n\nReminder that you can use the `??new_char` command to gather some of this information from your D&D Beyond sheet." """
 else:
   out += f""" -f "**__Looks Good!__**|If you feel your sheet is ready, ping <@&903482330117705759> about your ticket being completed!" """
 return out

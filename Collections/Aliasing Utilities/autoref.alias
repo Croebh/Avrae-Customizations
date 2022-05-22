@@ -76,4 +76,7 @@ else:
 </drac2>
 
 -f "ReadTheDocs|A full list of Automation Effects can be found at [avrae.rtfd.io](https://avrae.rtfd.io/en/stable/automation_ref.html)"
+
+-f "**Important Note**|> This alias has not been updated yet to reflect changes made in v4 of Avrae. Please read the docs themselves that are linked."
+
 -footer "All of these effects and variables are for *Automation*, and will not work inside of aliases/snippets."

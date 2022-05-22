@@ -97,7 +97,7 @@ if c:
   for attack in combatant.attacks:
    if attack.name == 'map':
     mapattach=combatant
-    mapinfo=attack.raw.automation[0].text
+    mapinfo=attack.raw.automation[-1].text
 </drac2>
 
 <drac2>

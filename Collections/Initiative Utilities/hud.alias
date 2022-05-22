@@ -1,0 +1,118 @@
+embed 
+<drac2>
+char = character()
+out = []
+
+# Constants
+AMMO = ["arrow", "bolt", "needle", "bullet", 
+        "ammo", "shuriken", "javelin", "dart", 
+        "dagger", "rock", "shot", "slug", "cartridge"]
+LEVEL_CHART = [int(lvl) for lvl in (
+                 get_svar("xptotals") or 
+                 get("xptotals", default="0,300,900,2700,6500,14000,23000,34000,48000,64000,85000,100000,120000,140000,165000,195000,225000,265000,305000,355000")
+               ).split(",")]
+NEWLINE = "\n"
+
+# Display counters with cc_str() or '{cur} / {max}'
+hud_display = get("hudDisplay")
+
+# Ignored counters
+ignored = load_json(get('hudignore', '[]'))
+
+# Counters
+CC_Dict  = {cc.name: cc for cc in char.consumables}
+counters = [x for x in CC_Dict if x not in ignored]
+counters.sort()
+
+# Experience
+experience = ""
+if char.cc_exists("Experience") or get('xp'):
+  xp_name = get_svar("xpname") or get("xpname", default="Experience")
+  # Handle counter and cvar version of
+  if char.cc_exists("Experience"):
+    cur_exp = char.get_cc("Experience")
+    counters.remove('Experience')
+  else:
+    cur_exp = float(get('xp'))
+  if cur_exp and cur_exp <= LEVEL_CHART[-1]:
+    experience = f"\n**{xp_name}:** {cur_exp:,}/{LEVEL_CHART[min(level,19)]:,}"
+
+# Exhaustion
+exhaustion = ""
+if 'Exhaustion' in counters:
+  counters.remove('Exhaustion')
+  if char.cc_exists('Exhaustion') and char.get_cc('Exhaustion'):
+    exhaustion = f"\n**Exhaustion Level:** {char.get_cc('Exhaustion')} / 6"
+
+# Hit Dice
+hit_dice = ' | '.join([f'**HD ({hd.strip("Hit Dice()")}):** {char.cc_str(hd)}' 
+                       for i in counters[::-1] 
+                       if "Hit Dice" in i 
+                       and (hd := counters.pop(counters.index(i)))])
+
+# Ammo
+# Some weird reversal stuff so it sorts properly for 'Used {ammo}' and '{ammo}'
+ammunition = [ammo[::-1] for x in counters[::-1]
+               if [y for y in AMMO if y in x.lower()] 
+               and (ammo := counters.pop(counters.index(x)))]
+if ammunition:
+  ammunition.sort(reverse=1)
+  ammunition = [x[::-1] for x in ammunition]
+  ammunition = NEWLINE.join([f"**{x.title()}:** {char.get_cc(x)}"
+                             for x in ammunition])
+
+# Trackers
+# Separate out counters that have no maximum set (defaults to 2147483647)
+trackers = NEWLINE.join([f"**{tracker}:** {char.get_cc(tracker)}"
+                         for i in counters 
+                         if CC_Dict[i].max == 2147483647 
+                         and (tracker := counters.pop(counters.index(i)))])
+
+# Rest of the counters
+cc_short = lambda counter: ' (Short)' if CC_Dict[counter].reset_on == 'short' else ''
+cc_disp  = lambda counter: char.cc_str(counter) if hud_display else f'{char.get_cc(counter)} / {char.get_cc_max(counter)}'
+
+cc = NEWLINE.join([f"""**{x}{cc_short(x)}:** {cc_disp(x)}""" 
+                   for x in counters])
+
+char = combat().me if combat() and combat().me else character()
+
+# Spellcaster
+spellbook  = char.spellbook
+SpellDC    = spellbook.dc
+SpellSAB   = spellbook.sab
+spellslots = NEWLINE.join([f"{spellbook.slots_str(i)}" 
+                           for i in range(1,10) 
+                           if spellbook.get_max_slots(i)])
+
+# Passive Perception
+perc = char.skills.perception
+perc_adv = argparse(f"&*& {'adv' if perc.adv else 'dis' if perc.adv is False else ''}").adv()
+observant = 'observant' in get('feats','').lower()
+passive = f"**Passive Perception:** {10 + perc.value + (5 * perc_adv) + (5 * observant)}"
+
+# Other
+initiative = f"**Initiative:** {f'{char.skills.initiative.value:+}'}"
+hp_out = char.hp_str().replace('<', '').replace('>', '')
+
+desc = f""" -desc "**HP:** {hp_out} | **AC:** {char.ac}
+{initiative} | {passive}{experience}{exhaustion}
+{hit_dice if hit_dice else''}" """
+
+# Output
+out.append(desc)
+if spellslots:
+  out.append(f'-f "Spell Slots (DC {SpellDC}, {SpellSAB:+} to Hit)|{spellslots}"')
+if cc:
+  out.append(f'-f "Limited Abilities|{cc}"')
+if ammunition:
+  out.append(f'-f "Ammunition|{ammunition}"')
+if trackers:
+  out.append(f'-f "Tracker|{trackers}"')
+
+return ' '.join(out)
+</drac2>
+
+-title "<name>"
+-thumb <image>
+-color <color>
