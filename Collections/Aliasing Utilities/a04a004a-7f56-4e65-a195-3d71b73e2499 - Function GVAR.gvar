@@ -1,1966 +1,1360 @@
 {
- "all(iterable)": {
-  "desc": "Return `True` if all elements of the *iterable* are true, or if the iterable is empty.",
-  "url": "all",
-  "syntax": ">>> all([1, True, \\\"Hello\\\"])\nTrue\n>>> all([1, True, \\\"Hello\\\", False])\nFalse"
- },
- "any(iterable)": {
-  "desc": "Return `True` if any element of the iterable is true. If the iterable is empty, return `False`.",
-  "url": "any",
-  "syntax": ">>> any([1, True, False, \\\"Hello\\\"])\nTrue\n>>> any([0, False, \\\"\\\", []])\nFalse\n>>> any([])\nFalse"
- },
- "ceil(x)": {
-  "desc": "Rounds a number up to the nearest integer. See [math.ceil()](https://docs.python.org/3/library/math.html#math.ceil).",
-  "param": [
-   {
-    "name": "x",
-    "type": [
-     "float",
-     "int"
+  "abs(x)": {
+    "desc": "Takes a number (float or int) and returns the absolute value of that number.",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "float",
+          "int"
+        ],
+        "desc": "The number to find the absolute value of."
+      }
     ],
-    "desc": "The number to round"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The small integer >= x"
+    "returns": {
+      "type": "float or int",
+      "desc": "The absolute value of x."
+    },
+    "url": "abs",
+    "syntax": ">>> abs(2.1)\n2.1\n>>> abs(-5)\n5"
   },
-  "url": "ceil",
-  "syntax": ">>> ceil(2.1)\n3\n>>> ceil(3.9)\n4"
- },
- "float(x)": {
-  "desc": "Converts *x* to a floating point number.",
-  "param": [
-   {
-    "name": "x",
-    "type": [
-     "float",
-     "int",
-     "str"
+  "all(iterable)": {
+    "desc": "Return `True` if all elements of the *iterable* are true, or if the iterable is empty.",
+    "url": "all",
+    "syntax": ">>> all([1, True, \\\"Hello\\\"])\nTrue\n>>> all([1, True, \\\"Hello\\\", False])\nFalse"
+  },
+  "any(iterable)": {
+    "desc": "Return `True` if any element of the iterable is true. If the iterable is empty, return `False`.",
+    "url": "any",
+    "syntax": ">>> any([1, True, False, \\\"Hello\\\"])\nTrue\n>>> any([0, False, \\\"\\\", []])\nFalse\n>>> any([])\nFalse"
+  },
+  "ceil(x)": {
+    "desc": "Rounds a number up to the nearest integer. See [math.ceil()](https://docs.python.org/3/library/math.html#math.ceil).",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "float",
+          "int"
+        ],
+        "desc": "The number to round"
+      }
     ],
-    "desc": "The value to convert"
-   }
-  ],
-  "returns": {
-   "type": "float",
-   "desc": "The float"
+    "returns": {
+      "type": "int",
+      "desc": "The small integer >= x"
+    },
+    "url": "ceil",
+    "syntax": ">>> ceil(2.1)\n3\n>>> ceil(3.9)\n4"
   },
-  "url": "float",
-  "syntax": ">>> float(\\\"2.1\\\")\n2.1\n>>> float(3)\n3.0"
- },
- "enumerate(iter[, start=0])": {
-  "desc": "Returns a iterable of tuples containing a count and the values from the iterable. Starts at `start`.",
-  "param": [
-   {
-    "name": "iter",
-    "type": [
-     "iterable"
+  "float(x)": {
+    "desc": "Converts *x* to a floating point number.",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "float",
+          "int",
+          "str"
+        ],
+        "desc": "The value to convert"
+      }
     ],
-    "desc": "The value to convert"
-   },
-   {
-    "name": "start",
-    "type": [
-     "int"
+    "returns": {
+      "type": "float",
+      "desc": "The float"
+    },
+    "url": "float",
+    "syntax": ">>> float(\\\"2.1\\\")\n2.1\n>>> float(3)\n3.0"
+  },
+  "enumerate(iter[, start=0])": {
+    "desc": "Returns a iterable of tuples containing a count and the values from the iterable. Starts at `start`.",
+    "param": [
+      {
+        "name": "iter",
+        "type": [
+          "iterable"
+        ],
+        "desc": "The value to convert"
+      },
+      {
+        "name": "start",
+        "type": [
+          "int"
+        ],
+        "desc": "The starting value for the count"
+      }
     ],
-    "desc": "The starting value for the count"
-   }
-  ],
-  "returns": {
-   "type": "iterable[tuple[int, any]]",
-   "desc": "enumerate of count and objects."
+    "returns": {
+      "type": "iterable[tuple[int, any]]",
+      "desc": "enumerate of count and objects."
+    },
+    "url": "enumerate",
+    "syntax": ">>> ourList = [\\\"Barbarian\\\", \\\"Bard\\\", \\\"Rogue\\\"]\n>>> return list(enumerate(ourList))\n[(0, \\\"Barbarian\\\"), (1, \\\"Bard\\\"), (2, \\\"Rogue\\\")]\n>>> out = []\n>>> for index, clas in enumerate(ourList, 1)\n...    out.append(f\\\"{clas} is number {index}\\\")\n>>> return ', and '.join(out)\n\\\"Barbarian is number 1, and Bard is number 2, and Rogue is number 3\\\""
   },
-  "url": "enumerate",
-  "syntax": ">>> ourList = [\\\"Barbarian\\\", \\\"Bard\\\", \\\"Rogue\\\"]\n>>> return list(enumerate(ourList))\n[(0, \\\"Barbarian\\\"), (1, \\\"Bard\\\"), (2, \\\"Rogue\\\")]\n>>> out = []\n>>> for index, clas in enumerate(ourList, 1)\n...    out.append(f\\\"{clas} is number {index}\\\")\n>>> return ', and '.join(out)\n\\\"Barbarian is number 1, and Bard is number 2, and Rogue is number 3\\\""
- },
- "floor(x)": {
-  "desc": "Rounds a number down to the nearest integer. See [math.floor()](https://docs.python.org/3/library/math.html#math.floor).",
-  "param": [
-   {
-    "name": "x",
-    "type": [
-     "float",
-     "int"
+  "floor(x)": {
+    "desc": "Rounds a number down to the nearest integer. See [math.floor()](https://docs.python.org/3/library/math.html#math.floor).",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "float",
+          "int"
+        ],
+        "desc": "The number to round"
+      }
     ],
-    "desc": "The number to round"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The small integer <= x"
+    "returns": {
+      "type": "int",
+      "desc": "The small integer <= x"
+    },
+    "url": "floor",
+    "syntax": ">>> floor(2.1)\n2\n>>> floor(3.9)\n3"
   },
-  "url": "floor",
-  "syntax": ">>> floor(2.1)\n2\n>>> floor(3.9)\n3"
- },
- "int(x)": {
-  "desc": "Converts *x* to an integer.",
-  "param": [
-   {
-    "name": "x",
-    "type": [
-     "float",
-     "int",
-     "str"
+  "int(x)": {
+    "desc": "Converts *x* to an integer.",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "float",
+          "int",
+          "str"
+        ],
+        "desc": "The value to convert"
+      }
     ],
-    "desc": "The value to convert"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The integer"
+    "returns": {
+      "type": "int",
+      "desc": "The integer"
+    },
+    "url": "int",
+    "syntax": ">>> int(\\\"2\\\")\n2\n>>> int(6.2)\n6"
   },
-  "url": "int",
-  "syntax": ">>> int(\\\"2\\\")\n2\n>>> int(6.2)\n6"
- },
- "len(s)": {
-  "desc": "Return the length (the number of items) of an object. The argument may be a sequence (such as a string, bytes, tuple, list, or range) or a collection (such as a dictionary, set, or frozen set).",
-  "returns": {
-   "type": "int",
-   "desc": "The length of the argument."
+  "len(s)": {
+    "desc": "Return the length (the number of items) of an object. The argument may be a sequence (such as a string, bytes, tuple, list, or range) or a collection (such as a dictionary, set, or frozen set).",
+    "returns": {
+      "type": "int",
+      "desc": "The length of the argument."
+    },
+    "url": "len",
+    "syntax": ">>> len([1, 1, 2, 3, 5])\n5\n>>> len(\\\"Hello, World\\\")\n12"
   },
-  "url": "len",
-  "syntax": ">>> len([1, 1, 2, 3, 5])\n5\n>>> len(\\\"Hello, World\\\")\n12"
- },
- "max(iterable, *[, key, default]) | max(arg1, arg2, *args[, key])": {
-  "desc": "Return the largest item in an iterable or the largest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The largest item in the iterable is returned. If two or more positional arguments are provided, the largest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are maximal, the function returns the first one encountered.",
-  "url": "max",
-  "syntax": ">>> max(2, 6, 7, 1)\n7"
- },
- "min(iterable, *[, key, default]) | min(arg1, arg2, *args[, key])": {
-  "desc": "Return the smallest item in an iterable or the smallest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The smallest item in the iterable is returned. If two or more positional arguments are provided, the smallest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are minimal, the function returns the first one encountered.",
-  "url": "min",
-  "syntax": ">>> min(2, 6, 7, 1)\n1"
- },
- "range(stop) | range(start, stop[, step])": {
-  "desc": "Returns a list of numbers in the specified range.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, `ValueError` is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.\n\nA range object will be empty if `r[0]` does not meet the value constraint. Ranges do support negative indices, but these are interpreted as indexing from the end of the sequence determined by the positive indices.",
-  "url": "range",
-  "param": [
-   {
-    "name": "start",
-    "type": [
-     "int"
+  "max(iterable, *[, key, default]) | max(arg1, arg2, *args[, key])": {
+    "desc": "Return the largest item in an iterable or the largest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The largest item in the iterable is returned. If two or more positional arguments are provided, the largest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are maximal, the function returns the first one encountered.",
+    "url": "max",
+    "syntax": ">>> max(2, 6, 7, 1)\n7"
+  },
+  "min(iterable, *[, key, default]) | min(arg1, arg2, *args[, key])": {
+    "desc": "Return the smallest item in an iterable or the smallest of two or more arguments.\n\nIf one positional argument is provided, it should be an iterable. The smallest item in the iterable is returned. If two or more positional arguments are provided, the smallest of the positional arguments is returned.\n\nThere are two optional keyword-only arguments. The key argument specifies a one-argument ordering function like that used for `list.sort()`. The default argument specifies an object to return if the provided iterable is empty. If the iterable is empty and default is not provided, a `ValueError` is raised.\n\nIf multiple items are minimal, the function returns the first one encountered.",
+    "url": "min",
+    "syntax": ">>> min(2, 6, 7, 1)\n1"
+  },
+  "range(stop) | range(start, stop[, step])": {
+    "desc": "Returns a list of numbers in the specified range.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, `ValueError` is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.\n\nA range object will be empty if `r[0]` does not meet the value constraint. Ranges do support negative indices, but these are interpreted as indexing from the end of the sequence determined by the positive indices.",
+    "url": "range",
+    "param": [
+      {
+        "name": "start",
+        "type": [
+          "int"
+        ],
+        "desc": "The start of the range (inclusive)"
+      },
+      {
+        "name": "end",
+        "type": [
+          "int"
+        ],
+        "desc": "The end of the range (exclusive)"
+      },
+      {
+        "name": "step",
+        "type": [
+          "int"
+        ],
+        "desc": "The step value"
+      }
     ],
-    "desc": "The start of the range (inclusive)"
-   },
-   {
-    "name": "end",
-    "type": [
-     "int"
+    "returns": {
+      "desc": "The range of numbers",
+      "type": "list"
+    },
+    "syntax": ">>> range(10)\n[0, 1, 2, 3, 4, 5, 6, 7, 9]\n>>> range(3, 5)\n[3, 4]\n>>> range(9, 0, -1)\n[9, 8, 7, 6, 5, 4, 3, 2, 1]"
+  },
+  "round(number [, ndigits])": {
+    "desc": "Return number rounded to ndigits precision after the decimal point. If ndigits is omitted or is `None`, it returns the nearest integer to its input.",
+    "url": "round",
+    "param": [
+      {
+        "name": "number",
+        "type": [
+          "float",
+          "int"
+        ],
+        "desc": "The number to round"
+      },
+      {
+        "name": "ndigits",
+        "type": [
+          "int"
+        ],
+        "desc": "The number of digits after the decimal point to keep."
+      }
     ],
-    "desc": "The end of the range (exclusive)"
-   },
-   {
-    "name": "step",
-    "type": [
-     "int"
+    "returns": {
+      "type": "float",
+      "desc": "The rounded number"
+    },
+    "syntax": ">>> round(2.1)\n2\n>>> round(2/3, 4)\n0.6667\n# Rounds towards even numbers on x.5\n>>> (round(2.5), round(3.5))\n(2, 4)"
+  },
+  "sqrt(x)": {
+    "desc": "See [math.sqrt()](https://docs.python.org/3/library/math.html#math.sqrt)",
+    "url": "sqrt",
+    "returns": {
+      "type": "float",
+      "desc": "The square root of *x*"
+    },
+    "syntax": ">>> sqrt(25)\n5\n>>> sqrt(32)\n5.656854249492381"
+  },
+  "str(x)": {
+    "desc": "Converts *x* to a string.",
+    "url": "str",
+    "param": [
+      {
+        "name": "x",
+        "type": [
+          "any"
+        ],
+        "desc": "The value to convert."
+      }
     ],
-    "desc": "The step value"
-   }
-  ],
-  "returns": {
-   "desc": "The range of numbers",
-   "type": "list"
+    "returns": {
+      "type": "str",
+      "desc": "The string."
+    },
+    "syntax": ">>> str(5)\n\\\"5\\\"\n>>> \\\"Hello, \\\" + str(2)\n\\\"Hello, 2\\\" "
   },
-  "syntax": ">>> range(10)\n[0, 1, 2, 3, 4, 5, 6, 7, 9]\n>>> range(3, 5)\n[3, 4]\n>>> range(9, 0, -1)\n[9, 8, 7, 6, 5, 4, 3, 2, 1]"
- },
- "round(number [, ndigits])": {
-  "desc": "Return number rounded to ndigits precision after the decimal point. If ndigits is omitted or is `None`, it returns the nearest integer to its input.",
-  "url": "round",
-  "param": [
-   {
-    "name": "number",
-    "type": [
-     "float",
-     "int"
+  "sum(iterable [, start])": {
+    "desc": "Sums *start* and the items of an *iterable* from left to right and returns the total. *start* defaults to `0`. The iterable’s items are normally numbers, and the start value is not allowed to be a string.",
+    "url": "sum",
+    "syntax": ">>> sum([6, 4, 2, 3, 6])\n21\n>>> sum([6, 7], 10)\n23"
+  },
+  "time()": {
+    "desc": "Return the time in seconds since the UNIX epoch (Jan 1, 1970, midnight UTC) as a floating point number. See [time.time()](https://docs.python.org/3/library/time.html#time.time).",
+    "url": "time",
+    "returns": {
+      "type": "float",
+      "desc": "The epoch time."
+    },
+    "alias": "curdate",
+    "syntax": ">>> time()\n1610417511.6360219"
+  },
+  "delete_uvar(name)": {
+    "desc": "Deletes a user variable. Does nothing if the variable does not exist.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.delete_uvar",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the variable to delete"
+      }
     ],
-    "desc": "The number to round"
-   },
-   {
-    "name": "ndigits",
-    "type": [
-     "int"
+    "syntax": ">>> uvar_exists(\\\"uvarName\\\")\nTrue\n>>> delete_uvar(\\\"uvarName\\\")\n>>> uvar_exists(\\\"uvarName\\\")\nFalse"
+  },
+  "dump_json(obj)": {
+    "desc": "Serializes an object to a JSON string. See [json.dumps()](https://docs.python.org/3/library/json.html#json.dumps).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.dump_json",
+    "returns": {
+      "type": "str",
+      "desc": "The JSON formatted string."
+    },
+    "syntax": ">>> json = {\\\"Test\\\": 1}\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json = dump_json(json)\n>>> typeof(json)\n\\\"str\\\"\n>>> json\n'{\\\"Test\\\": 1}'"
+  },
+  "load_json(jsonstr)": {
+    "desc": "Loads an object from a JSON string. See [json.loads()](https://docs.python.org/3/library/json.html#json.loads).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.load_json",
+    "param": [
+      {
+        "name": "jsonstr",
+        "type": [
+          "str"
+        ],
+        "desc": "A properly formatted JSON."
+      }
     ],
-    "desc": "The number of digits after the decimal point to keep."
-   }
-  ],
-  "returns": {
-   "type": "float",
-   "desc": "The rounded number"
+    "returns": {
+      "type": "dict, list, str, int, float, bool, nonetype",
+      "desc": "The converted jsonstr."
+    },
+    "syntax": ">>> json = '{\\\"Test\\\": 1}'\n>>> typeof(json)\n\\\"str\\\"\n>>> json = load_json(json)\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json\n{\\\"Test\\\": 1}"
   },
-  "syntax": ">>> round(2.1)\n2\n>>> round(2/3, 4)\n0.6667\n# Rounds towards even numbers on x.5\n>>> (round(2.5), round(3.5))\n(2, 4)"
- },
- "sqrt(x)": {
-  "desc": "See [math.sqrt()](https://docs.python.org/3/library/math.html#math.sqrt)",
-  "url": "sqrt",
-  "returns": {
-   "type": "float",
-   "desc": "The square root of *x*"
+  "dump_yaml(obj)": {
+    "desc": "Serializes an object to a YAML string. See [yaml.safe_dump](https://pyyaml.org/wiki/PyYAMLDocumentation).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.dump_yaml",
+    "returns": {
+      "type": "str",
+      "desc": "The YAML formatted string."
+    }
   },
-  "syntax": ">>> sqrt(25)\n5\n>>> sqrt(32)\n5.656854249492381"
- },
- "str(x)": {
-  "desc": "Converts *x* to a string.",
-  "url": "str",
-  "param": [
-   {
-    "name": "x",
-    "type": [
-     "any"
+  "load_yaml(yamlstr)": {
+    "desc": "Loads an object from a YAML string. See [yaml.safe_load](https://pyyaml.org/wiki/PyYAMLDocumentation).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.load_yaml",
+    "param": [
+      {
+        "name": "yamlstr",
+        "type": [
+          "str"
+        ],
+        "desc": "A properly formatted YAML or JSON string."
+      }
     ],
-    "desc": "The value to convert."
-   }
-  ],
-  "returns": {
-   "type": "str",
-   "desc": "The string."
+    "returns": {
+      "type": "dict, list, str, int, float, bool, nonetype",
+      "desc": "The converted yamlstr."
+    }
   },
-  "syntax": ">>> str(5)\n\\\"5\\\"\n>>> \\\"Hello, \\\" + str(2)\n\\\"Hello, 2\\\" "
- },
- "sum(iterable [, start])": {
-  "desc": "Sums *start* and the items of an *iterable* from left to right and returns the total. *start* defaults to `0`. The iterable’s items are normally numbers, and the start value is not allowed to be a string.",
-  "url": "sum",
-  "syntax": ">>> sum([6, 4, 2, 3, 6])\n21\n>>> sum([6, 7], 10)\n23"
- },
- "time()": {
-  "desc": "Return the time in seconds since the UNIX epoch (Jan 1, 1970, midnight UTC) as a floating point number. See [time.time()](https://docs.python.org/3/library/time.html#time.time).",
-  "url": "time",
-  "returns": {
-   "type": "float",
-   "desc": "The epoch time."
-  },
-  "alias": "curdate",
-  "syntax": ">>> time()\n1610417511.6360219"
- },
- "argparse(args)": {
-  "desc": "Parses arguments.",
-  "url": "utils.argparser.argparse",
-  "param": [
-   {
-    "name": "args",
-    "type": [
-     "str",
-     "iterable"
+  "err(reason, pm_user=False)": {
+    "desc": "Stops evaluation of an alias and shoes the user an error.",
+    "url": "aliasing.api.functions.err",
+    "param": [
+      {
+        "name": "reason",
+        "type": [
+          "str"
+        ],
+        "desc": "The error to show."
+      },
+      {
+        "name": "pm_user",
+        "type": [
+          "str"
+        ],
+        "desc": "Whether or not to PM the user the error traceback."
+      }
     ],
-    "desc": "A list of arguments to parse"
-   }
-  ],
-  "returns": {
-   "type": "ParsedArguments",
-   "desc": "The parsed arguments."
+    "raises": {
+      "name": "AliasException",
+      "desc": ""
+    },
+    "syntax": ">>> err('Missing Custom Counter')\nError evaluating expression: Missing Custom Counter"
   },
-  "syntax": ">>> args = argparse(\\\"adv -rr 2 -b 1d4[bless]\\\")\n>>> args.adv()\n1\n>>> args.last('rr')\n'2'\n>>> args.get('b')\n['1d4[bless]']"
- },
- "character()": {
-  "desc": "The character’s actions. These do not include attacks - see the `attacks` property.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.character",
-  "returns": {
-   "type": "AliasCharacter",
-   "desc": "The active character."
+  "exists(name)": {
+    "desc": "Returns whether or not a name is set in the current evaluation context.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.exists",
+    "returns": {
+      "type": "Bool",
+      "desc": "`True` if it exists, else `False`"
+    },
+    "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
   },
-  "syntax": ">>> char = character()\n>>> char.sheet_type\n\\\"beyond\\\"\n>>> str(char)\n<AliasStatBlock name=Croebh>"
- },
- "character().actions": {
-  "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.AliasCharacter.actions",
-  "returns": {
-   "type": "list[AliasAction]"
+  "get(name, default=None)": {
+    "desc": "Gets the value of a name, or returns *default* if the name is not set.\n\nRetrieves names in the order of local > cvar > uvar. Does not interact with svars.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.get",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name to retrieve."
+      },
+      {
+        "name": "default",
+        "type": [
+          "any"
+        ],
+        "desc": "What to return if the name is not set."
+      }
+    ],
+    "returns": {
+      "type": "any",
+      "desc": "The found name, else *default*."
+    },
+    "syntax": ">>> get('thisExists', 'Missing!')\nThe thing!\n>>> get('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get('thisDoesNotExist')\nNone"
+  },
+  "get_gvar(address)": {
+    "desc": "Retrieves and returns the value of a gvar (global variable).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.get_gvar",
+    "param": [
+      {
+        "name": "address",
+        "type": [
+          "str"
+        ],
+        "desc": "The gvar address."
+      }
+    ],
+    "returns": {
+      "type": "str",
+      "desc": "The value of the gvar. If the gvar doesn't exist, returns `None`."
+    },
+    "syntax": ">>> get_gvar('a04a004a-7f56-4e65-a195-3d71b73e2499')\n<contents of the gvar>\n>>> get_gvar('this is an invalid address')\nNone"
+  },
+  "get_svar(name, default=None)": {
+    "desc": "Retrieves and returns the value of a svar (server variable).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.get_svar",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the svar."
+      },
+      {
+        "name": "default",
+        "type": [
+          "any"
+        ],
+        "desc": "What to return if the name is not set."
+      }
+    ],
+    "returns": {
+      "type": "str or None",
+      "desc": "The value of the svar, or default if it does not exist."
+    },
+    "syntax": ">>> get_svar('thisExists', 'Missing!')\nThe thing!\n>> get_svar('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get_svar('thisDoesNotExist')\nNone"
+  },
+  "randint(stop)`\n`randint(start, stop[, step])": {
+    "desc": "Returns a random integer in the range `[start..stop)`.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, ValueError is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.",
+    "url": "randint",
+    "param": [
+      {
+        "name": "start",
+        "type": [
+          "int"
+        ],
+        "desc": "The lower limit (inclusive)."
+      },
+      {
+        "name": "stop",
+        "type": [
+          "int"
+        ],
+        "desc": "The upper limit (non-inclusive)."
+      },
+      {
+        "name": "step",
+        "type": [
+          "int"
+        ],
+        "desc": "The step value."
+      }
+    ],
+    "returns": {
+      "type": "int",
+      "desc": "A random integer."
+    },
+    "syntax": "# This will return an int from 0-19 (and never 20)\n>>> randint(20)\n8\n# This will return an int from 1-9 (Spell levels!)\n>>> randint(1, 10)\n3\n# This will return an int from 1-20, but only odd numbers\n>>> randint(1, 21, 2)\n11"
+  },
+  "randchoice(seq)": {
+    "desc": "Returns a random item from `seq`.",
+    "url": "randchoice",
+    "param": [
+      {
+        "name": "seq",
+        "type": [
+          "iterable"
+        ],
+        "desc": "The iterable to choose a random item from."
+      }
+    ],
+    "returns": {
+      "type": "any",
+      "desc": "A random item from the iterable."
+    },
+    "syntax": "# This will return a random item from the list\n>>> randchoice([1, 1, 3, 5, 8])\n8"
+  },
+  "randchoices(population, weights=None, cum_weights=None, k=1)": {
+    "desc": "Returns a list of random items from `population` of `k` length with either weighted or cumulatively weighted odds. The `weights` [2,1,1] are equal to `cum_weights` [2,3,4]. If no `weights` or `cum_weights` are input, the items in `population` will have equal odds of being chosen. If no `k` is input, the output length will be 1.",
+    "url": "randchoices",
+    "param": [
+      {
+        "name": "population",
+        "type": [
+          "iterable"
+        ],
+        "desc": "The iterable to choose random items from."
+      },
+      {
+        "name": "weights",
+        "type": [
+          "list of ints"
+        ],
+        "desc": "The odds for each item in the `population` iterable."
+      },
+      {
+        "name": "cum_weights",
+        "type": [
+          "list of ints"
+        ],
+        "desc": "The cumulative odds for each item in the `population` itterable."
+      },
+      {
+        "name": "k",
+        "type": [
+          "int"
+        ],
+        "desc": "The length of the output."
+      }
+    ],
+    "returns": {
+      "type": "list",
+      "desc": "A list of random items from the iterable."
+    }
+  },
+  "roll(dice)": {
+    "desc": "Rolls dice and returns the output.\n\nSee `!help roll` for syntax.",
+    "url": "aliasing.api.functions.roll",
+    "param": [
+      {
+        "name": "dice",
+        "type": [
+          "str"
+        ],
+        "desc": "The dice to roll."
+      }
+    ],
+    "returns": {
+      "type": "int",
+      "desc": "The roll’s total, or 0 if an error was encountered."
+    },
+    "syntax": "# If you plan on displaying the entire roll, look at vroll()\n>>> roll('1d20')\n3\n>>> roll('invalidString')\n0"
+  },
+  "set_uvar(name, value)": {
+    "desc": "Sets a user variable.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.set_uvar",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the variable to set."
+      },
+      {
+        "name": "value",
+        "type": [
+          "str"
+        ],
+        "desc": "The value to set it to."
+      }
+    ],
+    "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str"
+  },
+  "set_uvar_nx(name, value)": {
+    "desc": "Sets a user variable if there is not already an existing name.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.set_uvar",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the variable to set."
+      },
+      {
+        "name": "value",
+        "type": [
+          "str"
+        ],
+        "desc": "The value to set it to."
+      }
+    ],
+    "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str\n set_uvar_nx('theThing', 2)\n>>> get('theThing')\n1"
+  },
+  "signature(data=0)": {
+    "url": "aliasing.evaluators.ScriptingEvaluator.signature",
+    "desc": "Returns a unique signature encoding the time the alias was invoked, the channel it was invoked in, the invoker, the id of the workshop collection the alias originates from (if applicable), and whether the caller was a personal/server alias/snippet.\n\nThis signature is signed with a secret that guarantees that valid signatures cannot be spoofed; use this when it is necessary to audit the invocations of an alias (e.g. to ensure that a server version of the alias is being used over a personal version).\n\nUse `verify_signature()` in a separate alias to verify the integrity of a generated signature and unpack the encoded data.",
+    "returns": {
+      "type": "int or None"
+    },
+    "param": [
+      {
+        "name": "data",
+        "type": [
+          "int"
+        ],
+        "desc": "Some user-supplied data to encode in the signature. This must be an unsigned integer that fits within 5 bits (i.e. a value [0..31]). Default 0."
+      }
+    ]
+  },
+  "verify_signature(data)": {
+    "url": "aliasing.evaluators.ScriptingEvaluator.verify_signature",
+    "desc": "Verifies that a given signature is valid. The signature should have been generated by `signature()`.\n\nIf the signature is not valid, raises a ValueError. Otherwise, returns a dict with the following keys representing the context the given signature was generated in:```py\n{\n    \\\"message_id\\\": int,\n    \\\"channel_id\\\": int,\n    \\\"author_id\\\": int,\n    \\\"timestamp\\\": float,\n    \\\"workshop_collection_id\\\": str?,  # None if the caller was not a workshop object\n    \\\"scope\\\": str,  # one of UNKNOWN, PERSONAL_ALIAS, SERVER_ALIAS, PERSONAL_SNIPPET, SERVER_SNIPPET, COMMAND_TEST\n    \\\"user_data\\\": int,\n    \\\"guild_id\\\": int?,  # may be None\n    \\\"guild\\\": AliasGuild?,  # may be None\n    \\\"channel\\\": AliasChannel?,  # may be None\n    \\\"author\\\": AliasAuthor?,  # may be None\n}\n```",
+    "returns": {
+      "type": "dict"
+    },
+    "param": [
+      {
+        "name": "data",
+        "type": [
+          "str"
+        ],
+        "desc": "The signature to verify."
+      }
+    ]
+  },
+  "typeof(inst)": {
+    "desc": "Returns the name of the type of an object.",
+    "url": "aliasing.api.functions.typeof",
+    "param": [
+      {
+        "name": "inst",
+        "type": [
+          "any"
+        ],
+        "desc": "The object to find the type of."
+      }
+    ],
+    "returns": {
+      "type": "str",
+      "desc": "The type of object."
+    },
+    "syntax": ">>> typeof('Hello, world!')\n'str'\n>>> typeof(vroll('1d20'))\n'SimpleRollResult'"
+  },
+  "uvar_exists(name)": {
+    "desc": "Returns whether a uvar exists.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.uvar_exists",
+    "returns": {
+      "type": "bool",
+      "desc": "`True` if it exists, else `False`"
+    },
+    "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
+  },
+  "vroll(rollStr, multiply=1, add=0)": {
+    "desc": "Rolls dice and returns a detailed roll result.\n\nSee `!help roll` for syntax.",
+    "url": "aliasing.api.functions.vroll",
+    "param": [
+      {
+        "name": "dice",
+        "type": [
+          "str"
+        ],
+        "desc": "The dice to roll."
+      },
+      {
+        "name": "multiply",
+        "type": [
+          "int"
+        ],
+        "desc": "How many times to multiply each set of dice by."
+      },
+      {
+        "name": "add",
+        "type": [
+          "int"
+        ],
+        "desc": "How many dice to add to each set of dice."
+      }
+    ],
+    "returns": {
+      "type": "SimpleRollResult",
+      "desc": "The result of the roll."
+    },
+    "alias": "vroll",
+    "syntax": ">>> ourRoll = vroll('1d20+3')\n>>> str(ourRoll)\n1d20 (19) + 3 = `22`\n>>> ourRoll.total\n22\n>>> ourRoll = vroll('1d20+3', 2, 1)\n# Multiply dice by 2, but add 1 die after\n>>> str(ourRoll)\n3d20 (14, 9, 5) + 3 = `31`"
+  },
+  "parse_coins(args: str)": {
+    "url": "aliasing.api.functions.parse_coins",
+    "desc": "Parses a coin string into a representation of each currency. If the user input is a decimal number, assumes gold pieces. Otherwise, allows the user to specify currencies in the form ‘+1gp -2sp 3cp’",
+    "param": [
+      {
+        "name": "args",
+        "type": [
+          "str"
+        ],
+        "desc": "The coins you want to parse."
+      }
+    ],
+    "returns": {
+      "type": "dict",
+      "desc": "A dict of the coin changes, e.g. `{\\\"pp\\\":0, \\\"gp\\\":1, \\\"ep\\\":0, \\\"sp\\\":-2, \\\"cp\\\":3, \\\"total\\\": 0.83}`"
+    }
+  },
+  "combat()": {
+    "desc": "Returns the combat active in the channel if one is. Otherwise, returns `None`.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.combat",
+    "returns": {
+      "type": "SimpleCombat",
+      "desc": "The active combat."
+    },
+    "syntax": ">>> c = combat()\n>>> c.get_combatant(\\\"OR1\\\").init\n18\n>>> str(c)\n\\\"Initiative in #channel\\\" "
+  },
+  "combat().combatants": {
+    "desc": "A list of all `SimpleCombatant` in combat.",
+    "url": "aliasing.api.combat.SimpleCombat.combatants",
+    "returns": {
+      "type": "list[SimpleCombatant]",
+      "desc": "A list of the `SimpleCombatants` in the combat."
+    },
+    "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().combatants[0].name\n'OR1'"
+  },
+  "combat().current": {
+    "desc": "The `SimpleCombatant` or `SimpleGroup` representing the combatant whose turn it is.",
+    "url": "aliasing.api.combat.SimpleCombat.current",
+    "returns": {
+      "type": "SimpleCombatant** *or* **SimpleGroup",
+      "desc": "The combatant or group whose turn it is."
+    },
+    "syntax": ">>> combat().current\n<AliasStatBlock name=OR1>"
+  },
+  "combat().groups": {
+    "desc": "A list of all `SimpleGroup` in combat.",
+    "url": "aliasing.api.combat.SimpleCombat.groups",
+    "returns": {
+      "type": "list[SimpleGroup]",
+      "desc": "A list of the `SimpleGroup` in the combat."
+    },
+    "syntax": ">>> [f\\\"{group.name} - {len(group.combatants)} Members\\\" for group in combat().groups]\n# A list of all the groups in the combat, with the number of combatants in them\n[\\\"Orc - 4\\\", \\\"Wolf - 4\\\"]"
+  },
+  "combat().me": {
+    "desc": "The `SimpleCombatant` representing the active character in combat, or `None` if the character is not in the combat.",
+    "url": "aliasing.api.combat.SimpleCombat.me",
+    "returns": {
+      "type": "SimpleCombatant",
+      "desc": "The users active character in combat."
+    },
+    "syntax": ">>> combat().me\n<AliasStatBlock name=Hero McHeroson>\n>>> character().name\n'Hero McHeroson'\n>>> !char Broseidon\nActive character changed to Broseidon\n>>> combat().me\nNone"
+  },
+  "combat().name": {
+    "desc": "Returns the name of the combat, or None if a name is not set.",
+    "url": "aliasing.api.combat.SimpleCombat",
+    "returns": {
+      "type": "Str or None",
+      "desc": "The name of the combat."
+    }
+  },
+  "combat().round_num": {
+    "desc": "An `int` representing the round number of the combat.",
+    "url": "aliasing.api.combat.SimpleCombat.round_num",
+    "returns": {
+      "type": "int",
+      "desc": "The round number."
+    },
+    "syntax": ">>> combat().round_num\n7"
+  },
+  "combat().turn_num": {
+    "desc": "An `int` representing the initiative score of the current turn.",
+    "url": "aliasing.api.combat.SimpleCombat.turn_num",
+    "returns": {
+      "type": "int",
+      "desc": "The turn number."
+    },
+    "syntax": ">>> combat().turn_num\n17"
+  },
+  "combat().delete_metadata(k: str) → Optional[str]": {
+    "desc": "Removes a key from the metadata.",
+    "param": [
+      {
+        "name": "k",
+        "type": [
+          "str"
+        ],
+        "desc": "The metadata key to remove."
+      }
+    ],
+    "returns": {
+      "type": "str or None",
+      "desc": "The removed value or `None` if the key is not found."
+    },
+    "url": "aliasing.api.combat.SimpleCombat.delete_metadata"
+  },
+  "combat().get_metadata(k: str, default=None) → str": {
+    "desc": "Gets a metadata value for the passed key or returns default if the name is not set.",
+    "param": [
+      {
+        "name": "k",
+        "type": [
+          "str"
+        ],
+        "desc": "The metadata key to remove."
+      },
+      {
+        "name": "default",
+        "type": [
+          "any"
+        ],
+        "desc": "What to return if the name is not set."
+      }
+    ],
+    "returns": {
+      "type": "str or default",
+      "desc": "The removed value or `None` if the key is not found."
+    },
+    "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+    "syntax": ">>> combat().get_metadata(\\\"Test\\\")\n'{\\\"Status\\\": [\\\"Mario\\\", 1, 2]}'"
+  },
+  "combat().set_metadata(k: str, v: str)": {
+    "desc": "Assigns a metadata key to the passed value. Maximum size of the metadata is 100k characters, key and item inclusive.",
+    "param": [
+      {
+        "name": "k",
+        "type": [
+          "str"
+        ],
+        "desc": "The metadata key to set."
+      },
+      {
+        "name": "v",
+        "type": [
+          "str"
+        ],
+        "desc": "The metadata value to set."
+      }
+    ],
+    "url": "aliasing.api.combat.SimpleCombat.get_metadata",
+    "syntax": ">>> combat().set_metadata(\\\"Test\\\", dump_json({\\\"Status\\\": [\\\"Mario\\\", 1, 2]}))"
+  },
+  "combat().get_combatant(name, strict=None)": {
+    "desc": "Gets a `SimpleCombatant` by its name or ID.",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the combatant to get."
+      },
+      {
+        "name": "strict",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
+      }
+    ],
+    "returns": {
+      "type": "SimpleCombatant or SimpleGroup or None",
+      "desc": "The combatant or group or None."
+    },
+    "url": "aliasing.api.combat.SimpleCombat.get_combatant",
+    "alias": "targets",
+    "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().get_combatant('or1')\n<AliasStatBlock name=OR1>"
+  },
+  "combat().get_group(name, strict=None)": {
+    "desc": "Gets a `SimpleGroup` that matches on name.",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the group to get."
+      },
+      {
+        "name": "strict",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
+      }
+    ],
+    "returns": {
+      "type": "SimpleGroup or None",
+      "desc": "The group."
+    },
+    "url": "aliasing.api.combat.SimpleCombat.get_group",
+    "syntax": ">>> combat().get_group('Gobbos')\nGobbos (3 combatants)\n>>> combat().get_group('Gobbos').combatants\n[<AliasStatBlock name=GO1>, <AliasStatBlock name=GO2>, <AliasStatBlock name=GO3>]"
+  },
+  "combat().set_round(round_num: int)": {
+    "desc": "Sets the current round.\nSetting the round will not tick any events with durations.",
+    "param": [
+      {
+        "name": "round_num",
+        "type": [
+          "int"
+        ],
+        "desc": "The new round number"
+      }
+    ],
+    "url": "aliasing.api.combat.SimpleCombat.set_round"
+  },
+  "combat().end_round()": {
+    "desc": "Moves initiative to just before the next round (no active combatant or group).\nEnding the round will not tick any events with durations.",
+    "url": "aliasing.api.combat.SimpleCombat.end_round"
+  },
+  "SimpleCombatant.effects": {
+    "url": "aliasing.api.combat.SimpleCombatant.effects",
+    "desc": "A list of SimpleEffect active on the combatant.",
+    "type": {
+      "name": "list of SimpleEffect"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
+  },
+  "SimpleCombatant.init": {
+    "url": "aliasing.api.combat.SimpleCombatant.init",
+    "desc": "What the combatant rolled for initiative.",
+    "type": {
+      "name": "int"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
+  },
+  "SimpleCombatant.initmod": {
+    "url": "aliasing.api.combat.SimpleCombatant.initmod",
+    "desc": "An int representing the combatant’s initiative modifier.",
+    "type": {
+      "name": "int"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.initmod\n3"
+  },
+  "SimpleCombatant.type": {
+    "url": "aliasing.api.combat.SimpleCombatant.type",
+    "desc": "The type of the object (\\\"combatant\\\"), to determine whether this is a group or not.",
+    "type": {
+      "name": "str"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.type\n'combatant'"
+  },
+  "SimpleCombatant.ac": {
+    "url": "aliasing.api.combat.SimpleCombatant.ac",
+    "desc": "The armor class of the creature.",
+    "returns": {
+      "type": "int or None"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.ac\n21"
+  },
+  "SimpleCombatant.add_effect(name: str, args: str, duration: int = -1, concentration:bool = False, parent=None, end: bool = False, desc:str = None)": {
+    "url": "aliasing.api.combat.SimpleCombatant.add_effect",
+    "desc": "Adds an effect to the combatant.",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the effect to add."
+      },
+      {
+        "name": "args",
+        "type": [
+          "str"
+        ],
+        "desc": "The effect arguments to add (same syntax as init effect)."
+      },
+      {
+        "name": "duration",
+        "type": [
+          "int"
+        ],
+        "desc": "The duration of the effect, in rounds."
+      },
+      {
+        "name": "concentration",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether the effect requires concentration."
+      },
+      {
+        "name": "parent",
+        "type": [
+          "SimpleEffect"
+        ],
+        "desc": "The parent of the effect."
+      },
+      {
+        "name": "end",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether the effect ticks on the end of turn."
+      },
+      {
+        "name": "desc",
+        "type": [
+          "str"
+        ],
+        "desc": "A description of the effect."
+      }
+    ],
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[]\n>>> target.add_effect('Rage', '-d 2 -resist piercing -resist bludgeoning -resist slashing', 10, desc='This boi be angry!')\n# If you don't need one of the arguments that has a default (Such as conc or parent)\n# You can skip it by using positional arguments (desc='This boi be angry!)\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
+  },
+  "SimpleCombatant.attacks": {
+    "url": "aliasing.api.combat.SimpleCombatant.attacks",
+    "desc": "The attacks of the creature.",
+    "returns": {
+      "type": "AliasAttackList"
+    },
+    "syntax": ">>> target = combat().get_combatant('OR1')\n>>> str(target.attacks)\n'''**Greataxe:** Attack: +5 to hit. Hit: 1d12 + 3 [slashing] damage.\n**Javelin:** Attack: +5 to hit. Hit: 1d6 + 3 [piercing] damage.'''\n>>> target.attacks[0].name\n'Greataxe'"
+  },
+  "SimpleCombatant.controller": {
+    "desc": "The ID of the combatant's controller.",
+    "url": "aliasing.api.combat.SimpleCombatant.controller",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "SimpleCombatant.creature_type": {
+    "desc": "The creature type of the combatant. Will return None for players or combatants with no creature type.",
+    "url": "aliasing.api.combat.SimpleCombatant.creature_type",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "SimpleCombatant.damage(dice_str, crit=False, d=None, c=None, critdice=0, overheal=False)": {
+    "url": "aliasing.api.combat.SimpleCombatant.damage",
+    "desc": "Does damage to a combatant, and returns the rolled result and total, accounting for resistances.",
+    "returns": {
+      "type": "dict",
+      "desc": "Dictionary representing the results of the Damage Automation with three keys, `'damage'`, `'total'`, `roll`, detailing the resulting string, total damage, and the roll itself, respectively."
+    },
+    "param": [
+      {
+        "name": "dice_str",
+        "type": [
+          "str"
+        ],
+        "desc": "The damage to do (e.g. \\\"1d6[acid]\\\")."
+      },
+      {
+        "name": "crit",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether or not the damage should be rolled as a crit."
+      },
+      {
+        "name": "d",
+        "type": [
+          "str"
+        ],
+        "desc": "Any additional damage to add (equivalent of -d)."
+      },
+      {
+        "name": "c",
+        "type": [
+          "str"
+        ],
+        "desc": "Any additional damage to add to crits (equivalent of -c)."
+      },
+      {
+        "name": "critdice",
+        "type": [
+          "int"
+        ],
+        "desc": "How many extra weapon dice to roll on a crit (in addition to normal dice)."
+      },
+      {
+        "name": "overheal",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether or not to allow this damage to exceed a target’s HP max."
+      }
+    ],
+    "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n<15/15>\n>>> damage = target.damage('1d8 [piercing]')\n>>> damage\n{'damage': '**Damage:** 1d8 (7) [piercing] = `7`', 'total': 7, 'roll': <RollResult total=7>}\n>>> target.hp_str()\n<8/15>\n>>> damage.damage # I know it looks funny\n**Damage:** 1d8 (7) [piercing] = `7`\n# But what if we want to preroll our damage?\n>>> preRolled = vroll('1d4 [cold] + 1d4 [fire]')\n>>> str(preRolled)\n1d4 (3) [cold] + 1d4 (**4**) [fire] = `7`\n>>> damage = target.damage(preRolled.consolidated())\n>>> damage\n{'damage': '**Damage:** (3 [cold]) / 2 + 4 [fire] = `5`', 'total': 5, 'roll': <RollResult total=5>}\n# They were resistant to cold damage!\n>>> target.hp_str()\n<2/15>"
+  },
+  "SimpleCombatant.get_effect(name: str)": {
+    "url": "aliasing.api.combat.SimpleCombatant.get_effect",
+    "desc": "Gets a SimpleEffect, fuzzy searching (partial match) for a match.",
+    "returns": {
+      "type": "SimpleEffect",
+      "desc": "The effect."
+    },
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the effect to get."
+      }
+    ],
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]\n>>> effect = target.get_effect('Rage')\n>>> effect.name\n'Rage'"
+  },
+  "SimpleCombatant.group": {
+    "desc": "The name of the group the combatant is in, or `None` if the combatant is not in a group.",
+    "url": "aliasing.api.combat.SimpleCombatant.group",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "SimpleCombatant.hp": {
+    "url": "aliasing.api.combat.SimpleCombatant.hp",
+    "desc": "The current HP of the creature.",
+    "returns": {
+      "type": "int or None"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.hp\n10"
+  },
+  "SimpleCombatant.hp_str()": {
+    "url": "aliasing.api.combat.SimpleCombatant.hp_str",
+    "desc": "Returns a string describing the creature’s current, max, and temp HP.",
+    "returns": {
+      "type": "str"
+    },
+    "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n'<15/15>'\n# Now, lets assume they are hidden\n>>> target.hp_str()\n'<Healthy>'"
+  },
+  "SimpleCombatant.id": {
+    "url": "aliasing.api.combat.SimpleCombatant.id",
+    "desc": "The combatant’s unique identifier.",
+    "type": {
+      "name": "str"
+    },
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.id\n'd7c8e9fc-3531-44d8-8608-f42e03881d19'"
+  },
+  "SimpleCombatant.levels": {
+    "url": "aliasing.api.combat.SimpleCombatant.levels",
+    "desc": "The levels of the creature.",
+    "returns": {
+      "type": "AliasLevels"
+    }
+  },
+  "SimpleCombatant.max_hp": {
+    "url": "aliasing.api.combat.SimpleCombatant.max_hp",
+    "desc": "The maximum HP of the creature.",
+    "returns": {
+      "type": "int or None"
+    }
+  },
+  "SimpleCombatant.modify_hp(amount, ignore_temp=False, overflow=True)": {
+    "url": "aliasing.api.combat.SimpleCombatant.modify_hp",
+    "desc": "Modifies the creature’s remaining HP by a given amount.",
+    "param": [
+      {
+        "name": "amount",
+        "type": [
+          "int"
+        ],
+        "desc": "The amount of HP to add/remove."
+      },
+      {
+        "name": "ignore_temp",
+        "type": [
+          "bool"
+        ],
+        "desc": "If amount is negative, whether to damage temp HP first or ignore temp."
+      },
+      {
+        "name": "overflow",
+        "type": [
+          "bool"
+        ],
+        "desc": "If amount is positive, whether to allow overhealing or cap at the creature’s max HP."
+      }
+    ]
+  },
+  "SimpleCombatant.monster_name": {
+    "desc": "The monster name of the combatant. Will return None for players.",
+    "url": "aliasing.api.combat.SimpleCombatant.monster_name",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "SimpleCombatant.name": {
+    "url": "aliasing.api.combat.SimpleCombatant.name",
+    "desc": "The name of the creature.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "SimpleCombatant.note": {
+    "url": "aliasing.api.combat.SimpleCombatant.note",
+    "desc": "The note on the combatant. None if not set.",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "SimpleCombatant.race": {
+    "desc": "The race of the combatant. Will return None for monsters or combatants with no race.",
+    "url": "aliasing.api.combat.SimpleCombatant.race",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "SimpleCombatant.remove_effect(name: str)": {
+    "url": "aliasing.api.combat.SimpleCombatant.remove_effect",
+    "desc": "Removes an effect from the combatant, fuzzy searching on name. If not found, does nothing.",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the effect to remove."
+      }
+    ]
+  },
+  "SimpleCombatant.reset_hp()": {
+    "url": "aliasing.api.combat.SimpleCombatant.reset_hp",
+    "desc": "Heals a creature to max and removes any temp HP."
+  },
+  "SimpleCombatant.resistances": {
+    "url": "aliasing.api.combat.SimpleCombatant.resistances",
+    "desc": "The resistances, immunities, and vulnerabilities of the creature.",
+    "returns": {
+      "type": "AliasResistances"
+    }
+  },
+  "SimpleCombatant.save(ability: str, adv: bool = None)": {
+    "url": "aliasing.api.combat.SimpleCombatant.save",
+    "desc": "Rolls a combatant’s saving throw.",
+    "returns": {
+      "type": "SimpleRollResult",
+      "desc": "A SimpleRollResult describing the rolled save."
+    },
+    "param": [
+      {
+        "name": "ability",
+        "type": [
+          "str"
+        ],
+        "desc": "The type of save (“str”, “dexterity”, etc)."
+      },
+      {
+        "name": "adv",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether to roll the save with advantage. Rolls with advantage if True, disadvantage if False, or normally if None."
+      }
+    ]
+  },
+  "SimpleCombatant.saves": {
+    "url": "aliasing.api.combat.SimpleCombatant.saves",
+    "desc": "The saves of the creature.",
+    "returns": {
+      "type": "AliasSaves"
+    }
+  },
+  "SimpleCombatant.set_ac(ac: int)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_ac",
+    "desc": "Sets the combatant’s armor class.",
+    "param": [
+      {
+        "name": "ac",
+        "type": [
+          "int"
+        ],
+        "desc": "The new AC."
+      }
+    ]
+  },
+  "SimpleCombatant.set_group(group)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_group",
+    "desc": "Sets the combatant’s group",
+    "returns": {
+      "type": "SimpleGroup or None",
+      "desc": "The combatant’s new group, or None if the combatant was removed from a group."
+    },
+    "param": [
+      {
+        "name": "group",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the group. None to remove from group."
+      }
+    ]
+  },
+  "SimpleCombatant.set_hp(new_hp)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_hp",
+    "desc": "Sets the creature’s remaining HP.",
+    "param": [
+      {
+        "name": "new_hp",
+        "type": [
+          "int"
+        ],
+        "desc": "The amount of remaining HP (a nonnegative integer)."
+      }
+    ]
+  },
+  "SimpleCombatant.set_init(init: int)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_init",
+    "desc": "Sets the combatant’s initiative roll.",
+    "param": [
+      {
+        "name": "init",
+        "type": [
+          "int"
+        ],
+        "desc": "The new initiative."
+      }
+    ]
+  },
+  "SimpleCombatant.set_maxhp(maxhp: int)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_maxhp",
+    "desc": "Sets the combatant’s max HP.",
+    "param": [
+      {
+        "name": "maxhp",
+        "type": [
+          "int"
+        ],
+        "desc": "The new max HP."
+      }
+    ]
+  },
+  "SimpleCombatant.set_name(name: str)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_name",
+    "desc": "Sets the combatant’s name.",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The new name."
+      }
+    ]
+  },
+  "SimpleCombatant.set_note(note: str)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_note",
+    "desc": "Sets the combatant’s note.",
+    "param": [
+      {
+        "name": "note",
+        "type": [
+          "str"
+        ],
+        "desc": "The new note."
+      }
+    ]
+  },
+  "SimpleCombatant.set_temp_hp(new_temp)": {
+    "url": "aliasing.api.combat.SimpleCombatant.set_temp_hp",
+    "desc": "Sets a creature’s temp HP.",
+    "param": [
+      {
+        "name": "new_temp",
+        "type": [
+          "int"
+        ],
+        "desc": "The new temp HP (a non-negative integer)."
+      }
+    ]
+  },
+  "SimpleCombatant.skills": {
+    "url": "aliasing.api.combat.SimpleCombatant.skills",
+    "desc": "The skills of the creature.",
+    "returns": {
+      "type": "AliasSkills"
+    }
+  },
+  "SimpleCombatant.spellbook": {
+    "url": "aliasing.api.combat.SimpleCombatant.spellbook",
+    "desc": "The creature’s spellcasting information.",
+    "returns": {
+      "type": "AliasSpellbook"
+    }
+  },
+  "SimpleCombatant.stats": {
+    "url": "aliasing.api.combat.SimpleCombatant.stats",
+    "desc": "The stats of the creature.",
+    "returns": {
+      "type": "AliasBaseStats"
+    }
+  },
+  "SimpleCombatant.temp_hp": {
+    "url": "aliasing.api.combat.SimpleCombatant.temp_hp",
+    "desc": "The current temp HP of the creature.",
+    "returns": {
+      "type": "int"
+    }
   }
- },
- "combat()": {
-  "desc": "Returns the combat active in the channel if one is. Otherwise, returns `None`.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.combat",
-  "returns": {
-   "type": "SimpleCombat",
-   "desc": "The active combat."
-  },
-  "syntax": ">>> c = combat()\n>>> c.get_combatant(\\\"OR1\\\").init\n18\n>>> str(c)\n\\\"Initiative in #channel\\\" "
- },
- "ctx": {
-  "desc": "The context the alias was invoked in. See [AliasContext](https://avrae.readthedocs.io/en/latest/aliasing/api.html#aliasing.api.context.AliasContext) for more details.\n\nNote that this is an automatically bound name and not a function.",
-  "url": "ctx",
-  "type": {
-   "name": "AliasContext"
-  },
-  "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n>>> ctx.prefix\n\\\"!\\\" "
- },
- "delete_uvar(name)": {
-  "desc": "Deletes a user variable. Does nothing if the variable does not exist.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.delete_uvar",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to delete"
-   }
-  ],
-  "syntax": ">>> uvar_exists(\\\"uvarName\\\")\nTrue\n>>> delete_uvar(\\\"uvarName\\\")\n>>> uvar_exists(\\\"uvarName\\\")\nFalse"
- },
- "dump_json(obj)": {
-  "desc": "Serializes an object to a JSON string. See [json.dumps()](https://docs.python.org/3/library/json.html#json.dumps).",
-  "url": "aliasing.evaluators.ScriptingEvaluator.dump_json",
-  "returns": {
-   "type": "str",
-   "desc": "The JSON formatted string."
-  },
-  "syntax": ">>> json = {\\\"Test\\\": 1}\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json = dump_json(json)\n>>> typeof(json)\n\\\"str\\\"\n>>> json\n'{\\\"Test\\\": 1}'"
- },
- "err(reason, pm_user=False)": {
-  "desc": "Stops evaluation of an alias and shoes the user an error.",
-  "url": "aliasing.api.functions.err",
-  "param": [
-   {
-    "name": "reason",
-    "type": [
-     "str"
-    ],
-    "desc": "The error to show."
-   },
-   {
-    "name": "pm_user",
-    "type": [
-      "str"
-    ],
-    "desc": "Whether or not to PM the user the error traceback."
-   }
-  ],
-  "raises": {
-   "name": "AliasException",
-   "desc": ""
-  },
-  "syntax": ">>> err('Missing Custom Counter')\nError evaluating expression: Missing Custom Counter"
- },
- "exists(name)": {
-  "desc": "Returns whether or not a name is set in the current evaluation context.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.exists",
-  "returns": {
-   "type": "Bool",
-   "desc": "`True` if it exists, else `False`"
-  },
-  "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
- },
- "get(name, default=None)": {
-  "desc": "Gets the value of a name, or returns *default* if the name is not set.\n\nRetrieves names in the order of local > cvar > uvar. Does not interact with svars.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.get",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name to retrieve."
-   },
-   {
-    "name": "default",
-    "type": [
-     "any"
-    ],
-    "desc": "What to return if the name is not set."
-   }
-  ],
-  "returns": {
-   "type": "any",
-   "desc": "The found name, else *default*."
-  },
-  "syntax": ">>> get('thisExists', 'Missing!')\nThe thing!\n>>> get('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get('thisDoesNotExist')\nNone"
- },
- "get_gvar(address)": {
-  "desc": "Retrieves and returns the value of a gvar (global variable).",
-  "url": "aliasing.evaluators.ScriptingEvaluator.get_gvar",
-  "param": [
-   {
-    "name": "address",
-    "type": [
-     "str"
-    ],
-    "desc": "The gvar address."
-   }
-  ],
-  "returns": {
-   "type": "str",
-   "desc": "The value of the gvar. If the gvar doesn't exist, returns `None`."
-  },
-  "syntax": ">>> get_gvar('a04a004a-7f56-4e65-a195-3d71b73e2499')\n<contents of the gvar>\n>>> get_gvar('this is an invalid address')\nNone"
- },
- "get_svar(name, default=None)": {
-  "desc": "Retrieves and returns the value of a svar (server variable).",
-  "url": "aliasing.evaluators.ScriptingEvaluator.get_svar",
-  "param": [
-   {"name":"name", "type": ["str"], "desc":"The name of the svar."},
-   {"name":"default", "type":["any"], "desc":"What to return if the name is not set."}
-  ],
-  "returns": {"type":"str or None", "desc":"The value of the svar, or default if it does not exist."},
-  "syntax": ">>> get_svar('thisExists', 'Missing!')\nThe thing!\n>> get_svar('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get_svar('thisDoesNotExist')\nNone"
- },
- "load_json(jsonstr)": {
-  "desc": "Loads an object from a JSON string. See [json.loads()](https://docs.python.org/3/library/json.html#json.loads).",
-  "url": "aliasing.evaluators.ScriptingEvaluator.load_json",
-  "param": [
-   {
-    "name": "jsonstr",
-    "type": [
-     "str"
-    ],
-    "desc": "A properly formatted json."
-   }
-  ],
-  "returns": {
-   "type": "dict, list, str, int, float, bool, nonetype",
-   "desc": "The converted jsonstr."
-  },
-  "syntax": ">>> json = '{\\\"Test\\\": 1}'\n>>> typeof(json)\n\\\"str\\\"\n>>> json = load_json(json)\n>>> typeof(json)\n\\\"SafeDict\\\"\n>>> json\n{\\\"Test\\\": 1}"
- },
- "randint(stop)`\n`randint(start, stop[, step])": {
-  "desc": "Returns a random integer in the range `[start..stop)`.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, ValueError is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.",
-  "url": "randint",
-  "param": [
-   {
-    "name": "start",
-    "type": [
-     "int"
-    ],
-    "desc": "The lower limit (inclusive)."
-   },
-   {
-    "name": "stop",
-    "type": [
-     "int"
-    ],
-    "desc": "The upper limit (non-inclusive)."
-   },
-   {
-    "name": "step",
-    "type": [
-     "int"
-    ],
-    "desc": "The step value."
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "A random integer."
-  },
-  "syntax": "# This will return an int from 0-19 (and never 20)\n>>> randint(20)\n8\n# This will return an int from 1-9 (Spell levels!)\n>>> randint(1, 10)\n3\n# This will return an int from 1-20, but only odd numbers\n>>> randint(1, 21, 2)\n11"
- },
- "randchoice(seq)": {
-  "desc": "Returns a random item from `seq`.",
-  "url": "randchoice",
-  "param": [
-   {
-    "name": "seq",
-    "type": [
-     "iterable"
-    ],
-    "desc": "The iterable to choose a random item from."
-   }
-  ],
-  "returns": {
-   "type": "any",
-   "desc": "A random item from the iterable."
-  },
-  "syntax": "# This will return a random item from the list\n>>> randchoice([1, 1, 3, 5, 8])\n8"
- },
- "roll(dice)": {
-  "desc": "Rolls dice and returns the output.\n\nSee `!help roll` for syntax.",
-  "url": "aliasing.api.functions.roll",
-  "param": [
-   {
-    "name": "dice",
-    "type": [
-     "str"
-    ],
-    "desc": "The dice to roll."
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The roll’s total, or 0 if an error was encountered."
-  },
-  "syntax": "# If you plan on displaying the entire roll, look at vroll()\n>>> roll('1d20')\n3\n>>> roll('invalidString')\n0"
- },
- "set_uvar(name, value)": {
-  "desc": "Sets a user variable.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.set_uvar",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "str"
-    ],
-    "desc": "The value to set it to."
-   }
-  ],
-  "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str"
- },
- "set_uvar_nx(name, value)": {
-  "desc": "Sets a user variable if there is not already an existing name.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.set_uvar",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "str"
-    ],
-    "desc": "The value to set it to."
-   }
-  ],
-  "syntax": ">>> uvar_exists('theThing')\nFalse\n>>> set_uvar('theThing', 1) # Note: 1 is an int\n>>> uvar_exists('theThing')\nTrue\n>>> get('theThing')\n'1' # And when saved, it became a str\n set_uvar_nx('theThing', 2)\n>>> get('theThing')\n1"
- },
- "typeof(inst)": {
-  "desc": "Returns the name of the type of an object.",
-  "url": "aliasing.api.functions.typeof",
-  "param": [
-   {
-    "name": "inst",
-    "type": [
-     "any"
-    ],
-    "desc": "The object to find the type of."
-   }
-  ],
-  "returns": {
-   "type": "str",
-   "desc": "The type of object."
-  },
-  "syntax": ">>> typeof('Hello, world!')\n'str'\n>>> typeof(vroll('1d20'))\n'SimpleRollResult'"
- },
- "uvar_exists(name)": {
-  "desc": "Returns whether a uvar exists.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.uvar_exists",
-  "returns": {
-   "type": "bool",
-   "desc": "`True` if it exists, else `False`"
-  },
-  "syntax": ">>> exists('thisExists')\nTrue\n>>> exists('thisDoesNot')\nFalse"
- },
- "vroll(rollStr, multiply=1, add=0)": {
-  "desc": "Rolls dice and returns a detailed roll result.\n\nSee `!help roll` for syntax.",
-  "url": "aliasing.api.functions.vroll",
-  "param": [
-   {
-    "name": "dice",
-    "type": [
-     "str"
-    ],
-    "desc": "The dice to roll."
-   },
-   {
-    "name": "multiply",
-    "type": [
-     "int"
-    ],
-    "desc": "How many times to multiply each set of dice by."
-   },
-   {
-    "name": "add",
-    "type": [
-     "int"
-    ],
-    "desc": "How many dice to add to each set of dice."
-   }
-  ],
-  "returns": {
-   "type": "SimpleRollResult",
-   "desc": "The result of the roll."
-  },
-  "alias": "vroll",
-  "syntax": ">>> ourRoll = vroll('1d20+3')\n>>> str(ourRoll)\n1d20 (19) + 3 = `22`\n>>> ourRoll.total\n22\n>>> ourRoll = vroll('1d20+3', 2, 1)\n# Multiply dice by 2, but add 1 die after\n>>> str(ourRoll)\n3d20 (14, 9, 5) + 3 = `31`"
- },
- "chanid()": {
-  "desc": "Returns the ID of the active Discord channel.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.chanid",
-  "returns": {
-   "type": "str",
-   "desc": "The channel ID."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "ctx.channel.id"
-  }
- },
- "servid()": {
-  "desc": "Returns the ID of the active Discord guild, or None if in DMs.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.servid",
-  "returns": {
-   "type": "str",
-   "desc": "The guild/server ID."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "ctx.guild.id"
-  }
- },
- "set(name, value)": {
-  "desc": "Sets the value of a name in the current scripting context.",
-  "url": "aliasing.evaluators.ScriptingEvaluator.set",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "str"
-    ],
-    "desc": "The value to set it to."
-   }
-  ],
-  "deprecated": {
-   "version": "0.1.0",
-   "replacement": "name = value"
-  }
- },
- "cc_exists(name)": {
-  "desc": "Returns whether a custom counter exists.",
-  "url": "cc_exists",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to check."
-   }
-  ],
-  "returns": {
-   "type": "bool",
-   "desc": "Whether the counter exists."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().cc_exists()"
-  }
- },
- "cc_str(name)": {
-  "desc": "Returns a string representing a custom counter.",
-  "url": "cc_str",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to get."
-   }
-  ],
-  "returns": {
-   "type": "str",
-   "desc": "A string representing the current value, maximum, and minimum of the counter."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().cc_str()"
-  },
-  "syntax": ">>> cc_str(\\\"Ki\\\")\n'11/17'\n>>> cc_str(\\\"Bardic Inspiration\\\")\n'◉◉◉〇〇'"
- },
- "create_cc(name, minVal=None, maxVal=None, reset=None, dispType=None)": {
-  "desc": "Creates a custom counter. If a counter with the same name already exists, it will replace it.",
-  "url": "create_cc",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to create."
-   },
-   {
-    "name": "minVal",
-    "type": [
-     "str"
-    ],
-    "desc": "The minimum value of the counter. Supports Cvar Table parsing."
-   },
-   {
-    "name": "maxVal",
-    "type": [
-     "str"
-    ],
-    "desc": "The maximum value of the counter. Supports Cvar Table parsing."
-   },
-   {
-    "name": "reset",
-    "type": [
-     "str"
-    ],
-    "desc": "One of `'short'`, `'long'`, `'hp'`, `'none'`, or `None`."
-   },
-   {
-    "name": "dispType",
-    "type": [
-     "str"
-    ],
-    "desc": "Either `None` or `'bubble'`."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().create_cc()"
-  }
- },
- "create_cc_nx(name, minVal=None, maxVal=None, reset=None, dispType=None)": {
-  "desc": "Creates a custom counter if one with the given name does not already exist.",
-  "url": "create_cc_nx",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to create."
-   },
-   {
-    "name": "minVal",
-    "type": [
-     "str"
-    ],
-    "desc": "The minimum value of the counter. Supports Cvar Table parsing."
-   },
-   {
-    "name": "maxVal",
-    "type": [
-     "str"
-    ],
-    "desc": "The maximum value of the counter. Supports Cvar Table parsing."
-   },
-   {
-    "name": "reset",
-    "type": [
-     "str"
-    ],
-    "desc": "One of `'short'`, `'long'`, `'hp'`, `'none'`, or `None`."
-   },
-   {
-    "name": "dispType",
-    "type": [
-     "str"
-    ],
-    "desc": "Either `None` or `'bubble'`."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().create_cc_nx()"
-  }
- },
- "delete_cc(name)": {
-  "desc": "Deletes a custom counter.",
-  "url": "delete_cc",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to delete."
-   }
-  ],
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter doesn't exist."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().delete_cc()"
-  }
- },
- "get_cc(name)": {
-  "desc": "Gets the value of a custom counter.",
-  "url": "get_cc",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter to get"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The current value of the counter."
-  },
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter does not exist"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().get_cc()"
-  }
- },
- "get_cc_max(name)": {
-  "desc": "Gets the maximum value of a custom counter.",
-  "url": "get_cc_max",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter maximum to get"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The maximum value of the counter. If a counter has no maximum, it will return an obscenely large number (`2^31-1`)."
-  },
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter does not exist"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().get_cc_max()"
-  }
- },
- "get_cc_min(name)": {
-  "desc": "Gets the minimum value of a custom counter.",
-  "url": "get_cc_min",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter minimum to get"
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The minimum value of the counter. If a counter has no minimum, it will return an obscenely large number (`-2^31-1`)."
-  },
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter does not exist"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().get_cc_min()"
-  }
- },
- "set_cc(name, value, strict=False)": {
-  "desc": "Sets the value of a custom counter.",
-  "url": "set_cc",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter minimum to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "The value to set the counter to."
-   },
-   {
-    "name": "strict",
-    "type": [
-     "bool"
-    ],
-    "desc": "If `True`, will raise a `CounterOutOfBounds` if the new value is out of bounds, otherwise silently clips to bounds."
-   }
-  ],
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter does not exist"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().set_cc()"
-  }
- },
- "mod_cc(name, value, strict=False)": {
-  "desc": "Modifies the value of a custom counter.",
-  "url": "mod_cc",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the custom counter minimum to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "The delta to modify the counter by. `-1`, or `3` or `+4`, etc."
-   },
-   {
-    "name": "strict",
-    "type": [
-     "bool"
-    ],
-    "desc": "If `True`, will raise a `CounterOutOfBounds` if the new value is out of bounds, otherwise silently clips to bounds."
-   }
-  ],
-  "raises": {
-   "name": "ConsumableException",
-   "desc": "If the counter does not exist"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().mod_cc()"
-  }
- },
- "get_slots(level)": {
-  "desc": "Gets the number of remaining spell slots of a given level that a character has.",
-  "url": "get_slots",
-  "param": [
-   {
-    "name": "level",
-    "type": [
-     "int"
-    ],
-    "desc": "The level to get the remaining slots of."
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The number of remaining slots of that level."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().spellbook.get_slots()"
-  }
- },
- "get_slots_max(level)": {
-  "desc": "Gets the maximum number of spell slots of a given level that a character has.",
-  "url": "get_slots_max",
-  "param": [
-   {
-    "name": "level",
-    "type": [
-     "int"
-    ],
-    "desc": "The level to get the maximum slots of."
-   }
-  ],
-  "returns": {
-   "type": "int",
-   "desc": "The number of maximum slots of that level."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().spellbook.get_slots_max()"
-  }
- },
- "set_slots(level, value)": {
-  "desc": "Sets how many spell slots of a given level a character has.",
-  "url": "set_slots",
-  "param": [
-   {
-    "name": "level",
-    "type": [
-     "int"
-    ],
-    "desc": "The level of spell slots to set."
-   },
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "The value to set the remaining slots to."
-   }
-  ],
-  "raises": {
-   "name": "CounterOutOfBounds",
-   "desc": "If the number of slots is invalid"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().spellbook.set_slots()"
-  }
- },
- "slots_str(level)": {
-  "desc": "Returns a string representing how many spell slots a character has of a given level.",
-  "url": "slots_str",
-  "param": [
-   {
-    "name": "level",
-    "type": [
-     "int"
-    ],
-    "desc": "The level to get the slots of."
-   }
-  ],
-  "returns": {
-   "type": "str",
-   "desc": "A string representing the current remaining and maximum number of slots of that level."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().spellbook.slots_str()"
-  }
- },
- "use_slot(level)": {
-  "desc": "Uses one spell slot of a given level.",
-  "url": "use_slot",
-  "param": [
-   {
-    "name": "level",
-    "type": [
-     "int"
-    ],
-    "desc": "The level of spell slot to use."
-   }
-  ],
-  "raises": {
-   "name": "CounterOutOfBounds",
-   "desc": "If the number of slots is invalid"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().spellbook.use_slot()"
-  }
- },
- "get_hp()": {
-  "desc": "The active character's current hit points.",
-  "url": "get_hp",
-  "returns": {
-   "type": "int",
-   "desc": "The character's current hit points."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().hp"
-  }
- },
- "get_temphp()": {
-  "desc": "The active character's current temporary hit points.",
-  "url": "get_temphp",
-  "returns": {
-   "type": "int",
-   "desc": "The character's current temporary hit points."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().temp_hp"
-  }
- },
- "hp_str()": {
-  "desc": "Returns a string representing a character’s current HP, max HP, and temp HP.",
-  "url": "hp_str",
-  "returns": {
-   "type": "str"
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().hp_str()"
-  }
- },
- "mod_hp(value, overflow=True)": {
-  "desc": "Modifies the character’s remaining hit points by value. If *value* is negative, will deal damage to temp HP first.",
-  "url": "mod_hp",
-  "param": [
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "How much to modify remaining HP by."
-   },
-   {
-    "name": "overflow",
-    "type": [
-     "bool"
-    ],
-    "desc": "If `False`, clips new HP value to `[0..hp]`"
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().modify_hp()"
-  }
- },
- "set_hp(value)": {
-  "desc": "Sets the character’s remaining hit points. Ignores temp HP.",
-  "url": "set_hp",
-  "param": [
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "The new value for hit points."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().set_hp()"
-  }
- },
- "set_temphp(value)": {
-  "desc": "Sets the character’s remaining temp HP.",
-  "url": "set_temphp",
-  "param": [
-   {
-    "name": "value",
-    "type": [
-     "int"
-    ],
-    "desc": "The new value for temporary hit points."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().set_temp_hp()"
-  }
- },
- "delete_cvar(name)": {
-  "desc": "Deletes a custom character variable. Does nothing if the cvar does not exist.",
-  "url": "delete_cvar",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to be deleted."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().delete_cvar()"
-  }
- },
- "set_cvar(name, value)": {
-  "desc": "Sets a custom character variable, which will be available in all scripting contexts using this character.",
-  "url": "set_cvar",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to set. Must be a valid identifier and not be in the Cvar Table."
-   },
-   {
-    "name": "value",
-    "type": [
-     "str"
-    ],
-    "desc": "The value to set it to."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().set_cvar()"
-  }
- },
- "set_cvar_nx(name, value)": {
-  "desc": "Sets a custom character variable if it is not already set.",
-  "url": "set_cvar_nx",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the variable to set. Must be a valid identifier and not be in the Cvar Table."
-   },
-   {
-    "name": "value",
-    "type": [
-     "str"
-    ],
-    "desc": "The value to set it to."
-   }
-  ],
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character().set_cvar_nx()"
-  }
- },
- "get_raw()": {
-  "desc": "Returns a raw representation of character data.",
-  "url": "get_raw",
-  "returns": {
-   "type": "dict",
-   "desc": "A representation of character data."
-  },
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "character()"
-  },
-  "alias": "browse"
- },
- "combat().combatants": {
-  "desc": "A list of all `SimpleCombatant` in combat.",
-  "url": "aliasing.api.combat.SimpleCombat.combatants",
-  "returns": {
-   "type": "list[SimpleCombatant]",
-   "desc": "A list of the `SimpleCombatants` in the combat."
-  },
-  "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().combatants[0].name\n'OR1'"
- },
- "combat().groups": {
-  "desc": "A list of all `SimpleGroup` in combat.",
-  "url": "aliasing.api.combat.SimpleCombat.groups",
-  "returns": {
-   "type": "list[SimpleGroup]",
-   "desc": "A list of the `SimpleGroup` in the combat."
-  },
-  "syntax": ">>> [f\\\"{group.name} - {len(group.combatants)} Members\\\" for group in combat().groups]\n# A list of all the groups in the combat, with the number of combatants in them\n[\\\"Orc - 4\\\", \\\"Wolf - 4\\\"]"
- },
- "combat().current": {
-  "desc": "The `SimpleCombatant` or `SimpleGroup` representing the combatant whose turn it is.",
-  "url": "aliasing.api.combat.SimpleCombat.current",
-  "returns": {
-   "type": "SimpleCombatant** *or* **SimpleGroup",
-   "desc": "The combatant or group whose turn it is."
-  },
-  "syntax": ">>> combat().current\n<AliasStatBlock name=OR1>"
- },
- "combat().me": {
-  "desc": "The `SimpleCombatant` representing the active character in combat, or `None` if the character is not in the combat.",
-  "url": "aliasing.api.combat.SimpleCombat.me",
-  "returns": {
-   "type": "SimpleCombatant",
-   "desc": "The users active character in combat."
-  },
-  "syntax": ">>> combat().me\n<AliasStatBlock name=Hero McHeroson>\n>>> character().name\n'Hero McHeroson'\n>>> !char Broseidon\nActive character changed to Broseidon\n>>> combat().me\nNone"
- },
- "combat().round_num": {
-  "desc": "An `int` representing the round number of the combat.",
-  "url": "aliasing.api.combat.SimpleCombat.round_num",
-  "returns": {
-   "type": "int",
-   "desc": "The round number."
-  },
-  "syntax": ">>> combat().round_num\n7"
- },
- "combat().turn_num": {
-  "desc": "An `int` representing the initiative score of the current turn.",
-  "url": "aliasing.api.combat.SimpleCombat.turn_num",
-  "returns": {
-   "type": "int",
-   "desc": "The turn number."
-  },
-  "syntax": ">>> combat().turn_num\n17"
- },
- "combat().get_combatant(name, strict=None)": {
-  "desc": "Gets a `SimpleCombatant` by its name or ID.",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the combatant to get."
-   },
-   {
-    "name": "strict",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
-   }
-  ],
-  "returns": {
-   "type": "SimpleCombatant or SimpleGroup or None",
-   "desc": "The combatant or group or None."
-  },
-  "url": "aliasing.api.combat.SimpleCombat.get_combatant",
-  "alias": "targets",
-  "syntax": ">>> combat().combatants\n[<AliasStatBlock name=OR1>, <AliasStatBlock name=OR2>, <AliasStatBlock name=Hero McHeroson>]\n>>> combat().get_combatant('or1')\n<AliasStatBlock name=OR1>"
- },
- "combat().delete_metadata(k: str) → Optional[str]": {
-  "desc": "Removes a key from the metadata.",
-  "param": [
-   {
-    "name": "k",
-    "type": [
-     "str"
-    ],
-    "desc": "The metadata key to remove."
-   }
-  ],
-  "returns": {
-   "type": "str or None",
-   "desc": "The removed value or `None` if the key is not found."
-  },
-  "url": "aliasing.api.combat.SimpleCombat.delete_metadata"
- },
- "combat().get_metadata(k: str, default=None) → str": {
-  "desc": "Gets a metadata value for the passed key or returns default if the name is not set.",
-  "param": [
-   {
-    "name": "k",
-    "type": [
-     "str"
-    ],
-    "desc": "The metadata key to remove."
-   },
-   {
-    "name": "default",
-    "type": [
-     "any"
-    ],
-    "desc": "What to return if the name is not set."
-   }
-  ],
-  "returns": {
-   "type": "str or default",
-   "desc": "The removed value or `None` if the key is not found."
-  },
-  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
-  "syntax": ">>> combat().get_metadata(\\\"Test\\\")\n'{\\\"Status\\\": [\\\"Mario\\\", 1, 2]}'"
- },
- "combat().set_metadata(k: str, v: str)": {
-  "desc": "Assigns a metadata key to the passed value. Maximum size of the metadata is 100k characters, key and item inclusive.",
-  "param": [
-   {
-    "name": "k",
-    "type": [
-     "str"
-    ],
-    "desc": "The metadata key to set."
-   },
-   {
-    "name": "v",
-    "type": [
-     "str"
-    ],
-    "desc": "The metadata value to set."
-   }
-  ],
-  "url": "aliasing.api.combat.SimpleCombat.get_metadata",
-  "syntax": ">>> combat().set_metadata(\\\"Test\\\", dump_json({\\\"Status\\\": [\\\"Mario\\\", 1, 2]}))"
- },
- "combat().get_group(name, strict=None)": {
-  "desc": "Gets a `SimpleGroup` that matches on name.",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the group to get."
-   },
-   {
-    "name": "strict",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether combatant name must be a full case insensitive match. If this is `None` (default), attempts a strict match with fallback to partial match. If this is `False`, it returns the first partial match. If this is `True`, it will only return a strict match."
-   }
-  ],
-  "returns": {
-   "type": "SimpleGroup or None",
-   "desc": "The group."
-  },
-  "url": "aliasing.api.combat.SimpleCombat.get_group",
-  "syntax": ">>> combat().get_group('Gobbos')\nGobbos (3 combatants)\n>>> combat().get_group('Gobbos').combatants\n[<AliasStatBlock name=GO1>, <AliasStatBlock name=GO2>, <AliasStatBlock name=GO3>]"
- },
- "combat().set_round(round_num: int)": {
-  "desc": "Sets the current round.\nSetting the round will not tick any events with durations.",
-  "param": [
-   {
-    "name": "round_num",
-    "type": [
-     "int"
-    ],
-    "desc": "The new round number"
-   }
-  ],
-  "url": "aliasing.api.combat.SimpleCombat.set_round"
- },
- "combat().end_round()": {
-  "desc": "Moves initiative to just before the next round (no active combatant or group).\nEnding the round will not tick any events with durations.",
-  "url": "aliasing.api.combat.SimpleCombat.end_round"
- },
- "combat().name": {
-  "desc": "Returns the name of the combat, or None if a name is not set.",
-  "url": "aliasing.api.combat.SimpleCombat",
-  "returns": {
-   "type": "Str or None",
-   "desc": "The name of the combat."
-  }
- },
- "SimpleCombatant.effects": {
-  "url": "aliasing.api.combat.SimpleCombatant.effects",
-  "desc": "A list of SimpleEffect active on the combatant.",
-  "type": {
-   "name": "list of SimpleEffect"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
- },
- "SimpleCombatant.init": {
-  "url": "aliasing.api.combat.SimpleCombatant.init",
-  "desc": "What the combatant rolled for initiative.",
-  "type": {
-   "name": "int"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
- },
- "SimpleCombatant.id": {
-  "url": "aliasing.api.combat.SimpleCombatant.id",
-  "desc": "The combatant’s unique identifier.",
-  "type": {
-   "name": "str"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.id\n'd7c8e9fc-3531-44d8-8608-f42e03881d19'"
- },
- "SimpleCombatant.initmod": {
-  "url": "aliasing.api.combat.SimpleCombatant.initmod",
-  "desc": "An int representing the combatant’s initiative modifier.",
-  "type": {
-   "name": "int"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.initmod\n3"
- },
- "SimpleCombatant.level": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.levels.total_level or SimpleCombatant.spellbook"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.level",
-  "desc": "The combatant’s spellcaster level. 0 if the combatant is not a player or spellcaster.",
-  "type": {
-   "name": "int"
-  }
- },
- "SimpleCombatant.resists": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.resistances"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.resists",
-  "desc": "The combatant’s resistances, immunities, and vulnerabilities.",
-  "type": {
-   "name": "AliasResistances"
-  }
- },
- "SimpleCombatant.type": {
-  "url": "aliasing.api.combat.SimpleCombatant.type",
-  "desc": "The type of the object (\\\"combatant\\\"), to determine whether this is a group or not.",
-  "type": {
-   "name": "str"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.type\n'combatant'"
- },
- "SimpleCombatant.ac": {
-  "url": "aliasing.api.combat.SimpleCombatant.ac",
-  "desc": "The armor class of the creature.",
-  "returns": {
-   "type": "int or None"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.ac\n21"
- },
- "SimpleCombatant.add_effect(name: str, args: str, duration: int = -1, concentration:bool = False, parent=None, end: bool = False, desc:str = None)": {
-  "url": "aliasing.api.combat.SimpleCombatant.add_effect",
-  "desc": "Adds an effect to the combatant.",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the effect to add."
-   },
-   {
-    "name": "args",
-    "type": [
-     "str"
-    ],
-    "desc": "The effect arguments to add (same syntax as init effect)."
-   },
-   {
-    "name": "duration",
-    "type": [
-     "int"
-    ],
-    "desc": "The duration of the effect, in rounds."
-   },
-   {
-    "name": "concentration",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether the effect requires concentration."
-   },
-   {
-    "name": "parent",
-    "type": [
-     "SimpleEffect"
-    ],
-    "desc": "The parent of the effect."
-   },
-   {
-    "name": "end",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether the effect ticks on the end of turn."
-   },
-   {
-    "name": "desc",
-    "type": [
-      "str"
-    ],
-    "desc": "A description of the effect."
-   }
-  ],
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[]\n>>> target.add_effect('Rage', '-d 2 -resist piercing -resist bludgeoning -resist slashing', 10, desc='This boi be angry!')\n# If you don't need one of the arguments that has a default (Such as conc or parent)\n# You can skip it by using positional arguments (desc='This boi be angry!)\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
- },
- "SimpleCombatant.attacks": {
-  "url": "aliasing.api.combat.SimpleCombatant.attacks",
-  "desc": "The attacks of the creature.",
-  "returns": {
-   "type": "AliasAttackList"
-  },
-  "syntax": ">>> target = combat().get_combatant('OR1')\n>>> str(target.attacks)\n'''**Greataxe:** Attack: +5 to hit. Hit: 1d12 + 3 [slashing] damage.\n**Javelin:** Attack: +5 to hit. Hit: 1d6 + 3 [piercing] damage.'''\n>>> target.attacks[0].name\n'Greataxe'"
- },
- "SimpleCombatant.damage(dice_str, crit=False, d=None, c=None, critdice=0, overheal=False)": {
-  "url": "aliasing.api.combat.SimpleCombatant.damage",
-  "desc": "Does damage to a combatant, and returns the rolled result and total, accounting for resistances.",
-  "returns": {
-   "type": "dict",
-   "desc": "Dictionary representing the results of the Damage Automation with three keys, `'damage'`, `'total'`, `roll`, detailing the resulting string, total damage, and the roll itself, respectively."
-  },
-  "param": [
-   {
-    "name": "dice_str",
-    "type": [
-     "str"
-    ],
-    "desc": "The damage to do (e.g. \\\"1d6[acid]\\\")."
-   },
-   {
-    "name": "crit",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether or not the damage should be rolled as a crit."
-   },
-   {
-    "name": "d",
-    "type": [
-     "str"
-    ],
-    "desc": "Any additional damage to add (equivalent of -d)."
-   },
-   {
-    "name": "c",
-    "type": [
-     "str"
-    ],
-    "desc": "Any additional damage to add to crits (equivalent of -c)."
-   },
-   {
-    "name": "critdice",
-    "type": [
-     "int"
-    ],
-    "desc": "How many extra weapon dice to roll on a crit (in addition to normal dice)."
-   },
-   {
-    "name": "overheal",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether or not to allow this damage to exceed a target’s HP max."
-   }
-  ],
-  "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n<15/15>\n>>> damage = target.damage('1d8 [piercing]')\n>>> damage\n{'damage': '**Damage:** 1d8 (7) [piercing] = `7`', 'total': 7, 'roll': <RollResult total=7>}\n>>> target.hp_str()\n<8/15>\n>>> damage.damage # I know it looks funny\n**Damage:** 1d8 (7) [piercing] = `7`\n# But what if we want to preroll our damage?\n>>> preRolled = vroll('1d4 [cold] + 1d4 [fire]')\n>>> str(preRolled)\n1d4 (3) [cold] + 1d4 (**4**) [fire] = `7`\n>>> damage = target.damage(preRolled.consolidated())\n>>> damage\n{'damage': '**Damage:** (3 [cold]) / 2 + 4 [fire] = `5`', 'total': 5, 'roll': <RollResult total=5>}\n# They were resistant to cold damage!\n>>> target.hp_str()\n<2/15>"
- },
- "SimpleCombatant.get_effect(name: str)": {
-  "url": "aliasing.api.combat.SimpleCombatant.get_effect",
-  "desc": "Gets a SimpleEffect, fuzzy searching (partial match) for a match.",
-  "returns": {
-   "type": "SimpleEffect",
-   "desc": "The effect."
-  },
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the effect to get."
-   }
-  ],
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]\n>>> effect = target.get_effect('Rage')\n>>> effect.name\n'Rage'"
- },
- "SimpleCombatant.hp": {
-  "url": "aliasing.api.combat.SimpleCombatant.hp",
-  "desc": "The current HP of the creature.",
-  "returns": {
-   "type": "int or None"
-  },
-  "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.hp\n10"
- },
- "SimpleCombatant.hp_str()": {
-  "url": "aliasing.api.combat.SimpleCombatant.hp_str",
-  "desc": "Returns a string describing the creature’s current, max, and temp HP.",
-  "returns": {
-   "type": "str"
-  },
-  "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n'<15/15>'\n# Now, lets assume they are hidden\n>>> target.hp_str()\n'<Healthy>'"
- },
- "SimpleCombatant.levels": {
-  "url": "aliasing.api.combat.SimpleCombatant.levels",
-  "desc": "The levels of the creature.",
-  "returns": {
-   "type": "AliasLevels"
-  }
- },
- "SimpleCombatant.max_hp": {
-  "url": "aliasing.api.combat.SimpleCombatant.max_hp",
-  "desc": "The maximum HP of the creature.",
-  "returns": {
-   "type": "int or None"
-  }
- },
- "SimpleCombatant.maxhp": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.max_hp"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.maxhp",
-  "desc": "The combatant’s maximum hit points. None if not set.",
-  "returns": {
-   "type": "Optional[int]"
-  }
- },
- "SimpleCombatant.mod_hp(mod: int, overheal: bool = False)": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.modify_hp()"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.mod_hp",
-  "desc": "Modifies a combatant’s remaining hit points by a value.",
-  "param": [
-   {
-    "name": "mod",
-    "type": [
-     "int"
-    ],
-    "desc": "The amount of HP to add."
-   },
-   {
-    "name": "overheal",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether to allow exceeding max HP."
-   }
-  ]
- },
- "SimpleCombatant.modify_hp(amount, ignore_temp=False, overflow=True)": {
-  "url": "aliasing.api.combat.SimpleCombatant.modify_hp",
-  "desc": "Modifies the creature’s remaining HP by a given amount.",
-  "param": [
-   {
-    "name": "amount",
-    "type": [
-     "int"
-    ],
-    "desc": "The amount of HP to add/remove."
-   },
-   {
-    "name": "ignore_temp",
-    "type": [
-     "bool"
-    ],
-    "desc": "If amount is negative, whether to damage temp HP first or ignore temp."
-   },
-   {
-    "name": "overflow",
-    "type": [
-     "bool"
-    ],
-    "desc": "If amount is positive, whether to allow overhealing or cap at the creature’s max HP."
-   }
-  ]
- },
- "SimpleCombatant.name": {
-  "url": "aliasing.api.combat.SimpleCombatant.name",
-  "desc": "The name of the creature.",
-  "returns": {
-   "type": "str"
-  }
- },
- "SimpleCombatant.note": {
-  "url": "aliasing.api.combat.SimpleCombatant.note",
-  "desc": "The note on the combatant. None if not set.",
-  "returns": {
-   "type": "str or None"
-  }
- },
- "SimpleCombatant.remove_effect(name: str)": {
-  "url": "aliasing.api.combat.SimpleCombatant.remove_effect",
-  "desc": "Removes an effect from the combatant, fuzzy searching on name. If not found, does nothing.",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The name of the effect to remove."
-   }
-  ]
- },
- "SimpleCombatant.reset_hp()": {
-  "url": "aliasing.api.combat.SimpleCombatant.reset_hp",
-  "desc": "Heals a creature to max and removes any temp HP."
- },
- "SimpleCombatant.resistances": {
-  "url": "aliasing.api.combat.SimpleCombatant.resistances",
-  "desc": "The resistances, immunities, and vulnerabilities of the creature.",
-  "returns": {
-   "type": "AliasResistances"
-  }
- },
- "SimpleCombatant.controller": {
-  "desc": "The ID of the combatant's controller.",
-  "url": "aliasing.api.combat.SimpleCombatant.controller",
-  "returns": {"type":"int"}
- },
- "SimpleCombatant.creature_type": {
-  "desc": "The creature type of the combatant. Will return None for players or combatants with no creature type.",
-  "url": "aliasing.api.combat.SimpleCombatant.creature_type",
-  "returns": {"type":"str or None"}
- },
- "SimpleCombatant.monster_name": {
-  "desc": "The monster name of the combatant. Will return None for players.",
-  "url": "aliasing.api.combat.SimpleCombatant.monster_name",
-  "returns": {"type":"str or None"}
- },
- "SimpleCombatant.race": {
-  "desc": "The race of the combatant. Will return None for monsters or combatants with no race.",
-  "url": "aliasing.api.combat.SimpleCombatant.race",
-  "returns": {"type":"str or None"}
- },
- "SimpleCombatant.group": {
-  "desc": "The name of the group the combatant is in, or `None` if the combatant is not in a group.",
-  "url": "aliasing.api.combat.SimpleCombatant.group",
-  "returns": {"type":"str or None"}
- },
- "SimpleCombatant.save(ability: str, adv: bool = None)": {
-  "url": "aliasing.api.combat.SimpleCombatant.save",
-  "desc": "Rolls a combatant’s saving throw.",
-  "returns": {
-   "type": "SimpleRollResult",
-   "desc": "A SimpleRollResult describing the rolled save."
-  },
-  "param": [
-   {
-    "name": "ability",
-    "type": [
-     "str"
-    ],
-    "desc": "The type of save (“str”, “dexterity”, etc)."
-   },
-   {
-    "name": "adv",
-    "type": [
-     "bool"
-    ],
-    "desc": "Whether to roll the save with advantage. Rolls with advantage if True, disadvantage if False, or normally if None."
-   }
-  ]
- },
- "SimpleCombatant.saves": {
-  "url": "aliasing.api.combat.SimpleCombatant.saves",
-  "desc": "The saves of the creature.",
-  "returns": {
-   "type": "AliasSaves"
-  }
- },
- "SimpleCombatant.set_ac(ac: int)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_ac",
-  "desc": "Sets the combatant’s armor class.",
-  "param": [
-   {
-    "name": "ac",
-    "type": [
-     "int"
-    ],
-    "desc": "The new AC."
-   }
-  ]
- },
- "SimpleCombatant.set_hp(new_hp)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_hp",
-  "desc": "Sets the creature’s remaining HP.",
-  "param": [
-   {
-    "name": "new_hp",
-    "type": [
-     "int"
-    ],
-    "desc": "The amount of remaining HP (a nonnegative integer)."
-   }
-  ]
- },
- "SimpleCombatant.set_init(init: int)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_init",
-  "desc": "Sets the combatant’s initiative roll.",
-  "param": [
-   {
-    "name": "init",
-    "type": [
-     "int"
-    ],
-    "desc": "The new initiative."
-   }
-  ]
- },
- "SimpleCombatant.set_maxhp(maxhp: int)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_maxhp",
-  "desc": "Sets the combatant’s max HP.",
-  "param": [
-   {
-    "name": "maxhp",
-    "type": [
-     "int"
-    ],
-    "desc": "The new max HP."
-   }
-  ]
- },
- "SimpleCombatant.set_name(name: str)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_name",
-  "desc": "Sets the combatant’s name.",
-  "param": [
-   {
-    "name": "name",
-    "type": [
-     "str"
-    ],
-    "desc": "The new name."
-   }
-  ]
- },
- "SimpleCombatant.set_note(note: str)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_note",
-  "desc": "Sets the combatant’s note.",
-  "param": [
-   {
-    "name": "note",
-    "type": [
-     "str"
-    ],
-    "desc": "The new note."
-   }
-  ]
- },
- "SimpleCombatant.set_temp_hp(new_temp)": {
-  "url": "aliasing.api.combat.SimpleCombatant.set_temp_hp",
-  "desc": "Sets a creature’s temp HP.",
-  "param": [
-   {
-    "name": "new_temp",
-    "type": [
-     "int"
-    ],
-    "desc": "The new temp HP (a non-negative integer)."
-   }
-  ]
- },
- "SimpleCombatant.set_thp(thp: int)": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.set_temp_hp()"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.set_thp",
-  "desc": "Sets the combatant’s temp HP.",
-  "param": [
-   {
-    "name": "thp",
-    "type": [
-     "int"
-    ],
-    "desc": "The new temp HP."
-   }
-  ]
- },
- "SimpleCombatant.skills": {
-  "url": "aliasing.api.combat.SimpleCombatant.skills",
-  "desc": "The skills of the creature.",
-  "returns": {
-   "type": "AliasSkills"
-  }
- },
- "SimpleCombatant.spellbook": {
-  "url": "aliasing.api.combat.SimpleCombatant.spellbook",
-  "desc": "The creature’s spellcasting information.",
-  "returns": {
-   "type": "AliasSpellbook"
-  }
- },
- "SimpleCombatant.stats": {
-  "url": "aliasing.api.combat.SimpleCombatant.stats",
-  "desc": "The stats of the creature.",
-  "returns": {
-   "type": "AliasBaseStats"
-  }
- },
- "SimpleCombatant.temp_hp": {
-  "url": "aliasing.api.combat.SimpleCombatant.temp_hp",
-  "desc": "The current temp HP of the creature.",
-  "returns": {
-   "type": "int"
-  }
- },
- "SimpleCombatant.temphp": {
-  "deprecated": {
-   "version": "2.5.0",
-   "replacement": "SimpleCombatant.temp_hp"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.temphp",
-  "desc": "How many temporary hit points the combatant has.",
-  "returns": {
-   "type": "int"
-  }
- },
- "SimpleCombatant.wouldhit(to_hit: int)": {
-  "deprecated": {
-   "version": "1.1.5",
-   "replacement": "to_hit >= combatant.ac"
-  },
-  "url": "aliasing.api.combat.SimpleCombatant.wouldhit",
-  "desc": "Checks if a roll would hit this combatant.",
-  "returns": {
-   "type": "bool",
-   "desc": "Whether the total would hit."
-  },
-  "param": [
-   {
-    "name": "to_hit",
-    "type": [
-     "int"
-    ],
-    "desc": "The rolled total."
-   }
-  ]
- }
 }

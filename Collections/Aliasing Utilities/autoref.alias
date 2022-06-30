@@ -42,7 +42,7 @@ if len(searchResults) == 1:
                 opt_out = [f"""**{i_name}** - {i_info}""" for i_name, i_info in opt_info.items()]
             else:
                 opt_out = [opt_info]
-            out.append(f""" -f "{opt_name.title()}|{newline.join(opt_out)}" """)
+            out.append(f""" -f "{opt_name}|{newline.join(opt_out)}" """)
     if (var := funcInfo.get("variables")):
         var_out = [f"""`{var_name}` (*{var_info.type}*) - {var_info.desc}""" for var_name, var_info in var.items()]
         out.append(f""" -f "Variables|{newline.join(var_out)}" """)
@@ -76,7 +76,5 @@ else:
 </drac2>
 
 -f "ReadTheDocs|A full list of Automation Effects can be found at [avrae.rtfd.io](https://avrae.rtfd.io/en/stable/automation_ref.html)"
-
--f "**Important Note**|> This alias has not been updated yet to reflect changes made in v4 of Avrae. Please read the docs themselves that are linked."
 
 -footer "All of these effects and variables are for *Automation*, and will not work inside of aliases/snippets."

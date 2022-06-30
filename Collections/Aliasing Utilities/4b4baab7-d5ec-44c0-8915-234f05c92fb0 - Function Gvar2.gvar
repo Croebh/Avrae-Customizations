@@ -10,39 +10,12 @@
       "name": "str"
     }
   },
-  "SimpleGroup.id": {
-    "desc": "The group’s unique identifier.",
-    "url": "aliasing.api.combat.SimpleGroup.id",
-    "type": {
-      "name": "str"
-    }
-  },
-  "SimpleGroup.name": {
-    "desc": "The name of the group.",
-    "url": "aliasing.api.combat.SimpleGroup.name",
-    "type": {
-      "name": "str"
-    }
-  },
   "SimpleGroup.init": {
     "desc": "What the group rolled for initiative.",
     "url": "aliasing.api.combat.SimpleGroup.init",
     "type": {
       "name": "int"
     }
-  },
-  "SimpleGroup.set_init(init: int)": {
-    "desc": "Sets the group’s initiative roll.",
-    "url": "aliasing.api.combat.SimpleGroup.set_init",
-    "param": [
-      {
-        "name": "init",
-        "type": [
-          "int"
-        ],
-        "desc": "The new initiative."
-      }
-    ]
   },
   "SimpleGroup.get_combatant(name)": {
     "desc": "Gets a SimpleCombatant, fuzzy searching (partial match) on name.",
@@ -61,11 +34,52 @@
       "desc": "The combatant."
     }
   },
+  "SimpleGroup.id": {
+    "desc": "The group’s unique identifier.",
+    "url": "aliasing.api.combat.SimpleGroup.id",
+    "type": {
+      "name": "str"
+    }
+  },
+  "SimpleGroup.name": {
+    "desc": "The name of the group.",
+    "url": "aliasing.api.combat.SimpleGroup.name",
+    "type": {
+      "name": "str"
+    }
+  },
+  "SimpleGroup.set_init(init: int)": {
+    "desc": "Sets the group’s initiative roll.",
+    "url": "aliasing.api.combat.SimpleGroup.set_init",
+    "param": [
+      {
+        "name": "init",
+        "type": [
+          "int"
+        ],
+        "desc": "The new initiative."
+      }
+    ]
+  },
+  "SimpleEffect.combatant_name": {
+    "desc": "The name of the combatant this effect is on.",
+    "url": "aliasing.api.combat.SimpleEffect.combatant_name",
+    "type": {
+      "name": "str"
+    }
+  },
   "SimpleEffect.conc": {
     "desc": "Whether the effect requires concentration.",
     "url": "aliasing.api.combat.SimpleEffect.conc",
     "type": {
       "name": "bool"
+    }
+  },
+  "SimpleEffect.desc": {
+    "desc": "The description of the effect.",
+    "url": "aliasing.api.combat.SimpleEffect.desc",
+    "type": {
+      "name": "str"
     }
   },
   "SimpleEffect.duration": {
@@ -76,7 +90,7 @@
     }
   },
   "SimpleEffect.effect": {
-    "desc": "The applied effect of the object.",
+    "desc": "The applied passive effects of the object:```py\n{\n    attack_advantage: int\n    to_hit_bonus: str\n    damage_bonus: str\n    magical_damage: bool\n    silvered_damage: bool\n    resistances: List[Resistance]\n    immunities: List[Resistance]\n    vulnerabilities: List[Resistance]\n    ignored_resistances: List[Resistance]\n    ac_value: int\n    ac_bonus: int\n    max_hp_value: int\n    max_hp_bonus: int\n    save_bonus: str\n    save_adv: List[str]\n    save_dis: List[str]\n    check_bonus: str\n}```",
     "url": "aliasing.api.combat.SimpleEffect.effect",
     "type": {
       "name": "dict"
@@ -96,11 +110,25 @@
       "name": "int"
     }
   },
-  "SimpleEffect.desc": {
-    "desc": "The description of the effect.",
-    "url": "aliasing.api.combat.SimpleEffect.desc",
+  "SimpleEffect.ticks_on_end": {
+    "desc": "Whether the effect duration ticks at the end of the combatant’s turn or at the start.",
+    "url": "aliasing.api.combat.SimpleEffect.ticks_on_end",
     "type": {
-      "name": "str"
+      "name": "bool"
+    }
+  },
+  "SimpleEffect.children": {
+    "desc": "Gets the child effects of this effect.",
+    "url": "aliasing.api.combat.SimpleEffect.children",
+    "returns": {
+      "type": "[SimpleEffect]"
+    }
+  },
+  "SimpleEffect.parent": {
+    "desc": "Gets the parent effect of this effect, or ``None`` if this effect has no parent.",
+    "url": "aliasing.api.combat.SimpleEffect.parent",
+    "returns": {
+      "type": "SimpleEffect or None"
     }
   },
   "SimpleEffect.set_parent(parent)": {
@@ -115,20 +143,6 @@
         "desc": "The parent."
       }
     ]
-  },
-  "SimpleEffect.parent": {
-    "desc": "Gets the parent effect of this effect, or ``None`` if this effect has no parent.",
-    "url": "aliasing.api.combat.SimpleEffect.parent",
-    "returns": {
-      "type": "SimpleEffect or None"
-    }
-  },
-  "SimpleEffect.children": {
-    "desc": "Gets the child effects of this effect.",
-    "url": "aliasing.api.combat.SimpleEffect.children",
-    "returns": {
-      "type": "[SimpleEffect]"
-    }
   },
   "SimpleRollResult.dice": {
     "desc": "The rolled dice (e.g. 1d20 (5)).",
@@ -173,6 +187,25 @@
       "type": "str"
     }
   },
+  "argparse(args)": {
+    "desc": "Parses arguments.",
+    "url": "utils.argparser.argparse",
+    "param": [
+      {
+        "name": "args",
+        "type": [
+          "str",
+          "iterable"
+        ],
+        "desc": "A list of arguments to parse"
+      }
+    ],
+    "returns": {
+      "type": "ParsedArguments",
+      "desc": "The parsed arguments."
+    },
+    "syntax": ">>> args = argparse(\\\"adv -rr 2 -b 1d4[bless]\\\")\n>>> args.adv()\n1\n>>> args.last('rr')\n'2'\n>>> args.get('b')\n['1d4[bless]']"
+  },
   "argparse(args).add_context(context, args)": {
     "desc": "Adds contextual parsed arguments (arguments that only apply in a given context)",
     "url": "utils.argparser.ParsedArguments.add_context",
@@ -194,12 +227,12 @@
       }
     ]
   },
-  "argparse(args).adv(ea=False, boolwise=False, ephem=False, custom: dict = None)": {
+  "argparse(args).adv(eadv=False, boolwise=False, ephem=False, custom: dict = None)": {
     "desc": "Determines whether to roll with advantage, disadvantage, Elven Accuracy, or no special effect.",
     "url": "utils.argparser.ParsedArguments.adv",
     "param": [
       {
-        "name": "ea",
+        "name": "eadv",
         "type": [
           "bool"
         ],
@@ -231,7 +264,7 @@
       "type": "int or bool",
       "desc": "`-1` or False for dis, `0` or None for normal, `1` or True for adv, `2` for ea"
     },
-    "syntax": ">>> args = argparse(\\\"adv -d 1d10 sdis ea\\\")\n>>> args.adv() # Checks for adv and dis\n1\n>>> args.adv(ea=True) # Checks for adv, dis, and ea\n2\n>>> args.adv(boolwise=True) # Returns True, False, or None instead of integers\nTrue\n>>> args.adv(custom={'adv':'sadv', 'dis':'sdis'}) # Customize which args it looks for\n-1"
+    "syntax": ">>> args = argparse(\\\"adv -d 1d10 sdis ea\\\")\n>>> args.adv() # Checks for adv and dis\n1\n>>> args.adv(eadv=True) # Checks for adv, dis, and ea\n2\n>>> args.adv(boolwise=True) # Returns True, False, or None instead of integers\nTrue\n>>> args.adv(custom={'adv':'sadv', 'dis':'sdis'}) # Customize which args it looks for\n-1"
   },
   "argparse(args).get(arg, default=None, type_=<class 'str'>, ephem=False)": {
     "desc": "Gets a list of all values of an argument.",
@@ -402,25 +435,19 @@
       }
     ]
   },
-  "ctx.author": {
-    "desc": "The user that ran the alias.",
-    "url": "aliasing.api.context.AliasContext.author",
-    "returns": {
-      "type": "AliasAuthor"
-    }
+  "ctx": {
+    "desc": "The context the alias was invoked in. See [AliasContext](https://avrae.readthedocs.io/en/latest/aliasing/api.html#aliasing.api.context.AliasContext) for more details.\n\nNote that this is an automatically bound name and not a function.",
+    "url": "ctx",
+    "type": {
+      "name": "AliasContext"
+    },
+    "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n>>> ctx.prefix\n\\\"!\\\" "
   },
-  "ctx.channel": {
-    "desc": "The channel the alias was run in.",
-    "url": "aliasing.api.context.AliasContext.channel",
+  "ctx.alias": {
+    "desc": "The command used to run the alias.",
+    "url": "aliasing.api.context.AliasContext.alias",
     "returns": {
-      "type": "AliasChannel"
-    }
-  },
-  "ctx.guild": {
-    "desc": "The discord guild (server) the alias was run in, or None if the alias was run in DMs.",
-    "url": "aliasing.api.context.AliasContext.guild",
-    "returns": {
-      "type": "AliasGuild or None"
+      "type": "str"
     }
   },
   "ctx.prefix": {
@@ -430,11 +457,11 @@
       "type": "str"
     }
   },
-  "ctx.alias": {
-    "desc": "The command used to run the alias.",
-    "url": "aliasing.api.context.AliasContext.alias",
+  "ctx.guild": {
+    "desc": "The discord guild (server) the alias was run in, or None if the alias was run in DMs.",
+    "url": "aliasing.api.context.AliasContext.guild",
     "returns": {
-      "type": "str"
+      "type": "AliasGuild or None"
     }
   },
   "ctx.guild.id": {
@@ -451,6 +478,13 @@
       "type": "str"
     }
   },
+  "ctx.channel": {
+    "desc": "The channel the alias was run in.",
+    "url": "aliasing.api.context.AliasContext.channel",
+    "returns": {
+      "type": "AliasChannel"
+    }
+  },
   "ctx.channel.id": {
     "desc": "The ID of the channel.",
     "url": "aliasing.api.context.AliasChannel.id",
@@ -465,18 +499,18 @@
       "type": "str"
     }
   },
-  "ctx.channel.topic": {
-    "desc": "The channel topic.",
-    "url": "aliasing.api.context.AliasChannel.topic",
-    "returns": {
-      "type": "str"
-    }
-  },
   "ctx.channel.parent": {
     "desc": "If this channel is a thread, the thread’s parent channel, or None otherwise.",
     "url": "aliasing.api.context.AliasChannel.parent",
     "returns": {
       "type": "AliasChannel"
+    }
+  },
+  "ctx.channel.topic": {
+    "desc": "The channel topic.",
+    "url": "aliasing.api.context.AliasChannel.topic",
+    "returns": {
+      "type": "str"
     }
   },
   "ctx.channel.category": {
@@ -486,18 +520,25 @@
       "type": "AliasCategory"
     }
   },
-  "ctx.category.id": {
+  "ctx.channel.category.id": {
     "desc": "The ID of the category.",
     "url": "aliasing.api.context.AliasCategory.id",
     "returns": {
       "type": "int"
     }
   },
-  "ctx.category.name": {
+  "ctx.channel.category.name": {
     "desc": "The name of the category.",
     "url": "aliasing.api.context.AliasCategory.name",
     "returns": {
       "type": "str"
+    }
+  },
+  "ctx.author": {
+    "desc": "The user that ran the alias.",
+    "url": "aliasing.api.context.AliasContext.author",
+    "returns": {
+      "type": "AliasAuthor"
     }
   },
   "ctx.author.discriminator": {
@@ -528,6 +569,22 @@
       "type": "str"
     }
   },
+  "ctx.message_id": {
+    "desc": "The ID of the message the alias was invoked with.",
+    "url": "aliasing.api.context.message_id",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "character()": {
+    "desc": "The character’s actions. These do not include attacks - see the `attacks` property.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.character",
+    "returns": {
+      "type": "AliasCharacter",
+      "desc": "The active character."
+    },
+    "syntax": ">>> char = character()\n>>> char.sheet_type\n\\\"beyond\\\"\n>>> str(char)\n<AliasStatBlock name=Croebh>"
+  },
   "character().ac": {
     "desc": "The armor class of the creature.",
     "url": "aliasing.api.character.AliasCharacter.ac",
@@ -535,11 +592,25 @@
       "type": "int or None"
     }
   },
+  "character().actions": {
+    "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.AliasCharacter.actions",
+    "returns": {
+      "type": "list[AliasAction]"
+    }
+  },
   "character().attacks": {
     "desc": "The attacks of the creature.",
     "url": "aliasing.api.character.AliasCharacter.attacks",
     "returns": {
       "type": "AliasAttackList"
+    }
+  },
+  "character().background": {
+    "desc": "Gets the character's background.",
+    "url": "aliasing.api.character.AliasCharacter.background",
+    "returns": {
+      "type": "str or None"
     }
   },
   "character().cc(name)": {
@@ -602,7 +673,7 @@
     },
     "syntax": ">>> cc_str(\\\"Ki\\\")\n'11/17'\n>>> cc_str(\\\"Bardic Inspiration\\\")\n'◉◉◉〇〇'"
   },
-  "character().create_cc(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None)": {
+  "character().create_cc(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None, initial_value: str = None)": {
     "desc": "Creates a custom counter. If a counter with the same name already exists, it will replace it.",
     "url": "aliasing.api.character.AliasCharacter.create_cc",
     "param": [
@@ -668,6 +739,13 @@
           "str"
         ],
         "desc": "The description of the counter."
+      },
+      {
+        "name": "initial_value",
+        "type": [
+          "str"
+        ],
+        "desc": "The initial value of the counter."
       }
     ],
     "returns": {
@@ -675,7 +753,7 @@
       "desc": "The newly created counter."
     }
   },
-  "character().create_cc_nx(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None)": {
+  "character().create_cc_nx(name: str, minVal: str = None, maxVal: str = None, reset: str = None, dispType: str = None, reset_to: str = None, reset_by: str = None, title: str = None, desc: str = None, initial_value: str = None)": {
     "desc": "Creates a custom counter if one with the given name does not already exist. Equivalent to:",
     "url": "aliasing.api.character.AliasCharacter.create_cc_nx",
     "param": [
@@ -741,6 +819,13 @@
           "str"
         ],
         "desc": "The description of the counter."
+      },
+      {
+        "name": "initial_value",
+        "type": [
+          "str"
+        ],
+        "desc": "The initial value of the counter."
       }
     ],
     "returns": {
@@ -748,11 +833,102 @@
       "desc": "The newly created counter."
     }
   },
+  "character().edit_cc(name: str, minVal: str = sentinel, maxVal: str = sentinel, reset: str = sentinel, dispType: str = sentinel, reset_to: str = sentinel, reset_by: str = sentinel, title: str = sentinel, desc: str = sentinel, new_name: str = None)": {
+    "desc": "Edits an existing custom counter.\n\nPass `None` to remove an argument entirely. Will clamp counter value to new limits if needed.",
+    "url": "aliasing.api.character.AliasCharacter.edit_cc",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the counter to edit."
+      },
+      {
+        "name": "minVal",
+        "type": [
+          "str"
+        ],
+        "desc": "The minimum value of the counter. Supports Cvar Table parsing."
+      },
+      {
+        "name": "maxVal",
+        "type": [
+          "str"
+        ],
+        "desc": "The maximum value of the counter. Supports Cvar Table parsing."
+      },
+      {
+        "name": "reset",
+        "type": [
+          "str"
+        ],
+        "desc": "One of 'short', 'long', 'hp', 'none', or None."
+      },
+      {
+        "name": "dispType",
+        "type": [
+          "str"
+        ],
+        "desc": "Either None or 'bubble'."
+      },
+      {
+        "name": "reset_to",
+        "type": [
+          "str"
+        ],
+        "desc": "The value the counter should reset to. Supports cvar parsing."
+      },
+      {
+        "name": "reset_by",
+        "type": [
+          "str"
+        ],
+        "desc": "How much the counter should change by on a reset. Supports dice but not cvars."
+      },
+      {
+        "name": "title",
+        "type": [
+          "str"
+        ],
+        "desc": "The title of the counter."
+      },
+      {
+        "name": "desc",
+        "type": [
+          "str"
+        ],
+        "desc": "The description of the counter."
+      },
+      {
+        "name": "new_name",
+        "type": [
+          "str"
+        ],
+        "desc": "The new name of the counter."
+      }
+    ],
+    "returns": {
+      "type": "AliasCustomCounter",
+      "desc": "The edit counter."
+    },
+    "raises": {
+      "name": "ConsumableException",
+      "desc": "If the counter does not exist."
+    }
+  },
   "character().csettings": {
     "desc": "Gets a copy of the character’s settings dict.",
     "url": "aliasing.api.character.AliasCharacter.csettings",
     "returns": {
       "type": "dict"
+    }
+  },
+  "character().creature_type": {
+    "desc": "The creature type of the creature. Will return None for players or creatures with no creature type.",
+    "url": "aliasing.api.character.AliasCharacter.creature_type",
+    "returns": {
+      "type": "str or None"
     }
   },
   "character().consumables": {
@@ -763,7 +939,7 @@
     }
   },
   "character().delete_cc(name)": {
-    "desc": "Deletes a custom counter.",
+    "desc": "Deletes a custom counter.\n\n**Note:** This method does not unbind the name in the current runtime.",
     "url": "aliasing.api.character.AliasCharacter.delete_cc",
     "param": [
       {
@@ -811,13 +987,6 @@
     "url": "aliasing.api.character.AliasCharacter.sheet_type",
     "returns": {
       "type": "str"
-    }
-  },
-  "character().background": {
-    "desc": "Gets the character's background.",
-    "url": "aliasing.api.character.AliasCharacter.background",
-    "returns": {
-      "type": "str or None"
     }
   },
   "character().get_cc(name)": {
@@ -1118,11 +1287,42 @@
       "type": "int"
     }
   },
+  "AliasCustomCounter.desc": {
+    "url": "aliasing.api.character.AliasCustomCounter.desc",
+    "desc": "Returns the cc’s description.",
+    "returns": {
+      "type": "str or None"
+    }
+  },
+  "AliasCustomCounter.title": {
+    "url": "aliasing.api.character.AliasCustomCounter.title",
+    "desc": "Returns the cc’s title.",
+    "returns": {
+      "type": "str or None"
+    }
+  },
   "AliasCustomCounter.display_type": {
     "url": "aliasing.api.character.AliasCustomCounter.display_type",
     "desc": "Returns the cc’s display type. (None, ‘bubble’)",
     "returns": {
-      "type": "str"
+      "type": "str or None"
+    }
+  },
+  "AliasCustomCounter.full_str(include_name: bool = False)": {
+    "url": "aliasing.api.character.AliasCustomCounter.full_str",
+    "desc": "Returns a string representing the full custom counter.",
+    "params": [
+      {
+        "name": "include_name",
+        "type": [
+          "bool"
+        ],
+        "desc": "If the name of the counter should be included. Defaults to False."
+      }
+    ],
+    "returns": {
+      "type": "str",
+      "desc": "A string representing all components of the counter."
     }
   },
   "AliasCustomCounter.max": {
@@ -1262,6 +1462,41 @@
     "url": "aliasing.api.character.AliasDeathSaves.successes",
     "returns": {
       "type": "int"
+    }
+  },
+  "AliasAction.activation_type": {
+    "url": "aliasing.api.character.AliasAction.activation_type",
+    "desc": "The activation type of the action (e.g. action, bonus, etc).```\nAction Type   |  Value\n--------------|--------\nAction        |  1\nNo Action     |  2\nBonus Action  |  3\nReaction      |  4\nMinute        |  6\nHour          |  7\nSpecial       |  8```",
+    "returns": {
+      "type": "int"
+    }
+  },
+  "AliasAction.activation_type_name": {
+    "url": "aliasing.api.character.AliasAction.activation_type_name",
+    "desc": "The name of the activation type of the action. Will be one of: “ACTION”, “NO_ACTION”, “BONUS_ACTION”, “REACTION”, “MINUTE”, “HOUR”, “SPECIAL”. This list of options may expand in the future.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "AliasAction.description": {
+    "url": "aliasing.api.character.AliasAction.description",
+    "desc": "The description of the action as it appears in a non-verbose action list.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "AliasAction.name": {
+    "url": "aliasing.api.character.AliasAction.name",
+    "desc": "The name of the action.",
+    "returns": {
+      "type": "str"
+    }
+  },
+  "AliasAction.snippet": {
+    "url": "aliasing.api.character.AliasAction.snippet",
+    "desc": "The description of the action as it appears in a verbose action list.",
+    "returns": {
+      "type": "str"
     }
   },
   "AliasBaseStats.charisma": {
@@ -1609,6 +1844,13 @@
       "type": "bool"
     }
   },
+  "Resistance.is_complex": {
+    "desc": "Whether or not the resistance has some more complex conditional beyond just a dtype.",
+    "url": "Resistance.is_complex",
+    "returns": {
+      "type": "bool"
+    }
+  },
   "spell in AliasSpellbook": {
     "desc": "Returns whether the spell named spell (str) is known.",
     "url": "aliasing.api.statblock.AliasSpellbook",
@@ -1617,7 +1859,7 @@
     }
   },
   "AliasSpellbook.can_cast(spell, level)": {
-    "desc": "Returns whether or not the given spell can currently be cast at the given level.",
+    "desc": "Returns whether or not the given spell can currently be cast at the given level. Does not check to see what level that spell is, only if its in the creatures spellbook and they have the resources to cast it.",
     "url": "aliasing.api.statblock.AliasSpellbook.can_cast",
     "param": [
       {
@@ -1865,46 +2107,6 @@
       "type": "int or None"
     }
   },
-  "signature(data=0)": {
-    "url": "aliasing.evaluators.ScriptingEvaluator.signature",
-    "desc": "Returns a unique signature encoding the time the alias was invoked, the channel it was invoked in, the invoker, the id of the workshop collection the alias originates from (if applicable), and whether the caller was a personal/server alias/snippet.\n\nThis signature is signed with a secret that guarantees that valid signatures cannot be spoofed; use this when it is necessary to audit the invocations of an alias (e.g. to ensure that a server version of the alias is being used over a personal version).\n\nUse `verify_signature()` in a separate alias to verify the integrity of a generated signature and unpack the encoded data.",
-    "returns": {
-      "type": "int or None"
-    },
-    "param": [
-      {
-        "name": "data",
-        "type": [
-          "int"
-        ],
-        "desc": "Some user-supplied data to encode in the signature. This must be an unsigned integer that fits within 5 bits (i.e. a value [0..31]). Default 0."
-      }
-    ]
-  },
-  "verify_signature(data)": {
-    "url": "aliasing.evaluators.ScriptingEvaluator.verify_signature",
-    "desc": "Verifies that a given signature is valid. The signature should have been generated by `signature()`.\n\nIf the signature is not valid, raises a ValueError. Otherwise, returns a dict with the following keys representing the context the given signature was generated in:```py\n{\n    \\\"message_id\\\": int,\n    \\\"channel_id\\\": int,\n    \\\"author_id\\\": int,\n    \\\"timestamp\\\": float,\n    \\\"workshop_collection_id\\\": str?,  # None if the caller was not a workshop object\n    \\\"scope\\\": str,  # one of UNKNOWN, PERSONAL_ALIAS, SERVER_ALIAS, PERSONAL_SNIPPET, SERVER_SNIPPET, COMMAND_TEST\n    \\\"user_data\\\": int,\n    \\\"guild_id\\\": int?,  # may be None\n    \\\"guild\\\": AliasGuild?,  # may be None\n    \\\"channel\\\": AliasChannel?,  # may be None\n    \\\"author\\\": AliasAuthor?,  # may be None\n}\n```",
-    "returns": {
-      "type": "dict"
-    },
-    "param": [
-      {
-        "name": "data",
-        "type": [
-          "str"
-        ],
-        "desc": "The signature to verify."
-      }
-    ]
-  },
-  "load_yaml(self, yamlstr)": {
-    "url": "aliasing.evaluators.ScriptingEvaluator.load_yaml",
-    "desc": "Loads an object from a YAML string. See [yaml.safe_load](https://pyyaml.org/wiki/PyYAMLDocumentation)."
-  },
-  "dump_yaml(self, obj, indent=2)": {
-    "url": "aliasing.evaluators.ScriptingEvaluator.load_yaml",
-    "desc": "Serializes an object to a YAML string. See [yaml.safe_dump](https://pyyaml.org/wiki/PyYAMLDocumentation)."
-  },
   "character().coinpurse": {
     "url": "aliasing.api.character.AliasCharacter.coinpurse",
     "desc": "The coinpurse of the character.",
@@ -2095,22 +2297,5 @@
         "desc": "Copper Pieces"
       }
     ]
-  },
-  "parse_coins(args: str)": {
-    "url": "aliasing.api.functions.parse_coins",
-    "desc": "Parses a coin string into a representation of each currency. If the user input is a decimal number, assumes gold pieces. Otherwise, allows the user to specify currencies in the form ‘+1gp -2sp 3cp’",
-    "param": [
-      {
-        "name": "args",
-        "type": [
-          "str"
-        ],
-        "desc": "The coins you want to parse."
-      }
-    ],
-    "returns": {
-      "type": "dict",
-      "desc": "A dict of the coin changes, e.g. `{\\\"pp\\\":0, \\\"gp\\\":1, \\\"ep\\\":0, \\\"sp\\\":-2, \\\"cp\\\":3, \\\"total\\\": 0.83}`"
-    }
   }
 }

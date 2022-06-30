@@ -82,6 +82,4 @@ else:
 
 -f "ReadTheDocs|A full list of Functions can be found at [avrae.rtfd.io](https://avrae.rtfd.io/en/stable/aliasing/api.html)"
 
--f "**Important Note**|> This alias has not been updated yet to reflect changes made in v4 of Avrae. Please read the docs themselves that are linked."
-
 -footer "All of these functions require being wrapped in double curly brackets, and will only function inside snippets, aliases, and the `{{ctx.prefix}}test` or `{{ctx.prefix}}tembed` commands."
