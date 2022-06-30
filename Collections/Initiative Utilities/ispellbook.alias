@@ -21,7 +21,7 @@ if c and (target := c.get_combatant(t) or c.current):
   if spellDict:
     for lvl, spells in spellDict.items():
       if spells:
-        out.append(f""" -f "{str(lvl)+("st" if lvl==1 else "nd" if lvl == 2 else "th") if lvl else "Cantrip"}|{", ".join(spells)}|inline" """ )
+        out.append(f""" -f "{str(lvl)+("st" if lvl==1 else "nd" if lvl == 2 else "rd" if lvl == 3 else "th") if lvl else "Cantrip"}|{", ".join(spells)}|inline" """ )
 
   return f""" -title "{target.name}'s Spellbook"
   -desc "{target.name} knows {len(knownSpells)} spells"
