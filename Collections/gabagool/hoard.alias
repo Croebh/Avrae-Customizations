@@ -14,6 +14,7 @@ URL         = "https://www.dndbeyond.com/"
 tier   = "&1&".strip('&')
 chosen = TIERS[tier]
 
+num_split = int("&2&") if "&2&".isdigit() else None
 
 # Gold, Gems and Art
 gold       = vroll(chosen.gold)
@@ -27,11 +28,16 @@ art_out    = f"{num_art} pieces of art, valued at `{chosen.art[1]}` gp each"
 
 total      = gold.total + (num_gems.total * value_gems.total) + (num_art.total * chosen.art[1])
 total_out  = f"Total Gold Value: `{total:,}` gp"
+total_out += " split amongst the party" if not num_split else ""
 
 gold_out   = '\n'.join([str(gold) + ' gp', gem_out, art_out, '-----', total_out])
 
+if num_split:
+  gold_out += f"""\n\n**Split {num_split} ways:** {total//num_split:,} gp each"""
+
 # Consumables
 consumables_out = []
+scrolls_out = []
 for cons in chosen.consumables:
   consumables    = []
   consumable_num = vroll(cons[0])
@@ -39,18 +45,27 @@ for cons in chosen.consumables:
     type_roll   = roll('1d100')
     consum_type = [value for key, value in CONSUMABLES.items() if int(key) >= type_roll][0]
     consum      = randchoice(GVAR.Consumables[cons[1]][consum_type])
-    # Regularly pushes the character limit too far on T3/4 hoards
-    # if consum_type == "Scroll":
-    #   lvl = [i for i in consum.n if i.isdigit()]
-    #   if lvl:
-    #     scroll = randchoice(SCROLL_GVAR[lvl[0]])
-    #     consumables.append(f"[{consum.n}]({URL}{consum.u}) - {scroll}")
-    #     continue
+    
+    if consum_type == "Scroll":
+      lvl = [i for i in consum.n if i.isdigit()]
+      if lvl:
+        scroll = randchoice(SCROLL_GVAR[lvl[0]])
+        consumables.append(f"""*{consum.n}*""")
+        scrolls_out.append(f"[{consum.n}]({URL}{consum.u}) - {scroll}")
+        continue
+    
+    if consum.n == "Scroll of Protection":
+      prot_roll = roll('1d100')
+      prot_type = randchoices(["Aberrations", "Beasts", "Celestials", "Elementals", "Fey", "Fiends", "Plants", "Undead"], cum_weights=[10,20,30,40,50,75,80,100])[0]
+      consumables.append(f"[{consum.n}]({URL}{consum.u}) - {prot_type}")
+      continue
+
     consumables.append(f"[{consum.n}]({URL}{consum.u})")
   consumables.sort(key=str)
   consumables_out.append(f"""{consumable_num} {cons[1].title()} Consumable{'s' if consumable_num.total >1 else ''}:\n""" + '\n'.join(consumables))
 
 consumables_out = '\n'.join(consumables_out)
+scrolls_out     = '\n'.join(scrolls_out)
 
 
 # Magical Items
@@ -70,6 +85,22 @@ for itm in chosen.magic:
       item = randchoice(GVAR[item_type][itm[1]])
     else:
       item = randchoice(itm[1])
+
+    if item.n == "Armor of Resistance":
+      prot_type = randchoice(["Acid", "Cold", "Fire", "Force", "Lightning", "Necrotic", "Poison", "Psychic", "Radiant", "Thunder"])
+      items.append(f"[{item.n}]({URL}{item.u}) (A) - {prot_type}")
+      continue
+
+    if item.n == "Armor of Vulnerability":
+      prot_type = randchoice(["Bludgeoning", "Piercing", "Slashing"])
+      items.append(f"[{item.n}]({URL}{item.u}) (A) - {prot_type}")
+      continue
+
+    if item.n == "Dragon Wing Bow":
+      prot_type = randchoice(["Acid", "Cold", "Fire", "Force", "Lightning", "Necrotic", "Poison", "Psychic", "Radiant", "Thunder"])
+      items.append(f"[{item.n}]({URL}{item.u}) (A) - {prot_type}")
+      continue
+
     items.append(f"""[{item.n}]({URL}{item.u}){f' (A)' * bool(item.a)}""".replace(f'{URL}%2', 'https://5e.tools/items.html#%2b1%20weapon_dmg,flsttype:martial%20weapon=2~melee%20weapon=2~rod=1~shield=2~simple%20weapon=2~wand=1~wondrous%20item=1,floptype:extend,fbsr:%2'))
   items.sort(key=str)
   if len(itm) == 3:
@@ -90,7 +121,12 @@ bonus_out = f""" -f "Bonus Items|""" + '\n'.join(bonus_out) + '" ' if bonus_out 
 
 -f "Gold|{{gold_out}}"
 -f "Consumables|{{consumables_out}}"
+{{f""" -f "Spell Scrolls|{scrolls_out}" """ if scrolls_out else ""}}
 -f "Items|{{items_out}}"
 {{bonus_out}}
 
--footer "{{ctx.prefix + ctx.alias}} [tier]"
+-desc "To decide which player gets what items, ALL party members must roll `!r 1d100` to determine their turn order to select ONE item per rotation or turn. When everyone has selected their items, the turn rotation returns to the highest number again and repeats until all items are distributed. 
+
+Always ping <@&903358707725914133> when rolling the hoard command!"
+
+-footer "{{ctx.prefix + ctx.alias}} [tier] [split amount]"

@@ -61,6 +61,9 @@ for cls, lvl in raw.levels:
 
 class_out = ', '.join(class_out)
 
+if not any([True if "Hit Dice" in i.name else False for i in raw.consumables]):
+  issues.append(f"""Hit Dice are not set up. (!level)""")
+
 # Basic output of stats and stuff
 out += f""" -f "Misc.|{str(raw.stats)}
 **Saves:** {str(raw.saves)}
@@ -81,7 +84,7 @@ out += f""" -f "Misc.|{str(raw.stats)}
 **[Sheet Link]({sheet_url})**" """
 
 if not languages:
-  issues.append("You have no languages set (??get_languages [url])")
+  issues.append(f"You have no languages set (??get_languages {sheet_url})")
 
 # Do our best to ensure no banned content is being used
 # The svar should be a yaml dict with 'races', 'feats', 'spells', and 'subclasses' as the keys
@@ -99,7 +102,7 @@ for spell in prepped_spells:
     issues.append(f"We don't allow the {spell} spell.")
 if any([i for i in banned_content.get('backgrounds', []) if raw.background and i.lower() in raw.background.lower()]):
   issues.append(f"We don't allow the {raw.background} background.")
-if raw.background is None:
+if not raw.background.strip():
   issues.append("Background is not set.")
 for sub in subclasses.values():
   if sub in banned_content.get('subclasses', []):
@@ -127,7 +130,7 @@ for sub in subclasses.values():
 if description:
   description = description.replace('"', '\\"')
   if any([i not in description for i in ['__', '**', "> "]]):
-    issues.append("Your description may be missing some formatting (??get_desc [url])")
+    issues.append(f"Your description may be missing some formatting (??get_desc {sheet_url})")
   desc = [i.strip('*_> ') for i in description.splitlines() if i]
 
   # Find the various character traits and tally them
@@ -147,16 +150,16 @@ if description:
   if "height | weight |" in description:
     issues.append(f"""You have not set your height and weight.""")
   if "Write a bit about" in description:
-    issues.append(f"""You still need to write a description.""")
-  elif desc_valid['Description Length'] < 75:
+    issues.append(f"""You still need to write a description. (Set it in your 'Appearance' on Beyond then ??get_desc {sheet_url})""")
+  elif desc_valid['Description Length'] < 125:
     issues.append(f"""Your description is fairly short. Consider expanding on it.""")
   if "Enter your " in description:
-    issues.append(f"""You are missing {description.count("Enter your ")} traits/bonds/flaws/alignments""")
+    issues.append(f"""You are missing {description.count("Enter your ")} traits/bonds/flaws/alignments (Set them up on Beyond then ??get_desc {sheet_url})""")
   out += f""" -desc "{description}" 
               -f "Description Validation|{n.join([f"**{x}**: {desc_valid[x]}" for x in desc_valid])}|inline" """
 else:
   out += f""" -desc "No description set." """
-  issues.append(f"""You have not set up a description. (??get_desc [url])""")
+  issues.append(f"""You have not set up a description. (??get_desc {sheet_url})""")
 
 # Coin Stuff
 out += f""" -f "Coin Purse|{raw.coinpurse.compact_str()}|inline" """
@@ -177,15 +180,17 @@ out += n.join(bag_out)
 if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
   issues.append(f"""You are missing your starting 200 gold. (!coins +200)""")
 if not bag_out:
-  issues.append("You have not set up your bags at all. (??get_bags [url])")
+  issues.append(f"You have not set up your bags at all. (??get_bags {sheet_url})")
 elif len(bag_out) <= 2:
-  issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)!=1 else ''}. (??get_bags [url])""")
+  issues.append(f"""Have you set up your bags? You only have {len(bag_out)} bag{'s' if len(bag_out)!=1 else ''}. (??get_bags {sheet_url})""")
 
 # Do we have issues? Output it and warn them against pinging the support team until the issues are resolved
 issues = [f"- {issue}" for issue in issues]
 if issues:
-  out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid.\n\nReminder that you can use the `??new_char` command to gather some of this information from your D&D Beyond sheet." """
+  out += f""" -f "**__Issues__**|```diff\n+ Issues Found: {len(issues)}\n----------\n{n.join(issues)}```Do not ping <@&903482330117705759> about your ticket being completed unless you feel these issues are invalid. If you do, please explain in your message *why* you feel that way.\n\nReminder that you can use the `??new_char` command to gather some of this information from your D&D Beyond sheet." """
 else:
   out += f""" -f "**__Looks Good!__**|If you feel your sheet is ready, ping <@&903482330117705759> about your ticket being completed!" """
 return out
 </drac2>
+
+-thumb <image>
