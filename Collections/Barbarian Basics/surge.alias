@@ -11,8 +11,9 @@ surgeTable = [
   "name": "Wild Teleportation",
   "effect": [
    "Wild Surge - Teleport",
-   "",
-   "You teleport up to 30 feet to an unoccupied space you can see.\n - Until your rage ends, you can use this effect again as a bonus action."
+   {},
+   "You teleport up to 30 feet to an unoccupied space you can see.\n - Until your rage ends, you can use this effect again as a bonus action.",
+   []
   ],
   "desc": "You teleport up to 30 feet to an unoccupied space you can see. Until your rage ends, you can use this effect again on each of your turns as a bonus action."
  },
@@ -20,8 +21,9 @@ surgeTable = [
   "name": "Explosive Fey",
   "effect": [
    "Wild Surge - Exploding Flumphs",
-   "",
-   "You summon a spirit next to one creature that you can see within 30 feet.\n - At the end of the turn, it explodes, and each creature within 5 feet makes a Dex Save or takes 1d6 force damage.\n - As a bonus action, you can summon another spirit."
+   {},
+   "You summon a spirit next to one creature that you can see within 30 feet.\n - At the end of the turn, it explodes, and each creature within 5 feet makes a Dex Save or takes 1d6 force damage.\n - As a bonus action, you can summon another spirit.",
+   []
   ],
   "desc": "An intangible spirit, which looks like a flumph or a pixie (your choice), appears within 5 feet of one creature of your choice that you can see within 30 feet of you. At the end of the current turn, the spirit explodes, and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 1d6 force damage. Until your rage ends you can summon another spirit as a bonus action.",
   "use": "explode"
@@ -30,8 +32,9 @@ surgeTable = [
   "name": "Wild Weapon",
   "effect": [
    "Wild Surge - Force Weapon",
-   "",
-   "Damage type changes to force\n - Gains the light and thrown (20/60) properties\n - Reappears in your hand at the end of the current turn."
+   {},
+   "Damage type changes to force\n - Gains the light and thrown (20/60) properties\n - Reappears in your hand at the end of the current turn.",
+   []
   ],
   "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon's damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."
  },
@@ -39,8 +42,34 @@ surgeTable = [
   "name": "Retribution",
   "effect": [
    "Wild Surge - Thorns",
-   "-attack '|1d6 [force]|Whenever a creature hits you with an attack roll before your rage ends, that creature takes 1d6 force damage, as magic lashes out in retribution'",
-   "Attacking creatures take 1d6 force damage"
+   {},
+   "Attacking creatures take 1d6 force damage",
+   [
+    {
+      "attack": 
+          {
+            "name": "Wild Surge - Thorns",
+            "automation": [
+              {
+                "type": "target",
+                "target": "each",
+                "effects": [
+                  {
+                    "type": "damage",
+                    "damage": "1d6 [force]"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "text": "Whenever a creature hits you with an attack roll before your rage ends, that creature takes 1d6 force damage, as magic lashes out in retribution."
+              }
+            ],
+            "_v": 2
+          }
+        
+      }
+   ]
   ],
   "desc": "Whenever a creature hits you with an attack roll before your rage ends, that creature takes 1d6 force damage, as magic lashes out in retribution."
  },
@@ -48,8 +77,9 @@ surgeTable = [
   "name": "Protective Shroud",
   "effect": [
    "Wild Surge - Shroud",
-   "-ac +1",
-   "+1 bonus to AC\n - Allies gain the same bonus within 10 feet"
+   {"ac_bonus": "1"},
+   "+1 bonus to AC\n - Allies gain the same bonus within 10 feet",
+   []
   ],
   "desc": "Until your rage ends, you are surrounded by multicolored protective lights; you gain a +1 bonus to AC, and while within 10 feet of you, your allies gain the same bonus.",
   "use": "shroud"
@@ -58,8 +88,9 @@ surgeTable = [
   "name": "Wild Growth",
   "effect": [
    "Wild Surge - Difficult Terrain",
-   "",
-   "Ground within 15 feet of you is difficult terrain for your enemies."
+   {},
+   "Ground within 15 feet of you is difficult terrain for your enemies.",
+   []
   ],
   "desc": "Flowers and vines temporarily grow around you; until your rage ends, the ground within 15 feet of you is difficult terrain for your enemies."
  },
@@ -67,8 +98,9 @@ surgeTable = [
   "name": "Light Burst",
   "effect": [
    "Wild Surge - Light Beam",
-   "",
-   "A target you can see within 30 feet of you Con save or take 1d6 radiant damage and be blinded until the start of your next turn.\n - You can use this effect again as a bonus action."
+   {},
+   "A target you can see within 30 feet of you Con save or take 1d6 radiant damage and be blinded until the start of your next turn.\n - You can use this effect again as a bonus action.",
+   []
   ],
   "desc": "A bolt of light shoots from you chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
   "use": "burst"
@@ -87,7 +119,7 @@ if c and (me := c.me):
   out.append(f""" -f "Surge Roll|{surgeRoll}" """)
   out.append(f""" -f "{surge.name}|{surge.desc}" """)
   if (surgeEffect := surge.get('effect')):
-   me.add_effect(surgeEffect[0], surgeEffect[1], parent=rageEffect, desc=surgeEffect[2] + (f"\n - !use {surge.get('use')} -t <targ>" if surge.get('use') else ''))
+   me.add_effect(surgeEffect[0], passive_effects=surgeEffect[1], parent=rageEffect, desc=surgeEffect[2] + (f"\n - !use {surge.get('use')} -t <targ>" if surge.get('use') else ''), attacks=surgeEffect[3])
    surgeEffect = str(me.get_effect(surgeEffect[0])).splitlines()[0]
    out.append(f""" -f "{name}|{surgeEffect}" """)
   if (use := surge.get('use')):

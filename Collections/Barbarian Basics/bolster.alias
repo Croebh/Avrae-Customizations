@@ -46,7 +46,7 @@ if v or ignore:
   elif bolsterType == -1:
     # Are we in init/have a valid target?
     if cTarget:
-      cTarget.add_effect(cc, "-b '1d3 [bolster]'", 100, desc = "For 10 minutes, the creature can roll a d3 whenever making an attack roll or an ability check and add the number rolled to the d20 roll.")
+      cTarget.add_effect(cc, passive_effects={"to_hit_bonus": "1d3 [bolster]"}, duration=100, desc = "For 10 minutes, the creature can roll a d3 whenever making an attack roll or an ability check and add the number rolled to the d20 roll.")
       out.append(f""" -f "{cTarget.name}|{str(cTarget.get_effect(cc)).splitlines()[0]}|inline" """)
     # Otherwise, just display that the target can add the bonus to their checks/attacks
     else:

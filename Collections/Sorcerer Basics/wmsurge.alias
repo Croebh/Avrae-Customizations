@@ -15,9 +15,9 @@ embed
 
 {{character().set_cc('Sorcery Points', character().get_cc_max('Sorcery Points')) if not lookup and surge.type=='cc' and (chanceRoll.total==1 or tides) else ''}}
 
-{{Combat.me.add_effect(surge.effect[0],surge.effect[2],surge.effect[1]) if not lookup and surge.type=='effect' and Combat and Combat.me and (chanceRoll.total==1 or tides) else ''}}
+{{Combat.me.add_effect(name=surge.effect.name, duration=surge.effect.duration, passive_effects=surge.effect.passive_effects)  if not lookup and surge.type=='effect' and Combat and Combat.me and (chanceRoll.total==1 or tides) else ''}}
 
-{{'' if chanceRoll.total>1 and not tides else (f" -f 'Roll|{Roll}'" if surge.type.lower() == 'roll' else f" -f 'Health gained|{Roll}\n{character().hp_str()}'" if surge.type.lower()=='health' else f" -f 'Regain Slot|{character().spellbook.slots_str(usedSlots[0]) if usedSlots else '*None*'}'" if surge.type.lower()=='slots' else f" -f 'Sorcerer Points|{character().cc_str('Sorcery Points')}'" if surge.type.lower()=='cc' else f" -f 'Gained Effect|Name: {surge.effect[0]}\nDuration: {surge.effect[1]} rounds'" if surge.type.lower() =='effect' else '')}}
+{{'' if chanceRoll.total>1 and not tides else (f" -f 'Roll|{Roll}'" if surge.type.lower() == 'roll' else f" -f 'Health gained|{Roll}\n{character().hp_str()}'" if surge.type.lower()=='health' else f" -f 'Regain Slot|{character().spellbook.slots_str(usedSlots[0]) if usedSlots else '*None*'}'" if surge.type.lower()=='slots' else f" -f 'Sorcerer Points|{character().cc_str('Sorcery Points')}'" if surge.type.lower()=='cc' else f" -f 'Gained Effect|Name: {surge.effect.name}\nDuration: {surge.effect.duration} rounds'" if surge.type.lower() =='effect' else '')}}
 
 -title "Wild Magic Surge {{'| '+str(chanceRoll) if not (tides or lookup) else ''}}"
 

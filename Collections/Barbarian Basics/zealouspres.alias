@@ -21,14 +21,14 @@ targets = [target for targ in targets if c and (target := c.get_combatant(targ))
 if valid or ignore:
   # If the user is in the initiative, lets add the parent effect
   if c and (me := c.me):
-    me.add_effect(cc, "", 1, desc="Up to ten other creatures of your choice within 60 feet of you that can hear you gain advantage on attack rolls and saving throws until the start of your next turn.")
+    me.add_effect(cc, duration=1, desc="Up to ten other creatures of your choice within 60 feet of you that can hear you gain advantage on attack rolls and saving throws until the start of your next turn.")
     parent = me.get_effect(cc)
     # And display it
     out.append(f""" -f "{me.name}|{str(parent).splitlines()[0]}|inline" """)
   # Loop through our targets
   for target in targets:
     # Add the effect to each one, then display it
-    target.add_effect("Inspired Zealotry", "", 2, parent=parent, desc=f"You gain advantage on attack rolls and saving throws until the start of {name}'s next turn.")
+    target.add_effect("Inspired Zealotry", duration=2, parent=parent, desc=f"You gain advantage on attack rolls and saving throws until the start of {name}'s next turn.")
     out.append(f""" -f "{target.name}|{str(target.get_effect("Inspired Zealotry")).splitlines()[0]}|inline" """)
   # Mod the CC if we aren't ignoring requirements
   if not ignore:

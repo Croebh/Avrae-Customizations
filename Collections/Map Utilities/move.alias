@@ -384,7 +384,7 @@ if args.last('mapload') or args.last('loadmap'):
      desc.append(f"- Objects: `{', '.join(objects)}`")
    neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f' ~ Walls: {", ".join(walls)}' if walls else ""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}""".strip(" ~")
    if mapattach:
-    mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
+    mapattach.add_effect('map', attacks=[{"attack":{"name":"map","automation":[{"type":"text","text":neweffect}],"_v":2}}])
    break
 </drac2>
 
@@ -1481,7 +1481,7 @@ if c:
   neweffect = f"""{f"Size: {mapsize}" if mapsize else ""}{f" ~ Background: {mapbg}" if mapbg else ""}{f" ~ Options: {mapoptions}" if mapoptions else ""}{f" ~ Walls: {', '.join(walls)}" if walls else""}{f' ~ Objects: {"/".join(objects)}' if objects else ""}{f" ~ View: {setMapView}" if setMapView.strip(':') else ''}{f' ~ FOW: {", ".join(fow)}' if fow else ""}{f' ~ JSON: {", ".join(loadedjson)}' if loadedjson else ""}""".strip(" ~")
   # If mapattach exists, apply the new effect, and display
   if mapattach:
-   mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
+   mapattach.add_effect('map', attacks=[{"attack":{"name":"map","automation":[{"type":"text","text":neweffect}],"_v":2}}])
    desc.append(f"Map settings attached to `{mapattach.name}`")
   # Otherwise, show that it was changed, but not saved
   else:
@@ -1489,7 +1489,7 @@ if c:
    for maptarg in ("map", "dm", "lair"):
      if c.get_combatant(maptarg):
        mapattach = c.get_combatant(maptarg)
-       mapattach.add_effect('map', f"""-attack "||{neweffect}" """)
+       mapattach.add_effect('map', attacks=[{"attack":{"name":"map","automation":[{"type":"text","text":neweffect}],"_v":2}}])
        desc.append(f"""Autoattached map settings to {mapattach.name}""")
        break
    else:

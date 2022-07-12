@@ -13,7 +13,7 @@ combatHelper, combatTarget = None, None
 if combat():
   combatHelper = combat().get_combatant(helper)
   if (combatTarget := combat().get_combatant(target)):
-    combatTarget.add_effect(f"Helped by {combatHelper.name if combatHelper else helper}","",0,False, None, True, "You have advantage on the next ability check that you're being helped with\n - You have advantage on the next attack roll against the target that was distracted")
+    combatTarget.add_effect(f"Helped by {combatHelper.name if combatHelper else helper}",duration=0,end=True,desc="You have advantage on the next ability check that you're being helped with\n - You have advantage on the next attack roll against the target that was distracted")
 
 output =  f""" -title "{combatHelper.name if combatHelper else helper} assists {combatTarget.name if combatTarget else target}! {"Hey wait a second..." if (combatHelper.name if combatHelper else helper) == (combatTarget.name if combatTarget else target) else ""}"
 -desc "You can lend your aid to another creature in the completion of a task. When you take the Help action, the creature you aid gains advantage on the next ability check it makes to perform the task you are helping with, provided that it makes the check before the start of your next turn.

@@ -9,7 +9,7 @@ out = []
 
 if combat() and (current := combat().current) and typeof(current) != "SimpleGroup":
   # Add reminder text for the DM
-  current.add_effect("Attacked Recklessly", "", 1, desc="All attacks made against you until the start of your next turn have advantage.")
+  current.add_effect("Attacked Recklessly", duration=1, desc="All attacks made against you until the start of your next turn have advantage.")
   # Support for Reckless Abandon for the Battlerager sub
   # Requires level 6+ and to be raging
   if int(get(BL, 0)) >= 6 and subs.get(BL) == "Battlerager" and current.get_effect('Rage') and combat().me and current.name == combat().me.name:

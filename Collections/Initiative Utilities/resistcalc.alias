@@ -55,18 +55,13 @@ for context in t:
         resist = localargs.get('resist') + globalresist
         immune = localargs.get('immune') + globalimmune
         vuln = localargs.get('vuln') + globalvuln
-        # join all the resists
-        rstring = ' '.join([f" -neutral {r}" for r in neut] +
-                           [f" -resist {r}" for r in resist] +
-                           [f" -immune {r}" for r in immune] +
-                           [f" -vuln {r}" for r in vuln])
         if typeof(tar) == 'SimpleGroup':
             tar = tar.combatants
         else:
             tar = [tar]
         # handle groups
         for target in tar:
-            target.add_effect(f'Temporary Resists for {ctx.alias}', rstring)
+            target.add_effect(f'Temporary Resists for {ctx.alias}', passive_effects={"resistances": resist, "immunities": immune, "vulnerabilities": vuln, "ignored_resistances": neut})
 
             # apply it all to a damage
             dmg = target.damage(dice, crit=crit, d=d, c=c, critdice=critdice, overheal=overheal)

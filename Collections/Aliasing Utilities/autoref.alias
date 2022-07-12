@@ -45,7 +45,11 @@ if len(searchResults) == 1:
             out.append(f""" -f "{opt_name}|{newline.join(opt_out)}" """)
     if (var := funcInfo.get("variables")):
         var_out = [f"""`{var_name}` (*{var_info.type}*) - {var_info.desc}""" for var_name, var_info in var.items()]
-        out.append(f""" -f "Variables|{newline.join(var_out)}" """)
+        if len(newline.join(var_out)) <= 1000:
+            out.append(f""" -f "Variables|{newline.join(var_out)}" """)
+        else:
+            out.append(f""" -f "Variables|{newline.join(var_out[:len(var_out)//2])}" """)
+            out.append(f""" -f "{newline.join(var_out[len(var_out)//2:])}" """)
     # And for syntax
     if (syntax := funcInfo.get("syntax")):
         out.append(f""" -f "Syntax|```yaml

@@ -30,13 +30,13 @@ character().mod_cc(cc,-1) if v and not i and lvl<20 else ""
 character().mod_cc(ff,1) if character().cc_exists(ff) else ""
 f"-f '{ff}|{character().cc_str(ff)}'" if character().cc_exists(ff) else ""
 t=[i.dtype for i in C.resistances.immune] if C else ""
-T=["-resist "+x for x in b if x not in t]
+T=[x for x in b if x not in t]
 
 if C and v:
-  C.add_effect("Frenzied Rage" if fre else 'Rage',f'-cadv str -sadv str {f"-d {dmgBonus}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious" + (" or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" if lvl <= 14 else "") + ("\n - Can make a single melee weapon attack as a bonus action on each of your turns\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
+  C.add_effect("Frenzied Rage" if fre else 'Rage',passive_effects={"damage_bonus": f"{dmgBonus if dmg else ''}", "resistances": T, "save_adv": ["str"], "check_adv": ["strength"]}, duration=args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious" + (" or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" if lvl <= 14 else "") + ("\n - Can make a single melee weapon attack as a bonus action on each of your turns\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
   if (group := c.get_group(C.name)) and "Wild Shape" in str(group):
    wildshape = [i for i in group.combatants if i.name != C.name][0]
-   wildshape.add_effect("Frenzied Rage" if fre else 'Rage',f'-cadv str -sadv str {f"-d {dmgBonus}" if dmg else ""} {" ".join(T)}',args.last("dur") if "dur" in args else 10, parent = C.get_effect("Rage"))
+   wildshape.add_effect("Frenzied Rage" if fre else 'Rage',passive_effects={"damage_bonus": f"{dmgBonus if dmg else ''}", "resistances": T, "save_adv": ["str"], "check_adv": ["strength"]}, duration=args.last("dur") if "dur" in args else 10, parent = C.get_effect("Rage"))
   return f'-f "{C.name}|{str(C.get_effect("Rage")).splitlines()[0]}" ' + (f'-f "{wildshape.name}|{wildshape.get_effect("Rage")}"' if wildshape else '')
 </drac2>
 
