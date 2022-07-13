@@ -1,8 +1,20 @@
+# ieffectparse
+# Croebh#5603
+#
+# This module exposes a few functions, primarily to convert user imported `!i effect` arguments into
+# proper PassiveEffects and Attack formats for the new `.add_effect()`
+#
+# parse_effect_args(raw_args) -> {"passive_effects": dict, "attacks": list}
+# passive_from_args(parsed_args) -> list
+# attacks_from_args(parsed_args) -> dict
+#
+
+
 STAT_ABBREVIATIONS = ("str", "dex", "con", "int", "wis", "cha")
 SKILL_NAMES = ("acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",)
 
 
-def passive_from_args(args):
+def passive_from_args(parsed_args):
   
   def resolve_value_or_bonus(values):
       set_value = None
@@ -40,27 +52,27 @@ def passive_from_args(args):
           out.add(skill_options[0])
       return list(out)
 
-  ac_value, ac_bonus = resolve_value_or_bonus(args.get("ac"))
-  max_hp_value, max_hp_bonus = resolve_value_or_bonus(args.get("maxhp"))
-  passive = dict(attack_advantage=args.adv(eadv=True, boolwise=True),
-                 to_hit_bonus=args.join("b", "+"),
-                 damage_bonus=args.join("d", "+"),
-                 magical_damage="magical" in args,
-                 silvered_damage="silvered" in args,
-                 resistances=args.get("resist"),
-                 immunities=args.get("immune"),
-                 vulnerabilities=args.get("vuln"),
-                 ignored_resistances=args.get("neutral"),
+  ac_value, ac_bonus = resolve_value_or_bonus(parsed_args.get("ac"))
+  max_hp_value, max_hp_bonus = resolve_value_or_bonus(parsed_args.get("maxhp"))
+  passive = dict(attack_advantage=parsed_args.adv(eadv=True, boolwise=True),
+                 to_hit_bonus=parsed_args.join("b", "+"),
+                 damage_bonus=parsed_args.join("d", "+"),
+                 magical_damage="magical" in parsed_args,
+                 silvered_damage="silvered" in parsed_args,
+                 resistances=parsed_args.get("resist"),
+                 immunities=parsed_args.get("immune"),
+                 vulnerabilities=parsed_args.get("vuln"),
+                 ignored_resistances=parsed_args.get("neutral"),
                  ac_value=ac_value,
                  ac_bonus=ac_bonus,
                  max_hp_value=max_hp_value,
                  max_hp_bonus=max_hp_bonus,
-                 save_bonus=args.join("sb", "+"),
-                 save_adv=resolve_save_advs(args.get("sadv")),
-                 save_dis=resolve_save_advs(args.get("sdis")),
-                 check_bonus=args.join("cb", "+"),
-                 check_adv=resolve_check_advs(args.get("cadv")),
-                 check_dis=resolve_check_advs(args.get("cdis")))
+                 save_bonus=parsed_args.join("sb", "+"),
+                 save_adv=resolve_save_advs(parsed_args.get("sadv")),
+                 save_dis=resolve_save_advs(parsed_args.get("sdis")),
+                 check_bonus=parsed_args.join("cb", "+"),
+                 check_adv=resolve_check_advs(parsed_args.get("cadv")),
+                 check_dis=resolve_check_advs(parsed_args.get("cdis")))
   return passive
 
 ADT = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"miss":[],"adv":"0"}],"sortBy":null},{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
@@ -72,8 +84,8 @@ D = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effe
 T = """{"name":"ATTACKNAME","automation":[{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
 
 
-def attacks_from_args(args):
-  attacks = args.get('attack')
+def attacks_from_args(parsed_args):
+  attacks = parsed_args.get('attack')
   attacks_out = []
   for i, attack in enumerate(attacks, 1):
     attack_args = attack.split('|')
