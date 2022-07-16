@@ -1,0 +1,37 @@
+{
+  "vamp": {
+    "dc": "{8+proficiencyBonus+constitutionMod}",
+    "d": "1d12 [necrotic]",
+    "title": "{name} explodes in a Vampiric Burst",
+    "desc": "Shadowy tendrils lash around you. Each creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d12 necrotic damage. You also gain 1d12 temporary hit points.",
+    "save": "con"
+  },
+  "awareness": {
+    "fail": "True",
+    "cc": "Magic Awareness",
+    "title": "{name} becomes more aware of magic",
+    "desc": "As an action, you can open your awareness to the presence of concentrated magic. Until the end of your next turn, you know the location of any spell or magic item within 60 feet of you that isn't behind total cover. When you sense a spell, you learn which school of magic it belongs to.\n\nYou can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",
+    "seffect": "Magic Awareness|end|2"
+  },
+  "burst": {
+    "dc": "{8+proficiencyBonus+constitutionMod}",
+    "d": "1d6 [radiant]",
+    "effect": "Blinded",
+    "title": "A bolt of light bursts from {name}'s chest!",
+    "desc": "A bolt of light shoots from your chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
+    "save": "con",
+    "seffect": "Blinding Burst|parent|1"
+  },
+  "explode": {
+    "dc": "{8+proficiencyBonus+constitutionMod}",
+    "d": "1d6 [force]",
+    "title": "{name} causes an intangible spirit to Explode!",
+    "desc": "An intangible spirit, which looks like a flumph or a pixie (your choice), appears within 5 feet of one creature of your choice that you can see within 30 feet of you. At the end of the current turn, the spirit explodes, and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 1d6 force damage. Until your rage ends, you can use this effect again, summoning another spirit, on each of your turns as a bonus action."
+  },
+  "shroud": {
+    "fail": "True",
+    "effect": "Shroud|-ac +1",
+    "title": "{name} provides a protective shroud for their allies!",
+    "desc": "Until your rage ends, you are surrounded by multicolored protective lights; you gain a +1 bonus to AC, and while within 10 feet of you, your allies gain the same bonus."
+  }
+}

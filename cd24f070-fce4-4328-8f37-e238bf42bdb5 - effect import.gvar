@@ -4,17 +4,21 @@
 # This module exposes a few functions, primarily to convert user imported `!i effect` arguments into
 # proper PassiveEffects and Attack formats for the new `.add_effect()`
 #
-# parse_effect_args(raw_args) -> {"passive_effects": dict, "attacks": list}
-# passive_from_args(parsed_args) -> list
-# attacks_from_args(parsed_args) -> dict
+# parse_effect_args(args, name: str = None) -> {"passive_effects": dict, "attacks": list}
+# passive_from_args(args) -> dict
+# attacks_from_args(args, name: str = None) -> list
 #
 
 
 STAT_ABBREVIATIONS = ("str", "dex", "con", "int", "wis", "cha")
 SKILL_NAMES = ("acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",)
 
+def _parsed_or_raw(args):
+  if typeof(args) == "ParsedArguments":
+    return args
+  return argparse(args)
 
-def passive_from_args(parsed_args):
+def passive_from_args(args):
   
   def resolve_value_or_bonus(values):
       set_value = None
@@ -33,7 +37,7 @@ def passive_from_args(parsed_args):
       out = set()
       for arg in values:
           if arg is True or arg.lower() == "all" or arg == "True":
-              return set(STAT_ABBREVIATIONS)
+              return list(set(STAT_ABBREVIATIONS))
           stat_abbr = arg[:3].lower()
           if stat_abbr not in STAT_ABBREVIATIONS:
               continue
@@ -45,35 +49,38 @@ def passive_from_args(parsed_args):
       out = set()
       for arg in values:
           if arg is True or arg.lower() == "all" or arg == "True":
-              return set(SKILL_NAMES)
+              return list(set(SKILL_NAMES))
           skill_options = [k for k in SKILL_NAMES if k.lower().startswith(arg.lower())]
           if not skill_options or len(skill_options) > 1:
               continue
           out.add(skill_options[0])
       return list(out)
 
-  ac_value, ac_bonus = resolve_value_or_bonus(parsed_args.get("ac"))
-  max_hp_value, max_hp_bonus = resolve_value_or_bonus(parsed_args.get("maxhp"))
-  passive = dict(attack_advantage=parsed_args.adv(eadv=True, boolwise=True),
-                 to_hit_bonus=parsed_args.join("b", "+"),
-                 damage_bonus=parsed_args.join("d", "+"),
-                 magical_damage="magical" in parsed_args,
-                 silvered_damage="silvered" in parsed_args,
-                 resistances=parsed_args.get("resist"),
-                 immunities=parsed_args.get("immune"),
-                 vulnerabilities=parsed_args.get("vuln"),
-                 ignored_resistances=parsed_args.get("neutral"),
+  args = _parsed_or_raw(args)
+
+  ac_value, ac_bonus = resolve_value_or_bonus(args.get("ac"))
+  max_hp_value, max_hp_bonus = resolve_value_or_bonus(args.get("maxhp"))
+  passive = dict(attack_advantage=args.adv(eadv=True, boolwise=True),
+                 to_hit_bonus=args.join("b", "+"),
+                 damage_bonus=args.join("d", "+"),
+                 magical_damage="magical" in args,
+                 silvered_damage="silvered" in args,
+                 resistances=args.get("resist"),
+                 immunities=args.get("immune"),
+                 vulnerabilities=args.get("vuln"),
+                 ignored_resistances=args.get("neutral"),
                  ac_value=ac_value,
                  ac_bonus=ac_bonus,
                  max_hp_value=max_hp_value,
                  max_hp_bonus=max_hp_bonus,
-                 save_bonus=parsed_args.join("sb", "+"),
-                 save_adv=resolve_save_advs(parsed_args.get("sadv")),
-                 save_dis=resolve_save_advs(parsed_args.get("sdis")),
-                 check_bonus=parsed_args.join("cb", "+"),
-                 check_adv=resolve_check_advs(parsed_args.get("cadv")),
-                 check_dis=resolve_check_advs(parsed_args.get("cdis")))
-  return passive
+                 save_bonus=args.join("sb", "+"),
+                 save_adv=resolve_save_advs(args.get("sadv")),
+                 save_dis=resolve_save_advs(args.get("sdis")),
+                 check_bonus=args.join("cb", "+"),
+                 check_adv=resolve_check_advs(args.get("cadv")),
+                 check_dis=resolve_check_advs(args.get("cdis")))
+
+  return {key: value for key, value in passive.items() if value}
 
 ADT = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"miss":[],"adv":"0"}],"sortBy":null},{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
 AD = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"miss":[],"adv":"0"}],"sortBy":null}],"_v":2,"verb":null,"proper":false}"""
@@ -84,8 +91,9 @@ D = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effe
 T = """{"name":"ATTACKNAME","automation":[{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
 
 
-def attacks_from_args(parsed_args):
-  attacks = parsed_args.get('attack')
+def attacks_from_args(args, name: str = None):
+  args = _parsed_or_raw(args)
+  attacks = args.get('attack')
   attacks_out = []
   for i, attack in enumerate(attacks, 1):
     attack_args = attack.split('|')
@@ -109,10 +117,9 @@ def attacks_from_args(parsed_args):
         base_str = ADT[:]
       case _:
         continue
-    attacks_out.append({"attack": load_json(base_str.replace("ATTACKNAME", f"Ieffect Attack {i}").replace("ATTACKBONUS", bonus).replace("DAMAGE", damage).replace("TEXTDESC", text))})
+    attacks_out.append({"attack": load_json(base_str.replace("ATTACKNAME", (name or "Ieffect Attack") + (f" {i}" if i != 1 else "")).replace("ATTACKBONUS", bonus).replace("DAMAGE", damage).replace("TEXTDESC", text))})
   return attacks_out
 
 
-def parse_effect_args(raw_args):
-  args = argparse(raw_args)
-  return {"passive_effects": passive_from_args(args), "attacks": attacks_from_args(args)}
+def parse_effect_args(args, name=None):
+  return {"passive_effects": passive_from_args(args), "attacks": attacks_from_args(args, name)}

@@ -4,7 +4,7 @@ surgeTable = [
  {
   "name": "Vampiric Burst",
   "effect": [],
-  "desc": "Each creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d12 necrotic damage. You also gain temporary hit points equal to 1d12 plus your barbarian level.",
+  "desc": "Shadowy tendrils lash around you. Each creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d12 necrotic damage. You also gain 1d12 temporary hit points.",
   "use": "vamp"
  },
  {
@@ -25,7 +25,7 @@ surgeTable = [
    "You summon a spirit next to one creature that you can see within 30 feet.\n - At the end of the turn, it explodes, and each creature within 5 feet makes a Dex Save or takes 1d6 force damage.\n - As a bonus action, you can summon another spirit.",
    []
   ],
-  "desc": "An intangible spirit, which looks like a flumph or a pixie (your choice), appears within 5 feet of one creature of your choice that you can see within 30 feet of you. At the end of the current turn, the spirit explodes, and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 1d6 force damage. Until your rage ends you can summon another spirit as a bonus action.",
+  "desc": "An intangible spirit, which looks like a flumph or a pixie (your choice), appears within 5 feet of one creature of your choice that you can see within 30 feet of you. At the end of the current turn, the spirit explodes, and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 1d6 force damage. Until your rage ends, you can use this effect again, summoning another spirit, on each of your turns as a bonus action.",
   "use": "explode"
  },
  {
@@ -36,7 +36,7 @@ surgeTable = [
    "Damage type changes to force\n - Gains the light and thrown (20/60) properties\n - Reappears in your hand at the end of the current turn.",
    []
   ],
-  "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon's damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."
+  "desc": "Magic infuses one weapon of your choice that you are holding. Until your rage ends, the weapon’s damage type changes to force, and it gains the light and thrown properties, with a normal range of 20 feet and a long range of 60 feet. If the weapon leaves your hand, the weapon reappears in your hand at the end of the current turn."
  },
  {
   "name": "Retribution",
@@ -81,7 +81,7 @@ surgeTable = [
    "+1 bonus to AC\n - Allies gain the same bonus within 10 feet",
    []
   ],
-  "desc": "Until your rage ends, you are surrounded by multicolored protective lights; you gain a +1 bonus to AC, and while within 10 feet of you, your allies gain the same bonus.",
+  "desc": "Until your rage ends, you are surrounded by multicolored, protective lights; you gain a +1 bonus to AC, and while within 10 feet of you, your allies gain the same bonus.",
   "use": "shroud"
  },
  {
@@ -102,7 +102,7 @@ surgeTable = [
    "A target you can see within 30 feet of you Con save or take 1d6 radiant damage and be blinded until the start of your next turn.\n - You can use this effect again as a bonus action.",
    []
   ],
-  "desc": "A bolt of light shoots from you chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
+  "desc": "A bolt of light shoots from your chest. Another creature of your choice that you can see within 30 feet of you must succeed on a Constitution saving throw or take 1d6 radiant damage and be blinded until the start of your next turn. Until your rage ends, you can use this effect again on each of your turns as a bonus action.",
   "use": "burst"
  }
 ]

@@ -70,7 +70,7 @@ trackers = NEWLINE.join([f"**{tracker}:** {char.get_cc(tracker)}"
 
 # Rest of the counters
 cc_short = lambda counter: ' (Short)' if CC_Dict[counter].reset_on == 'short' else ''
-cc_disp  = lambda counter: char.cc_str(counter) if hud_display else f'{char.get_cc(counter)} / {char.get_cc_max(counter)}'
+cc_disp  = lambda counter: char.cc_str(counter) if hud_display else f'{char.get_cc(counter)} / {char.get_cc_max(counter)}' if char.get_cc_max(counter) != 2147483647 else f'{char.get_cc(counter)}'
 
 cc = NEWLINE.join([f"""**{x}{cc_short(x)}:** {cc_disp(x)}""" 
                    for x in counters])

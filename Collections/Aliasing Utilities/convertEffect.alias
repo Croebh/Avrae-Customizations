@@ -1,0 +1,17 @@
+echo 
+<drac2>
+args = "&*&"
+if args:
+  using(cM="cd24f070-fce4-4328-8f37-e238bf42bdb5")
+  passive, attacks = cM.parse_effect_args(argparse(args)).values()
+
+  if passive:
+    passive = f"""**Passive Effects:** {"`"*3}yaml\n{dump_yaml(passive)}\n{"`"*3}"""
+
+  if attacks:
+    attacks = f"""**Attacks:** {"`"*3}yaml\n{dump_yaml(attacks)}\n{"`"*3}"""
+
+  if attacks or passive:
+    return "\n".join([f"The arguments `{args}` converts to:\n", passive or "", attacks or ""])
+return "No arguments found."
+</drac2>
