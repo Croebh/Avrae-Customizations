@@ -4,7 +4,7 @@ testVersion = False
 argList = &ARGS&
 
 # Comment the first line for `!map`, second line for `!move`
-args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-view']+argList if argList else [])
+args = argparse((['-t',combat().me.name if combat().me else combat().current.name] if combat() and (combat().me or combat().current) else []) + ['-view']+argList if argList else [], parse_ephem=False)
 # args = argparse(argList)
 
 # Set are base variables

@@ -14,11 +14,13 @@ STAT_ABBREVIATIONS = ("str", "dex", "con", "int", "wis", "cha")
 SKILL_NAMES = ("acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",)
 
 def _parsed_or_raw(args):
+  """Converts provided args into ParsedArguments, unless it was already parsed."""
   if typeof(args) == "ParsedArguments":
     return args
   return argparse(args)
 
 def passive_from_args(args):
+  """Converts args from `!init effect` to a dict PassiveEffects for IEffect2."""
   
   def resolve_value_or_bonus(values):
       set_value = None
@@ -43,7 +45,6 @@ def passive_from_args(args):
               continue
           out.add(stat_abbr)
       return list(out)
-
 
   def resolve_check_advs(values):
       out = set()
@@ -92,9 +93,14 @@ T = """{"name":"ATTACKNAME","automation":[{"type":"text","text":"TEXTDESC"}],"_v
 
 
 def attacks_from_args(args, name: str = None):
+  """Converts args from `!init effect` to a list of AttackInteractions for IEffect2. 
+     Can be passed a name for the attack."""
+
   args = _parsed_or_raw(args)
+  
   attacks = args.get('attack')
   attacks_out = []
+  
   for i, attack in enumerate(attacks, 1):
     attack_args = attack.split('|')
     if not len(attack_args) == 3:
@@ -122,4 +128,7 @@ def attacks_from_args(args, name: str = None):
 
 
 def parse_effect_args(args, name=None):
+  """Converts args from `!init effect` to a dict containing PassiveEffects and AttackInteractions for IEffect2. 
+     Can be passed a name for any attacks."""
+
   return {"passive_effects": passive_from_args(args), "attacks": attacks_from_args(args, name)}

@@ -129,7 +129,7 @@ for sub in subclasses.values():
 
 if description:
   description = description.replace('"', '\\"')
-  if any([i not in description for i in ['__', '**', "> "]]):
+  if any([i not in description for i in ['__', '**']]):
     issues.append(f"Your description may be missing some formatting (??get_desc {sheet_url})")
   desc = [i.strip('*_> ') for i in description.splitlines() if i]
 
@@ -176,7 +176,8 @@ bags = dict(load_json(get('bags', '[]')))
 bag_out = [f""" -f "Bags: {bag_name}|{n.join([f"{item} {f'x{quantity}'*(quantity>1)}" for item, quantity in items.items()]) or '*Empty*'}|inline" """ for bag_name, items in bags.items()]
 out += n.join(bag_out)
 
-
+if "Coin Pouch" in bags:
+  issues.append("You appear to have a Coin Pouch in your !bag. We use !g coins for coin tracking.")
 if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
   issues.append(f"""You are missing your starting 200 gold. (!coins +200)""")
 if not bag_out:

@@ -44,6 +44,7 @@ if C and v:
   C.add_effect("Frenzied Rage" if fre else 'Rage',passive_effects={"damage_bonus": f"{dmgBonus if dmg else ''}", "resistances": T, "save_adv": ["str"], "check_adv": ["strength"]}, duration=args.last("dur") if "dur" in args else 10, desc = "Advantage on Strength checks/saves\n - Cannot cast/concentrate on spells\n - Ends if knocked unconscious" + (" or if your turn ends and you haven't attacked a hostile creature or taken damage since your last turn" if lvl <= 14 else "") + ("\n - When your rage ends, you suffer one level of exhaustion." if fre else ""))
   if (group := c.get_group(C.name)) and "Wild Shape" in str(group):
     wildshape = [i for i in group.combatants if i.name != C.name][0]
+    wildshape = c.get_combatant(wildshape.name)
     wildshape.add_effect("Frenzied Rage" if fre else 'Rage',passive_effects={"damage_bonus": f"{dmgBonus if dmg else ''}", "resistances": T, "save_adv": ["str"], "check_adv": ["strength"]}, duration=args.last("dur") if "dur" in args else 10, parent = C.get_effect("Rage"))
   return f'-f "{C.name}|{str(C.get_effect("Rage")).splitlines()[0]}" ' + (f'-f "{wildshape.name}|{wildshape.get_effect("Rage")}"' if wildshape else '')
 </drac2>

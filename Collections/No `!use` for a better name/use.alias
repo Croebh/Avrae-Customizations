@@ -494,12 +494,12 @@ if not (out or help) and valid:
      tOut.append(f"""Temp. HP Unchanged: `{target.temp_hp}`""")
    # Are we adding an effect?
    if tEffect := anno.get("effect"):
-    target_effect_args = ieffect_parse.parse_effect_args(tEffect["args"])
+    target_effect_args = ieffect_parse.parse_effect_args(tEffect["args"], tEffect["name"])
     # Set our parent effect (Defaulting to None)
     parent = None
     # If we're parenting the effect to a target, we need to make sure that effect exists
     if (sEffect := anno.get("seffect")) and sEffect.get('parent') and typeof(user) == "SimpleCombatant":
-     self_effect_args = ieffect_parse.parse_effect_args(sEffect["args"])
+     self_effect_args = ieffect_parse.parse_effect_args(sEffect["args"], sEffect["name"])
      # Are we created one parent effect?
      if not sEffect.get('separate'):
       # If the parent effect doesn't exist yet, lets create it
@@ -554,7 +554,7 @@ if not (out or help) and valid:
   # and not just not made because everyone passed their save
   if sEffect := anno.get("seffect"):
    if not sEffect.get('created') and not 'parent' in sEffect.get('args'):
-    self_effect_args = ieffect_parse.parse_effect_args(sEffect["args"])
+    self_effect_args = ieffect_parse.parse_effect_args(sEffect["args"], sEffect["name"])
     user.add_effect(sEffect["name"], passive_effects=self_effect_args.passive_effects, duration=sEffect["dur"], concentration=sEffect["conc"], end=sEffect["end"], desc=anno.get("seffectdesc"), attacks=self_effect_args.attacks)
     sEffect["created"] = sEffect.get("created", []) + [user.get_effect(sEffect["name"])]
    for effect in sEffect.get("created", []):

@@ -23,7 +23,7 @@ for arg in argList:
 
 
 # Comment the first line for `!map`, second line for `!move`
-args = argparse(argOut)
+args = argparse(argOut, parse_ephem=False)
 # args = argparse(argList)
 
 # Set are base variables
