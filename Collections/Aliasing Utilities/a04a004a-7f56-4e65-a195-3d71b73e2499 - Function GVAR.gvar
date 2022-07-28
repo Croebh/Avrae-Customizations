@@ -418,6 +418,38 @@
     },
     "syntax": ">>> get_svar('thisExists', 'Missing!')\nThe thing!\n>> get_svar('thisDoesNotExist', 'Missing!')\n'Missing!'\n>>> get_svar('thisDoesNotExist')\nNone"
   },
+  "get_uvars()": {
+    "desc": "Retrieves and returns the dict of uvars.",
+    "url": "aliasing.evaluators.ScriptingEvaluator.get_uvars",
+    "returns": {
+      "type": "dict",
+      "desc": "A dict of all uvars."
+    }
+  },
+  "get_uvar(name, default=None)": {
+    "desc": "Retrieves and returns the value of a uvar (user variable).",
+    "url": "aliasing.evaluators.ScriptingEvaluator.get_uvar",
+    "param": [
+      {
+        "name": "name",
+        "type": [
+          "str"
+        ],
+        "desc": "The name of the uvar."
+      },
+      {
+        "name": "default",
+        "type": [
+          "any"
+        ],
+        "desc": "What to return if the name is not set."
+      }
+    ],
+    "returns": {
+      "type": "str or None",
+      "desc": "The value of the uvar, or default if it does not exist."
+    }
+  },
   "randint(stop)`\n`randint(start, stop[, step])": {
     "desc": "Returns a random integer in the range `[start..stop)`.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, ValueError is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.",
     "url": "randint",
@@ -917,61 +949,85 @@
     },
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.ac\n21"
   },
-  "SimpleCombatant.add_effect(name: str, args: str, duration: int = -1, concentration:bool = False, parent=None, end: bool = False, desc:str = None)": {
+  "SimpleCombatant.add_effect(name: str, args: str = None, duration: int = None, concentration: bool = False, parent: SimpleEffect = None, end: bool = False, desc: str = None, passive_effects: dict = None, attacks: list[dict] = None, buttons: list[dict] = None)": {
     "url": "aliasing.api.combat.SimpleCombatant.add_effect",
-    "desc": "Adds an effect to the combatant.",
+    "desc": "Adds an effect to the combatant. Returns the added effect.\n\n**Note:** It is recommended to pass all arguments other than `name` to this method as keyword arguments (i.e. `add_effect(\\\"On Fire\\\", duration=10)`). This is not strictly enforced for backwards-compatibility.\n\n**Deprecation Warning:** The `args` argument is deprecated as of v4.1.0. Use `passive_effects` instead.",
     "param": [
       {
-        "name": "name",
+        "name": "name ",
         "type": [
           "str"
         ],
         "desc": "The name of the effect to add."
       },
       {
-        "name": "args",
+        "name": "args ",
         "type": [
           "str"
         ],
-        "desc": "The effect arguments to add (same syntax as init effect)."
+        "desc": "The effect arguments to add (same syntax as !init effect)."
       },
       {
-        "name": "duration",
+        "name": "duration ",
         "type": [
           "int"
         ],
-        "desc": "The duration of the effect, in rounds."
+        "desc": "The duration of the effect, in rounds. Pass None for indefinite."
       },
       {
-        "name": "concentration",
+        "name": "concentration ",
         "type": [
           "bool"
         ],
         "desc": "Whether the effect requires concentration."
       },
       {
-        "name": "parent",
+        "name": "parent ",
         "type": [
           "SimpleEffect"
         ],
         "desc": "The parent of the effect."
       },
       {
-        "name": "end",
+        "name": "end ",
         "type": [
           "bool"
         ],
-        "desc": "Whether the effect ticks on the end of turn."
+        "desc": "Whether the effect ends on the end of turn."
       },
       {
-        "name": "desc",
+        "name": "desc ",
         "type": [
           "str"
         ],
         "desc": "A description of the effect."
+      },
+      {
+        "name": "passive_effects",
+        "type": [
+          "dict"
+        ],
+        "desc": "The passive effects this effect should grant. See Initiative Effect Args."
+      },
+      {
+        "name": "attacks",
+        "type": [
+          "list"
+        ],
+        "desc": "The attacks granted by this effect. See Initiative Effect Args."
+      },
+      {
+        "name": "buttons",
+        "type": [
+          "list"
+        ],
+        "desc": "The buttons granted by this effect. See Initiative Effect Args."
       }
     ],
-    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[]\n>>> target.add_effect('Rage', '-d 2 -resist piercing -resist bludgeoning -resist slashing', 10, desc='This boi be angry!')\n# If you don't need one of the arguments that has a default (Such as conc or parent)\n# You can skip it by using positional arguments (desc='This boi be angry!)\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
+    "returns": {
+      "type": "SimpleEffect",
+      "desc": "The effect."
+    }
   },
   "SimpleCombatant.attacks": {
     "url": "aliasing.api.combat.SimpleCombatant.attacks",
@@ -1356,5 +1412,26 @@
     "returns": {
       "type": "int"
     }
+  },
+  "Initiative Effect Args": {
+    "url": "ieffectargs",
+    "desc": "The passive_effects, attacks, and buttons arguments to `SimpleCombatant.add_effect()` should be a dict/list that follows the schema below, respectively.\n\nSome examples are provided under `passive_effects`, `AttackInteraction`, and `ButtonInteraction`.\n\n```py\nclass PassiveEffects:\n    attack_advantage: Optional[enums.AdvantageType]\n    to_hit_bonus: Optional[str255]\n    damage_bonus: Optional[str255]\n    magical_damage: Optional[bool]\n    silvered_damage: Optional[bool]\n    resistances: Optional[List[str255]]\n    immunities: Optional[List[str255]]\n    vulnerabilities: Optional[List[str255]]\n    ignored_resistances: Optional[List[str255]]\n    ac_value: Optional[int]\n    ac_bonus: Optional[int]\n    max_hp_value: Optional[int]\n    max_hp_bonus: Optional[int]\n    save_bonus: Optional[str255]\n    save_adv: Optional[Set[str]]\n    save_dis: Optional[Set[str]]\n    check_bonus: Optional[str255]\n    check_adv: Optional[Set[str]]\n    check_dis: Optional[Set[str]]\n\nclass AttackInteraction:\n    attack: AttackModel  # this can be any attack built on the Avrae Dashboard\n    override_default_dc: Optional[int]\n    override_default_attack_bonus: Optional[int]\n    override_default_casting_mod: Optional[int]\n\nclass ButtonInteraction:\n    automation: Automation  # this can be any automation built on the Avrae Dashboard\n    label: str\n    verb: Optional[str255]\n    style: Optional[conint(ge=1, le=4)]\n    override_default_dc: Optional[int]\n    override_default_attack_bonus: Optional[int]\n    override_default_casting_mod: Optional[int]```"
+  },
+  "passive_effects": {
+    "url": "ieffectargs",
+    "desc": "```py\nclass PassiveEffects:\n    attack_advantage: Optional[enums.AdvantageType]\n    to_hit_bonus: Optional[str255]\n    damage_bonus: Optional[str255]\n    magical_damage: Optional[bool]\n    silvered_damage: Optional[bool]\n    resistances: Optional[List[str255]]\n    immunities: Optional[List[str255]]\n    vulnerabilities: Optional[List[str255]]\n    ignored_resistances: Optional[List[str255]]\n    ac_value: Optional[int]\n    ac_bonus: Optional[int]\n    max_hp_value: Optional[int]\n    max_hp_bonus: Optional[int]\n    save_bonus: Optional[str255]\n    save_adv: Optional[Set[str]]\n    save_dis: Optional[Set[str]]\n    check_bonus: Optional[str255]\n    check_adv: Optional[Set[str]]\n    check_dis: Optional[Set[str]]```\nExample: ```py\nCombatant.add_effect(\n  \\\"Some Magical Effect\\\",\n  passive_effects={\n    \\\"attack_advantage\\\": 1,\n    \\\"damage_bonus\\\": \\\"1d4 [fire]\\\",\n    \\\"magical_damage\\\": True,\n    \\\"resistances\\\": [\\\"fire\\\", \\\"nonmagical slashing\\\"],\n    \\\"ac_bonus\\\": 2,\n    \\\"save_adv\\\": [\\\"dexterity\\\"]\n  }\n)```"
+  },
+  "AttackInteraction": {
+    "url": "ieffectargs",
+    "desc": "```py\nclass AttackInteraction:\n    attack: AttackModel  # this can be any attack built on the Avrae Dashboard\n    override_default_dc: Optional[int]\n    override_default_attack_bonus: Optional[int]\n    override_default_casting_mod: Optional[int]```\nExample: ```py\nCombatant.add_effect(\n  \\\"Some Magical Effect\\\",\n  attacks=[{\n    \\\"attack\\\": {\n      \\\"_v\\\": 2,\n      \\\"name\\\": \\\"Magical Attack\\\",\n      \\\"verb\\\": \\\"shows off the power of\\\",\n      \\\"automation\\\": [\n        {\n          \\\"type\\\": \\\"target\\\",\n          \\\"target\\\": \\\"each\\\",\n          \\\"effects\\\": [\n            {\n              \\\"type\\\": \\\"attack\\\",\n              \\\"hit\\\": [\n                {\n                  \\\"type\\\": \\\"damage\\\",\n                  \\\"damage\\\": \\\"1d10[fire]\\\"\n                }\n              ],\n              \\\"miss\\\": []\n            }\n          ]\n        }\n      ]\n    }\n  }]\n)```"
+  },
+  "ButtonInteraction": {
+    "url": "ieffectargs",
+    "desc": "```py\nclass ButtonInteraction:\n    automation: Automation  # this can be any automation built on the Avrae Dashboard\n    label: str\n    verb: Optional[str255]\n    style: Optional[conint(ge=1, le=4)]\n    override_default_dc: Optional[int]\n    override_default_attack_bonus: Optional[int]\n    override_default_casting_mod: Optional[int]```\nExample: ```py\nCombatant.add_effect(\n  \\\"Some Magical Effect\\\",\n  buttons=[{\n    \\\"label\\\": \\\"On Fire\\\",\n    \\\"verb\\\": \\\"is burning\\\",\n    \\\"style\\\": 4,\n    \\\"automation\\\": [\n      {\n        \\\"type\\\": \\\"target\\\",\n        \\\"target\\\": \\\"self\\\",\n        \\\"effects\\\": [\n          {\n            \\\"type\\\": \\\"damage\\\",\n            \\\"damage\\\": \\\"1d6 [fire]\\\"\n          }\n        ]\n      }\n    ]\n  }]\n)```"
+  },
+  "using(**imports)": {
+    "url": "aliasing.evaluators.ScriptingEvaluator.using",
+    "desc": "Imports Draconic global variables as modules in the current namespace. See [Using Imports](https://avrae.readthedocs.io/en/latest/aliasing/api.html#using-imports) for details.\n\nUsually this should be the first statement in a code block if imports are used.\n\n**Warning**\nOnly import modules from trusted sources! The entire contents of an imported module is executed once upon import, and can do bad things like delete all of your variables.",
+    "syntax": ">>> using(\n...     hello=\\\"50943a96-381b-427e-adb9-eea8ebf61f27\\\"\n... )\n>>> hello.hello()\n\\\"Hello world!\\\""
   }
 }

@@ -532,7 +532,7 @@ if 'list' in argList:
                         -f "Add your own overlays/spells | You can add your own overlays/spells by running the command `!map -save <spellname>:<overlay>`
                         See `!map help spell` for more info"  """
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
-elif not c or args.get('?') or args.get('help'):
+elif not c or '?' in argList or 'help' in argList:
  help = f"""-title "Master. Master. Master of Spells, I'm pulling your overlays"
             -desc "__**Map Utility**__
             This is a utility to use with the `!map` alias. It allows you can quickly place preset spell effect overlays or ones that you have saved."

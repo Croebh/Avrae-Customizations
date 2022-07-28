@@ -2,9 +2,9 @@ echo
 <drac2>
 args = "&*&"
 
-dump = dump_yaml
-if "json" in args:
-  dump = dump_json
+dump = dump_json
+if "yaml" in args:
+  dump = dump_yaml
 
 if args:
   using(cM="cd24f070-fce4-4328-8f37-e238bf42bdb5")
