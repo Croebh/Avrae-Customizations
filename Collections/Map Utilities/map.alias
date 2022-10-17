@@ -1166,7 +1166,7 @@ if c:
     desc.append(f"Map background changed to `{mapbg}`")
   if mapoptions != args.last('mapoptions', args.last('options', mapoptions)):
   # If the new mapoptions are different from the old ones, update and display
-   if args.last('mapoptions', args.last('options')) in ('none', 'None', True, 'true', 'True', None):
+   if args.last('mapoptions', args.last('options', '')).lower() == 'reset':
     mapoptions = ""
     desc.append(f"Map options reset")
    else:
@@ -1179,6 +1179,22 @@ if c:
 
     options = {"old": {}, "new": {}}
     opt = args.last('mapoptions', args.last('options', ''))
+    
+    # Account for `-{options}`
+    # New argparse detects it as a new arg and treats -options as a toggle
+    if opt == "True":
+      optLoc = None
+      if "-options" in argList:
+        optLoc = argList.index("-options")
+      elif "-mapoptions" in argList:
+        optLoc = argList.index("-mapoptions")
+
+      try:
+        opt = argList[optLoc+1]
+      except:
+        ...
+
+
     if mapoptions is None:
       mapoptions = ""
 
@@ -1510,6 +1526,7 @@ if c:
   if len(tColor) in (3, 6):
    tColor = f"~{tColor}".upper()
   tName = target.translate(nameStrip)
+  tName = tName.splitlines()[0]
   # Only display if they have a location
   if tLocation:
     people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")
@@ -1567,6 +1584,8 @@ if c:
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
  if not any(args.get(arg) for arg in ('?', 'help', 'spelllist', 'spellbook', 'maplist', 'bglist', 'backgroundlist', 'viewlist', "battlelist", 'tokenimport')):
   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=1{f"&bg={mapbg}" if mapbg else ""}"""
+  if args.last('debug'):
+    return f""" -f "Debug|```\n{finalMap}\n```" """
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 

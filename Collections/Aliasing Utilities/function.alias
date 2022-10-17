@@ -59,6 +59,10 @@ if len(searchResults) == 1:
         Use `{deprecated.replacement}` instead."
         -color FF0000
         -thumb https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/Stop_hand.svg/1024px-Stop_hand.svg.png """)
+    # Do we have a source?
+    if (sources := funcInfo.get("source")):
+        sources = [f"`{source}`" for source in sources]
+        out.append(f""" -f "Sources|You can access this function/method/property via:\n{newline.join(sources)}" """)
     out.append(f""" -title "`{func.replace(') | ', f')`{newline}`')}`"
     -desc "{funcInfo.desc}"
     -f "[Link](https://bit.ly/3Cuzupy#{funcInfo.url})" """)

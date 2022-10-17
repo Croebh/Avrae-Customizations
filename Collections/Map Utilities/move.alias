@@ -1179,6 +1179,22 @@ if c:
 
     options = {"old": {}, "new": {}}
     opt = args.last('mapoptions', args.last('options', ''))
+
+    # Account for `-{options}`
+    # New argparse detects it as a new arg and treats -options as a toggle
+    if opt == "True":
+      optLoc = None
+      if "-options" in argList:
+        optLoc = argList.index("-options")
+      elif "-mapoptions" in argList:
+        optLoc = argList.index("-mapoptions")
+
+      try:
+        opt = argList[optLoc+1]
+      except:
+        ...
+        
+
     if mapoptions is None:
       mapoptions = ""
 
@@ -1510,6 +1526,7 @@ if c:
   if len(tColor) in (3, 6):
    tColor = f"~{tColor}".upper()
   tName = target.translate(str.maketrans(' ', '_', nameStrip))
+  tName = tName.splitlines()[0]
   # Only display if they have a location
   if tLocation:
     people.append(f"{tLocation}{tSize}{tColor}-{tName}{f'~{tToken}' if tToken else ''}")

@@ -436,7 +436,7 @@ if c:
 
 <drac2>
 
-if not c or args.get('?') or args.get('help'):
+if not c or ('?' in argList) or ('help' in argList):
  help = f"""-title "Go for it!"
             -desc "**__Map Utility__**
             This is a utility to use with the `!map` alias. You can move either your current active player in initiative or targeted player as step movements. It will still tally up the total distance after the move.

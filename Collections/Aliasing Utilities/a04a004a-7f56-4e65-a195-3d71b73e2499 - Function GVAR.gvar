@@ -915,9 +915,27 @@
     "type": {
       "name": "list of SimpleEffect"
     },
-    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]"
+    "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]",
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ]
   },
   "SimpleCombatant.init": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.init",
     "desc": "What the combatant rolled for initiative.",
     "type": {
@@ -926,6 +944,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.init\n19"
   },
   "SimpleCombatant.initmod": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.initmod",
     "desc": "An int representing the combatant’s initiative modifier.",
     "type": {
@@ -934,6 +961,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.initmod\n3"
   },
   "SimpleCombatant.type": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.type",
     "desc": "The type of the object (\\\"combatant\\\"), to determine whether this is a group or not.",
     "type": {
@@ -942,6 +978,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.type\n'combatant'"
   },
   "SimpleCombatant.ac": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.ac",
     "desc": "The armor class of the creature.",
     "returns": {
@@ -949,7 +994,16 @@
     },
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.ac\n21"
   },
-  "SimpleCombatant.add_effect(name: str, args: str = None, duration: int = None, concentration: bool = False, parent: SimpleEffect = None, end: bool = False, desc: str = None, passive_effects: dict = None, attacks: list[dict] = None, buttons: list[dict] = None)": {
+  "SimpleCombatant.add_effect(name, args, duration, concentration, parent, end, desc, passive_effects, attacks, buttons)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.add_effect",
     "desc": "Adds an effect to the combatant. Returns the added effect.\n\n**Note:** It is recommended to pass all arguments other than `name` to this method as keyword arguments (i.e. `add_effect(\\\"On Fire\\\", duration=10)`). This is not strictly enforced for backwards-compatibility.\n\n**Deprecation Warning:** The `args` argument is deprecated as of v4.1.0. Use `passive_effects` instead.",
     "param": [
@@ -1030,6 +1084,15 @@
     }
   },
   "SimpleCombatant.attacks": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.attacks",
     "desc": "The attacks of the creature.",
     "returns": {
@@ -1038,6 +1101,15 @@
     "syntax": ">>> target = combat().get_combatant('OR1')\n>>> str(target.attacks)\n'''**Greataxe:** Attack: +5 to hit. Hit: 1d12 + 3 [slashing] damage.\n**Javelin:** Attack: +5 to hit. Hit: 1d6 + 3 [piercing] damage.'''\n>>> target.attacks[0].name\n'Greataxe'"
   },
   "SimpleCombatant.controller": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "desc": "The ID of the combatant's controller.",
     "url": "aliasing.api.combat.SimpleCombatant.controller",
     "returns": {
@@ -1045,6 +1117,15 @@
     }
   },
   "SimpleCombatant.creature_type": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "desc": "The creature type of the combatant. Will return None for players or combatants with no creature type.",
     "url": "aliasing.api.combat.SimpleCombatant.creature_type",
     "returns": {
@@ -1052,6 +1133,15 @@
     }
   },
   "SimpleCombatant.damage(dice_str, crit=False, d=None, c=None, critdice=0, overheal=False)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.damage",
     "desc": "Does damage to a combatant, and returns the rolled result and total, accounting for resistances.",
     "returns": {
@@ -1105,6 +1195,15 @@
     "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n<15/15>\n>>> damage = target.damage('1d8 [piercing]')\n>>> damage\n{'damage': '**Damage:** 1d8 (7) [piercing] = `7`', 'total': 7, 'roll': <RollResult total=7>}\n>>> target.hp_str()\n<8/15>\n>>> damage.damage # I know it looks funny\n**Damage:** 1d8 (7) [piercing] = `7`\n# But what if we want to preroll our damage?\n>>> preRolled = vroll('1d4 [cold] + 1d4 [fire]')\n>>> str(preRolled)\n1d4 (3) [cold] + 1d4 (**4**) [fire] = `7`\n>>> damage = target.damage(preRolled.consolidated())\n>>> damage\n{'damage': '**Damage:** (3 [cold]) / 2 + 4 [fire] = `5`', 'total': 5, 'roll': <RollResult total=5>}\n# They were resistant to cold damage!\n>>> target.hp_str()\n<2/15>"
   },
   "SimpleCombatant.get_effect(name: str)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.get_effect",
     "desc": "Gets a SimpleEffect, fuzzy searching (partial match) for a match.",
     "returns": {
@@ -1123,6 +1222,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.effects\n[<SimpleEffect name='Rage' duration=10 remaining=10>]\n>>> effect = target.get_effect('Rage')\n>>> effect.name\n'Rage'"
   },
   "SimpleCombatant.group": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "desc": "The name of the group the combatant is in, or `None` if the combatant is not in a group.",
     "url": "aliasing.api.combat.SimpleCombatant.group",
     "returns": {
@@ -1130,6 +1238,15 @@
     }
   },
   "SimpleCombatant.hp": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.hp",
     "desc": "The current HP of the creature.",
     "returns": {
@@ -1138,6 +1255,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.hp\n10"
   },
   "SimpleCombatant.hp_str()": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.hp_str",
     "desc": "Returns a string describing the creature’s current, max, and temp HP.",
     "returns": {
@@ -1146,6 +1272,15 @@
     "syntax": ">>> target = combat().get_combatant('OR1')\n# Lets assume they were an unhidden combatant\n>>> target.hp_str()\n'<15/15>'\n# Now, lets assume they are hidden\n>>> target.hp_str()\n'<Healthy>'"
   },
   "SimpleCombatant.id": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.id",
     "desc": "The combatant’s unique identifier.",
     "type": {
@@ -1154,6 +1289,15 @@
     "syntax": ">>> target = combat().get_combatant('Angry Man')\n>>> target.id\n'd7c8e9fc-3531-44d8-8608-f42e03881d19'"
   },
   "SimpleCombatant.levels": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.levels",
     "desc": "The levels of the creature.",
     "returns": {
@@ -1161,6 +1305,15 @@
     }
   },
   "SimpleCombatant.max_hp": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.max_hp",
     "desc": "The maximum HP of the creature.",
     "returns": {
@@ -1168,6 +1321,15 @@
     }
   },
   "SimpleCombatant.modify_hp(amount, ignore_temp=False, overflow=True)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.modify_hp",
     "desc": "Modifies the creature’s remaining HP by a given amount.",
     "param": [
@@ -1195,6 +1357,15 @@
     ]
   },
   "SimpleCombatant.monster_name": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "desc": "The monster name of the combatant. Will return None for players.",
     "url": "aliasing.api.combat.SimpleCombatant.monster_name",
     "returns": {
@@ -1202,6 +1373,15 @@
     }
   },
   "SimpleCombatant.name": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.name",
     "desc": "The name of the creature.",
     "returns": {
@@ -1209,6 +1389,15 @@
     }
   },
   "SimpleCombatant.note": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.note",
     "desc": "The note on the combatant. None if not set.",
     "returns": {
@@ -1216,6 +1405,15 @@
     }
   },
   "SimpleCombatant.race": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "desc": "The race of the combatant. Will return None for monsters or combatants with no race.",
     "url": "aliasing.api.combat.SimpleCombatant.race",
     "returns": {
@@ -1223,6 +1421,15 @@
     }
   },
   "SimpleCombatant.remove_effect(name: str)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.remove_effect",
     "desc": "Removes an effect from the combatant, fuzzy searching on name. If not found, does nothing.",
     "param": [
@@ -1236,10 +1443,28 @@
     ]
   },
   "SimpleCombatant.reset_hp()": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.reset_hp",
     "desc": "Heals a creature to max and removes any temp HP."
   },
   "SimpleCombatant.resistances": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.resistances",
     "desc": "The resistances, immunities, and vulnerabilities of the creature.",
     "returns": {
@@ -1247,6 +1472,15 @@
     }
   },
   "SimpleCombatant.save(ability: str, adv: bool = None)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.save",
     "desc": "Rolls a combatant’s saving throw.",
     "returns": {
@@ -1271,6 +1505,15 @@
     ]
   },
   "SimpleCombatant.saves": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.saves",
     "desc": "The saves of the creature.",
     "returns": {
@@ -1278,6 +1521,15 @@
     }
   },
   "SimpleCombatant.set_ac(ac: int)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_ac",
     "desc": "Sets the combatant’s armor class.",
     "param": [
@@ -1291,6 +1543,15 @@
     ]
   },
   "SimpleCombatant.set_group(group)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_group",
     "desc": "Sets the combatant’s group",
     "returns": {
@@ -1308,6 +1569,15 @@
     ]
   },
   "SimpleCombatant.set_hp(new_hp)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_hp",
     "desc": "Sets the creature’s remaining HP.",
     "param": [
@@ -1321,6 +1591,15 @@
     ]
   },
   "SimpleCombatant.set_init(init: int)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_init",
     "desc": "Sets the combatant’s initiative roll.",
     "param": [
@@ -1334,6 +1613,15 @@
     ]
   },
   "SimpleCombatant.set_maxhp(maxhp: int)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_maxhp",
     "desc": "Sets the combatant’s max HP.",
     "param": [
@@ -1347,6 +1635,15 @@
     ]
   },
   "SimpleCombatant.set_name(name: str)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_name",
     "desc": "Sets the combatant’s name.",
     "param": [
@@ -1360,6 +1657,15 @@
     ]
   },
   "SimpleCombatant.set_note(note: str)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_note",
     "desc": "Sets the combatant’s note.",
     "param": [
@@ -1373,6 +1679,15 @@
     ]
   },
   "SimpleCombatant.set_temp_hp(new_temp)": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.set_temp_hp",
     "desc": "Sets a creature’s temp HP.",
     "param": [
@@ -1386,6 +1701,15 @@
     ]
   },
   "SimpleCombatant.skills": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.skills",
     "desc": "The skills of the creature.",
     "returns": {
@@ -1393,6 +1717,15 @@
     }
   },
   "SimpleCombatant.spellbook": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.spellbook",
     "desc": "The creature’s spellcasting information.",
     "returns": {
@@ -1400,6 +1733,15 @@
     }
   },
   "SimpleCombatant.stats": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.stats",
     "desc": "The stats of the creature.",
     "returns": {
@@ -1407,6 +1749,15 @@
     }
   },
   "SimpleCombatant.temp_hp": {
+    "source": [
+      "combat().me",
+      "combat().current",
+      "combat().combatants[#]",
+      "combat().get_combatant(name)",
+      "combat().get_group(name).combatants[#]",
+      "combat().get_group(name).get_combatant(name)",
+      "SimpleEffect.combatant_name"
+    ],
     "url": "aliasing.api.combat.SimpleCombatant.temp_hp",
     "desc": "The current temp HP of the creature.",
     "returns": {

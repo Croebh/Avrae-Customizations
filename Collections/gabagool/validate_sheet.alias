@@ -178,7 +178,7 @@ out += n.join(bag_out)
 
 if "Coin Pouch" in bags:
   issues.append("You appear to have a Coin Pouch in your !bag. We use !g coins for coin tracking.")
-if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out) and 'Pistol' in n.join(bag_out)):
+if raw.coinpurse.gp < 200 and not (('Artificer' in class_out or 'Gunslinger' in class_out or 'Giff' in raw.race) and 'Pistol' in n.join(bag_out)):
   issues.append(f"""You are missing your starting 200 gold. (!coins +200)""")
 if not bag_out:
   issues.append(f"You have not set up your bags at all. (??get_bags {sheet_url})")

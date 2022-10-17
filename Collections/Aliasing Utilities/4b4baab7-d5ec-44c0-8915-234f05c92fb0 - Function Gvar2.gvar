@@ -1,9 +1,21 @@
 {
   "SimpleGroup.combatants": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": " A list of all SimpleCombatant in this group.",
     "url": "aliasing.api.combat.SimpleGroup.combatants.combatants"
   },
   "SimpleGroup.type": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "The type of the object (\\\"group\\\"), to determine whether this is a group or not.",
     "url": "aliasing.api.combat.SimpleGroup.type",
     "type": {
@@ -11,6 +23,12 @@
     }
   },
   "SimpleGroup.init": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "What the group rolled for initiative.",
     "url": "aliasing.api.combat.SimpleGroup.init",
     "type": {
@@ -18,6 +36,12 @@
     }
   },
   "SimpleGroup.get_combatant(name)": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "Gets a SimpleCombatant, fuzzy searching (partial match) on name.",
     "url": "aliasing.api.combat.SimpleGroup.get_combatant",
     "param": [
@@ -35,6 +59,12 @@
     }
   },
   "SimpleGroup.id": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "The group’s unique identifier.",
     "url": "aliasing.api.combat.SimpleGroup.id",
     "type": {
@@ -42,6 +72,12 @@
     }
   },
   "SimpleGroup.name": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "The name of the group.",
     "url": "aliasing.api.combat.SimpleGroup.name",
     "type": {
@@ -49,6 +85,12 @@
     }
   },
   "SimpleGroup.set_init(init: int)": {
+    "source": [
+      "combat().current",
+      "combat().get_group(name)",
+      "combat().groups[#]",
+      "SimpleCombatant.group"
+    ],
     "desc": "Sets the group’s initiative roll.",
     "url": "aliasing.api.combat.SimpleGroup.set_init",
     "param": [
@@ -62,6 +104,11 @@
     ]
   },
   "SimpleEffect.combatant_name": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The name of the combatant this effect is on.",
     "url": "aliasing.api.combat.SimpleEffect.combatant_name",
     "type": {
@@ -69,6 +116,11 @@
     }
   },
   "SimpleEffect.conc": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "Whether the effect requires concentration.",
     "url": "aliasing.api.combat.SimpleEffect.conc",
     "type": {
@@ -76,6 +128,11 @@
     }
   },
   "SimpleEffect.desc": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The description of the effect.",
     "url": "aliasing.api.combat.SimpleEffect.desc",
     "type": {
@@ -83,6 +140,11 @@
     }
   },
   "SimpleEffect.duration": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The initial duration of the effect, in rounds (-1 = infinite).",
     "url": "aliasing.api.combat.SimpleEffect.duration",
     "type": {
@@ -90,6 +152,11 @@
     }
   },
   "SimpleEffect.effect": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The applied passive effects of the object:```py\n{\n    attack_advantage: int\n    to_hit_bonus: str\n    damage_bonus: str\n    magical_damage: bool\n    silvered_damage: bool\n    resistances: List[Resistance]\n    immunities: List[Resistance]\n    vulnerabilities: List[Resistance]\n    ignored_resistances: List[Resistance]\n    ac_value: int\n    ac_bonus: int\n    max_hp_value: int\n    max_hp_bonus: int\n    save_bonus: str\n    save_adv: List[str]\n    save_dis: List[str]\n    check_bonus: str\n}```",
     "url": "aliasing.api.combat.SimpleEffect.effect",
     "type": {
@@ -97,6 +164,11 @@
     }
   },
   "SimpleEffect.name": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The name of the effect.",
     "url": "aliasing.api.combat.SimpleEffect.name",
     "type": {
@@ -104,6 +176,11 @@
     }
   },
   "SimpleEffect.remaining": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "The remaining duration of the effect, in rounds.",
     "url": "aliasing.api.combat.SimpleEffect.remaining",
     "type": {
@@ -111,6 +188,11 @@
     }
   },
   "SimpleEffect.ticks_on_end": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "Whether the effect duration ticks at the end of the combatant’s turn or at the start.",
     "url": "aliasing.api.combat.SimpleEffect.ticks_on_end",
     "type": {
@@ -118,6 +200,11 @@
     }
   },
   "SimpleEffect.children": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "Gets the child effects of this effect.",
     "url": "aliasing.api.combat.SimpleEffect.children",
     "returns": {
@@ -125,6 +212,11 @@
     }
   },
   "SimpleEffect.parent": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "Gets the parent effect of this effect, or ``None`` if this effect has no parent.",
     "url": "aliasing.api.combat.SimpleEffect.parent",
     "returns": {
@@ -132,6 +224,11 @@
     }
   },
   "SimpleEffect.set_parent(parent)": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
     "desc": "Sets the parent effect of this effect.",
     "url": "aliasing.api.combat.SimpleEffect.set_parent",
     "param": [
@@ -145,6 +242,10 @@
     ]
   },
   "SimpleRollResult.dice": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "The rolled dice (e.g. 1d20 (5)).",
     "url": "aliasing.api.functions.SimpleRollResult.dice",
     "type": {
@@ -152,6 +253,10 @@
     }
   },
   "SimpleRollResult.total": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "The total of the roll.",
     "url": "aliasing.api.functions.SimpleRollResult.total",
     "type": {
@@ -159,6 +264,10 @@
     }
   },
   "SimpleRollResult.full": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "The string representing the roll.",
     "url": "aliasing.api.functions.SimpleRollResult.full",
     "type": {
@@ -166,6 +275,10 @@
     }
   },
   "SimpleRollResult.result": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "The RollResult object returned by the roll.",
     "url": "aliasing.api.functions.SimpleRollResult.result",
     "type": {
@@ -173,6 +286,10 @@
     }
   },
   "SimpleRollResult.raw": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "The Expression object returned by the roll. Equivalent to SimpleRollResult.result.expr.",
     "url": "aliasing.api.functions.SimpleRollResult.raw",
     "type": {
@@ -180,6 +297,10 @@
     }
   },
   "SimpleRollResult.consolidated()": {
+    "source": [
+      "vroll(dice)",
+      "SimpleCombatant.save()"
+    ],
     "desc": "Gets the most simplified version of the roll string. Consolidates totals and damage types together.\n\nNote that this modifies the result expression in place!",
     "url": "aliasing.api.functions.SimpleRollResult.consolidated",
     "syntax": ">>> result = vroll(\\\"3d6[fire]+1d4[cold]\\\")\n>>> str(result)\n'3d6 (3, 3, 2) [fire] + 1d4 (2) [cold] = `10`'\n>>> result.consolidated()\n'8 [fire] + 2 [cold]'",
@@ -435,14 +556,6 @@
       }
     ]
   },
-  "ctx": {
-    "desc": "The context the alias was invoked in. See [AliasContext](https://avrae.readthedocs.io/en/latest/aliasing/api.html#aliasing.api.context.AliasContext) for more details.\n\nNote that this is an automatically bound name and not a function.",
-    "url": "ctx",
-    "type": {
-      "name": "AliasContext"
-    },
-    "syntax": ">>> ctx\n<AliasContext guild=Avrae Development channel=alias-testing author=Croebh#5603 prefix=! alias=test>\n>>> ctx.prefix\n\\\"!\\\" "
-  },
   "ctx.alias": {
     "desc": "The command used to run the alias.",
     "url": "aliasing.api.context.AliasContext.alias",
@@ -594,7 +707,7 @@
   },
   "character().actions": {
     "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
-    "url": "aliasing.evaluators.ScriptingEvaluator.AliasCharacter.actions",
+    "url": "aliasing.api.character.AliasCharacter.actions",
     "returns": {
       "type": "list[AliasAction]"
     }
@@ -1312,6 +1425,12 @@
     }
   },
   "AliasCustomCounter.desc": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.desc",
     "desc": "Returns the cc’s description.",
     "returns": {
@@ -1319,6 +1438,12 @@
     }
   },
   "AliasCustomCounter.title": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.title",
     "desc": "Returns the cc’s title.",
     "returns": {
@@ -1326,6 +1451,12 @@
     }
   },
   "AliasCustomCounter.display_type": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.display_type",
     "desc": "Returns the cc’s display type. (None, ‘bubble’)",
     "returns": {
@@ -1333,6 +1464,12 @@
     }
   },
   "AliasCustomCounter.full_str(include_name: bool = False)": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.full_str",
     "desc": "Returns a string representing the full custom counter.",
     "params": [
@@ -1350,6 +1487,12 @@
     }
   },
   "AliasCustomCounter.max": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.max",
     "desc": "Returns the maximum value of the cc, or 2^31-1 if the cc has no max.",
     "returns": {
@@ -1357,6 +1500,12 @@
     }
   },
   "AliasCustomCounter.min": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.min",
     "desc": "Returns the minimum value of the cc, or -2^31 if the cc has no min.",
     "returns": {
@@ -1364,6 +1513,12 @@
     }
   },
   "AliasCustomCounter.name": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.name",
     "desc": "Returns the cc’s name.",
     "returns": {
@@ -1371,6 +1526,12 @@
     }
   },
   "AliasCustomCounter.reset()": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.reset()",
     "desc": "Resets the cc to its reset value. Errors if the cc has no reset value or no reset.\n\nThe reset value is calculated in 3 steps:\n - if the cc has a `reset_to` value, it is reset to that\n - else if the cc has a `reset_by` value, it is modified by that much\n - else the reset value is its max",
     "returns": {
@@ -1379,6 +1540,12 @@
     }
   },
   "AliasCustomCounter.reset_on": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.reset_on",
     "desc": "Returns the condition on which the cc resets. (‘long’, ‘short’, ‘none’, None)",
     "returns": {
@@ -1386,6 +1553,12 @@
     }
   },
   "AliasCustomCounter.reset_to": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.reset_to",
     "desc": "Returns the value the cc resets to, if it was created with an explicit `resetto`.",
     "returns": {
@@ -1393,6 +1566,12 @@
     }
   },
   "AliasCustomCounter.reset_by": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.reset_by",
     "desc": "Returns the amount the cc changes by on a reset, if it was created with an explicit `resetby`.",
     "returns": {
@@ -1400,6 +1579,12 @@
     }
   },
   "AliasCustomCounter.set(new_value, strict=False)": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.set(new_value, strict=False)",
     "desc": "Sets the cc’s value to a new value.",
     "params": [
@@ -1424,6 +1609,12 @@
     }
   },
   "AliasCustomCounter.value": {
+    "source": [
+      "character().cc(name)",
+      "character().consumables[#]",
+      "character().create_cc(name)",
+      "character().edit_cc(name)"
+    ],
     "url": "aliasing.api.character.AliasCustomCounter.value",
     "desc": "Returns the current value of the cc.",
     "returns": {
@@ -1431,6 +1622,9 @@
     }
   },
   "AliasDeathSaves.fail(num=1)": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Adds one or more failed death saves.",
     "url": "aliasing.api.character.AliasDeathSaves.fail",
     "param": [
@@ -1444,6 +1638,9 @@
     ]
   },
   "AliasDeathSaves.fails": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Returns the number of failed death saves.",
     "url": "aliasing.api.character.AliasDeathSaves.fails",
     "returns": {
@@ -1451,6 +1648,9 @@
     }
   },
   "AliasDeathSaves.is_dead()": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Returns whether or not the character is dead.",
     "url": "aliasing.api.character.AliasDeathSaves.is_dead",
     "returns": {
@@ -1458,6 +1658,9 @@
     }
   },
   "AliasDeathSaves.is_stable()": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Returns whether or not the character is stable.",
     "url": "aliasing.api.character.AliasDeathSaves.is_stable",
     "returns": {
@@ -1465,10 +1668,16 @@
     }
   },
   "AliasDeathSaves.reset()": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Resets all death saves.",
     "url": "aliasing.api.character.AliasDeathSaves.reset"
   },
   "AliasDeathSaves.succeed(num=1)": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Adds one or more successful death saves.",
     "url": "aliasing.api.character.AliasDeathSaves.succeed",
     "param": [
@@ -1482,6 +1691,9 @@
     ]
   },
   "AliasDeathSaves.successes": {
+    "source": [
+      "character().death_saves"
+    ],
     "desc": "Returns the number of successful death saves.",
     "url": "aliasing.api.character.AliasDeathSaves.successes",
     "returns": {
@@ -1489,20 +1701,29 @@
     }
   },
   "AliasAction.activation_type": {
+    "source": [
+      "character().actions"
+    ],
     "url": "aliasing.api.character.AliasAction.activation_type",
-    "desc": "The activation type of the action (e.g. action, bonus, etc).```\nAction Type   |  Value\n--------------|--------\nAction        |  1\nNo Action     |  2\nBonus Action  |  3\nReaction      |  4\nMinute        |  6\nHour          |  7\nSpecial       |  8```",
+    "desc": "The activation type of the action (e.g. action, bonus, etc).```\nAction Type      |  Value\n-----------------|--------\nAction           |  1\nNo Action        |  2\nBonus Action     |  3\nReaction         |  4\nMinute           |  6\nHour             |  7\nSpecial          |  8\nLegendary Action | 9\nMythic Action    | 10\nLair Action      | 11```",
     "returns": {
       "type": "int"
     }
   },
   "AliasAction.activation_type_name": {
+    "source": [
+      "character().actions"
+    ],
     "url": "aliasing.api.character.AliasAction.activation_type_name",
-    "desc": "The name of the activation type of the action. Will be one of: “ACTION”, “NO_ACTION”, “BONUS_ACTION”, “REACTION”, “MINUTE”, “HOUR”, “SPECIAL”. This list of options may expand in the future.",
+    "desc": "The name of the activation type of the action. Will be one of: “ACTION”, “NO_ACTION”, “BONUS_ACTION”, “REACTION”, “MINUTE”, “HOUR”, “SPECIAL”, “LEGENDARY_ACTION”, “MYTHIC_ACTION”, “LAIR_ACTION”. This list of options may expand in the future.",
     "returns": {
       "type": "str"
     }
   },
   "AliasAction.description": {
+    "source": [
+      "character().actions"
+    ],
     "url": "aliasing.api.character.AliasAction.description",
     "desc": "The description of the action as it appears in a non-verbose action list.",
     "returns": {
@@ -1510,6 +1731,9 @@
     }
   },
   "AliasAction.name": {
+    "source": [
+      "character().actions"
+    ],
     "url": "aliasing.api.character.AliasAction.name",
     "desc": "The name of the action.",
     "returns": {
@@ -1517,6 +1741,9 @@
     }
   },
   "AliasAction.snippet": {
+    "source": [
+      "character().actions"
+    ],
     "url": "aliasing.api.character.AliasAction.snippet",
     "desc": "The description of the action as it appears in a verbose action list.",
     "returns": {
@@ -1524,6 +1751,10 @@
     }
   },
   "AliasBaseStats.charisma": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Charisma score.",
     "url": "aliasing.api.statblock.AliasBaseStats.charisma",
     "returns": {
@@ -1531,6 +1762,10 @@
     }
   },
   "AliasBaseStats.constitution": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Constitution score.",
     "url": "aliasing.api.statblock.AliasBaseStats.constitution",
     "returns": {
@@ -1538,6 +1773,10 @@
     }
   },
   "AliasBaseStats.dexterity": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Dexterity score.",
     "url": "aliasing.api.statblock.AliasBaseStats.dexterity",
     "returns": {
@@ -1545,6 +1784,10 @@
     }
   },
   "AliasBaseStats.get_mod(stat: str)": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Gets the modifier for a base stat (str, dex, con, etc). Does not take skill check bonuses into account.\nFor the skill check modifier, use `StatBlock.skills.strength` etc.",
     "url": "aliasing.api.statblock.AliasBaseStats.get_mod",
     "param": [
@@ -1561,6 +1804,10 @@
     }
   },
   "AliasBaseStats.intelligence": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Intelligence score.",
     "url": "aliasing.api.statblock.AliasBaseStats.intelligence",
     "returns": {
@@ -1568,6 +1815,10 @@
     }
   },
   "AliasBaseStats.prof_bonus": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "The proficiency bonus.",
     "url": "aliasing.api.statblock.AliasBaseStats.prof_bonus",
     "returns": {
@@ -1575,6 +1826,10 @@
     }
   },
   "AliasBaseStats.strength": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Strength score.",
     "url": "aliasing.api.statblock.AliasBaseStats.strength",
     "returns": {
@@ -1582,6 +1837,10 @@
     }
   },
   "AliasBaseStats.wisdom": {
+    "source": [
+      "character().stats",
+      "SimpleCombatant.stats"      
+    ],
     "desc": "Wisdom score.",
     "url": "aliasing.api.statblock.AliasBaseStats.wisdom",
     "returns": {
@@ -1589,6 +1848,10 @@
     }
   },
   "for (cls, level) in AliasLevels:": {
+    "source": [
+      "character().levels",
+      "SimpleCombatant.levels"      
+    ],
     "desc": "Iterates over pairs of class names and the number of levels in that class.",
     "url": "aliasing.api.statblock.AliasLevels",
     "type": {
@@ -1596,6 +1859,10 @@
     }
   },
   "AliasLevels.get(cls_name, default=0)": {
+    "source": [
+      "character().levels",
+      "SimpleCombatant.levels"      
+    ],
     "desc": "Gets the levels in a given class, or default if there are none.",
     "url": "aliasing.api.statblock.AliasLevels.get",
     "param": [
@@ -1619,6 +1886,10 @@
     }
   },
   "AliasLevels.total_level": {
+    "source": [
+      "character().levels",
+      "SimpleCombatant.levels"      
+    ],
     "desc": "The total level.",
     "url": "aliasing.api.statblock.AliasLevels.total_level",
     "returns": {
@@ -1626,6 +1897,10 @@
     }
   },
   "str(AliasAttackList)": {
+    "source": [
+      "character().attacks",
+      "SimpleCombatant.attacks"      
+    ],
     "desc": "Returns a string representation of all attacks in this attack list.",
     "url": "aliasing.api.statblock.AliasAttackList.str",
     "type": {
@@ -1633,6 +1908,10 @@
     }
   },
   "len(AliasAttackList)": {
+    "source": [
+      "character().attacks",
+      "SimpleCombatant.attacks"      
+    ],
     "desc": "Returns the number of attacks in this attack list.",
     "url": "aliasing.api.statblock.AliasAttackList.len",
     "type": {
@@ -1640,6 +1919,10 @@
     }
   },
   "for attack in AliasAttackList:": {
+    "source": [
+      "character().attacks",
+      "SimpleCombatant.attacks"      
+    ],
     "desc": "Iterates over attacks in this attack list.",
     "url": "aliasattacklist",
     "type": {
@@ -1647,6 +1930,10 @@
     }
   },
   "AliasAttackList[i]": {
+    "source": [
+      "character().attacks",
+      "SimpleCombatant.attacks"      
+    ],
     "desc": "Gets the i-th indexed attack.",
     "url": "aliasattacklist",
     "type": {
@@ -1654,6 +1941,10 @@
     }
   },
   "str(AliasAttack)": {
+    "source": [
+      "character().attacks[#]",
+      "SimpleCombatant.attacks[#]"
+    ],
     "desc": "Returns a string representation of this attack.",
     "url": "aliasing.api.statblock.AliasAttack.str",
     "type": {
@@ -1661,6 +1952,10 @@
     }
   },
   "AliasAttack.name": {
+    "source": [
+      "character().attacks[#]",
+      "SimpleCombatant.attacks[#]"
+    ],
     "desc": "The name of the attack.",
     "url": "aliasing.api.statblock.AliasAttack.name",
     "returns": {
@@ -1668,6 +1963,10 @@
     }
   },
   "AliasAttack.proper": {
+    "source": [
+      "character().attacks[#]",
+      "SimpleCombatant.attacks[#]"
+    ],
     "desc": "Whether or not this attack is a proper noun.",
     "url": "aliasing.api.statblock.AliasAttack.proper",
     "returns": {
@@ -1675,6 +1974,10 @@
     }
   },
   "AliasAttack.raw": {
+    "source": [
+      "character().attacks[#]",
+      "SimpleCombatant.attacks[#]"
+    ],
     "desc": "A dict representing the raw value of this attack.",
     "url": "aliasing.api.statblock.AliasAttack.raw",
     "returns": {
@@ -1682,6 +1985,10 @@
     }
   },
   "AliasAttack.verb": {
+    "source": [
+      "character().attacks[#]",
+      "SimpleCombatant.attacks[#]"
+    ],
     "desc": "The custom verb used for this attack, if applicable.",
     "url": "aliasing.api.statblock.AliasAttack.verb",
     "returns": {
@@ -1689,6 +1996,12 @@
     }
   },
   "AliasSkill.adv": {
+    "source": [
+      "character().skills[skill]",
+      "SimpleCombatant.skills[skill]",
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "The guaranteed advantage or disadvantage on this skill modifier. True = adv, False = dis, None = normal.",
     "url": "aliasing.api.statblock.AliasSkill.adv",
     "returns": {
@@ -1696,6 +2009,12 @@
     }
   },
   "AliasSkill.bonus": {
+    "source": [
+      "character().skills[skill]",
+      "SimpleCombatant.skills[skill]",
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "The miscellaneous bonus to the skill modifier.",
     "url": "aliasing.api.statblock.AliasSkill.bonus",
     "returns": {
@@ -1703,6 +2022,12 @@
     }
   },
   "AliasSkill.d20(base_adv=None, reroll=None, min_val=None, mod_override=None)": {
+    "source": [
+      "character().skills[skill]",
+      "SimpleCombatant.skills[skill]",
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "Gets a dice string representing the roll for this skill.",
     "url": "aliasing.api.statblock.AliasSkill.d20",
     "param": [
@@ -1740,6 +2065,12 @@
     }
   },
   "AliasSkill.prof": {
+    "source": [
+      "character().skills[skill]",
+      "SimpleCombatant.skills[skill]",
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "The proficiency multiplier in this skill. 0 = no proficiency, 0.5 = JoAT, 1 = proficiency, 2 = expertise.",
     "url": "aliasing.api.statblock.AliasSkill.prof",
     "returns": {
@@ -1747,6 +2078,12 @@
     }
   },
   "AliasSkill.value": {
+    "source": [
+      "character().skills[skill]",
+      "SimpleCombatant.skills[skill]",
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "The final modifier. Generally, value = (base stat mod) + (profBonus) * prof + bonus.",
     "url": "aliasing.api.statblock.AliasSkill.value",
     "returns": {
@@ -1754,6 +2091,10 @@
     }
   },
   "AliasSkills.<Skill>": {
+    "source": [
+      "character().skills",
+      "SimpleCombatant.skills"
+    ],
     "desc": "The skill modifier for a given skill. Valid skills: `acrobatics`, `animalHandling`, `arcana`, `athletics`, `deception`, `history`, `initiative`, `insight`, `intimidation`, `investigation`, `medicine`, `nature`, `perception`, `performance`, `persuasion`, `religion`, `sleightOfHand`, `stealth`, `survival`, `strength`, `dexterity`, `constitution`, `intelligence`, `wisdom`, and `charisma`",
     "url": "aliasing.api.statblock.AliasSkills",
     "type": {
@@ -1761,6 +2102,10 @@
     }
   },
   "for (save_name, skill) in AliasSaves:": {
+    "source": [
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "Iterates over pairs of save names and corresponding save.",
     "url": "aliasing.api.statblock.AliasSaves",
     "type": {
@@ -1768,6 +2113,10 @@
     }
   },
   "AliasSaves.get(base_stat)": {
+    "source": [
+      "character().saves.get(stat)",
+      "SimpleCombatant.saves.get(stat)"
+    ],
     "desc": "Gets the save skill for a given stat (str, dex, etc).",
     "url": "aliasing.api.statblock.AliasSaves.get",
     "param": [
@@ -1784,6 +2133,10 @@
     }
   },
   "AliasResistances.immune": {
+    "source": [
+      "character().resistances",
+      "SimpleCombatant.resistances"
+    ],
     "desc": "A list of damage types that the stat block is immune to.",
     "url": "aliasing.api.statblock.AliasResistances.immune",
     "returns": {
@@ -1791,6 +2144,10 @@
     }
   },
   "AliasResistances.neutral": {
+    "source": [
+      "character().resistances",
+      "SimpleCombatant.resistances"
+    ],
     "desc": "A list of damage types that the stat block ignores in damage calculations. (i.e. will not handle resistances/ vulnerabilities/immunities)",
     "url": "aliasing.api.statblock.AliasResistances.neutral",
     "returns": {
@@ -1798,6 +2155,10 @@
     }
   },
   "AliasResistances.resist": {
+    "source": [
+      "character().resistances",
+      "SimpleCombatant.resistances"
+    ],
     "desc": "A list of damage types that the stat block is resistant to.",
     "url": "aliasing.api.statblock.AliasResistances.resist",
     "returns": {
@@ -1805,6 +2166,10 @@
     }
   },
   "AliasResistances.vuln": {
+    "source": [
+      "character().resistances",
+      "SimpleCombatant.resistances"
+    ],
     "desc": "A list of damage types that the stat block is vulnerable to.",
     "url": "aliasing.api.statblock.AliasResistances.vuln",
     "returns": {
@@ -1812,10 +2177,30 @@
     }
   },
   "Resistance": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "Represents a conditional resistance to a damage type.\nOnly applied to a type token set T if `dtype ∈ T ∧ ¬(unless ∩ T) ∧ only ⊂ T`.\nNote: transforms all damage types given to lowercase.",
     "url": "cogs5e.models.sheet.resistance.Resistance"
   },
   "Resistance.dtype": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "The damage type.",
     "url": "Resistance.dtype",
     "type": {
@@ -1823,6 +2208,16 @@
     }
   },
   "Resistance.unless": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "A set of tokens that if present, this resistance will not apply.",
     "url": "Resistance.unless",
     "type": {
@@ -1830,6 +2225,16 @@
     }
   },
   "Resistance.only": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "A set of tokens that unless present, this resistance will not apply.",
     "url": "Resistance.only",
     "type": {
@@ -1837,6 +2242,16 @@
     }
   },
   "Resistance.applies_to(tokens)": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "Note that tokens should be a set of lowercase strings.",
     "url": "Resistance.applies_to",
     "param": [
@@ -1853,6 +2268,16 @@
     }
   },
   "Resistance.applies_to_str(dtype)": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "Returns whether or not this resistance is applicable to a damage type.",
     "url": "Resistance.applies_to_str",
     "param": [
@@ -1869,6 +2294,16 @@
     }
   },
   "Resistance.is_complex": {
+    "source": [
+      "character().resistances.immune",
+      "character().resistances.vuln",
+      "character().resistances.neutral",
+      "character().resistances.resist",
+      "SimpleCombatant.resistances.immune",
+      "SimpleCombatant.resistances.vuln",
+      "SimpleCombatant.resistances.neutral",
+      "SimpleCombatant.resistances.resist"
+    ],
     "desc": "Whether or not the resistance has some more complex conditional beyond just a dtype.",
     "url": "Resistance.is_complex",
     "returns": {
@@ -1876,6 +2311,10 @@
     }
   },
   "spell in AliasSpellbook": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Returns whether the spell named spell (str) is known.",
     "url": "aliasing.api.statblock.AliasSpellbook",
     "type": {
@@ -1883,6 +2322,10 @@
     }
   },
   "AliasSpellbook.can_cast(spell, level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Returns whether or not the given spell can currently be cast at the given level. Does not check to see what level that spell is, only if its in the creatures spellbook and they have the resources to cast it.",
     "url": "aliasing.api.statblock.AliasSpellbook.can_cast",
     "param": [
@@ -1906,6 +2349,10 @@
     }
   },
   "AliasSpellbook.cast(spell, level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Uses all resources to cast a given spell at a given level.",
     "url": "aliasing.api.statblock.AliasSpellbook.cast",
     "param": [
@@ -1926,6 +2373,10 @@
     ]
   },
   "AliasSpellbook.caster_level": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The caster’s caster level.",
     "url": "aliasing.api.statblock.AliasSpellbook.caster_level",
     "returns": {
@@ -1933,6 +2384,10 @@
     }
   },
   "AliasSpellbook.dc": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The spellcasting DC.",
     "url": "aliasing.api.statblock.AliasSpellbook.dc",
     "returns": {
@@ -1940,6 +2395,10 @@
     }
   },
   "AliasSpellbook.max_pact_slots": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The maximum number of pact slots the spellcaster has remaining. If the spellcaster has no pact slots, returns `None`.\n\n**Note:** Only D&D Beyond character sheets support the explicit distinction between pact and non-pact slots.",
     "url": "aliasing.api.statblock.AliasSpellbook.max_pact_slots",
     "returns": {
@@ -1947,6 +2406,10 @@
     }
   },
   "AliasSpellbook.num_pact_slots": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The number of pact slots the spellcaster has remaining. If the spellcaster has no pact slots, returns `None`.\n\n**Note:** Only D&D Beyond character sheets support the explicit distinction between pact and non-pact slots.",
     "url": "aliasing.api.statblock.AliasSpellbook.num_pact_slots",
     "returns": {
@@ -1954,6 +2417,10 @@
     }
   },
   "AliasSpellbook.pact_slot_level": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The spellcaster’s pact slot level. If the spellcaster has no pact slots, returns `None`.\n\n**Note:** Only D&D Beyond character sheets support the explicit distinction between pact and non-pact slots.",
     "url": "aliasing.api.statblock.AliasSpellbook.pact_slot_level",
     "returns": {
@@ -1961,6 +2428,10 @@
     }
   },
   "AliasSpellbook.get_max_slots(level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Gets the maximum number of level level spell slots available.",
     "url": "aliasing.api.statblock.AliasSpellbook.get_max_slots",
     "param": [
@@ -1978,6 +2449,10 @@
     }
   },
   "AliasSpellbook.get_slots(level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Gets the remaining number of slots of a given level. Always returns 1 if level is 0.",
     "url": "aliasing.api.statblock.AliasSpellbook.get_slots",
     "param": [
@@ -1995,6 +2470,10 @@
     }
   },
   "AliasSpellbook.remaining_casts_of(spell, level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Gets a string representing the remaining casts of a given spell at a given level.",
     "url": "aliasing.api.statblock.AliasSpellbook.remaining_casts_of",
     "param": [
@@ -2018,14 +2497,26 @@
     }
   },
   "AliasSpellbook.reset_pact_slots()": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Resets the number of remaining pact slots to the max, leaving non-pact slots untouched.",
     "url": "aliasing.api.statblock.AliasSpellbook.reset_pact_slots"
   },
   "AliasSpellbook.reset_slots()": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Resets the number of remaining spell slots of all levels to the max.",
     "url": "aliasing.api.statblock.AliasSpellbook.reset_slots"
   },
   "AliasSpellbook.sab": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The spell attack bonus.",
     "url": "aliasing.api.statblock.AliasSpellbook.sab",
     "returns": {
@@ -2033,6 +2524,10 @@
     }
   },
   "AliasSpellbook.set_slots(level, value)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Sets the remaining number of spell slots of a given level.",
     "url": "aliasing.api.statblock.AliasSpellbook.set_slots",
     "param": [
@@ -2053,6 +2548,10 @@
     ]
   },
   "AliasSpellbook.slots_str(level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Returns a string representing how many slots of a level a caster has.",
     "url": "aliasing.api.statblock.AliasSpellbook.slots_str",
     "param": [
@@ -2070,6 +2569,10 @@
     }
   },
   "AliasSpellbook.spell_mod": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The spellcasting modifier.",
     "url": "aliasing.api.statblock.AliasSpellbook.spell_mod",
     "returns": {
@@ -2077,6 +2580,10 @@
     }
   },
   "AliasSpellbook.spells": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "The list of spells in this spellbook.",
     "url": "aliasing.api.statblock.AliasSpellbook.spells",
     "returns": {
@@ -2084,6 +2591,10 @@
     }
   },
   "AliasSpellbook.use_slot(level)": {
+    "source": [
+      "character().spellbook",
+      "SimpleCombatant.spellbook"
+    ],
     "desc": "Uses one spell slot of a given level. Equivalent to set_slots(level, get_slots(level) - 1).",
     "url": "aliasing.api.statblock.AliasSpellbook.use_slot",
     "param": [
@@ -2097,6 +2608,11 @@
     ]
   },
   "AliasSpellbookSpell.dc": {
+    "source": [
+      "character().spellbook.spells[#]",
+      "spell in character().spellbook",
+      "SimpleCombatant.spellbook.spells[#]"
+    ],
     "url": "aliasing.api.statblock.AliasSpellbookSpell.dc",
     "desc": "The spell’s overridden DC. None if this spell uses the default caster DC.",
     "returns": {
@@ -2104,6 +2620,11 @@
     }
   },
   "AliasSpellbookSpell.mod": {
+    "source": [
+      "character().spellbook.spells[#]",
+      "spell in character().spellbook",
+      "SimpleCombatant.spellbook.spells[#]"
+    ],
     "url": "aliasing.api.statblock.AliasSpellbookSpell.mod",
     "desc": "The spell’s overridden spellcasting modifier. None if this spell uses the default caster spellcasting modifier.",
     "returns": {
@@ -2111,6 +2632,11 @@
     }
   },
   "AliasSpellbookSpell.prepared": {
+    "source": [
+      "character().spellbook.spells[#]",
+      "spell in character().spellbook",
+      "SimpleCombatant.spellbook.spells[#]"
+    ],
     "url": "aliasing.api.statblock.AliasSpellbookSpell.prepared",
     "desc": "Whether or not the spell is prepared. If the spell is always prepared, the caster is not a prepared caster (e.g. Sorcerer), or the spell is a cantrip, this will be True.",
     "returns": {
@@ -2118,6 +2644,11 @@
     }
   },
   "AliasSpellbookSpell.name": {
+    "source": [
+      "character().spellbook.spells[#]",
+      "spell in character().spellbook",
+      "SimpleCombatant.spellbook.spells[#]"
+    ],
     "url": "aliasing.api.statblock.AliasSpellbookSpell.name",
     "desc": "The name of the spell.",
     "returns": {
@@ -2125,6 +2656,11 @@
     }
   },
   "AliasSpellbookSpell.sab": {
+    "source": [
+      "character().spellbook.spells[#]",
+      "spell in character().spellbook",
+      "SimpleCombatant.spellbook.spells[#]"
+    ],
     "url": "aliasing.api.statblock.AliasSpellbookSpell.sab",
     "desc": "The spell’s overridden spell attack bonus. None if this spell uses the default caster spell attack bonus.",
     "returns": {

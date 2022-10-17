@@ -17,13 +17,14 @@ b = args.join("b", ' + ')
 adv = args.adv(boolwise=True)
 bladesong = args.last('bs') if self else None
 transmuter = args.last('ts') if self else None
+reroll = args.last('reroll', character().csettings.get('reroll') if self else None, type_=int)
 
 if c and (target := c.get_combatant(target)):
  effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
  bladesong  = bladesong or target.get_effect("Bladesong")
  transmuter = transmuter or target.get_effect("Transmuter's Stone")
  sb         = ' + '.join([sb_ for eff in target.effects if (sb_ := eff.effect.get('sb', eff.effect.get('save_bonus')))])
- rollString = f"{target.saves.get('constitution').d20(adv)}" +  \
+ rollString = f"{target.saves.get('constitution').d20(adv, reroll)}" +  \
              (f' + {b}' if b else '') +  \
              (f' + {sb}' if sb else '') + \
              (f' + {max(1, (target.stats.get_mod("int")))} [bladesong]' if bladesong else '') + \
@@ -44,7 +45,7 @@ if c and (target := c.get_combatant(target)):
    concOut   = concOut[:-2] + f"""\nYou weren't concentrating on a spell in init." """
 elif target == name:
  target = character()
- rollString = f"{target.saves.get('constitution').d20(adv)}" +  \
+ rollString = f"{target.saves.get('constitution').d20(adv, reroll)}" +  \
              (f' + {b}' if b else '') + \
              (f' + {max(1, (target.stats.constitution-10)//2)} [bladesong]' if bladesong else '')
  concRoll   = vroll(rollString)
