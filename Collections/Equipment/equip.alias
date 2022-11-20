@@ -1,6 +1,6 @@
 <drac2>
-args = &ARGS&
-wn, g, args = args[0] if args else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(args)
+argslist = &ARGS&
+wn, g, args = argslist[0] if argslist else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(argslist)
 style, customName, bonus, damage = g.style, args.last("name"), args.join("b", "+"), args.join("d", "+")
 cmd = f"""embed -title "It's dangerous to go alone..." -desc "I'm afraid **&1&** isn't a valid item in my database.\n\nPlease note that with little exception, this alias only has support for weapons found in the PHB." """
 chosenWeapon = None
@@ -10,7 +10,7 @@ for weapon in g.weapons:
   break
 if chosenWeapon:
  offhand = args.last("off")
- twohanded = args.last("2h") and chosenWeapon.get("vers")
+ twohanded = "2h" in argslist and chosenWeapon.get("vers")
  noprof = args.last("noprof") or args.last('t')
  monk = args.last("monk")
  archery = args.last("archery") and "ranged" in chosenWeapon.type.lower()
