@@ -9,18 +9,18 @@ for weapon in g.weapons:
   chosenWeapon = weapon
   break
 if chosenWeapon:
- offhand = args.last("off")
+ offhand   = args.last("off")
  twohanded = "2h" in argslist and chosenWeapon.get("vers")
- noprof = args.last("noprof") or args.last('t')
- monk = args.last("monk")
- archery = args.last("archery") and "ranged" in chosenWeapon.type.lower()
- dueling = args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc
- gwf     = args.last("gwf") and ("two" in chosenWeapon.desc or twohanded)
- thrown  = args.last("thrown") and "thrown" in chosenWeapon.desc.lower()
- unarmed = args.last("uf")
- savage  = args.last("savage") and chosenWeapon.type=="Melee"
- criton  = args.last('criton') or ""
- nodmg   = args.last('nodmg')
+ noprof    = args.last("noprof") or args.last('t')
+ monk      = args.last("monk")
+ archery   = args.last("archery") and "ranged" in chosenWeapon.type.lower()
+ dueling   = args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc
+ gwf       = args.last("gwf") and ("two" in chosenWeapon.desc or twohanded)
+ thrown    = args.last("thrown") and "thrown" in chosenWeapon.desc.lower()
+ unarmed   = args.last("uf")
+ savage    = args.last("savage") and chosenWeapon.type=="Melee"
+ criton    = args.last('criton') or ""
+ nodmg     = args.last('nodmg')
  if criton:
   criton = f""" -criton "{criton}" """
  critd   = args.last('c') or ""
@@ -33,7 +33,8 @@ if chosenWeapon:
  mod = g.z[args.last("stat")] if args.last("stat") else "dexterityMod"if "ranged" in chosenWeapon.type.lower() else f'max(dexterityMod, strengthMod)'if chosenWeapon.get('finesse') or monk else "strengthMod"
  twohanded = unarmed and twohanded if "Unarmed" in chosenWeapon.name else twohanded
  tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else g.prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
- damageDice = ("1d{{4+2*((int(MonkLevel)+1)//6)}}" if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + ("ro<3" if gwf else "")) if chosenWeapon.get("dice") else ""
+ dieSize = (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice).split('d')[-1]
+ damageDice = (("1d{{max(4+2*((int(MonkLevel)+1)//6)" + f",{dieSize}" + ")}}")  if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + ("ro<3" if gwf else "")) if chosenWeapon.get("dice") else ""
  damageDice = ((f'({damageDice},{damageDice})kh1' if savage else damageDice) + "+" + ("0" if args.last("t") or offhand else '{{' + mod + '}}') + ("+2" if dueling else "") + ("+1" if thrown else "") + (f' [{" ".join([x for x in g.at if x in args]+[""])}{chosenWeapon.damage}]' if chosenWeapon.get("damage")else '') + ("+" + damage if damage else "")) if damageDice and not nodmg else ''
  desc = [f"**{chosenWeapon.get('class')} {chosenWeapon.get('type')} Weapon**. " + chosenWeapon.get('desc')] + ([chosenWeapon.special] if chosenWeapon.get("special") else [])
  for x in style:
