@@ -1660,7 +1660,7 @@ elif args.get('objectlist'):
  # Add some pizazz
  return objectlist + f"""-title "I've got a loveley bunch of Objects, diddly dee" """
 # If we're not in combat, or "?" or "help" are given as arguments, display the help
-elif (not c or args.get('?') or args.get('help')) and not args.get("tokenimport"):
+elif (not c or '?' in argList or args.get('help')) and not args.get("tokenimport"):
  if any(args.last(potentialArg) for potentialArg in ('overlay', 'over', 'overlays', 'spell', 'spells')):
   help = f"""-title "Maps: overlays and spells"
             -desc "{["Bro","Broski","Brotein","Brosicle","Broseph","Brotastic","Han Brolo","Broba Fett","Brotato Chip","Broseidon","Brochacho","Broebh"][randint(12)]}, I'm so Over this!
