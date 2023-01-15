@@ -487,7 +487,7 @@ if c:
 </drac2>
 
 <drac2>
-if not c or args.get('?') or args.get('help'):
+if not c or '?' in argList or args.get('help'):
  help =  """-title "The View Looks Amazing Up Here"
              -desc "**__Map Utility__**
             This is a utility to use with the `!map` alias. You can focus on a portion of a map as well as shift that view, expand it, or reduce it. You also have the option to save a view, so later on you can load it quickly."
