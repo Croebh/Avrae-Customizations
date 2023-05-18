@@ -308,7 +308,7 @@
       "type": "str"
     }
   },
-  "argparse(args)": {
+  "argparse(args, parse_ephem=True)": {
     "desc": "Parses arguments.",
     "url": "utils.argparser.argparse",
     "param": [
@@ -319,6 +319,13 @@
           "iterable"
         ],
         "desc": "A list of arguments to parse"
+      },
+      {
+        "name": "parse_ephem",
+        "type": [
+          "bool"
+        ],
+        "desc": "Whether to treat args like `-d1` as ephemeral arguments or literal ones."
       }
     ],
     "returns": {
@@ -690,7 +697,7 @@
     }
   },
   "character()": {
-    "desc": "The character’s actions. These do not include attacks - see the `attacks` property.",
+    "desc": "Returns the active character if one is. Otherwise, raises a `FunctionRequiresCharacter` error.",
     "url": "aliasing.evaluators.ScriptingEvaluator.character",
     "returns": {
       "type": "AliasCharacter",

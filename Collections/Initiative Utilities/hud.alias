@@ -1,23 +1,31 @@
-embed 
+embed
 <drac2>
 char = character()
 out = []
 
 # Constants
-AMMO = ["arrow", "bolt", "needle", "bullet", 
-        "ammo", "shuriken", "javelin", "dart", 
+AMMO = ["arrow", "bolt", "needle", "bullet",
+        "ammo", "shuriken", "javelin", "dart",
         "dagger", "rock", "shot", "slug", "cartridge"]
 LEVEL_CHART = [int(lvl) for lvl in (
-                 get_svar("xptotals") or 
+                 get_svar("xptotals") or
                  get("xptotals", default="0,300,900,2700,6500,14000,23000,34000,48000,64000,85000,100000,120000,140000,165000,195000,225000,265000,305000,355000")
                ).split(",")]
+
+SPECIAL = ["Travel Tokens", "Short Rest Tokens"]
+
 NEWLINE = "\n"
+cc_short = lambda counter: ' (Short)' if CC_Dict[counter].reset_on == 'short' else ''
+cc_disp  = lambda counter: char.cc_str(counter) if hud_display else f'{char.get_cc(counter)} / {char.get_cc_max(counter)}' if char.get_cc_max(counter) != 2147483647 else f'{char.get_cc(counter)}'
 
 # Display counters with cc_str() or '{cur} / {max}'
 hud_display = get("hudDisplay")
 
 # Ignored counters
 ignored = load_json(get('hudignore', '[]'))
+
+# Item Counters
+item_cc = load_json(get('hudItemCCs', '[]'))
 
 # Counters
 CC_Dict  = {cc.name: cc for cc in char.consumables}
@@ -45,34 +53,53 @@ if 'Exhaustion' in counters:
     exhaustion = f"\n**Exhaustion Level:** {char.get_cc('Exhaustion')} / 6"
 
 # Hit Dice
-hit_dice = ' | '.join([f'**HD ({hd.strip("Hit Dice()")}):** {char.cc_str(hd)}' 
-                       for i in counters[::-1] 
-                       if "Hit Dice" in i 
+hit_dice = ' | '.join([f'**HD ({hd.strip("Hit Dice()")}):** {char.cc_str(hd)}'
+                       for i in counters[::-1]
+                       if "Hit Dice" in i
                        and (hd := counters.pop(counters.index(i)))])
 
+
+# Item Counters
+item_ccs = NEWLINE.join([f"**{cc}:** {cc_disp(cc)}"
+                         for i in counters[::-1]
+                         if i in item_cc
+                         and (cc := counters.pop(counters.index(i)))][::-1])
+
 # Ammo
-# Some weird reversal stuff so it sorts properly for 'Used {ammo}' and '{ammo}'
-ammunition = [ammo[::-1] for x in counters[::-1]
-               if [y for y in AMMO if y in x.lower()] 
+
+def ammo_sort(item):
+  item = item.lower()
+  if item.startswith('used '):
+    return item[5] + 'u'
+  return item[0]
+
+ammunition = [ammo for x in counters[::-1]
+               if [y for y in AMMO if y in x.lower()]
                and (ammo := counters.pop(counters.index(x)))]
 if ammunition:
-  ammunition.sort(reverse=1)
-  ammunition = [x[::-1] for x in ammunition]
-  ammunition = NEWLINE.join([f"**{x.title()}:** {char.get_cc(x)}"
+  ammunition.sort(key=ammo_sort)
+  ammunition = NEWLINE.join([f"**{x}:** {cc_disp(x)}"
                              for x in ammunition])
 
 # Trackers
 # Separate out counters that have no maximum set (defaults to 2147483647)
-trackers = NEWLINE.join([f"**{tracker}:** {char.get_cc(tracker)}"
-                         for i in counters 
-                         if CC_Dict[i].max == 2147483647 
-                         and (tracker := counters.pop(counters.index(i)))])
+trackers = NEWLINE.join([f"**{tracker}:** {cc_disp(tracker)}"
+                         for i in counters[::-1]
+                         if CC_Dict[i].max == 2147483647
+                         and (tracker := counters.pop(counters.index(i)))][::-1])
+
+
+# Special things for the NLP server
+specials = NEWLINE.join([f"**{cc}:** {char.cc_str(cc)}"
+                         for i in counters[::-1]
+                         if i in SPECIAL
+                         and (cc := counters.pop(counters.index(i)))]) if ctx.guild and ctx.guild.id == 1031055347319832666 else ""
+
 
 # Rest of the counters
-cc_short = lambda counter: ' (Short)' if CC_Dict[counter].reset_on == 'short' else ''
-cc_disp  = lambda counter: char.cc_str(counter) if hud_display else f'{char.get_cc(counter)} / {char.get_cc_max(counter)}' if char.get_cc_max(counter) != 2147483647 else f'{char.get_cc(counter)}'
 
-cc = NEWLINE.join([f"""**{x}{cc_short(x)}:** {cc_disp(x)}""" 
+
+cc = NEWLINE.join([f"""**{x}{cc_short(x)}:** {cc_disp(x)}"""
                    for x in counters])
 
 char = combat().me if combat() and combat().me else character()
@@ -81,8 +108,8 @@ char = combat().me if combat() and combat().me else character()
 spellbook  = char.spellbook
 SpellDC    = spellbook.dc
 SpellSAB   = spellbook.sab
-spellslots = NEWLINE.join([f"{spellbook.slots_str(i)}" 
-                           for i in range(1,10) 
+spellslots = NEWLINE.join([f"{spellbook.slots_str(i)}"
+                           for i in range(1,10)
                            if spellbook.get_max_slots(i)])
 
 # Passive Perception
@@ -102,13 +129,53 @@ desc = f""" -desc "**HP:** {hp_out} | **AC:** {char.ac}
 # Output
 out.append(desc)
 if spellslots:
-  out.append(f'-f "Spell Slots (DC {SpellDC}, {SpellSAB:+} to Hit)|{spellslots}"')
+  out.append(f'-f "Spell Slots (DC {SpellDC}, {SpellSAB or 0:+} to Hit)|{spellslots}"')
 if cc:
   out.append(f'-f "Limited Abilities|{cc}"')
+if item_ccs:
+  out.append(f'-f "Items|{item_ccs}"')
 if ammunition:
   out.append(f'-f "Ammunition|{ammunition}"')
 if trackers:
   out.append(f'-f "Tracker|{trackers}"')
+if specials:
+  out.append(f'-f "NLP Trackers|{specials}"')
+  craft = int(get(f'craft_Cooldown', 0))
+  job = int(get(f'job_Cooldown', 0))
+  current = int(time())
+  crafting = load_json(get('current_craft', '{}'))
+  mcrafting = load_json(get('current_mcraft', '{}'))
+  waypoint_cds = load_json(get("aetheryte_cooldowns", '{"home":0, "transit": 0}'))
+  garden_cooldown = int(get(f'garden_Cooldown', 0))
+  has_garden = load_yaml(get("housing_upgrades", "{}")).get("garden", False)
+  has_workshop = load_yaml(get("housing_upgrades", "{}")).get("workshop", False)
+  one_day = 64800
+  one_week = 604800
+
+  home_cd = f"<t:{waypoint_cds['home'] + one_day}> (<t:{waypoint_cds['home'] + one_day}:R>)" if (current - waypoint_cds["home"]) < one_day else "*Not on cooldown*"
+  transit_cd = f"<t:{waypoint_cds['transit'] + one_day}> (<t:{waypoint_cds['transit'] + one_day}:R>)" if (current - waypoint_cds["transit"]) < one_day else "*Not on cooldown*"
+
+  j_cd = "*Not on cooldown*"
+  if job:
+    j_cd = f"""<t:{job+one_day}> (<t:{job+one_day}:R>)"""
+  m_craft = ""
+  if mcrafting and has_workshop:
+    m_craft = f""" (Crafting {mcrafting.name}, {mcrafting.remaining} days left) """
+
+  c_cd = "*Not on cooldown*"
+  if craft:
+    c_cd = f"""<t:{craft+one_day}> (<t:{craft+one_day}:R>)"""
+  c_craft = ""
+  if crafting:
+    c_craft = f""" (Crafting {crafting.name}, {crafting.remaining} days left) """
+
+  garden_cd = ""
+  if has_garden:
+    g_cd = "*Not on cooldown*"
+    if garden_cooldown:
+      g_cd = f"""<t:{garden_cooldown+one_week}> (<t:{garden_cooldown+one_week}:R>)"""
+    garden_cd = f""" -f "Garden Cooldown|{g_cd}" """
+  out.append(f""" -f "Job Cooldown{m_craft}|{j_cd}" -f "Craft Cooldown{c_craft}|{c_cd}" -f "Home Teleport|{home_cd}" -f "Transit Teleport|{transit_cd}" {garden_cd} """)
 
 return ' '.join(out)
 </drac2>

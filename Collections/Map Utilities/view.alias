@@ -23,7 +23,7 @@ mapview = ""
 mapviewsize = ""
 mapviewlocation = ""
 mapattach = ""
-map="http://otfbm.io/"
+map=get("otfbm_base_url", "http://otfbm.io/")
 walls = []
 objects = []
 loadedjson = []
@@ -270,7 +270,7 @@ if args.last('load'):
 <drac2>
 if c:
  # If theres a -mapsize, -bg, -options, -view, -attach, -view, -wall, -deletewall, -object, -deleteobject, -loadmap, -savebattle, -deletebattle, -loadbattle, -fow, or -addfow  - arg, process that and add/replace the effect
- if any(args.last(thisArg) for thisArg in ('mapview', 'view')) and not (args.last('help') or args.last('?')):
+ if any(args.last(thisArg) for thisArg in ('mapview', 'view')) and not (args.last('help') or '?' in argList):
   # If the new mapsize is different from the old one, update and display
   if mapview != args.last('mapview', args.last('view', mapview)):
    # Do they want to reset the map view?
@@ -481,8 +481,8 @@ if c:
  # &cid={ctx.channel.id}&sid={ctx.guild.id}&uid={ctx.author.id}{"&d=1" if testVersion else ""}
 
  overlays = [f"*{overlay.strip('*')}" for overlay in overlays]
- if not any(args.get(arg) for arg in ('?', 'help', 'list')):
-  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=2{f"&bg={mapbg}" if mapbg else ""}"""
+ if not any(args.get(arg) for arg in ('help', 'list')) or not '?' in argList:
+  finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}{f"?load={'&load='.join(loadedjson)}" if loadedjson else ""}?a=2{f"&bg={mapbg.split('?')[0]}" if mapbg else ""}"""
   return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 

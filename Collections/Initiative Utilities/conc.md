@@ -10,3 +10,4 @@ __Valid Arguments__
 `bs` - Adds your Intelligence modifier for when Bladesong is active. The alias also checks for any active effects in init that grant save bonuses.
 `ts` - Adds your Proficiency bonus for when you're holding a Transmuter's stone that grants proficiency in Constitution Saves. The alias also checks for an effect called "Tranmuter's Stone" to apply the bonus. 
 `-reroll [#]` - Sets a reroll amount for the save.
+`-rr [#]` - Allows you to roll multiple saves at once

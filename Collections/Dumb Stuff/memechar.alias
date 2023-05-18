@@ -3,7 +3,7 @@ embed
 STATS = {
           "str": "Strength",
           "dex": "Dexterity",
-          "con": f"Constitution ({ctx.author.display_name} is a GOOB)",
+          "con": "Constitution",
           "int": "Intelligence",
           "wis": "Wisdom",
           "cha": "Charisma"
@@ -15,7 +15,7 @@ CLASSES = {
             "int": ["Wizard", "Artificer"],
             "wis": ["Cleric", "Druid", "Monk", "Ranger"],
             "cha": ["Sorcerer", "Bard", "Warlock", "Paladin"],
-            "con": ["Fighter", "Barbarian", "Paladin", "Rogue", "Blood Hunter", 
+            "con": ["Fighter", "Barbarian", "Paladin", "Rogue", 
                     "Monk", "Ranger", "Wizard", "Artificer", 
                     "Cleric", "Druid", "Sorcerer", "Bard", "Warlock"]
           }
@@ -28,7 +28,6 @@ EMOJI = {
           "Cleric": "<:Cleric:908398770818023434>",
           "Artificer": "<:artificer:908398770373398538>",
           "Barbarian": "<:barbarian:908398771237437562>",
-          "Blood Hunter": "<:bloodhunter:908398771648466994>",
           "Druid": "<:druid:908398771677843516>",
           "Fighter": "<:fighter:908398771958874132>",
           "Monk": "<:monk:908398771749126174>",
@@ -37,15 +36,11 @@ EMOJI = {
           "Wizard": "<:wizard:908398771979821066>"
         }
 
-TESTIMONIALS = get_gvar("4f10340c-203d-4386-b853-83ceb3ffc02f").splitlines()
-quotes = '\\"'
-testimonial = f"""({TESTIMONIALS.index(testimonial := randchoice(TESTIMONIALS))+1}/{len(TESTIMONIALS)})|{testimonial.replace('"',quotes)}"""
-
 stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]
 number = int(([20] + [i for i in &ARGS& if i.isdigit()])[-1])
 
 if not stats:
-  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!" """
+  return f""" -title "Choose your stats!" -desc "`{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]`\nIf you add `stats` to the args it will roll stats!" """
 
 set_classes = []
 title = []
@@ -106,14 +101,12 @@ for dline in diag:
 statrolls = []
 if argparse(&ARGS&).last('stats'):
   dice = "1d20"
-  statrolls = '\n'.join([f"""**{stat.upper()}:** {vroll(dice)}""" for stat in STATS])
+  statrolls = '\n'.join([f"""**`{stat.upper()}:`** {vroll(dice)}""" for stat in STATS])
 
-return f"""-title "{"/".join(title)} {"Multiclass" if len(out) != 1 else "Class"} Stupidity (Maximum {len(out)})" 
+return f"""-title "{"/".join(title)} {"Multiclass" if len(out) != 1 else "Class"} Absurdity (Maximum {len(out)})" 
            -f "Totals|{" ".join([f"{x[0]} {x[1]}" for x in out.items()])}" 
            -f "Choices|{N.join(["".join(i) for i in board])}"
-           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nJust don't choose Con you goob.\nIf you add `stats` to the args it will roll stats!"
+           -footer "{ctx.prefix}{ctx.alias} <stat> [stat2] [stat3...] [max_classes]\nIf you add `stats` to the args it will roll stats!"
            -f "Connect 4|{"You only got one class!" if len(out)==1 else N.join(possible_wins) if possible_wins else "No wins!"}"
            {f''' -f "Stats|{statrolls}" ''' if statrolls else ""} """
 </drac2>
-
--f "Testimonials {{testimonial}}"

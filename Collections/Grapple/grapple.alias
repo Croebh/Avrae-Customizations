@@ -5,6 +5,7 @@ args     = argparse(&ARGS&)
 c        = combat()
 grappler = args.last("c", name if not c or not c.current or c.me else c.current.name)
 target   = args.last("t")
+fail     = args.last("fail")
 
 grapplerStatOverride = args.last("stat")
 targetStatOverride = args.last("tstat")
@@ -19,6 +20,9 @@ title    = args.last('title', "")
 desc     = args.last('desc', "")
 thumb    = args.last('thumb', "")
 image    = args.last('image', "")
+
+
+
 
 # Are we in combat, and have a target and an grappler?
 if c and target and grappler:
@@ -44,6 +48,7 @@ if grappler and target:
   aDice += '+' + args.join('b', '+') if args.last('b') else ''
 
   # And now for the target
+  tArgs = tArgs.replace("-b", "-tb")
   args.add_context(target.name, argparse(tArgs))
   args.set_context(target.name)
   # Note to self, add `acro` an `athl` for args to select this
@@ -62,14 +67,54 @@ if grappler and target:
      tOver = target.skills.acrobatics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('dexterity')
     tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}),mod_override=tOver)
     tType = "Acrobatics"
-  tDice  += '+' + args.join('b', '+') if args.last('b') else ''
+  tDice  += '+' + args.join('tb', '+') if args.last('tb') else ''
   # Roll the checks
   aRoll   = vroll(aDice)
   tRoll   = vroll(tDice)
+
   # Success is from the context of the grappler
   success = tRoll.total < aRoll.total
-  return f"""-title "{title.replace("[grappler]", grappler.name).replace("[target]", target.name) or f"{grappler.name} attempts to {gtitle} {target.name}!"}" -f "{grappler.name}|**Athletics:** {aRoll}" -f "{target.name}|**{tType}:** {tRoll}" -desc "{desc}
-  {[f'Not {gtype}', f'{gtype}'][success]}!" {f"-thumb {thumb}" if thumb else ""} {f"-image {image}" if image else ""} """
+
+  if fail:
+    success = True
+    aRoll = "Automatically passed"
+    tRoll = "Automatically failed"
+
+  aEffect = ""
+  tEffect = ""
+  if success and gtitle == "grapple":
+    grappled_button = [{"style":"3","verb":f"attempts to break out of {grappler.name}'s grapple","label":f"Escape {grappler.name}'s Grapple","automation":[{"effects":[{"contestAbility":["acrobatics","athletics"],"fail":[{"type":"remove_ieffect"},{"type":"text","text":"{{caster.name}} breaks free from {{target.name}}'s grapple!"}],"type":"check","contestTie":"fail","ability":["athletics"],"success":[{"type":"text","text":"{{target.name}} maintains their grapple over {{caster.name}}!"}]}],"type":"target","target":"children"}]}]
+    grappler_button = [{"style":"1","verb":f"lets go of {target.name}","label":f"Release {target.name}","automation":[{"removeParent":"always","type":"remove_ieffect"}]}]
+    tEffect = target.add_effect(
+      f"Grappled by {grappler.name}",
+      buttons=grappled_button
+    )
+    aEffect = grappler.add_effect(
+      f"Grappling {target.name}",
+      buttons=grappler_button,
+      parent=tEffect
+    )
+  if success and 'trip' in gtitle:
+    proned_button = [{"automation":[{"type":"remove_ieffect"}],"label":"Stand Up","verb":"stands up","style":1}]
+    tEffect = target.add_effect(
+      "Prone",
+      desc="A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition",
+      passive_effects={"attack_advantage": -1},
+      buttons=proned_button
+    )
+
+  if tEffect:
+    tEffect = str(tEffect).splitlines()[0]
+  if aEffect:
+    aEffect = str(aEffect).splitlines()[0]
+
+  title = f"""{title.replace("[grappler]", grappler.name).replace("[target]", target.name) or f"{grappler.name} attempts to {gtitle} {target.name}!"}"""
+  return f""" -title "{title}"
+              -f "{grappler.name}|**Athletics:** {aRoll}\n{aEffect}"
+              -f "{target.name}|**{tType}:** {tRoll}\n{tEffect}"
+              -desc "{desc}\n{[f'Not {gtype}', f'{gtype}'][success]}!"
+              {f"-thumb {thumb}" if thumb else ""}
+              {f"-image {image}" if image else ""} """
 else:
   return f""" -title "Quick, Wes, jump off this two headed pegacentaur and RKO that three headed pegacentaur, 70 feet in the air!"
 -desc "`{ctx.prefix}{ctx.alias} [args]`
@@ -80,13 +125,15 @@ else:
 `-t [target]` - The target of the grapple
 `acro` - Forces the targets check to be acrobatics
 
-`-b #` - Adds a bonus to the grapple check
-`adv`/`dis` - Rolls the checks for the grappler at dis/advantage
-`tadv`/`tdis` - Rolls the checks for the target at dis/advantage
-`-stat [stat]` - Use a different stat mod for the grappler
-`-tstat [stat]` - Use a different stat mod for the target
+`fail` - Automatically fail the check with no rolls
 
-You can do target specific, i.e, `-t OR1|dis` or `-c \\\"GO1|-b 5\\\"`
+`-b #` - Adds a bonus to the grappler's check
+`adv`/`dis` - Rolls the checks for the grappler at dis/advantage
+`-stat [stat]` - Use a different stat mod for the grappler
+
+`-tb #` - Adds a bonus to the target's check
+`tadv`/`tdis` - Rolls the checks for the target at dis/advantage
+`-tstat [stat]` - Use a different stat mod for the target
 
 `shove` - Denotes that the grapple is an attempt to shove. Can be combined with `trip`
 `trip` - Denotes that the grapple is an attempt to trip. Can be combined with `shove`

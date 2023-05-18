@@ -6,14 +6,15 @@
 `-t [target]` - The target of the grapple
 `acro` - Forces the targets check to be acrobatics
 
-`-b #` - Adds a bonus to the grapple check
+`fail` - Automatically fail the check with no rolls
 
+`-b #` - Adds a bonus to the grappler's check
 `adv`/`dis` - Rolls the checks for the grappler at dis/advantage
-`tadv`/`tdis` - Rolls the checks for the target at dis/advantage
 `-stat [stat]` - Use a different stat mod for the grappler
-`-tstat [stat]` - Use a different stat mod for the target
 
-You can do target specific, i.e, `-t OR1|tdis` or `-c "GO1|-b 5"`
+`-tb #` - Adds a bonus to the target's check
+`tadv`/`tdis` - Rolls the checks for the target at dis/advantage
+`-tstat [stat]` - Use a different stat mod for the target
 
 `shove` - Denotes that the grapple is an attempt to shove. Can be combined with `trip`
 `trip` - Denotes that the grapple is an attempt to trip. Can be combined with `shove`
