@@ -1,35 +1,4 @@
 */lookup/*.gvar
 Other/dist.alias
-Collections/gabagool/aoe.alias
-Collections/gabagool/arenaloot.alias
-Collections/gabagool/autocalc.alias
-Collections/gabagool/calc.alias
-Collections/gabagool/colorpool.alias
-Collections/gabagool/denc.alias
-Collections/gabagool/rest.alias
-Collections/gabagool/despair.alias
-Collections/gabagool/despair rest.alias
-Collections/gabagool/drink.alias
-Collections/gabagool/drinkofmany.alias
-Collections/gabagool/encounter.alias
-Collections/gabagool/gabagool.alias
-Collections/gabagool/hoard reroll.alias
-Collections/gabagool/hoard.alias
-Collections/gabagool/job.alias
-Collections/gabagool/loot.alias
-Collections/gabagool/lr.alias
-Collections/gabagool/modapplication.alias
-Collections/gabagool/nosol.alias
-Collections/gabagool/pandemonium.alias
-Collections/gabagool/planarmessage.alias
-Collections/gabagool/randarmour.alias
-Collections/gabagool/randscroll.alias
-Collections/gabagool/randweapon.alias
-Collections/gabagool/research.alias
-Collections/gabagool/shop.alias
-Collections/gabagool/sr.alias
-Collections/gabagool/theatre.alias
-Collections/gabagool/traps.alias
-Collections/gabagool/wotf.alias
-Collections/gabagool/collection.id
-Collections/gabagool/crime.alias
+Collections/gabagool/*
+Collections/nlp/*
