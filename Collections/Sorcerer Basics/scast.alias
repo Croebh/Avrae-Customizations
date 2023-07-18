@@ -3,6 +3,8 @@
 spell_gvar  = load_json(get_gvar('5e2c8e11-6ade-4ce2-9ece-562fc9db70c7'))
 meta_gvar   = load_json(get_gvar('9af34023-6eba-4789-82b1-e68b191220ac'))
 cc          = "Sorcery Points"
+cc_alt      = "Sorcery Points (Metamagic Adept)"
+cc_to_use   = cc
 
 # Arguments
 args        = &ARGS&
@@ -31,19 +33,22 @@ for meta in meta_gvar:
     # Min 1 for cantrips
     meta_cost += max(int(get(meta.points, meta.points)),1)
 
-if not character().cc_exists(cc) and meta_cost:
+if not character().cc_exists(cc) and character().cc_exists(cc_alt):
+  cc_to_use = cc_alt
+
+if not character().cc_exists(cc_to_use) and meta_cost:
   return f"""embed -title "I'm sorry {ctx.author.display_name}, I can't let you do that." -desc "You are missing a Sorcery Points custom counter. You can either create one yourself (`!help cc create`), or use the [`{ctx.prefix}level` alias](https://avrae.io/dashboard/workshop/5f7385fe647bb0a416316d1d)." """
 elif meta_cost:
-  if character().cc_exists(cc) and character().get_cc(cc) >= meta_cost:
+  if character().cc_exists(cc_to_use) and character().get_cc(cc_to_use) >= meta_cost:
     # If the character cannot cast the spell at the level specified, safely error before expending sorcery points
     if character().spellbook.get_slots(spell_level) == 0 and not argparse(args).last('i'):
       return f"""embed -title "Cannot cast spell!" -desc "You don't have enough level {spell_level} slots left! Use `-l <level>` to cast at a different level, `!g lr` to take a long rest, or `-i` to ignore spell slots!" """
 
-    character().mod_cc(cc, -meta_cost)
+    character().mod_cc(cc_to_use, -meta_cost)
   else:
     return f"""embed -title "I'm sorry {ctx.author.display_name}, I can't let you do that." -desc "You don't have enough Sorcery Points for that." """
 
-cc_out  = f""" -f "{cc} {f'(-{meta_cost})' if meta_cost and character().get_cc(cc) >= meta_cost else ''}|{character().cc_str(cc) if character().cc_exists(cc) else '*None*'}"  """
+cc_out  = f""" -f "{cc_to_use} {f'(-{meta_cost})' if meta_cost and character().get_cc(cc_to_use) >= meta_cost else ''}|{character().cc_str(cc_to_use) if character().cc_exists(cc_to_use) else '*None*'}"  """
 
 # If no arguments, return the help
 if not args:
