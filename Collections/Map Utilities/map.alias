@@ -1348,8 +1348,11 @@ if c:
      if foundObject:
        objectLocation = argsDeleteObject[0]
        loadedObject=objectLocation+objectColor+foundObject
-     objects.remove(loadedObject)
-     desc.append(f"Object `{object}:{loadedObject}` was removed")
+     if loadedObject in objects:
+       objects.remove(loadedObject)
+       desc.append(f"Object `{object}:{loadedObject}` was removed")
+     else:
+       desc.append(f"Object `{object}:{loadedObject}` not found on map")
   #If user wnats to do fog of war
   if args.last('fow'):
    #If user wants to remove ALL fog of war
