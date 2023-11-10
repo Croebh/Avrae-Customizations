@@ -60,7 +60,8 @@ match summon_type:
 attacks = [{"attack": attack} for attack in attacks]
 stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(value)=='SafeList' else f"-{arg} {value}" for arg, value in stat_block.items()])
 
-summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name} {TYPE}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}" """
+num_attacks = max(1, spell_level//2)
+summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name} {TYPE}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}\nMultiattack: {num_attacks}" """
 
 c.me.set_group(f"{name}'s Summons")
 c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
