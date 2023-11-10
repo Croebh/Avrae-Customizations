@@ -1,0 +1,86 @@
+<drac2>
+TYPE = "Undead"
+MIN_LEVEL = 3
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+spell_level = args.last('l', min_slot, int)
+summon_type = args.last('type', "", str).lower()
+ignore  = args.last('i')
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  ch.spellbook.use_slot(spell_level)
+
+stat_block = {
+  "hp": 10 * spell_level,
+  "ac": 11 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 12,
+  "dexterity": 16,
+  "constitution": 15,
+  "intelligence": 4,
+  "wisdom": 10,
+  "charisma": 9,
+  "immune": ["necrotic", "poison"],
+  "type": "undead",
+}
+
+attacks = []
+extra_effects = []
+match summon_type:
+  case "ghostly" | "ghost":
+    attacks = [{"name":"Deathly Touch","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [necrotic]"},{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"ieffect2","name":"Frightened","duration":1,"end":True,"desc":"Frightened of {{caster.name}}"}],"success":[],"adv":0}],"miss":[],"adv":"0"}],"sortBy":None},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level necrotic damage, and the creature must succeed on a Wisdom saving throw against your spell save DC or be frightened of the undead until the end of the target's next turn."}],"_v":2,"verb":None,"proper":False,"activation_type":None}]
+    summon_name = "Ghostly"
+  case "putrid":
+    attacks = [{"name":"Rotting Claw","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + 3 + {spell_level} [slashing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level slashing damage. If the target is poisoned, it must succeed on a Constitution saving throw against your spell save DC or be paralyzed until the end of its next turn."}],"_v":2,"verb":None,"proper":False,"activation_type":None},{"name":"Paralyzing Claw","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + 3 + {spell_level} [slashing]"},{"type":"save","stat":"con","dc":sdc,"fail":[{"type":"ieffect2","name":"Poisoned","duration":1,"end":True,"effects":{"attack_advantage":-1,"check_dis":["all"]}}],"success":[],"adv":0}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level slashing damage. If the target is poisoned, it must succeed on a Constitution saving throw against your spell save DC or be paralyzed until the end of its next turn."}],"_v":2,"verb":"has","proper":False,"activation_type":8}]
+    extra_effects = [{"name":"Festering Aura","desc":"A creature that starts its turn within 5 feet of {{caster.name}} must make a Constitution save or be poisoned","attacks":[{"attack":{"name":"Spread Festering Aura","automation":[{"type":"target","target":"each","effects":[{"type":"ieffect2","name":"In the Festering Aura","duration":"10","desc":"A creature that starts its turn within 5 feet of {{caster.name}} must make a Constitution save or be poisoned","parent":"ieffect","buttons":[{"label":"Festering Aura (Start of Turn)","verb":"is inside the Festering Aura","style":"4","defaultDC":"spell","automation":[{"type":"target","target":"self","effects":[{"type":"ieffect2","name":"In the Festering Aura","duration":1,"desc":"A creature that starts its turn within 5 feet of {{caster.name}} must make a Constitution save or be poisoned","buttons":[{"label":"Leave the Festering Aura","verb":"leaves the range of the Festering Aura","style":"3","automation":[{"type":"remove_ieffect"}]},{"label":"Festering Aura Poison","verb":"risks being poisoned by the Festering Aura","style":"4","automation":[{"type":"target","target":"self","effects":[{"type":"save","stat":"con","dc":sdc,"fail":[{"type":"ieffect2","name":"Poisoned","duration":1,"effects":{"attack_advantage":-1,"check_dis":["all"]}}],"success":[],"adv":0}]},{"type":"text","text":"Any creature, other than you, that starts its turn within 5 feet of the spirit must succeed on a Constitution saving throw against your spell save DC or be poisoned until the start of its next turn."}]}],"end":True,"parent":"ieffect"}]},{"type":"text","text":"Any creature, other than you, that starts its turn within 5 feet of the spirit must succeed on a Constitution saving throw against your spell save DC or be poisoned until the start of its next turn."}]},{"label":"Leave Festering Aura","verb":"leaves the range of the Festering Aura","style":"3","automation":[{"type":"remove_ieffect"}]}]}]},{"type":"text","text":"Any creature, other than you, that starts its turn within 5 feet of the spirit must succeed on a Constitution saving throw against your spell save DC or be poisoned until the start of its next turn."}],"_v":2}}]}]
+    summon_name = "Putrid"
+  case "skeleton" | "skeletal" | "bone":
+    attacks = [{"name":"Grave Bolt","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"2d4 + 3 + {spell_level} [necrotic]"}],"miss":[],"adv":"0"}],"sortBy":None},{"type":"text","text":"*Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one target. *Hit:* 2d4 + 3 + the spell's level necrotic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None}]
+    summon_name = "Skeletal"
+    stat_block['hp'] -= 10
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+attacks = [{"attack": attack} for attack in attacks]
+stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(value)=='SafeList' else f"-{arg} {value}" for arg, value in stat_block.items()])
+
+summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name} {TYPE}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}" """
+
+c.me.set_group(f"{name}'s Summons")
+c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+
+
+embed = f"""{pf}tembed -title "{name} summoned a {summon_name} {TYPE}!" -footer "{pf+ctx.alias} | Made by Croebh" -color {color} -thumb {image} -f "Spell Slots|{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}" """
+embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="Summon {TYPE}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+for effect in extra_effects:
+  effect_name = effect['name']
+  effect_desc = effect['desc']
+  effect_buttons = effect.get('buttons', [])
+  effect_passive = effect.get('passive', [])
+  effect_attacks = effect.get('attacks', [])
+
+  embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="{effect_name}",attacks=load_yaml('''{dump_yaml(effect_attacks)}'''),buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+
+</drac2>
