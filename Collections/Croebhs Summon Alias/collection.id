@@ -1,6 +1,7 @@
 {
   "name": "Croebh's Summon Alias", 
   "aliases": {
+    "summon fey": "654db943ac7cd2bc90723095", 
     "summon beast": "654d9662cdc23397786a442a", 
     "summon undead": "654d9632ac7cd2bc90723088", 
     "summon fiend": "654d963cac7cd2bc90723089", 
