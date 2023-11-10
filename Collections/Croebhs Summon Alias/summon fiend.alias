@@ -1,1 +1,90 @@
-echo The `fiend` alias does not have an active code version. Please contact the collection author, or if you are the author, create or select an active code version on the Alias Workshop.
+<drac2>
+TYPE = "Fiend"
+MIN_LEVEL = 6
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+spell_level = args.last('l', min_slot, int)
+summon_type = args.last('type', "", str).lower()
+ignore  = args.last('i')
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  ch.spellbook.use_slot(spell_level)
+
+stat_block = {
+  "hp": 15 * spell_level,
+  "ac": 12 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 13,
+  "dexterity": 16,
+  "constitution": 15,
+  "intelligence": 10,
+  "wisdom": 10,
+  "charisma": 16,
+  "type": "fiend",
+  "immune": "poison",
+  "resist": "fire"
+}
+
+attacks = []
+extra_effects = [{"name": "Magic Resistance", "desc": "The fiend has advantage on saving throws against spells and other magical effects."}]
+match summon_type:
+  case "demon":
+    summon_name = "Demon"
+    stat_block['hp'] -= 40
+    attacks = [{"name":"Bite","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d12 + 3 + {spell_level} [necrotic]"}],"miss":[]}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d12 + 3 + the spell's level necrotic damage."}],"_v":2},{"name":"Death Throes","automation":[{"type":"roll","dice":f"2d10 + {spell_level} [fire]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"dex","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[{"type":"damage","damage":"({damage}) / 2"}]}],"meta":[]},{"type":"text","text":"When the fiend drops to 0 hit points or the spell ends, the fiend explodes, and each creature within 10 feet of it must make a Dexterity saving throw against your spell save DC. A creature takes 2d10 + this spell's level fire damage on a failed save, or half as much damage on a successful one."}],"_v":2,"verb":"explodes in their","proper":true,"activation_type":8}]
+  case "devil":
+    summon_name = "Devil"
+    stat_block['hp'] -= 50
+    attacks = [{"name":"Hurl Flame","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"2d6 + 3 + {spell_level} [fire]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one target. *Hit:* 2d6 + 3 + the spell's level fire damage. If the target is a flammable object that isn't being worn or carried, it also catches fire."}],"_v":2}]
+    extra_effects.extend([{"name":"Devil's Sight","desc":"Magical darkness doesn’t impede the fiend’s darkvision."}])
+  case "yugoloth" | "yugo" | "loth":
+    stat_block['hp'] -= 30
+    summon_name = "Yugoloth"
+    attacks = [{"name":"Claws","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [slashing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 3 + the spell's level slashing damage. Immediately after the attack hits or misses, the fiend can magically teleport up to 30 feet to an unoccupied space it can see."}],"_v":2,"proper":True}]
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+attacks = [{"attack": attack} for attack in attacks]
+stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(value)=='SafeList' else f"-{arg} {value}" for arg, value in stat_block.items()])
+
+num_attacks = max(1, spell_level//2)
+summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name} {TYPE}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}\nMultiattack: {num_attacks}" """
+
+c.me.set_group(f"{name}'s Summons")
+c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+
+
+embed = f"""{pf}tembed -title "{name} summoned a {summon_name} {TYPE}!" -footer "{pf+ctx.alias} | Made by Croebh" -color {color} -thumb {image} -f "Spell Slots|{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}" """
+embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="Summon {TYPE}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+for effect in extra_effects:
+  effect_name = effect['name']
+  effect_desc = effect['desc']
+  effect_buttons = effect.get('buttons', [])
+  effect_passive = effect.get('passive', [])
+  effect_attacks = effect.get('attacks', [])
+
+  embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="{effect_name}",attacks=load_yaml('''{dump_yaml(effect_attacks)}'''),buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+
+</drac2>

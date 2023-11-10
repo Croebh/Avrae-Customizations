@@ -1,1 +1,74 @@
-echo The `reaper` alias does not have an active code version. Please contact the collection author, or if you are the author, create or select an active code version on the Alias Workshop.
+<drac2>
+TYPE = "Spirit of Death"
+MIN_LEVEL = 4
+
+args = argparse(&ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+spell_level = args.last('l', min_slot, int)
+ignore  = args.last('i')
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  ch.spellbook.use_slot(spell_level)
+
+stat_block = {
+  "hp": 10 * spell_level,
+  "ac": 11 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 16,
+  "dexterity": 16,
+  "constitution": 15,
+  "intelligence": 16,
+  "wisdom": 16,
+  "charisma": 16,
+  "type": "undead",
+  "immune": ["poison", "necrotic"],
+  "resist": "fire"
+}
+
+attacks = [{"name":"Reaping Scythe","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 {spell_level} [necrotic]"}],"miss":[],"adv":"1"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit (with advantage), reach 5 ft., the creature haunted by Haunt Creature. *Hit:* 1d8 + 3 + the spell's level necrotic damage."}],"_v":2},{"name":"Haunt Creature","automation":[{"type":"target","target":"each","effects":[{"type":"ieffect2","name":"Haunting Creature","desc":"Haunting {{target.name}}","save_as":"haunt","target_self":True},{"type":"ieffect2","name":"Haunted","desc":"Being haunted by {{caster.name}}\n - If starting turn within 10ft of the spirit, must make a Wisdom save to avoid being frightened","buttons":[{"label":"Close to Spirit","verb":"is being haunted","style":"1","automation":[{"type":"target","target":"self","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"ieffect2","name":"Frightened","duration":1,"desc":"Frightened of {{parent.combatant_name}}"}],"success":[]}]},{"type":"text","text":"The spirit targets a creature it can see within 10 feet of itself and begins haunting it. While the target is haunted, you and the spirit sense the direction and distance to the target if it is on the same plane of existence as you. Additionally, if the target starts its turn within 10 feet of the spirit, the target must succeed on a Wisdom saving throw against your spell save DC or have the frightened condition until the start of the target's next turn. The target remains haunted until it dies, the spirit disappears, or the spirit uses this action again."}]}],"parent":"haunt"}]},{"type":"text","text":"The spirit targets a creature it can see within 10 feet of itself and begins haunting it. While the target is haunted, you and the spirit sense the direction and distance to the target if it is on the same plane of existence as you. Additionally, if the target starts its turn within 10 feet of the spirit, the target must succeed on a Wisdom saving throw against your spell save DC or have the frightened condition until the start of the target's next turn. The target remains haunted until it dies, the spirit disappears, or the spirit uses this action again."}],"_v":2,"verb":"begins to","proper":True,"activation_type":3}]
+extra_effects = []
+summon_name = "Spirit of Death"
+
+attacks = [{"attack": attack} for attack in attacks]
+stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(value)=='SafeList' else f"-{arg} {value}" for arg, value in stat_block.items()])
+
+num_attacks = max(1, spell_level//2)
+summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}\nMultiattack: {num_attacks}" """
+
+c.me.set_group(f"{name}'s Summons")
+c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+
+
+embed = f"""{pf}tembed -title "{name} summoned a {summon_name}!" -footer "{pf+ctx.alias} | Made by Croebh" -color {color} -thumb {image} -f "Spell Slots|{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}" """
+embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name}").add_effect(name="Summon {TYPE}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+for effect in extra_effects:
+  effect_name = effect['name']
+  effect_desc = effect['desc']
+  effect_buttons = effect.get('buttons', [])
+  effect_passive = effect.get('passive', [])
+  effect_attacks = effect.get('attacks', [])
+
+  embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name}").add_effect(name="{effect_name}",attacks=load_yaml('''{dump_yaml(effect_attacks)}'''),buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+
+</drac2>
