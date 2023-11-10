@@ -1,1 +1,1 @@
-Summon spells, lets gooo
+This handles all of the Summon X spells, without using CritterDB.

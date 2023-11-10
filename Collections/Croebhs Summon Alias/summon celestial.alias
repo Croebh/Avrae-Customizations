@@ -1,1 +1,83 @@
-echo The `celestial` alias does not have an active code version. Please contact the collection author, or if you are the author, create or select an active code version on the Alias Workshop.
+<drac2>
+TYPE = "Celestial"
+MIN_LEVEL = 5
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+spell_level = args.last('l', min_slot, int)
+summon_type = args.last('type', "", str).lower()
+ignore  = args.last('i')
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  ch.spellbook.use_slot(spell_level)
+
+stat_block = {
+  "hp": (10 * spell_level) - 10,
+  "ac": 11 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 16,
+  "dexterity": 14,
+  "constitution": 16,
+  "intelligence": 10,
+  "wisdom": 14,
+  "charisma": 16,
+  "type": "celestial",
+  "resist": "radiant"
+}
+
+attacks = [{"name":"Healing Touch","automation":[{"type":"target","target":"self","effects":[{"type":"ieffect2","name":"Healing Touch Used","duration":-1,"stacking":True}]},{"type":"target","target":"each","effects":[{"type":"damage","damage":f"-(2d8 + {spell_level}) [heal]"}]},{"type":"text","text":"The celestial touches another creature. The target magically regains hit points equal to 2d8 + the spell's level."}],"_v":2,"verb":"reaches out with"}]
+extra_effects = []
+match summon_type:
+  case "avenger" | "avenge":
+    summon_name = "Avenger"
+    attacks.extend([{"name":"Radiant Bow","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"2d6 + 2 + {spell_level} [radiant]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Weapon Attack:* your spell attack modifier to hit, range 150/600 ft., one target. *Hit:* 2d6 + 2 + the spell's level radiant damage."}],"_v":2}])
+  case "defender" | "defend":
+    summon_name = "Defender"
+    stat_block['ac'] += 2
+    attacks.extend([{"name":"Radiant Mace","automation":[{"type":"target","target":1,"effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 3 + {spell_level} [radiant]"}],"miss":[],"adv":"0"}]},{"type":"target","target":2,"effects":[{"type":"temphp","amount":"1d10"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level radiant damage, and the celestial can choose itself or another creature it can see within 10 feet of the target. The chosen creature gains 1d10 temporary hit points."}],"_v":2}])
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+attacks = [{"attack": attack} for attack in attacks]
+stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(value)=='SafeList' else f"-{arg} {value}" for arg, value in stat_block.items()])
+
+num_attacks = max(1, spell_level//2)
+summon_command = f"""{pf}init add {c.me.init} "Summoned {summon_name} {TYPE}" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}\nMultiattack: {num_attacks}" """
+
+c.me.set_group(f"{name}'s Summons")
+c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+
+
+embed = f"""{pf}tembed -title "{name} summoned a {summon_name} {TYPE}!" -footer "{pf+ctx.alias} | Made by Croebh" -color {color} -thumb {image} -f "Spell Slots|{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}" """
+embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="Summon {TYPE}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+for effect in extra_effects:
+  effect_name = effect['name']
+  effect_desc = effect['desc']
+  effect_buttons = effect.get('buttons', [])
+  effect_passive = effect.get('passive', [])
+  effect_attacks = effect.get('attacks', [])
+
+  embed += (f""" {open_b}combat().get_combatant("Summoned {summon_name} {TYPE}").add_effect(name="{effect_name}",attacks=load_yaml('''{dump_yaml(effect_attacks)}'''),buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+
+</drac2>
