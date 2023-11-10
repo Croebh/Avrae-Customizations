@@ -1,5 +1,6 @@
 <drac2>
 TYPE = "Fey"
+SPELL_NAME = "Summon Fey"
 MIN_LEVEL = 3
 
 args = argparse(["-type"] + &ARGS&)
@@ -24,6 +25,8 @@ ignore  = args.last('i')
 if not ignore:
   if not ch.spellbook.get_slots(spell_level):
     return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
   ch.spellbook.use_slot(spell_level)
 
 stat_block = {
