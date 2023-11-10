@@ -1,6 +1,6 @@
 echo Export Raw Attacks
 <drac2>
-a = '&1&'.lower() if &ARGS& else 'list'
+a = """&1&""".lower() if &ARGS& else 'list'
 graves = "`"*3
 n = '\n'
 target = combat().me if combat() and combat().me else character()
@@ -25,9 +25,9 @@ else:
 
   json_out = f"""JSON\n{graves}json\n{json}{graves}"""
   yaml_out = f"""YAML\n{graves}yml\n{yaml}{graves}"""
-  if 'yaml' in '&*&'.lower():
+  if 'yaml' in """&*&""".lower():
     return f"""{yaml_out}"""
-  if 'json' in '&*&'.lower():
+  if 'json' in """&*&""".lower():
     return f"""{json_out}"""
   elif len(json_out+yaml_out+20)>1999:
     return f"""{yaml_out}"""

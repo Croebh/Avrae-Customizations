@@ -1,22 +1,22 @@
 {
-  "collection": "5f88d637f2d59b2718721a9a", 
+  "name": "Initiative Utilities", 
+  "aliases": {
+    "combatrename": "6216989f2e83e5a624101782", 
+    "disengage": "5f88da3fbbee1bca82ad366f", 
+    "combatants": "62167bec70fab12b99f97371", 
+    "assist": "5f88de58bbee1bca82ad3676", 
+    "monsternames": "62167f192e83e5a624101768", 
+    "ready": "5f88e3e4bbee1bca82ad367f", 
+    "ispellbook": "5fea826b032beeab196956f2", 
+    "dash": "5f88d9d7bbee1bca82ad366d", 
+    "conc drop": "5f88d65cf2d59b2718721a9c", 
+    "conc": "5f88d654bbee1bca82ad365f", 
+    "hud": "628a05b7b974a8cac6ba0a37", 
+    "resistcalc": "6104d425e4a331a06e146e52", 
+    "dodge": "5f88da78f2d59b2718721aa4"
+  }, 
   "snippets": {
     "readied": "5fffeea2deab056568e68e87"
   }, 
-  "aliases": {
-    "disengage": "5f88da3fbbee1bca82ad366f", 
-    "conc": "5f88d654bbee1bca82ad365f", 
-    "conc drop": "5f88d65cf2d59b2718721a9c", 
-    "dodge": "5f88da78f2d59b2718721aa4", 
-    "combatrename": "6216989f2e83e5a624101782", 
-    "assist": "5f88de58bbee1bca82ad3676", 
-    "ispellbook": "5fea826b032beeab196956f2", 
-    "ready": "5f88e3e4bbee1bca82ad367f", 
-    "hud": "628a05b7b974a8cac6ba0a37", 
-    "monsternames": "62167f192e83e5a624101768", 
-    "combatants": "62167bec70fab12b99f97371", 
-    "resistcalc": "6104d425e4a331a06e146e52", 
-    "dash": "5f88d9d7bbee1bca82ad366d"
-  }, 
-  "name": "Initiative Utilities"
+  "collection": "5f88d637f2d59b2718721a9a"
 }

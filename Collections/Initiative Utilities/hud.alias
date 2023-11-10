@@ -152,9 +152,6 @@ if specials:
   one_day = 64800
   one_week = 604800
 
-  home_cd = f"<t:{waypoint_cds['home'] + one_day}> (<t:{waypoint_cds['home'] + one_day}:R>)" if (current - waypoint_cds["home"]) < one_day else "*Not on cooldown*"
-  transit_cd = f"<t:{waypoint_cds['transit'] + one_day}> (<t:{waypoint_cds['transit'] + one_day}:R>)" if (current - waypoint_cds["transit"]) < one_day else "*Not on cooldown*"
-
   j_cd = "*Not on cooldown*"
   if job:
     j_cd = f"""<t:{job+one_day}> (<t:{job+one_day}:R>)"""
@@ -175,7 +172,7 @@ if specials:
     if garden_cooldown:
       g_cd = f"""<t:{garden_cooldown+one_week}> (<t:{garden_cooldown+one_week}:R>)"""
     garden_cd = f""" -f "Garden Cooldown|{g_cd}" """
-  out.append(f""" -f "Job Cooldown{m_craft}|{j_cd}" -f "Craft Cooldown{c_craft}|{c_cd}" -f "Home Teleport|{home_cd}" -f "Transit Teleport|{transit_cd}" {garden_cd} """)
+  out.append(f""" -f "Job Cooldown{m_craft}|{j_cd}" -f "Craft Cooldown{c_craft}|{c_cd}" {garden_cd} """)
 
 return ' '.join(out)
 </drac2>

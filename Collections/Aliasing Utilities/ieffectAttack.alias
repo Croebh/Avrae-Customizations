@@ -1,0 +1,21 @@
+echo
+<drac2>
+c = combat()
+args = """&*&"""
+
+if not args:
+  return "You did not provide automation"
+if not c or not c.current:
+  return "There is no active combatant"
+target = c.current
+
+try:
+  attacks = load_yaml(args)
+except:
+  return "The automation provided was invalid json/yaml"
+
+if typeof(attacks) == "SafeDict":
+  attacks = [attacks]
+effect = target.add_effect(f"Automation Test", attacks=[{"attack": attack} for attack in attacks])
+return f""" Added {effect} to {target.name} """
+</drac2>

@@ -1,18 +1,19 @@
 {
-  "collection": "5f6bf59f647bb0a416316ca6", 
-  "aliases": {
-    "convertEffect": "62d22a095f641f4fd7259861", 
-    "signature": "619d3fe72b6f629b63ba132b", 
-    "exportAttack": "61bb214b56999f9b483612bd", 
-    "function": "5f6bf5e3647bb0a416316ca8", 
-    "combatbegin": "5f73d02e647bb0a416316d3c", 
-    "gvarcopy": "5f798b9890e415e96a23caed", 
-    "formtest": "61dc93ad039e2e56939666b4", 
-    "browse": "5f6e95b7647bb0a416316cde", 
-    "vroll": "5f798bae90e415e96a23caef", 
-    "workshop": "611773326d4679c05cbe0155", 
-    "autoref": "616e5d563252c1a86b70f9a6"
-  }, 
   "name": "Aliasing Utilities", 
-  "snippets": {}
+  "aliases": {
+    "vroll": "5f798bae90e415e96a23caef", 
+    "exportAttack": "61bb214b56999f9b483612bd", 
+    "autoref": "616e5d563252c1a86b70f9a6", 
+    "convertEffect": "62d22a095f641f4fd7259861", 
+    "workshop": "611773326d4679c05cbe0155", 
+    "function": "5f6bf5e3647bb0a416316ca8", 
+    "formtest": "61dc93ad039e2e56939666b4", 
+    "signature": "619d3fe72b6f629b63ba132b", 
+    "gvarcopy": "5f798b9890e415e96a23caed", 
+    "combatbegin": "5f73d02e647bb0a416316d3c", 
+    "browse": "5f6e95b7647bb0a416316cde", 
+    "ieffectAttack": "64779398aa4ea0905ad74100"
+  }, 
+  "snippets": {}, 
+  "collection": "5f6bf59f647bb0a416316ca6"
 }

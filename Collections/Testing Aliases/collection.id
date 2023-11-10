@@ -1,12 +1,19 @@
 {
-  "collection": "5f79188590e415e96a23ca58", 
-  "aliases": {
-    "mapTest spelllist": "5ffaa722052554a14d396c17", 
-    "equipT": "5f9db522bb7663bfd855a226", 
-    "mapTest": "5f7fcc80f2d59b271872109d", 
-    "thresh": "60022b94deab056568e69023", 
-    "dist": "5f8f0ee345ecc74b79b8e4bb"
-  }, 
+  "name": "Testing Aliases", 
   "snippets": {}, 
-  "name": "Testing Aliases"
+  "aliases": {
+    "mapTest Test": "611dc1ca15bf60f80b452393", 
+    "vs": "634f33e29fb55be1a5013f99", 
+    "downtime": "652ebc7f3f7849a8b59dda63", 
+    "safety go": "620055cb10bae65359790cc6", 
+    "pusheen": "61e7350810bae6535978f72a", 
+    "mapTest Test Test2": "611dc1cf15bf60f80b452394", 
+    "safety stop": "620055b110bae65359790cc5", 
+    "safety": "620055ab8ccb409a8b38e47b", 
+    "safety slower": "620055d010bae65359790cc7", 
+    "mapTest": "611dc1a715bf60f80b452392", 
+    "drinkofmany": "620c6c3070fab12b99f96bf0", 
+    "safety faster": "620055d510bae65359790cc8"
+  }, 
+  "collection": "5f79188590e415e96a23ca58"
 }

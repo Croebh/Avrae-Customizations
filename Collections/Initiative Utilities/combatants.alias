@@ -1,8 +1,36 @@
-echo Combatant List: ```
+echo 
 <drac2>
-monsters = '\n'.join([f'-t "{x.name}|"' for x in combat().combatants if x.levels.get('Monster', None) is not None]) if combat() else ""
-players  = '\n'.join([f'-t "{x.name}|"' for x in combat().combatants if x.levels.get('Monster', None) is None]) if combat() else ""
+c = combat()
+if not c:
+  return "This channel is not currently in combat."
 
-return f"""{monsters}\n\n{players}\n\n&*&""" if combat() and combat().combatants else "There are no combatants in the current combat." if combat() else "This channel is not currently in combat."
+combatants = c.combatants
+if not combatants:
+  return "There are no combatants in the current combat."
+
+monsters = []
+players = []
+other = []
+for combatant in combatants:
+  if combatant.levels.get('Monster'):
+    monsters.append(f"""-t "{combatant.name}|" """)
+  elif combatant.levels.total_level:
+    players.append(f"""-t "{combatant.name}|" """)
+  else:
+    other.append(f"""-t "{combatant.name}|" """)
+
+out = monsters
+if players:
+  out.append("")
+  out.extend(players)
+if other:
+  out.append("")
+  out.extend(other)
+
+out = '\n'.join(out)
+return f"""{'`'*3}
+{out}
+{'`'*3}"""
+
+
 </drac2>
-```

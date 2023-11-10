@@ -1,0 +1,79 @@
+<drac2>
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+
+warlock = ch.levels.get('Warlock')
+min_slot = max(4, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+spell_level = args.last('l', min_slot, int)
+summon_type = args.last('type', "", str).lower()
+ignore  = args.last('i')
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any {slot_level} slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  ch.spellbook.use_slot(spell_level)
+
+stat_block = {
+  "hp": 10 * spell_level,
+  "ac": 11 + spell_level,
+  "pb": proficiencyBonus,
+  "strength": 16,
+  "dexterity": 10,
+  "constitution": 15,
+  "intelligence": 16,
+  "wisdom": 10,
+  "charisma": 6,
+  "immune": "psychic",
+  "type": "aberration",
+}
+stat_args = " ".join([f"-{arg} {value}" for arg, value in stat_block.items()])
+
+attacks = []
+extra_effects = []
+match summon_type:
+  case "beholder" | "beholderkin":
+    attacks = [{"name":"Eye Ray","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [psychic]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None}]
+    summon_name = "Beholderkin"
+  case "slaad":
+    attacks = [{"name":"Claws","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 3 + {spell_level} [slashing]"},{"type":"ieffect2","name":"Festering Wound","duration":1,"desc":"Cannot heal","effects":{"immunities":["heal"]},"tick_on_caster":True}],"miss":[]}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level slashing damage. If the target is a creature, it can't regain hit points until the start of the aberration's next turn."}],"_v":2,"verb":None,"proper":True,"activation_type":None}]
+    extra_effects = [{"name":"Regeneration","desc":"Regains 5 hit points at the start of its turn if it has at least 1 hit point","buttons":[{"label":"Regenerate","verb":"begins to regenerate","style":"3","automation":[{"type":"target","target":"self","effects":[{"type":"damage","damage":"{min(0, caster.hp)-5} [heal]"}]},{"type":"text","text":"The slaad regains 5 hit points at the start of its turn if it has at least 1 hit point."}]}]}]
+    summon_name = "Slaad"
+  case "star" | "star spawn" | "starspawn" | "spawn":
+    attacks = [{"name":"Psychic Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [psychic]"}],"miss":[]}]},{"type":"text","text":"*Melee Spell Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None},{"name":"Whispering Aura","automation":[{"type":"roll","dice":"2d6 [psychic]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[]}],"meta":[]},{"type":"text","text":"At the start of each of the aberration's turns, each creature within 5 feet of the aberration must succeed on a Wisdom saving throw against your spell save DC or take 2d6 psychic damage, provided that the aberration isn't incapacitated."}],"_v":2,"verb":"exudes"}]
+    summon_name = "Star Spawn"
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+attacks = [{"attack": attack} for attack in attacks]
+
+summon_command = f"""{pf}init add {c.me.init} "{summon_name} ({name})" -p {stat_args} -group "{name}'s Summons" -note "Summoned by {name}" """
+
+ch.me.set_group(f"{name}'s Summons")
+
+embed = f"""{pf}tembed -title "{name} summoned a {summon_name}!" -footer "{pf+ctx.alias} | Made by Croebh" -color {color} -thumb {image} -f "Spell Slots|{ch.spellbook.slots_str(spell_level)} {'(-1)' if not ignore else ''}" """
+embed += (f""" {open_b}combat().get_combatant("{summon_name} ({name})").add_effect(name="Summon Aberration",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+for effect in extra_effects:
+  effect_name = effect['name']
+  effect_desc = effect['desc']
+  effect_buttons = effect.get('buttons', [])
+  effect_passive = effect.get('passive', [])
+
+  embed += (f""" {open_b}combat().get_combatant("{summon_name} ({name})").add_effect(name="{effect_name}",buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+
+</drac2>

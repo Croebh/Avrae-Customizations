@@ -49,5 +49,5 @@ else:
     out += """ -desc "*No Results Found*" """
   return out + " -color 00FF00"
 </drac2>
--f "Workshop Information Last Updated: {{"<t:" + "1635388938" + ":R>"}}"
+-f "Workshop Information Last Updated: {{"<t:" + "1698289497" + ":R>"}}"
 -footer "{{ctx.prefix}}{{ctx.alias}} [search] [-h]"

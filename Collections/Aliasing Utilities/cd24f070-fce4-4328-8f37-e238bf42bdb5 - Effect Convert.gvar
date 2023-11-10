@@ -1,0 +1,137 @@
+# <drac2> # Don't mind me this is the dumb fix to get draconic working-
+# ieffectparse
+# Croebh#5603
+#
+# This module exposes a few functions, primarily to convert user imported `!i effect` arguments into
+# proper PassiveEffects and Attack formats for the new `.add_effect()`
+#
+# parse_effect_args(args, name: str = None) -> {"passive_effects": dict, "attacks": list}
+# passive_from_args(args) -> dict
+# attacks_from_args(args, name: str = None) -> list
+#
+
+
+STAT_ABBREVIATIONS = ("str", "dex", "con", "int", "wis", "cha")
+SKILL_NAMES = ("acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma",)
+
+def _parsed_or_raw(args):
+  """Converts provided args into ParsedArguments, unless it was already parsed."""
+  if typeof(args) == "ParsedArguments":
+    return args
+  return argparse(args)
+
+def passive_from_args(args):
+  """Converts args from `!init effect` to a dict PassiveEffects for IEffect2."""
+  
+  def resolve_value_or_bonus(values):
+      set_value = None
+      bonus = None
+
+      for value in values:
+        if not str(value).strip('+-').isdigit():
+          continue
+        if str(value).startswith(("+", "-")):
+            bonus = (bonus or 0) + int(value)
+        else:
+            set_value = max(set_value or 0, int(value))
+      return set_value, bonus
+
+  def resolve_save_advs(values):
+      out = set()
+      for arg in values:
+          if arg is True or arg.lower() == "all" or arg == "True":
+              return list(set(STAT_ABBREVIATIONS))
+          stat_abbr = arg[:3].lower()
+          if stat_abbr not in STAT_ABBREVIATIONS:
+              continue
+          out.add(stat_abbr)
+      return list(out)
+
+  def resolve_check_advs(values):
+      out = set()
+      for arg in values:
+          if arg is True or arg.lower() == "all" or arg == "True":
+              return list(set(SKILL_NAMES))
+          skill_options = [k for k in SKILL_NAMES if k.lower().startswith(arg.lower())]
+          if not skill_options or len(skill_options) > 1:
+              continue
+          out.add(skill_options[0])
+      return list(out)
+
+  args = _parsed_or_raw(args)
+
+  ac_value, ac_bonus = resolve_value_or_bonus(args.get("ac"))
+  max_hp_value, max_hp_bonus = resolve_value_or_bonus(args.get("maxhp"))
+  passive = dict(attack_advantage=args.adv(eadv=True, boolwise=True),
+                 to_hit_bonus=args.join("b", "+"),
+                 damage_bonus=args.join("d", "+"),
+                 magical_damage="magical" in args,
+                 silvered_damage="silvered" in args,
+                 resistances=args.get("resist"),
+                 immunities=args.get("immune"),
+                 vulnerabilities=args.get("vuln"),
+                 ignored_resistances=args.get("neutral"),
+                 ac_value=ac_value,
+                 ac_bonus=ac_bonus,
+                 max_hp_value=max_hp_value,
+                 max_hp_bonus=max_hp_bonus,
+                 save_bonus=args.join("sb", "+"),
+                 save_adv=resolve_save_advs(args.get("sadv")),
+                 save_dis=resolve_save_advs(args.get("sdis")),
+                 check_bonus=args.join("cb", "+"),
+                 check_adv=resolve_check_advs(args.get("cadv")),
+                 check_dis=resolve_check_advs(args.get("cdis")),
+                 dc_bonus=args.join("dc", "+")
+               )
+
+  return {key: value for key, value in passive.items() if value}
+
+ADT = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"miss":[],"adv":"0"}],"sortBy":null},{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
+AD = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"miss":[],"adv":"0"}],"sortBy":null}],"_v":2,"verb":null,"proper":false}"""
+AT = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"ATTACKBONUS","hit":[],"miss":[],"adv":"0"}],"sortBy":null},{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
+DT = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"sortBy":null},{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
+A = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[],"sortBy":null}],"_v":2,"verb":null,"proper":false}"""
+D = """{"name":"ATTACKNAME","automation":[{"type":"target","target":"each","effects":[{"type":"damage","damage":"DAMAGE","overheal":false,"cantripScale":false}],"sortBy":null}],"_v":2,"verb":null,"proper":false}"""
+T = """{"name":"ATTACKNAME","automation":[{"type":"text","text":"TEXTDESC"}],"_v":2,"verb":null,"proper":false}"""
+
+
+def attacks_from_args(args, name: str = None):
+  """Converts args from `!init effect` to a list of AttackInteractions for IEffect2. 
+     Can be passed a name for the attack."""
+
+  args = _parsed_or_raw(args)
+  
+  attacks = args.get('attack')
+  attacks_out = []
+  
+  for i, attack in enumerate(attacks, 1):
+    attack_args = attack.split('|')
+    if not len(attack_args) == 3:
+      continue
+    bonus, damage, text = attack_args
+    match [bonus, damage, text]:
+      case [_bonus, _damage, _text] if _bonus and _damage and _text:
+        base_str = ADT[:]
+      case [_bonus, _damage, ""] if _bonus and _damage:
+        base_str = AD[:]
+      case [_bonus, "", _text] if _bonus and _text:
+        base_str = AT[:]
+      case ["", _damage, _text] if _damage and _text:
+        base_str = DT[:]
+      case [_bonus, "", ""] if _bonus:
+        base_str = ADT[:]
+      case ["", _damage, ""] if _damage:
+        base_str = ADT[:]
+      case ["", "", _text] if _text:
+        base_str = ADT[:]
+      case _:
+        continue
+    attacks_out.append({"attack": load_json(base_str.replace("ATTACKNAME", (name or "Ieffect Attack") + (f" {i}" if i != 1 else "")).replace("ATTACKBONUS", bonus).replace("DAMAGE", damage).replace("TEXTDESC", text))})
+  return attacks_out
+
+
+def parse_effect_args(args, name=None):
+  """Converts args from `!init effect` to a dict containing PassiveEffects and AttackInteractions for IEffect2. 
+     Can be passed a name for any attacks."""
+
+  return {"passive_effects": passive_from_args(args), "attacks": attacks_from_args(args, name)}
