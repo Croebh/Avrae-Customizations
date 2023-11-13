@@ -52,7 +52,7 @@ stat_args = " ".join([' '.join([f"-{arg} {val}" for val in value]) if typeof(val
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')
-if s_name == 'reset'
+if s_name == 'reset':
   custom_names.pop(summon_name, None)
 elif s_name:
   custom_names[summon_name] = s_name
