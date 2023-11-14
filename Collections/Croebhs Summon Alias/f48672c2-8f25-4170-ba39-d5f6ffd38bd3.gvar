@@ -1,0 +1,93 @@
+# Example `stat_block` for `build_init_add()`:
+# stat_block = {
+#   "hp": (10 * spell_level) - 10,
+#   "ac": 11 + spell_level,
+#   "pb": proficiencyBonus,
+#   "strength": 16,
+#   "dexterity": 14,
+#   "constitution": 16,
+#   "intelligence": 10,
+#   "wisdom": 14,
+#   "charisma": 16,
+#   "type": "celestial",
+#   "resist": "radiant"
+# }
+
+
+open_b, close_b = "<"+"drac2"+">", "</"+"drac2"+">"
+pf = ctx.prefix
+
+def safe_quote(string):
+  """Escape quotes in a string."""
+
+  return string.replace('"', '\"').replace("'", "\'")
+
+def build_init_add(init_name: str, init_mod:int, stat_block:dict) -> str:
+  """
+  Build a command string to add a combatant with specified stats to the initiative tracker.
+
+  Parameters:
+  - init_name (str): Name of the combatant.
+  - init_mod (int): Initiative modifier of the combatant.
+  - stat_block (dict): Dictionary containing various stat values for the combatant. 
+                       Keys should match the arguments for `!init add`
+                       You can use bools for flags (`{"p": True}`)
+                       You can use lists for multiple of the same arg (`{"resist":["fire", "cold"]}`)
+
+  Returns:
+    str: The command string for adding the combatant to the initiative tracker.
+  """
+  stat_args = [
+    ' '.join([f"""-{arg} "{safe_quote(val)}" """ for val in value]) if typeof(value)=='SafeList' else 
+    arg if value == True else
+    f"-{arg} {value}" 
+    for arg, value in stat_block.items()
+  ]
+  summon_command = f"""{pf}init add {init_mod} "{init_name}" {" ".join(stat_args)} """
+
+  return summon_command
+
+def build_tembed(title:str, desc:str, footer:str = None, fields:list[dict] = None, color:str = None, thumb:str = None, init_name:str = None, attacks:list = None, effect_name:str = None, extra_effects:list = None) -> str:
+  
+  """
+  Build a command string to create a text embed for use in Discord.
+
+  Parameters:
+  - title (str): Title of the embed.
+  - desc (str): Description of the embed.
+  - footer (str): Footer text for the embed.
+  - fields (list[dict]): List of dictionaries containing field information.
+                         [{title: str, desc: str, inline:bool = False}]
+  - color (str): Color code for the embed.
+  - thumb (str): URL of the thumbnail for the embed.
+
+  - init_name (str): Name of the target
+  - attacks (list): List of automation dictionaries to apply to the target
+  - effect_name (str): What to name the effect
+
+  - extra_effects (list): A list of dictionaries representing extra effects to add to the target
+                          [name: str, desc: str=None, buttons: list[dict]=None, passive: list[dict]=None, attacks:list[dict]=None]
+
+  Returns:
+    str: The command string for creating the tembed that adds the extra effects
+  """
+  if footer:
+    footer = f""" -footer "{safe_quote(footer)}" """
+  if fields:
+    fields = [f""" -f "{safe_quote(field.title)}|{safe_quote(field.desc)}{'|inline' if field.get('inline') else ''}" """ for field in fields]
+
+  embed = f"""{pf}tembed -title "{safe_quote(title)}" -desc "{safe_quote(desc)}" {" ".join(fields)} -color {color} -thumb {thumb} {footer} """
+  if init_name and attacks and effect_name:
+    attacks = [{"attack": attack} if not attack.get('attack') else attack for attack in attacks]
+    embed += (f""" {open_b}combat().get_combatant("{init_name}").add_effect(name="{safe_quote(effect_name)}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
+
+  for effect in extra_effects:
+    effect_name = safe_quote(effect['name'])
+    effect_desc = safe_quote(effect.get('desc', ''))
+    effect_buttons = effect.get('buttons', [])
+    effect_passive = effect.get('passive', [])
+    effect_attacks = effect.get('attacks', [])
+
+    embed += (f""" {open_b}combat().get_combatant("{init_name}").add_effect(name="{effect_name}",attacks=load_yaml('''{dump_yaml(effect_attacks)}'''),buttons=load_yaml('''{dump_yaml(effect_buttons)}'''),passive_effects=load_yaml('''{dump_yaml(effect_passive)}''')){close_b}""")
+
+  return embed
