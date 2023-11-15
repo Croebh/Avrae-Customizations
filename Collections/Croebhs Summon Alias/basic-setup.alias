@@ -1,7 +1,7 @@
 <drac2>
-TYPE = "Celestial"
-SPELL_NAME = "Summon Celestial"
-SPELL_DESC = "You call forth a celestial spirit. It manifests in an angelic form in an unoccupied space that you can see within range. This corporeal form uses the Celestial Spirit stat block. When you cast the spell, choose Avenger or Defender. Your choice determines the creature's attack in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger."
+TYPE = ""
+SPELL_NAME = ""
+SPELL_DESC = ""
 MIN_LEVEL = 5
 
 using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
@@ -44,16 +44,13 @@ stat_block = {
   "resist":       "radiant"
 }
 
-attacks = [{"name":"Healing Touch","automation":[{"type":"target","target":"self","effects":[{"type":"ieffect2","name":"Healing Touch Used","duration":-1,"stacking":True}]},{"type":"target","target":"each","effects":[{"type":"damage","damage":f"-(2d8 + {spell_level}) [heal]"}]},{"type":"text","text":"The celestial touches another creature. The target magically regains hit points equal to 2d8 + the spell's level."}],"_v":2,"verb":"reaches out with"}]
+attacks = []
 extra_effects = []
 match summon_type:
   case "avenger" | "avenge":
     summon_name = "Avenger"
-    attacks.extend([{"name":"Radiant Bow","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"2d6 + 2 + {spell_level} [radiant]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Weapon Attack:* your spell attack modifier to hit, range 150/600 ft., one target. *Hit:* 2d6 + 2 + the spell's level radiant damage."}],"_v":2}])
-  case "defender" | "defend":
-    summon_name = "Defender"
-    stat_block['ac'] += 2
-    attacks.extend([{"name":"Radiant Mace","automation":[{"type":"target","target":1,"effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 3 + {spell_level} [radiant]"}],"miss":[],"adv":"0"}]},{"type":"target","target":2,"effects":[{"type":"temphp","amount":"1d10"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level radiant damage, and the celestial can choose itself or another creature it can see within 10 feet of the target. The chosen creature gains 1d10 temporary hit points."}],"_v":2}])
+    attacks.extend([])
+    extra_effects.extend([])
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
 

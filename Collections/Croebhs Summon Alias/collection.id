@@ -1,15 +1,18 @@
 {
   "name": "Croebh's Summon Alias", 
   "aliases": {
-    "summon fey": "654db943ac7cd2bc90723095", 
-    "summon beast": "654d9662cdc23397786a442a", 
     "summon undead": "654d9632ac7cd2bc90723088", 
-    "summon fiend": "654d963cac7cd2bc90723089", 
-    "summon": "654d8fc5cdc23397786a441f", 
+    "summon construct": "6554430e570fbb99660e3fe1", 
     "summon reaper": "654d9688cdc23397786a442b", 
     "summon aberration": "654d8fe1cdc23397786a4420", 
+    "summon fey": "654db943ac7cd2bc90723095", 
+    "summon beast": "654d9662cdc23397786a442a", 
     "summon celestial": "654d965bcdc23397786a4429", 
-    "summon draconic": "654d9647cdc23397786a4428"
+    "summon shadowspawn": "65544308fe08d18dde41a487", 
+    "summon draconic": "654d9647cdc23397786a4428", 
+    "summon": "654d8fc5cdc23397786a441f", 
+    "summon fiend": "654d963cac7cd2bc90723089", 
+    "summon elemental": "65544319fe08d18dde41a488"
   }, 
   "snippets": {}, 
   "collection": "654d8fbecdc23397786a441e"

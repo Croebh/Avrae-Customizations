@@ -40,7 +40,7 @@ def build_init_add(init_name: str, init_mod:int, stat_block:dict) -> str:
   stat_args = [
     ' '.join([f"""-{arg} "{safe_quote(val)}" """ for val in value]) if typeof(value)=='SafeList' else 
     arg if value == True else
-    f"-{arg} {value}" 
+    f"""-{arg} "{safe_quote(str(value))}" """ 
     for arg, value in stat_block.items()
   ]
   summon_command = f"""{pf}init add {init_mod} "{init_name}" {" ".join(stat_args)} """
