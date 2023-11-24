@@ -223,6 +223,30 @@
       "type": "SimpleEffect or None"
     }
   },
+  "SimpleEffect.attacks": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
+    "desc": "Gets the attacks granted by this effect.",
+    "url": "aliasing.api.combat.SimpleEffect.attacks",
+    "returns": {
+      "type": "List"
+    }
+  },
+  "SimpleEffect.buttons": {
+    "source": [
+      "SimpleCombatant.add_effect(name)",
+      "SimpleCombatant.get_effect(name)",
+      "SimpleCombatant.effects[#]"
+    ],
+    "desc": "Gets the buttons granted by this effect.",
+    "url": "aliasing.api.combat.SimpleEffect.buttons",
+    "returns": {
+      "type": "List"
+    }
+  },
   "SimpleEffect.set_parent(parent)": {
     "source": [
       "SimpleCombatant.add_effect(name)",

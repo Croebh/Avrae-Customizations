@@ -1,0 +1,37 @@
+embed -title "Effect Copier"
+-footer "{{ctx.prefix+ctx.alias}} [originator] [effect_name] [*targets]"
+<drac2>
+args = &ARGS&
+c = combat()
+if len(args) < 3:
+  return """ -desc "Need target, originator, and effect name" """
+if not c:
+  return """ -desc "Not in combat" """
+
+originator_name, effect_name, *targets_names = args
+originator = c.get_combatant(originator_name)
+if not originator:
+  return f""" -desc "Invalid originator: {originator_name}" """
+
+effect = originator.get_effect(effect_name)
+if not effect:
+  return """ -desc "Invalid Effect Name" """
+
+targets = []
+for t_name in targets_names:
+  targets.extend(c.get_group(t_name).combatants if c.get_group(t_name) else [c.get_combatant(t_name)])
+if not (targets and any(targets)):
+  return f""" -desc "Invalid target(s): {targets_names}" """
+
+target_out = []
+for target in targets:
+  target_effect = target.add_effect(effect.name, duration=effect.remaining, concentration=effect.conc, parent=effect.parent, end=effect.ticks_on_end, desc=effect.desc, passive_effects=effect.effect, attacks=effect.attacks, buttons=effect.buttons)
+  target_out.append(target.name)
+
+
+target_out = ', '.join(target_out[:-1]) + f" and {target_out[-1]}"
+return f""" -desc "Copying the effect **{effect.name}** from {originator.name} to {target_out}" 
+-f "Effect Description|```md
+{effect}
+```" """
+</drac2>
