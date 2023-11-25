@@ -56,7 +56,7 @@ if s_name == 'reset':
 elif s_name:
   custom_names[summon_name] = s_name
 ch.set_cvar('summon_names', dump_yaml(custom_names))
-s_name = custom_names.get(summon_name, f"{s_name} {TYPE}")
+s_name = custom_names.get(summon_name, f"{s_name} {TYPE} ({init_add.get_initials(name)})")
 
 stat_block['p'] = True
 stat_block['group'] = f"{name}'s Summons"
