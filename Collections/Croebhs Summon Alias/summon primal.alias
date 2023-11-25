@@ -1,0 +1,96 @@
+<drac2>
+FEATURE_DESC = "You magically summon a primal beast, which draws strength from your bond with nature. The beast is friendly to you and your companions and obeys your commands. Choose its stat block—Beast of the Land, Beast of the Sea, or Beast of the Sky—which uses your proficiency bonus (PB) in several places. You also determine the kind of animal the beast is, choosing a kind appropriate for the stat block. Whatever kind you choose, the beast bears primal markings, indicating its mystical origin.\n\nIn combat, the beast acts during your turn. It can move and use its reaction on its own, but the only action it takes is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. You can also sacrifice one of your attacks when you take the Attack action to command the beast to take the Attack action. If you are incapacitated, the beast can take any action of its choice, not just Dodge."
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+ignore  = args.last('i')
+summon_type = args.last('type', "", str).lower()
+
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+ranger = ch.levels.get('Ranger')
+if not( ranger >= 6 or ignore):
+  return f"""embed -title "Woopsie!" -desc "You're not a Ranger of sufficient level!" """
+
+if ignore:
+  ranger = level  # University Artificers hate this one trick
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+stat_block = {
+  "hp": 5 + (5 * ranger),
+  "ac": 13 + proficiencyBonus,
+  "pb": proficiencyBonus,
+  "type": "beast",
+  "strength": 14,
+  "dexterity": 12,
+  "constitution": 14,
+  "intelligence": 8,
+  "wisdom": 114,
+  "charisma": 11,
+  "prof": ["acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],  
+  "save": ["str", "dex", "con", "int", "wis", "cha"]  # Primal bond is nutty
+}
+
+attacks = []
+extra_effects = []
+match summon_type:
+  case "land":
+    stat_block["strength"]     = 14
+    stat_block["dexterity"]    = 14
+    stat_block["constitution"] = 15
+    attacks = [{"name":"Maul","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":"1d8 + 2 + {proficiencyBonus} [slashing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 2 + PB slashing damage."}],"_v":2},{"name":"Charge","automation":[{"type":"target","target":"each","effects":[{"type":"damage","damage":"1d6 [slashing]"},{"type":"save","stat":"str","dc":sdc,"fail":[{"type":"ieffect2","name":"Prone","effects":{"attack_advantage":-1},"desc":"A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition","buttons":[{"automation":[{"type":"remove_ieffect"}],"label":"Stand Up","verb":"stands up"}]}],"success":[]}]},{"type":"text","text":"If the beast moves at least 20 feet straight toward a target and then hits it with a maul attack on the same turn, the target takes an extra 1d6 slashing damage. If the target is a creature, it must succeed on a Strength saving throw against your spell save DC or be knocked prone."}],"_v":2,"verb":"rushes forward with","activation_type":8}]
+  case "sea":
+    stat_block["strength"]     = 14
+    stat_block["dexterity"]    = 14
+    stat_block["constitution"] = 15
+    attacks = [{"name":"Binding Strike (Piercing)","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":"1d6 + 2 + {proficiencyBonus} [piercing]"},{"type":"ieffect2","name":"Grappling {{target.name if str(target)!=target else target}}","buttons":[{"label":"Release {{target.name if str(target)!=target else target}}","verb":"releases {{target.name if str(target)!=target else target}}","style":"1","automation":[{"type":"remove_ieffect","removeParent":"always"}]}],"save_as":"grapple","target_self":true},{"type":"ieffect2","name":"Grappled by {{caster.name}}","desc":f"Escape DC {sdc}","buttons":[{"label":"Escape {{caster.name}}'s Grapple","verb":"tries to escape from {{caster.name}}'s grapple","automation":[{"type":"target","target":"self","effects":[{"type":"check","ability":["acrobatics","athletics"],"dc":sdc,"success":[{"type":"remove_ieffect","removeParent":"if_no_children"}],"fail":[]}]},{"type":"text","text":"A creature grappled by the monster can use its action to try to escape. To do so, it must succeed on a Strength (Athletics) or Dexterity (Acrobatics) check against the escape DC in the monster's stat block."}]}],"parent":"grapple"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 2 + PB piercing or bludgeoning damage (your choice), and the target is grappled (escape DC equals your spell save DC). Until this grapple ends, the beast can't use this attack on another target."}],"_v":2},{"name":"Binding Strike (Bludgeoning)","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":"1d6 + 2 + {proficiencyBonus} [bludgeoning]"},{"type":"ieffect2","name":"Grappling {{target.name if str(target)!=target else target}}","buttons":[{"label":"Release {{target.name if str(target)!=target else target}}","verb":"releases {{target.name if str(target)!=target else target}}","style":"1","automation":[{"type":"remove_ieffect","removeParent":"always"}]}],"save_as":"grapple","target_self":true},{"type":"ieffect2","name":"Grappled by {{caster.name}}","desc":f"Escape DC {sdc}","buttons":[{"label":"Escape {{caster.name}}'s Grapple","verb":"tries to escape from {{caster.name}}'s grapple","automation":[{"type":"target","target":"self","effects":[{"type":"check","ability":["acrobatics","athletics"],"dc":sdc,"success":[{"type":"remove_ieffect","removeParent":"if_no_children"}],"fail":[]}]},{"type":"text","text":"A creature grappled by the monster can use its action to try to escape. To do so, it must succeed on a Strength (Athletics) or Dexterity (Acrobatics) check against the escape DC in the monster's stat block."}]}],"parent":"grapple"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 2 + PB piercing or bludgeoning damage (your choice), and the target is grappled (escape DC equals your spell save DC). Until this grapple ends, the beast can't use this attack on another target."}],"_v":2},]
+  case "sky" | "air":
+    summon_type = "sky"
+    attacks = [{"name":"Shred","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":"1d4 + 3 + {proficiencyBonus} [slashing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d4 + 3 + PB slashing damage."}],"_v":2}]
+    stat_block['hp'] = 4 + (4 * ranger)
+    stat_block["strength"]     = 6
+    stat_block["dexterity"]    = 16
+    stat_block["constitution"] = 13
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+summon_name = f"Beast of the {summon_type.title()}"
+
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, summon_name)
+
+stat_block['p'] = True
+stat_block['group'] = f"{name}'s Summons"
+stat_block['note'] = f"Summoned by {name}"
+
+c.me.set_group(f"{name}'s Summons")
+
+embed_args = {
+  "title": f"{name} summoned their {summon_name}!",
+  "desc": FEATURE_DESC,
+  "fields": [],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon Primal Companion", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>

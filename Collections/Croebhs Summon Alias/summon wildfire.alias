@@ -1,0 +1,74 @@
+<drac2>
+FEATURE_DESC = "The spirit appears in an unoccupied space of your choice that you can see within 30 feet of you. Each creature within 10 feet of the spirit (other than you) when it appears must succeed on a Dexterity saving throw against your spell save DC or take 2d6 fire damage.\n\nThe spirit is friendly to you and your companions and obeys your commands. See this creature's game statistics in the Wildfire Spirit stat block, which uses your proficiency bonus (PB) in several places. You determine the spirit's appearance. Some spirits take the form of a humanoid figure made of gnarled branches covered in flame, while others look like beasts wreathed in fire."
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(&ARGS&)
+c = combat()
+ch = character()
+ignore  = args.last('i')
+
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+druid = ch.levels.get('Druid')
+if not( druid >= 2 or ignore):
+  return f"""embed -title "Woopsie!" -desc "You're not a Druid of sufficient level!" """
+
+if ignore:
+  druid = level  # University Artificers hate this one trick
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+stat_block = {
+  "hp": 5 + (5 * druid),
+  "ac": 13,
+  "pb": proficiencyBonus,
+  "strength": 10,
+  "dexterity": 14,
+  "constitution": 14,
+  "intelligence": 13,
+  "wisdom": 15,
+  "charisma": 11,
+  "type": "elemental",
+  "immune": ["fire"]
+}
+
+summon_name = "Wildfire Spirit"
+attacks = [{"name":"Flame Seed","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + {proficiencyBonus} [fire]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Weapon Attack:* your spell attack modifier to hit, range 60 ft., one target you can see. *Hit:* 1d6 + PB fire damage."}],"_v":2},{"name":"Fiery Teleportation","automation":[{"type":"roll","dice":f"1d6 + {proficiencyBonus} [fire]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"dex","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[]}]},{"type":"text","text":"The spirit and each willing creature of your choice within 5 feet of it teleport up to 15 feet to unoccupied spaces you can see. Then each creature within 5 feet of the space that the spirit left must succeed on a Dexterity saving throw against your spell save DC or take 1d6 + PB fire damage."}],"_v":2,"verb":"uses","proper":true,"activation_type":1}]
+extra_effects = []
+
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, summon_name)
+
+stat_block['p'] = True
+stat_block['group'] = f"{name}'s Summons"
+stat_block['note'] = f"Summoned by {name}"
+
+c.me.set_group(f"{name}'s Summons")
+
+embed_args = {
+  "title": f"{name} summoned their {summon_name}!",
+  "desc": FEATURE_DESC,
+  "fields": [],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon Wildfire Spirit", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>

@@ -1,0 +1,74 @@
+<drac2>
+FEATURE_DESC = "In combat, the item shares your initiative count, but it takes its turn immediately after yours. It can move and use its reaction on its own, but the only action it takes on its turn is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. If you are incapacitated, the item can take any action of its choice, not just Dodge.\n\nWhen you use your Bardic Inspiration feature, you can command the item as part of the same bonus action you use for Bardic Inspiration. Once you animate an item with this feature, you can't do so again until you finish a long rest, unless you expend a spell slot of 3rd level or higher to use this feature again. You can have only one item animated by this feature at a time; if you use this action and already have a dancing item from this feature, the first one immediately becomes inanimate."
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(&ARGS&)
+c = combat()
+ch = character()
+ignore  = args.last('i')
+
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+bard = ch.levels.get('Bard')
+if not( bard >= 6 or ignore):
+  return f"""embed -title "Woopsie!" -desc "You're not a Bard of sufficient level!" """
+
+if ignore:
+  bard = level  # University bards hate this one trick
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+stat_block = {
+  "hp": 10 + (5 * bard),
+  "ac": 16,
+  "pb": proficiencyBonus,
+  "strength": 18,
+  "dexterity": 14,
+  "constitution": 16,
+  "intelligence": 4,
+  "wisdom": 10,
+  "charisma": 6,
+  "type": "construct",
+  "immune": ["poison", "psychic"]
+}
+
+summon_name = "Dancing Item"
+attacks = [{"name":"Force-Empowered Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":"1d10 + {proficiencyBonus} [force]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target you can see. *Hit:* 1d10 + PB force damage."}],"_v":2},{"name":"Irrepressible Dance","automation":[{"type":"target","target":"each","effects":[{"type":"ieffect2","name":"Irrepressible Dance","duration":1,"end":true,"desc":"Speed increased or decreased by 10 feet"}]},{"type":"text","text":"When any creature starts its turn within 10 feet of the item, the item can increase or decrease (your choice) the walking speed of that creature by 10 feet until the end of the turn, provided the item isn’t incapacitated."}],"_v":2,"verb":"grants","proper":false,"activation_type":8}]
+extra_effects = []
+
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, summon_name)
+
+stat_block['p'] = True
+stat_block['group'] = f"{name}'s Summons"
+stat_block['note'] = f"Summoned by {name}"
+
+c.me.set_group(f"{name}'s Summons")
+
+embed_args = {
+  "title": f"{name} summoned their {summon_name}!",
+  "desc": FEATURE_DESC,
+  "fields": [],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon Dancing Item", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>

@@ -1,19 +1,26 @@
 {
-  "name": "Croebh's Summon Alias", 
   "aliases": {
-    "summon undead": "654d9632ac7cd2bc90723088", 
-    "summon construct": "6554430e570fbb99660e3fe1", 
-    "summon reaper": "654d9688cdc23397786a442b", 
-    "summon aberration": "654d8fe1cdc23397786a4420", 
-    "summon fey": "654db943ac7cd2bc90723095", 
-    "summon beast": "654d9662cdc23397786a442a", 
-    "summon celestial": "654d965bcdc23397786a4429", 
-    "summon shadowspawn": "65544308fe08d18dde41a487", 
-    "summon draconic": "654d9647cdc23397786a4428", 
     "summon": "654d8fc5cdc23397786a441f", 
+    "summon aberration": "654d8fe1cdc23397786a4420", 
+    "summon beast": "654d9662cdc23397786a442a", 
+    "summon blighted": "6561977deee9b8c102856d41", 
+    "summon celestial": "654d965bcdc23397786a4429", 
+    "summon construct": "6554430e570fbb99660e3fe1", 
+    "summon dancing": "6561b858eee9b8c102856d4b", 
+    "summon draconic": "654d9647cdc23397786a4428", 
+    "summon drake": "65619d3aeee9b8c102856d43", 
+    "summon elemental": "65544319fe08d18dde41a488", 
+    "summon fey": "654db943ac7cd2bc90723095", 
     "summon fiend": "654d963cac7cd2bc90723089", 
-    "summon elemental": "65544319fe08d18dde41a488"
+    "summon homunculus": "65619376eee9b8c102856d3f", 
+    "summon primal": "6561a1fd99d1bfdcad0cb581", 
+    "summon reaper": "654d9688cdc23397786a442b", 
+    "summon shadowspawn": "65544308fe08d18dde41a487", 
+    "summon steel": "65618f9599d1bfdcad0cb580", 
+    "summon undead": "654d9632ac7cd2bc90723088", 
+    "summon wildfire": "65619505eee9b8c102856d40"
   }, 
-  "snippets": {}, 
-  "collection": "654d8fbecdc23397786a441e"
+  "collection": "654d8fbecdc23397786a441e", 
+  "name": "Croebh's Summon Alias", 
+  "snippets": {}
 }

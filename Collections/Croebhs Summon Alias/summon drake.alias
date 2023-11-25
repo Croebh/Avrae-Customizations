@@ -1,0 +1,91 @@
+<drac2>
+FEATURE_DESC = "The drake is friendly to you and your companions, and it obeys your commands. See its game statistics in the accompanying Drake Companion stat block, which uses your proficiency bonus (PB) in several places. Whenever you summon the drake, choose a damage type listed in its Draconic Essence trait. You can determine the cosmetic characteristics of the drake, such as its color, its scale texture, or any visible effect of its Draconic Essence; your choice has no effect on its game statistics.\n\nIn combat, the drake shares your initiative count, but it takes its turn immediately after yours. It can move and use its reaction on its own, but the only action it takes on its turn is the Dodge action, unless you take a bonus action on your turn to command it to take another action. That action can be one in its stat block or some other action. If you are incapacitated, the drake can take any action of its choice, not just Dodge.\n\nThe drake remains until it is reduced to 0 hit points, until you use this feature to summon the drake again, or until you die. Anything the drake was wearing or carrying is left behind when the drake vanishes."
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(["-type"] + &ARGS&)
+c = combat()
+ch = character()
+ignore  = args.last('i')
+summon_type = args.last('type', "", str).lower()
+
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+ranger = ch.levels.get('Ranger')
+if not( ranger >= 6 or ignore):
+  return f"""embed -title "Woopsie!" -desc "You're not a Ranger of sufficient level!" """
+
+if ignore:
+  ranger = level  # University Artificers hate this one trick
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+stat_block = {
+  "hp": 5 + (5 * ranger),
+  "ac": 14 + proficiencyBonus,
+  "pb": proficiencyBonus,
+  "strength": 16,
+  "dexterity": 12,
+  "constitution": 15,
+  "intelligence": 8,
+  "wisdom": 14,
+  "charisma": 8,
+  "type": "dragon",
+}
+
+summon_name = "Drake Companion"
+
+extra_effects = []
+match summon_type:
+  case "acid":
+    summon_name = f"Acidic {summon_name}"
+  case "cold":
+    summon_name = f"Freezing {summon_name}"
+  case "fire":
+    summon_name = f"Flaming {summon_name}"
+  case "lightning":
+    summon_name = f"Jolting {summon_name}"
+  case "poison":
+    summon_name = f"Poisonous {summon_name}"
+  case _:
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+attacks = [{"name":"Bite","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"3 + proficiencyBonus","hit":[{"type":"damage","damage":f"""1d6 + {proficiencyBonus} [piercing] {f"+ 1d6 [{summon_type}]" if ranger >= 7 else ""}"""}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* +3 plus PB to hit, reach 5 ft., one target. *Hit:* 1d6 plus PB piercing damage." + ("\n\n**Magic Fang.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for the drake’s Draconic Essence." if ranger >= 7 else "") + ("\n\n**Empowered Bite.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage)." if ranger >= 15 else "")}],"_v":2},{"name":"Infused Strikes","automation":[{"type":"target","target":"each","effects":[{"type":"damage","damage":f"{1 + (ranger>=15)}d6 [{summon_type}]"}]},{"type":"text","text":"When another creature within 30 feet of the drake that it can see hits a target with a weapon attack, the drake infuses the strike with its essence, causing the target to take an extra 1d6 damage of the type determined by its Draconic Essence."+ ("\n\n**Empowered Bite.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage)." if ranger >= 15 else "")}],"_v":2,"verb":"grants","proper":true,"activation_type":4}]
+
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, summon_name)
+
+stat_block['p'] = True
+stat_block['group'] = f"{name}'s Summons"
+stat_block['note'] = f"Summoned by {name}"
+
+c.me.set_group(f"{name}'s Summons")
+if ranger >= 7:
+  c.me.add_effect("Bond of Fang and Scale", passive_effects={"resistances": [summon_type]})
+
+embed_args = {
+  "title": f"{name} summoned their {summon_name}!",
+  "desc": FEATURE_DESC,
+  "fields": [],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon Drake Companion", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>

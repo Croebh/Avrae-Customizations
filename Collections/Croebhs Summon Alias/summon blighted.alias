@@ -1,0 +1,82 @@
+<drac2>
+FEATURE_DESC = "When a creature that is not undead or a construct takes damage within the area of your Defile Ground feature, you can use your reaction to summon a blighted sapling in an unoccupied space within 5 feet of the creature. You can direct the sapling to make an attack against any creature within 5 feet of it as a part of this reaction. The sapling then acts on your initiative, obeying your verbal commands.\n\nThe blighted sapling remains in your service until it's reduced to 0 hit points, until the end of your next long rest, or until you summon another sapling, at which point it crumbles into foul-smelling mulch. You can use this feature a number of times equal to your proficiency bonus, regaining all expended uses when you finish a long rest."
+
+using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
+
+args = argparse(&ARGS&)
+c = combat()
+ch = character()
+ignore  = args.last('i')
+
+sab = ch.spellbook.sab
+sdc = ch.spellbook.dc
+true, false, null = True, False, None
+
+druid = ch.levels.get('Druid')
+if not( druid >= 6 or ignore):
+  return f"""embed -title "Woopsie!" -desc "You're not a Druid of sufficient level!" """
+
+if ignore:
+  druid = level  # University Artificers hate this one trick
+
+if not (c and c.me):
+  return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+stat_block = {
+  "hp": 2 * druid,
+  "ac": 10 + proficiencyBonus,
+  "pb": proficiencyBonus,
+  "strength": 8,
+  "dexterity": 13,
+  "constitution": 12,
+  "intelligence": 4,
+  "wisdom": 8,
+  "charisma": 3,
+  "type": "plant",
+  "vuln": ["fire"],
+  "resist": ["necrotic", "poison"]
+}
+
+summon_name = "Blighted Sapling"
+attacks = [{"name":"Claws","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"2d4 + {proficiencyBonus} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 2d4 + PB piercing damage."}],"_v":2}]
+extra_effects = []
+
+custom_names = load_yaml(get('summon_names', '{}'))
+s_name = args.last('name')
+if s_name == 'reset':
+  custom_names.pop(summon_name, None)
+elif s_name:
+  custom_names[summon_name] = s_name
+ch.set_cvar('summon_names', dump_yaml(custom_names))
+s_name = custom_names.get(summon_name, summon_name)
+
+stat_block['p'] = True
+stat_block['group'] = f"{name}'s Summons"
+stat_block['note'] = f"Summoned by {name}"
+
+if druid >= 10:  # Foul Conjuration
+  stat_block['resist'] = []
+  stat_block['immune'] = ['necrotic', 'poison']
+  attacks.append({"name":"Toxic Demise","automation":[{"type":"roll","dice":"{proficiencyBonus}d6 [necrotic]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"con","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[]}]},{"type":"text","text":"When the creature is reduced to 0 hit points, it explodes in a burst of toxic mulch or fetid viscera. Each creature within 5 feet of the exploding creature must succeed on a Constitution saving throw against your spell save DC or take necrotic damage based on the creature’s challenge rating (see the table below). As an action, you can also cause a summoned creature to explode, immediately killing it."}],"_v":2,"verb":"explodes in their","proper":true,"activation_type":8})
+if druid >= 14:
+  stat_block['note'] += "\nMultiattack: 2"
+
+c.me.set_group(f"{name}'s Summons")
+
+embed_args = {
+  "title": f"{name} summoned their {summon_name}!",
+  "desc": FEATURE_DESC,
+  "fields": [],
+  "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+  "color": color,
+  "thumb": image
+}
+
+summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
+embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon Blighted Sapling", extra_effects=extra_effects)
+
+return f"""multiline
+{summon_command}
+{embed}
+"""
+</drac2>
