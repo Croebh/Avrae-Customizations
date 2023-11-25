@@ -1,7 +1,7 @@
 embed
 <drac2>
 args = argparse(&ARGS&)
-casting = any([i for i in &ARGS& if i.lower() in ["cast", "spell", "cantrip"]])
+casting = any([i for i in &ARGS& if i.lower() in ["cast", "spell", "cantrip", "casts"]])
 target, combatTarget = name, ""
 if combat():
     combatTarget = combat().current if combat().current.type!="group" else combat().me if combat().me else ""

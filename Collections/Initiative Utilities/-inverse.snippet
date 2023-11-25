@@ -1,0 +1,26 @@
+<drac2>
+if get('already_inversed'):
+  return
+args = argparse(&ARGS&)
+c = combat()
+
+def safe_quote(string):
+  return string.replace('"', '\"').replace("'", "\'")
+
+if not c:
+  return """ -f "Inverse Targets|This channel is not in combat." """
+
+inversed = []
+for targ_name in args.get('inverse'):
+  inversed.extend([t.name for t in (c.get_group(targ_name).combatants if c.get_group(targ_name) else [c.get_combatant(targ_name)]) if t])
+
+targets = ""
+for combatant in c.combatants:
+  if combatant.name in inversed:
+    continue
+  targets += f""" -t "{safe_quote(combatant.name)}" """
+
+already_inversed = True
+
+return targets + f""" -f "Inverse Targets|Targetting everyone but: {safe_quote(', '.join(inversed))}" """
+</drac2>

@@ -9,12 +9,16 @@ if not combatants:
   return "There are no combatants in the current combat."
 
 monsters = []
+nonhidden_monsters = []
 players = []
 other = []
 for combatant in combatants:
-  if combatant.levels.get('Monster'):
-    monsters.append(f"""-t "{combatant.name}|" """)
-  elif combatant.levels.total_level:
+  if combatant.monster_name:
+    if (group := c.get_group(combatant.group)) and any([t.race for t in group.combatants]) or not combatant.is_hidden:
+      nonhidden_monsters.append(f"""-t "{combatant.name}|" """)
+    else:
+      monsters.append(f"""-t "{combatant.name}|" """)
+  elif combatant.race:
     players.append(f"""-t "{combatant.name}|" """)
   else:
     other.append(f"""-t "{combatant.name}|" """)
@@ -23,6 +27,9 @@ out = monsters
 if players:
   out.append("")
   out.extend(players)
+if nonhidden_monsters:
+  out.append("")
+  out.extend(nonhidden_monsters)
 if other:
   out.append("")
   out.extend(other)
