@@ -53,10 +53,10 @@ ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"{summon_name} ({init_add.get_initials(name)})")
 
 stat_block['p'] = True
-stat_block['group'] = f"{name}'s Summons"
+stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
 stat_block['note'] = f"Summoned by {name}"
 
-c.me.set_group(f"{name}'s Summons")
+c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
 
 embed_args = {
   "title": f"{name} summoned their {summon_name}!",
