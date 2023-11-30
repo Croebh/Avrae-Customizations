@@ -1,0 +1,120 @@
+<drac2>
+def partial_match(input_str, string_list):
+    matches = []
+
+    for item in string_list:
+        if input_str.lower() in item.lower():
+            matches.append(item)
+
+    return matches
+
+def save_bonus(creature_name, save):
+  stat_block = STAT_BLOCKS[creature_name]
+  bonus = (stat_block[save[:3]]//2)-5
+
+  # handle save prof 
+  prof = stat_block.get('save', None)
+  if prof and (save[:3] in prof):
+    bonus += proficiencyBonus
+    
+  return bonus
+
+def build_output(summon_name, custom_name, save_bonus, save, otherArgs):
+  title = ""
+
+  # handle names
+  if custom_names.get(summon_name.title(), None):
+    title = f"{custom_name} makes a "
+  elif custom_name in ["Land (Primal Companion)", "Sky (Primal Companion)", "Sea (Primal Companion)"]:
+    title = f"A {custom_name} makes a "
+  else:
+    a_or_an_start = "A"
+    a_or_an_end = "a"
+    if summon_name.lower().startswith(('a', 'e', 'i', 'u', 'o')):
+      a_or_an_start = "An"
+    if save.lower().startswith(('a', 'e', 'i', 'u', 'o')):
+      a_or_an_end = 'an'
+    if summon_name in COMPANIONS:
+      title = f"{a_or_an_start} {summon_name.title()} Companion makes {a_or_an_end} "
+    else:
+      title = f"{a_or_an_start} {summon_name.title()} Summon makes {a_or_an_end} "
+
+  title += f"{save.title()} Save!"
+
+  output = f"""ms Commoner Dexterity -b {save_bonus} -title "{title}" {" ".join(args)} -color {color} """
+  return output
+
+args = &ARGS&
+parsed = argparse(args)
+ch = character()
+
+STAT_BLOCKS = load_yaml(get_gvar("a99036e7-d4d8-4492-b82a-f11bed9d43ec"))
+COMPANIONS = ["dancing", "drake", "homunculus", "land", "sea", "sky", "steel", "wildfire"]
+SUMMON_LIST = ["aberration", "beast", "blighted", "celestial", "construct", "dancing", "draconic", "drake", "elemental", "fey", "demon", "homunculus", "primal", "land", "sea", "sky", "reaper", "shadowspawn", "steel", "undead", "wildfire"]
+
+SAVE_LIST = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"]
+
+ABBR_TO_FULL = {"str": "Strength", "dex": "Dexterity", "con": "Constitution", "int": "Intelligence", "cha": "Charisma"}
+
+defaults = f""" -footer "{ctx.prefix}{ctx.alias} <summon|save> [save] - By Croebh and VeryGreatFrog" -color {color} """
+
+n = "\n"
+if len(args) == 0:
+  return f"help {ctx.alias} -here"
+name_or_save = args[0].lower().replace(" ", "")
+potential_save = args[1].lower().replace(" ", "") if len(args)>1 else ""
+summon = ""
+skill = ""
+
+summ = "CurrentSummon"
+current_summon = ch.get_cvar(summ, "")
+custom_names = load_yaml(get('summon_names', '{}'))
+# first arg matched a summon name - what to do with the second arg. Is it a skill?
+if name_or_save in SUMMON_LIST:
+  if name_or_save == "primal":
+    return f"""embed -title "{name} tried to set a Primal Companion!" -desc "Please clarify which Primal Companion you want to set." -f "{ctx.prefix}{ctx.alias} [sky|sea|land]" {defaults}"""
+
+  # gets summon name - crucially, does not work for summon spells with types as we dont ask for that type when making this check, since it doesnt change anything anyway
+  summon_name = custom_names.get(name_or_save.title(), None) or name_or_save.title()
+  # If no custom name is set for one of these three primal companions, just set their name to that + (primal)
+  if name_or_save in ["land", "sky", "water"] and not custom_names.get(name_or_save.title(), None): summon_name = name_or_save.title() + " (Primal Companion)"
+
+  # matched a summon name, did not give a save - so tried to change the type or didnt give a save
+  if (len(args)==1 or args[1].lower() == "change"):
+    if (len(args)>1) and args[1].lower() == "change":
+      ch.set_cvar(summ, name_or_save)
+      return f"""embed -title "{name} set their current summon to {name_or_save.title()}!" {defaults} """
+    return f"""embed -title "{name} tried to change their active Summon!" -desc "Run `{ctx.prefix}{ctx.alias} {name_or_save} change` confirm this change." {defaults} """
+  # matched a summon name, changing the type, but matched multiple saves
+  elif len((saves:=partial_match(potential_save, SAVE_LIST))) > 1:
+    ch.set_cvar(summ, name_or_save)
+    return f"""embed -title "{name} tried to roll a Saving Throw with {'an' if name_or_save.startswith(('a', 'e', 'i', 'u', 'o')) else 'a'} {name_or_save.title()} Summon/Companion, but matched multiple saves!" -desc "Set active summon to {name_or_save.title()}. Please run this command again with the save being more specific." -f "Matched Saves|- {f"{n}- ".join(saves)}" {defaults} """
+  # matched a summon name and matched only one save
+  elif len((save:=partial_match(potential_save, SAVE_LIST))) == 1:
+    ch.set_cvar(summ, name_or_save)
+    return build_output(name_or_save, summon_name, save_bonus(name_or_save, save[0]), save[0], args[2:])
+  # matched a summon name but matched no save
+  elif len((saves:=partial_match(potential_save, SAVE_LIST))) == 0:
+    ch.set_cvar(summ, name_or_save)
+    return f"""embed -title "{name} tried to roll a Saving Throw with {'an' if name_or_save.startswith(('a', 'e', 'i', 'u', 'o')) else 'a'} {name_or_save.title()} Summon/Companion, but matched no saves!" -desc "Set active summon to {name_or_save.title()}. Please run this command again to match a save. You typed: `{potential_save}`. Did you mean to set a summon?" -f "Summon Spells|{", ".join([f"`{x}`" for x in SUMMON_LIST if x not in COMPANIONS])}" -f "Companions|{", ".join([f"`{x}`" for x in SUMMON_LIST if x in COMPANIONS])}" {defaults} """
+# did not match a summon name (is the first arg then the save?)
+elif not current_summon:
+  return f"test Please set a summon with {ctx.prefix}{ctx.alias} <summon>; otherwise the alias cannot find a default summon to start with."
+elif (name_or_save not in SUMMON_LIST):
+  # gets summon name - crucially, does not work for summon spells with types as we dont ask for that type when making this check, since it doesnt change anything anyway
+  summon_name = custom_names.get(current_summon.title(), None) or current_summon.title()
+  # If no custom name is set for one of these three primal companions, just set their name to that + (primal)
+  if current_summon in ["land", "sky", "water"] and not custom_names.get(current_summon.title(), None): summon_name = current_summon.title() + " (Primal Companion)"
+
+  # did not give a summon name, and matched multiple save
+  if len((saves:=partial_match(name_or_save, SAVE_LIST))) > 1:
+    return f"""embed -title "{name} tried to roll a Saving Throw with {'an' if current_summon.startswith(('a', 'e', 'i', 'u', 'o')) else 'a'} {current_summon.title()} Summon/Companion, but matched multiple saves!" -desc "Please run this command again with the save being more specific." -f "Matched Saves|- {f"{n}- ".join(saves)}" {defaults} """
+  # did not give summon name, matched one save only
+  elif len((save:=partial_match(name_or_save, SAVE_LIST))) == 1:
+    return build_output(current_summon, summon_name, save_bonus(current_summon, save[0]), save[0], args[1:])
+  # matched no saves
+  elif len((saves:=partial_match(name_or_save, SAVE_LIST))) == 0:
+    return f"""embed -title "{name} tried to roll a Saving Throw with {'an' if current_summon.startswith(('a', 'e', 'i', 'u', 'o')) else 'a'} {current_summon.title()} Summon/Companion, but matched no saves!" -desc "Please run this command again to match a save. You typed: `{name_or_save}`. Did you mean to set a summon?" -f "Summon Spells|{", ".join([f"`{x}`" for x in SUMMON_LIST if x not in COMPANIONS])}" -f "Companions|{", ".join([f"`{x}`" for x in SUMMON_LIST if x in COMPANIONS])}"  {defaults} """
+  else: 
+    return f"""embed -title "{name} did something wrong" -desc "Failed to match a summon or a save. Please try again." -f "Summon Spells|{", ".join([f"`{x}`" for x in SUMMON_LIST if x not in COMPANIONS])}" -f "Companions|{", ".join([f"`{x}`" for x in SUMMON_LIST if x in COMPANIONS])}" {defaults} """
+</drac2>
