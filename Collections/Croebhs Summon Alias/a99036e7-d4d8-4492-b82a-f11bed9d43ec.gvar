@@ -1,0 +1,286 @@
+{
+    "aberration": {
+        "str":16,
+        "dex":10,
+        "con": 15,
+        "int": 16,
+        "wis": 10,
+        "cha": 6
+    },
+    "beast": {
+        "str":18,
+        "dex":11,
+        "con": 16,
+        "int": 4,
+        "wis": 14,
+        "cha": 5
+    },
+    "blighted": {
+        "str":8,
+        "dex":13,
+        "con": 12,
+        "int": 4,
+        "wis": 8,
+        "cha": 3
+    },
+    "celestial": {
+        "str":16,
+        "dex":14,
+        "con": 16,
+        "int": 10,
+        "wis": 14,
+        "cha": 16
+    },
+    "construct": {
+        "str":18,
+        "dex":10,
+        "con": 18,
+        "int": 14,
+        "wis": 11,
+        "cha": 5
+    },
+    "dancing": {
+        "str":18,
+        "dex":14,
+        "con": 16,
+        "int": 4,
+        "wis": 10,
+        "cha": 6
+    },
+    "draconic": {
+        "str":19,
+        "dex":14,
+        "con": 17,
+        "int": 10,
+        "wis": 14,
+        "cha": 14
+    },
+    "drake": {
+        "str":16,
+        "dex":12,
+        "con": 15,
+        "int": 8,
+        "wis": 14,
+        "cha": 8
+    },
+    "elemental": {
+        "str":18,
+        "dex":15,
+        "con": 17,
+        "int": 4,
+        "wis": 10,
+        "cha": 16
+    },
+    "fey": {
+        "str":13,
+        "dex":16,
+        "con": 14,
+        "int": 14,
+        "wis": 11,
+        "cha": 16
+    },
+    "fiend": {
+        "str":13,
+        "dex":16,
+        "con": 15,
+        "int": 10,
+        "wis": 10,
+        "cha": 16
+    },
+    "homunculus": {
+        "str":4,
+        "dex":15,
+        "con": 12,
+        "int": 10,
+        "wis": 10,
+        "cha": 7,
+        "save": [
+            "dex"
+        ],
+        "prof": [
+            "stealth"
+        ],
+        "exp": [
+            "perception"
+        ]
+    },
+    "land": {
+        "str":14,
+        "dex":14,
+        "con": 15,
+        "int": 8,
+        "wis": 14,
+        "cha": 11,
+        "prof": [
+            "acrobatics",
+            "animalHandling",
+            "arcana",
+            "athletics",
+            "deception",
+            "history",
+            "initiative",
+            "insight",
+            "intimidation",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception",
+            "performance",
+            "persuasion",
+            "religion",
+            "sleightOfHand",
+            "stealth",
+            "survival",
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma"
+        ],
+        "save": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+        ]
+    },
+    "sea": {
+        "str":14,
+        "dex":14,
+        "con": 15,
+        "int": 8,
+        "wis": 14,
+        "cha": 11,
+        "prof": [
+            "acrobatics",
+            "animalHandling",
+            "arcana",
+            "athletics",
+            "deception",
+            "history",
+            "initiative",
+            "insight",
+            "intimidation",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception",
+            "performance",
+            "persuasion",
+            "religion",
+            "sleightOfHand",
+            "stealth",
+            "survival",
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma"
+        ],
+        "save": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+        ]
+    },
+    "sky": {
+        "str":6,
+        "dex":16,
+        "con": 13,
+        "int": 8,
+        "wis": 14,
+        "cha": 11,
+        "prof": [
+            "acrobatics",
+            "animalHandling",
+            "arcana",
+            "athletics",
+            "deception",
+            "history",
+            "initiative",
+            "insight",
+            "intimidation",
+            "investigation",
+            "medicine",
+            "nature",
+            "perception",
+            "performance",
+            "persuasion",
+            "religion",
+            "sleightOfHand",
+            "stealth",
+            "survival",
+            "strength",
+            "dexterity",
+            "constitution",
+            "intelligence",
+            "wisdom",
+            "charisma"
+        ],
+        "save": [
+            "str",
+            "dex",
+            "con",
+            "int",
+            "wis",
+            "cha"
+        ]
+    },
+    "reaper": {
+        "str":16,
+        "dex":16,
+        "con": 15,
+        "int": 16,
+        "wis": 16,
+        "cha": 16
+    },
+    "shadowspawn": {
+        "str":13,
+        "dex":16,
+        "con": 15,
+        "int": 4,
+        "wis": 10,
+        "cha": 16
+    },
+    "steel": {
+        "str":14,
+        "dex":12,
+        "con": 14,
+        "int": 4,
+        "wis": 10,
+        "cha": 6,
+        "save": [
+            "dex",
+            "con"
+        ],
+        "prof": [
+            "athletics"
+        ],
+        "exp": [
+            "perception"
+        ]
+    },
+    "undead": {
+        "str":12,
+        "dex":16,
+        "con": 15,
+        "int": 4,
+        "wis": 10,
+        "cha": 9
+    },
+    "wildfire": {
+        "str":10,
+        "dex":14,
+        "con": 14,
+        "int": 13,
+        "wis": 15,
+        "cha": 11
+    }
+}
