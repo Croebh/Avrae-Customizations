@@ -23,10 +23,26 @@ for t_name in targets_names:
 if not (targets and any(targets)):
   return f""" -desc "Invalid target(s): {targets_names}" """
 
+def str_resist(resist):
+  out = []
+  for only in resist.get('only', []):
+    out.append(only)
+  for unless in resist.get('unless', []):
+    out.append(f"non{unless}")
+  out.append(resist['dtype'])
+  return " ".join(out)
+
+passives = effect.effect.copy()
+for r_type in ('resistances', 'immunities', 'vulnerabilities', 'ignored_resistances'):
+  if passives.get(r_type):
+    passives[r_type] = [str_resist(i) for i in passives[r_type]]
+
 target_out = []
 for target in targets:
-  target_effect = target.add_effect(effect.name, duration=effect.remaining, concentration=effect.conc, parent=effect.parent, end=effect.ticks_on_end, desc=effect.desc, passive_effects=effect.effect, attacks=effect.attacks, buttons=effect.buttons)
+  target_effect = target.add_effect(effect.name, duration=effect.remaining, concentration=effect.conc, parent=effect.parent, end=effect.ticks_on_end, desc=effect.desc, passive_effects=passives, attacks=effect.attacks, buttons=effect.buttons)
   target_out.append(target.name)
+
+
 
 
 target_out = ', '.join(target_out[:-1]) + f" and {target_out[-1]}"
