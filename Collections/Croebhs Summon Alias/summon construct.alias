@@ -23,13 +23,6 @@ spell_level = args.last('l', min_slot, int)
 summon_type = args.last('type', "", str).lower()
 ignore  = args.last('i')
 
-if not ignore:
-  if not ch.spellbook.get_slots(spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
-  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
-  ch.spellbook.use_slot(spell_level)
-
 stat_block = {
   "hp":           (15 * spell_level) - 20,
   "ac":           13 + spell_level,
@@ -58,6 +51,13 @@ match summon_type:
     attacks.extend([{"name":"Stone Lethargy","automation":[{"type":"target","target":"each","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"ieffect2","name":"Lethargic","duration":1,"desc":"Can't use reactions, speed halved"}],"success":[]}]},{"type":"text","text":"When a creature the construct can see starts its turn within 10 feet of the construct, the construct can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target can't use reactions and its speed is halved until the start of its next turn."}],"_v":2,"verb":"uses","proper":true,"activation_type":8}])
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
+  ch.spellbook.use_slot(spell_level)
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')

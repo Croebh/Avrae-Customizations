@@ -23,13 +23,6 @@ spell_level = args.last('l', min_slot, int)
 summon_type = args.last('type', "", str).lower()
 ignore  = args.last('i')
 
-if not ignore:
-  if not ch.spellbook.get_slots(spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
-  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
-  ch.spellbook.use_slot(spell_level)
-
 stat_block = {
   "hp":           (10 * spell_level) + 10,
   "ac":           11 + spell_level,
@@ -69,6 +62,13 @@ match summon_type:
     extra_effects.extend([])
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
+  ch.spellbook.use_slot(spell_level)
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')

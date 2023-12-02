@@ -32,7 +32,7 @@ stat_block = {
   "dexterity": 12,
   "constitution": 14,
   "intelligence": 8,
-  "wisdom": 114,
+  "wisdom": 14,
   "charisma": 11,
   "prof": ["acrobatics", "animalHandling", "arcana", "athletics", "deception", "history", "initiative", "insight", "intimidation", "investigation", "medicine", "nature", "perception", "performance", "persuasion", "religion", "sleightOfHand", "stealth", "survival", "strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],  
   "save": ["str", "dex", "con", "int", "wis", "cha"]  # Primal bond is nutty

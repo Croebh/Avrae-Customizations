@@ -23,13 +23,6 @@ spell_level = args.last('l', min_slot, int)
 summon_type = args.last('type', "", str).lower()
 ignore  = args.last('i')
 
-if not ignore:
-  if not ch.spellbook.get_slots(spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
-  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
-  ch.spellbook.use_slot(spell_level)
-
 stat_block = {
   "hp": 15 * spell_level,
   "ac": 12 + spell_level,
@@ -63,6 +56,13 @@ match summon_type:
     attacks = [{"name":"Claws","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [slashing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 3 + the spell's level slashing damage. Immediately after the attack hits or misses, the fiend can magically teleport up to 30 feet to an unoccupied space it can see."}],"_v":2,"proper":True}]
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
+  ch.spellbook.use_slot(spell_level)
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')

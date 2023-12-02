@@ -26,13 +26,6 @@ spell_level = args.last('l', min_slot, int)
 summon_type = args.last('type', "", str).lower()
 ignore  = args.last('i')
 
-if not ignore:
-  if not ch.spellbook.get_slots(spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
-  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
-    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
-  ch.spellbook.use_slot(spell_level)
-
 stat_block = {
   "hp": 20 + (5 * spell_level),
   "ac": 11 + spell_level,
@@ -46,7 +39,7 @@ stat_block = {
   "type": "beast",
 }
 
-attacks = [{"name":"Maul","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 {spell_level} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level piercing damage."}],"_v":2}]
+attacks = [{"name":"Maul","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 + {spell_level} [piercing]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level piercing damage."}],"_v":2}]
 extra_effects = []
 match summon_type:
   case "air":
@@ -61,6 +54,13 @@ match summon_type:
     effects = [{"name": "Pact Tactics", "desc": "Advantage on an attack rolls against creatures if an ally is within 5 ft"}]
   case _:
     return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+
+if not ignore:
+  if not ch.spellbook.get_slots(spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have any slots left!" -f "Spell Slots|{ch.spellbook.slots_str(spell_level)}" """
+  if not ch.spellbook.can_cast(SPELL_NAME, spell_level):
+    return f"""embed -title "Woopsie!" -desc "You don't have that spell prepared!" """
+  ch.spellbook.use_slot(spell_level)
 
 custom_names = load_yaml(get('summon_names', '{}'))
 s_name = args.last('name')
