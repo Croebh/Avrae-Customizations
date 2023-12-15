@@ -54,7 +54,7 @@ match summon_type:
     attacks = [{"name":"Psychic Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [psychic]"}],"miss":[]}]},{"type":"text","text":"*Melee Spell Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None},{"name":"Whispering Aura","automation":[{"type":"roll","dice":"2d6 [psychic]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[]}],"meta":[]},{"type":"text","text":"At the start of each of the aberration's turns, each creature within 5 feet of the aberration must succeed on a Wisdom saving throw against your spell save DC or take 2d6 psychic damage, provided that the aberration isn't incapacitated."}],"_v":2,"verb":"exudes"}]
     summon_name = "Star Spawn"
   case _:
-    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nChoose from Beholder, Slaad or Star Spawn." """
 
 if not ignore:
   if not ch.spellbook.get_slots(spell_level):
@@ -73,10 +73,10 @@ ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_add.get_initials(name)})")
 
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = combat().me.group or args.last('group', f"{init_add.get_initials(name)}'s Summons")
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(stat_block['group'])
 c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
 
 embed_args = {
