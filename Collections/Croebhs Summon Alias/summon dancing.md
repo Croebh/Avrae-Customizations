@@ -1,4 +1,4 @@
-`!summon primal <type> [args]` 
+`!summon dancing [args]` 
 
 Summons a Dancing Item from the Bard College of Creation subclass.
 

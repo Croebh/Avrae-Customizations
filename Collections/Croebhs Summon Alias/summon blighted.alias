@@ -50,8 +50,10 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"{summon_name} ({init_add.get_initials(name)})")
 
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}"
 
 if druid >= 10:  # Foul Conjuration
@@ -61,7 +63,7 @@ if druid >= 10:  # Foul Conjuration
 if druid >= 14:
   stat_block['note'] += "\nMultiattack: 2"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(group_name)
 
 embed_args = {
   "title": f"{name} summoned their {summon_name}!",

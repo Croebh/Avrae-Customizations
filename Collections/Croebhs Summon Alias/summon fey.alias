@@ -49,7 +49,7 @@ match summon_type:
     summon_name = "Tricksy"
     attacks.extend([{"name":"Fey Step","automation":[{"type":"target","target":"self","effects":[{"type":"ieffect2","name":"Tricksy Step","duration":2,"end":True,"desc":"The fey can fill a 5-foot cube within 5 feet of it with magical darkness, which lasts until the end of its next turn"}]},{"type":"text","text":"The fey magically teleports up to 30 feet to an unoccupied space it can see. Then one of the following effects occurs, based on the fey's chosen mood:\n\n**Tricksy.** The fey can fill a 5-foot cube within 5 feet of it with magical darkness, which lasts until the end of its next turn."}],"_v":2,"verb":"takes","activation_type":3}])
   case _:
-    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nChoose from Fuming, Mirthful, Tricksy." """
 
 if not ignore:
   if not ch.spellbook.get_slots(spell_level):
@@ -67,11 +67,13 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_add.get_initials(name)})")
 
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(group_name)
 c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
 
 embed_args = {

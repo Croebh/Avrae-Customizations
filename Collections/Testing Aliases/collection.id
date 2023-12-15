@@ -1,19 +1,18 @@
 {
-  "name": "Testing Aliases", 
-  "snippets": {}, 
   "aliases": {
-    "mapTest Test": "611dc1ca15bf60f80b452393", 
-    "vs": "634f33e29fb55be1a5013f99", 
-    "downtime": "652ebc7f3f7849a8b59dda63", 
-    "safety go": "620055cb10bae65359790cc6", 
-    "pusheen": "61e7350810bae6535978f72a", 
-    "mapTest Test Test2": "611dc1cf15bf60f80b452394", 
-    "safety stop": "620055b110bae65359790cc5", 
-    "safety": "620055ab8ccb409a8b38e47b", 
-    "safety slower": "620055d010bae65359790cc7", 
-    "mapTest": "611dc1a715bf60f80b452392", 
     "drinkofmany": "620c6c3070fab12b99f96bf0", 
-    "safety faster": "620055d510bae65359790cc8"
+    "mapTest": "611dc1a715bf60f80b452392", 
+    "mapTest Test": "611dc1ca15bf60f80b452393", 
+    "mapTest Test Test2": "611dc1cf15bf60f80b452394", 
+    "pusheen": "61e7350810bae6535978f72a", 
+    "safety": "620055ab8ccb409a8b38e47b", 
+    "safety faster": "620055d510bae65359790cc8", 
+    "safety go": "620055cb10bae65359790cc6", 
+    "safety slower": "620055d010bae65359790cc7", 
+    "safety stop": "620055b110bae65359790cc5", 
+    "vs": "634f33e29fb55be1a5013f99"
   }, 
-  "collection": "5f79188590e415e96a23ca58"
+  "collection": "5f79188590e415e96a23ca58", 
+  "name": "Testing Aliases", 
+  "snippets": {}
 }

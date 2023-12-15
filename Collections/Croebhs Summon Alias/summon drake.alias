@@ -51,7 +51,7 @@ match summon_type:
   case "poison":
     summon_name = f"Poisonous {summon_name}"
   case _:
-    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nChoose from Acid, Cold, Fire, Lightning, or Poison." """
 
 attacks = [{"name":"Bite","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":"3 + proficiencyBonus","hit":[{"type":"damage","damage":f"""1d6 + {proficiencyBonus} [piercing] {f"+ 1d6 [{summon_type}]" if ranger >= 7 else ""}"""}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* +3 plus PB to hit, reach 5 ft., one target. *Hit:* 1d6 plus PB piercing damage." + ("\n\n**Magic Fang.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for the drake’s Draconic Essence." if ranger >= 7 else "") + ("\n\n**Empowered Bite.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage)." if ranger >= 15 else "")}],"_v":2},{"name":"Infused Strikes","automation":[{"type":"target","target":"each","effects":[{"type":"damage","damage":f"{1 + (ranger>=15)}d6 [{summon_type}]"}]},{"type":"text","text":"When another creature within 30 feet of the drake that it can see hits a target with a weapon attack, the drake infuses the strike with its essence, causing the target to take an extra 1d6 damage of the type determined by its Draconic Essence."+ ("\n\n**Empowered Bite.** The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage)." if ranger >= 15 else "")}],"_v":2,"verb":"grants","proper":true,"activation_type":4}]
 
@@ -64,11 +64,13 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"{summon_name} ({init_add.get_initials(name)})")
 
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(group_name)
 if ranger >= 7:
   c.me.add_effect("Bond of Fang and Scale", passive_effects={"resistances": [summon_type]})
 

@@ -612,7 +612,7 @@ if anno.get("phrase"):
  flavourOut += f""" -desc "*{anno.get("phrase")}*" """
 
 
-footerBase = f"{ctx.prefix}{ctx.alias} [args] | {ctx.prefix}{ctx.alias} ? | v{VERSION}{' | This was VERY recently updated, please let me know if there is issues' if VERSION == '5.0a' else ''}"
+footerBase = f"{ctx.prefix}{ctx.alias} [args] | {ctx.prefix}{ctx.alias} help | v{VERSION}{' | This was VERY recently updated, please let me know if there is issues' if VERSION == '5.0a' else ''}"
 consumeOut = ' '.join(consumeOut)
 
 if help:

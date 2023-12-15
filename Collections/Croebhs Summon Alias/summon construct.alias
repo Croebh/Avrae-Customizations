@@ -37,7 +37,7 @@ stat_block = {
   "resist":       ["poison"]
 }
 
-attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 + {spell_level} [fire]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level bludgeoning damage."}],"_v":2}]
+attacks = [{"name":"Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 4 + {spell_level} [bludgeoning]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d8 + 4 + the spell's level bludgeoning damage."}],"_v":2}]
 extra_effects = []
 match summon_type:
   case "clay":
@@ -50,7 +50,7 @@ match summon_type:
     summon_name = "Stone"
     attacks.extend([{"name":"Stone Lethargy","automation":[{"type":"target","target":"each","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"ieffect2","name":"Lethargic","duration":1,"desc":"Can't use reactions, speed halved"}],"success":[]}]},{"type":"text","text":"When a creature the construct can see starts its turn within 10 feet of the construct, the construct can force it to make a Wisdom saving throw against your spell save DC. On a failed save, the target can't use reactions and its speed is halved until the start of its next turn."}],"_v":2,"verb":"uses","proper":true,"activation_type":8}])
   case _:
-    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nSelect from Clay, Metal, or Stone." """
 
 if not ignore:
   if not ch.spellbook.get_slots(spell_level):
@@ -68,11 +68,13 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_add.get_initials(name)})")
 
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(group_name)
 c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
 
 embed_args = {

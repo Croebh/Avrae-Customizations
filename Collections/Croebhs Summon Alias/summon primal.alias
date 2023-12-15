@@ -14,7 +14,7 @@ sdc = ch.spellbook.dc
 true, false, null = True, False, None
 
 ranger = ch.levels.get('Ranger')
-if not( ranger >= 6 or ignore):
+if not( ranger >= 3 or ignore):
   return f"""embed -title "Woopsie!" -desc "You're not a Ranger of sufficient level!" """
 
 if ignore:
@@ -59,7 +59,7 @@ match summon_type:
     stat_block["dexterity"]    = 16
     stat_block["constitution"] = 13
   case _:
-    return f"""embed -title "Woopsie!" -desc "You didn't select a type!" """
+    return f"""embed -title "Woopsie!" -desc "You didn't select a type!\n\nSelect from Land, Sea, and Sky." """
 summon_name = f"Beast of the {summon_type.title()}"
 
 custom_names = load_yaml(get('summon_names', '{}'))
@@ -71,11 +71,13 @@ elif s_name:
 ch.set_cvar('summon_names', dump_yaml(custom_names))
 s_name = custom_names.get(summon_name, f"{summon_name} ({init_add.get_initials(name)})")
 
+group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")
+c.me.set_group(group_name)
 
 embed_args = {
   "title": f"{name} summoned their {summon_name}!",
