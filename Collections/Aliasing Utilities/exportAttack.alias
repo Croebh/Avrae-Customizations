@@ -1,6 +1,7 @@
-echo Export Raw Attacks
 <drac2>
 a = """&1&""".lower() if &ARGS& else 'list'
+args = """&*&""".lower()
+base = f"""embed -title "Export Raw Attacks" -footer "{ctx.prefix+ctx.alias} [index|name|list] [yaml|json] [-t <target>] [import]" """
 graves = "`"*3
 n = '\n'
 target = combat().me if combat() and combat().me else character()
@@ -10,7 +11,7 @@ attacks = target.attacks
 lenAttacks = len(str(len(attacks)))
 attack = None
 if (not &ARGS& ) or a == 'list':
-  return f"""{graves}swift\n{n.join([f"[{i:>{lenAttacks}}] - {x.name}" for i, x in enumerate(attacks)])}{graves}\n> `{ctx.prefix+ctx.alias} [index|name|list] [yaml|json] [-t <target>]` """
+  return f"""{base} -desc 《{graves}swift\n{n.join([f"[{i:>{lenAttacks}}] - {x.name}" for i, x in enumerate(attacks)])}{graves}》 """
 else:
   if a.isdigit() and (len(attacks) - 1) >= int(a):
     attack = attacks[int(a)]
@@ -18,19 +19,29 @@ else:
     attack = ([i for i in attacks if a in i.name.lower()] + [None])[0]
 
   if not attack:
-    return f"""Could not find an attack {f'at index `{a}`' if a.isdigit() else f'with `{a}` in the name'}."""
+    return f"""{base} -desc 《Could not find an attack {f'at index `{a}`' if a.isdigit() else f'with `{a}` in the name'}.》 """
 
   json = dump_json(attack.raw).replace(', "meta": []','')
   yaml = dump_yaml(load_json(json))
 
   json_out = f"""JSON\n{graves}json\n{json}{graves}"""
   yaml_out = f"""YAML\n{graves}yml\n{yaml}{graves}"""
-  if 'yaml' in """&*&""".lower():
-    return f"""{yaml_out}"""
-  if 'json' in """&*&""".lower():
-    return f"""{json_out}"""
-  elif len(json_out+yaml_out+20)>1999:
-    return f"""{yaml_out}"""
-  else:
-    return f"""{json_out}\n{yaml_out}"""
+
+  set_uvar('exported_attack', yaml)
+
+  output_flag = ('y' if 'yaml' in args else 
+                 'j' if 'json' in args else 
+                 'i' if 'import' in args else 
+                 'a')
+  match output_flag:
+    case 'i':
+      return f"""a import {yaml}"""
+    case 'y' if len(yaml_out) < 4000:
+      return f"""{base} -desc 《{yaml_out}》 """
+    case 'j' if len(json_out) < 4000:
+      return f"""{base} -desc 《{json_out}》 """
+    case 'a' if len(json_out+yaml_out) < 4000:
+      return f"""{base} -desc 《{json_out}\n{yaml_out}》 """
+    case _:
+      return f"""{base} -desc 《Output is too long to be displayed.\n\nPlease use `{ctx.prefix}uvar exported_attack` to view the automation.》 """
 </drac2>
