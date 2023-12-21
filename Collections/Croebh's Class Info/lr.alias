@@ -38,9 +38,9 @@ for (cls, lvl) in ch.levels:
 
 for size, num in hit_dice.items():
   cc_name = f"Hit Dice (d{size})"
-  cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.str.strip('+'), reset=None)
+  cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.int.strip('+'), reset=None)
   if ch.get_cc_max(cc_name) != num.int:
-    ch.edit_cc(cc_name, maxVal=num.str.strip('+'))
+    ch.edit_cc(cc_name, maxVal=num.int.strip('+'))
 
 sb = ch.spellbook
 compact = parsed.last('h',parsed.last('compact',False))

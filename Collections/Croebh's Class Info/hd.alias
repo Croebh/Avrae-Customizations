@@ -29,20 +29,20 @@ classes = merge_dicts(classes, uvar_classes)
 hit_dice = {}
 
 for (cls, lvl) in ch.levels:
-    cls_info = classes.get(cls, {})
-    sub = subclasses.get(f"{cls}Level")
-    size = cls_info.get("hit_die", 0)
-    if size:
-        if not hit_dice.get(size):
-            hit_dice[size] = {'str': "", 'int': 0}
-        hit_dice[size]['str'] += f"+{cls}Level"
-        hit_dice[size]['int'] += lvl
+  cls_info = classes.get(cls, {})
+  sub = subclasses.get(f"{cls}Level")
+  size = cls_info.get("hit_die", 0)
+  if size:
+    if not hit_dice.get(size):
+      hit_dice[size] = {'str': "", 'int': 0}
+    hit_dice[size]['str'] += f"+{cls}Level"
+    hit_dice[size]['int'] += lvl
 
 for size, num in hit_dice.items():
-    cc_name = f"Hit Dice (d{size})"
-    cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.str.strip('+'), reset=None)
-    if ch.get_cc_max(cc_name) != num.int:
-        ch.edit_cc(cc_name, maxVal=num.str.strip('+'))
+  cc_name = f"Hit Dice (d{size})"
+  cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.int.strip('+'), reset=None)
+  if ch.get_cc_max(cc_name) != num.int:
+    ch.edit_cc(cc_name, maxVal=num.int.strip('+'))
 
 counters = ch.consumables
 counterNames = [x.name for x in counters]
