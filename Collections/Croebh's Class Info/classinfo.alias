@@ -36,16 +36,10 @@ if len(args) >= 2:
   if arg_cls and arg_sub:
     subclasses[f"{arg_cls}Level"] = arg_sub
     ch.set_cvar("subclass", dump_json(subclasses))
-
-
-
-
-
-
     hit_dice[size]['str'] += f"+{cls}Level"
     hit_dice[size]['int'] += lvl
 
-for (cls, level) in ch.levels:
+for (cls, lvl) in ch.levels:
   cls_info = classes.get(cls, {})
   sub = subclasses.get(f"{cls}Level")
   size = cls_info.get("hit_die", 0)
@@ -54,14 +48,16 @@ for (cls, level) in ch.levels:
   if size:
     hit_dice[size]['str'] += f"+{cls}Level"
     hit_dice[size]['int'] += lvl
-  if level >= cls_info.get('sub_level', 21) and not sub:
+  if lvl >= cls_info.get('sub_level', 21) and not sub:
     note_out.append(f"You're missing a subclass for {cls}. Use `{ctx.prefix+ctx.alias} {cls} [sub name]` to set it.")
-  sub_out.append(f"{cls} {f'({sub})' if sub else ''}: {level}")
+  sub_out.append(f"{cls} {f'({sub})' if sub else ''}: {lvl}")
 
 for size, num in hit_dice.items():
-  cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.int.strip('+'), reset=None)
+  cc_name = f"Hit Dice (d{size})"
+  cc = ch.create_cc_nx(cc_name, minVal=0, maxVal=num.int, reset=None)
   if ch.get_cc_max(cc_name) != num.int:
-    ch.edit_cc(cc_name, maxVal=num.int.strip('+'))
+    ch.edit_cc(cc_name, maxVal=num.int)
+  dice_out.append(f"""{num.int}d{size}""")
 
 out = [f""" -f "Total Level|{ch.levels.total_level}" """]
 out.append(f""" -f "Hit Dice|{n.join(dice_out)}|inline" """)
