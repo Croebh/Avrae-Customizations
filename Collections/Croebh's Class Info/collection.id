@@ -1,8 +1,11 @@
 {
-  "name": "Croebh's Class Info", 
   "aliases": {
-    "classinfo": "65525daefe08d18dde41a39d"
+    "classinfo": "65525daefe08d18dde41a39d", 
+    "hd": "658376eb7e4343807ffaad7c", 
+    "lr": "658376e27e4343807ffaad7b", 
+    "sr": "658376e659660edd77ded1ab"
   }, 
-  "snippets": {}, 
-  "collection": "65525da6fe08d18dde41a39c"
+  "collection": "65525da6fe08d18dde41a39c", 
+  "name": "Croebh's Class Info", 
+  "snippets": {}
 }
