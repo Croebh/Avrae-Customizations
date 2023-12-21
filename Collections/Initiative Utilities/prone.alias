@@ -1,0 +1,44 @@
+embed <drac2>
+button = [
+    {
+      "automation": [
+        {
+          "type": "remove_ieffect"
+        }
+      ],
+      "label": "Stand Up",
+      "verb": "stands up",
+      "style": 1
+    }
+  ]
+
+desc = "A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition"
+
+args = [arg for arg in &ARGS& if arg != "-t"]
+c = combat()
+if not combat():
+  return f""" -desc "You aren't in combat." """
+if not args:
+  return f""" -desc "You didn't provide any targets." """
+
+targets = []
+for target in args:
+  if t := c.get_combatant(target):
+    targets.append(t)
+    continue
+  if g := c.get_group(target):
+    targets.extend(g.combatants)
+
+if not targets:
+  return f""" -desc "You didn't provide any valid targets." """
+
+out = [""" -desc "A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition." """]
+for target in targets:
+  effect = target.add_effect("Prone", desc=desc, buttons=button, passive_effects={"attack_advantage": -1})
+  out.append(f""" -f "{target.name}|{str(effect).splitlines()[0]}" """)
+
+return '\n'.join(out)
+</drac2>
+-title "Easy Trip!"
+-footer "!prone [targets]"
+-thumb https://cdn.discordapp.com/attachments/1031055347818971198/1084262242968674424/286619073226342400.png
