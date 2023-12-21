@@ -32,7 +32,7 @@ hit_dice = {}
 if len(args) >= 2:
   arg_cls, arg_sub = args[:2]
   arg_cls = ([cls for cls in classes if arg_cls.lower() in cls.lower() and ch.levels.get(cls) >= classes[cls].sub_level] + [""])[0]
-  arg_sub = ([sub for sub in classes[arg_cls].subclasses if arg_sub.lower() in sub.lower()] + [""])[0]
+  arg_sub = ([sub for sub in classes.get(arg_cls, {}).get("subclasses", []) if arg_sub.lower() in sub.lower()] + [""])[0]
   if arg_cls and arg_sub:
     subclasses[f"{arg_cls}Level"] = arg_sub
     ch.set_cvar("subclass", dump_json(subclasses))
@@ -49,7 +49,7 @@ for (cls, lvl) in ch.levels:
     hit_dice[size]['str'] += f"+{cls}Level"
     hit_dice[size]['int'] += lvl
   if lvl >= cls_info.get('sub_level', 21) and not sub:
-    note_out.append(f"You're missing a subclass for {cls}. Use `{ctx.prefix+ctx.alias} {cls} [sub name]` to set it.")
+    note_out.append(f"""You're missing a subclass for {cls}. Use `{ctx.prefix+ctx.alias} "{cls}" [sub name]` to set it.""")
   sub_out.append(f"{cls} {f'({sub})' if sub else ''}: {lvl}")
 
 for size, num in hit_dice.items():
@@ -63,7 +63,7 @@ out = [f""" -f "Total Level|{ch.levels.total_level}" """]
 out.append(f""" -f "Hit Dice|{n.join(dice_out)}|inline" """)
 out.append(f""" -f "Class Levels|{n.join(sub_out)}|inline"   """)
 if note_out:
-  out.append(f""" -f "Notes|{n.join(note_out)}" """)
+  out.append(f""" -f 《Notes|{n.join(note_out)}》 """)
 
 return n.join(out)
 </drac2>
