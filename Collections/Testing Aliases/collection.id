@@ -10,7 +10,9 @@
     "safety go": "620055cb10bae65359790cc6", 
     "safety slower": "620055d010bae65359790cc7", 
     "safety stop": "620055b110bae65359790cc5", 
-    "vs": "634f33e29fb55be1a5013f99"
+    "vs": "634f33e29fb55be1a5013f99", 
+    "vs craft": "65847ac9cc376999f44e7ed7", 
+    "vs raid": "65847ad4cc376999f44e7ed8"
   }, 
   "collection": "5f79188590e415e96a23ca58", 
   "name": "Testing Aliases", 

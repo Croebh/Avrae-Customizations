@@ -84,7 +84,7 @@ if arguments and (arguments[0].isdigit()) and ownedHitDice and not spentDice:
       spentDice.append({"size":hd,"counter":hitdie,"numberSpent":min(totalDice,ch.get_cc(hitdie))})
       totalDice -= ch.get_cc(hitdie)
 spentDiceString = (', ' if len(spentDice)!=2 else ' and ').join([f"{'and ' if len(spentDice)>2 and spentDice[spentDice.index(die)]==spentDice[-1] else ''}{die.numberSpent} {die.size}" for die in spentDice]) or 0
-hdRolls = [vroll(f"{die.numberSpent}{die.size.replace('d','*' if maxed else 'd')}{Verdan}{f'mi{max(2,constitutionMod*2)}[durable]' if durable else ''}{'*2[Periapt of Wound Closure]' if periapt else ''}+{die.numberSpent*constitutionMod}") for die in spentDice]
+hdRolls = [vroll(f"{die.numberSpent}{die.size.replace('d','*' if maxed else 'd')}{Verdan}{f'mi{max(2,constitutionMod*2)}[durable]' if durable else ''}{'*2[Periapt of Wound Closure]' if periapt else ''}+({die.numberSpent} [dice spent]*{constitutionMod} [constitution mod])") for die in spentDice]
 for die in spentDice:
   ch.mod_cc(die.counter,-die.numberSpent)
 hpGain = sum([Roll.total for Roll in hdRolls])
