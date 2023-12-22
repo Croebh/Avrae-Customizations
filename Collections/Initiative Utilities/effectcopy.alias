@@ -39,7 +39,17 @@ for r_type in ('resistances', 'immunities', 'vulnerabilities', 'ignored_resistan
 
 target_out = []
 for target in targets:
-  target_effect = target.add_effect(effect.name, duration=effect.remaining, concentration=effect.conc, parent=effect.parent, end=effect.ticks_on_end, desc=effect.desc, passive_effects=passives, attacks=effect.attacks, buttons=effect.buttons)
+  target_effect = target.add_effect(
+    effect.name, 
+    duration=effect.remaining, 
+    concentration=effect.conc, 
+    parent=effect.parent, 
+    end=effect.ticks_on_end, 
+    desc=effect.desc, 
+    passive_effects=passives, 
+    attacks=effect.attacks, 
+    buttons=effect.buttons
+  )
   target_out.append(target.name)
 
 
