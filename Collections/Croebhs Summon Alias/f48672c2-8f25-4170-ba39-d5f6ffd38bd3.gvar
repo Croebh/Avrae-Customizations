@@ -71,11 +71,11 @@ def build_tembed(title:str, desc:str, footer:str = None, fields:list[dict] = Non
     str: The command string for creating the tembed that adds the extra effects
   """
   if footer:
-    footer = f""" -footer "{safe_quote(footer)}" """
+    footer = f""" -footer 《{safe_quote(footer)}》 """
   if fields:
-    fields = " ".join([f""" -f "{safe_quote(field.title)}|{safe_quote(field.desc)}{'|inline' if field.get('inline') else ''}" """ for field in fields])
+    fields = " ".join([f""" -f 《{safe_quote(field.title)}|{safe_quote(field.desc)}{'|inline' if field.get('inline') else ''}》 """ for field in fields])
 
-  embed = f"""{pf}tembed -title "{safe_quote(title)}" -desc "{safe_quote(desc)}" {fields} -color {color} -thumb {thumb} {footer} """
+  embed = f"""{pf}tembed -title 《{safe_quote(title)}》 -desc 《{safe_quote(desc)}》 {fields} -color {color} -thumb {thumb} {footer} """
   if init_name and attacks and effect_name:
     attacks = [{"attack": attack} if not attack.get('attack') else attack for attack in attacks]
     embed += (f""" {open_b}combat().get_combatant("{init_name}").add_effect(name="{safe_quote(effect_name)}",attacks=load_yaml('''{dump_yaml(attacks)}''')){close_b}""")
