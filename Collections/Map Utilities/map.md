@@ -8,7 +8,7 @@ Much more detailed help can be found inside the alias.
 `!map help <walls|doors|objects>` - Walls, Doors and Objects
 
 **__First time using this alias?__**
-Check our [Getting Started Guide](http://docs.otfbm.com/#/guides_getting_started) to learn how to set up your first map.
+Check our [Getting Started Guide](https://docs.otfbm.com/#/pages/guides_getting_started) to learn how to set up your first map.
 
 **__Targeting Combatants__**
 `-t <target>` - Targets a combatant and, paired with the following arguments, changes its token.
