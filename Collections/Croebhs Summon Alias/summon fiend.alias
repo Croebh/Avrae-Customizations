@@ -76,10 +76,10 @@ s_name = custom_names.get(summon_name, f"Summoned {summon_name} {TYPE} ({init_ad
 group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
 
 stat_block['p'] = True
-stat_block['group'] = f"{init_add.get_initials(name)}'s Summons"stat_block['group'] = group_name
+stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
-c.me.set_group(f"{init_add.get_initials(name)}'s Summons")c.me.set_group(group_name)
+c.me.set_group(group_name)
 c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
 
 embed_args = {

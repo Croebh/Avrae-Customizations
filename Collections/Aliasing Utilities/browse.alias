@@ -64,7 +64,9 @@ Combat={combatant.name: {
            "remaining":effect.remaining,
            "conc":effect.conc,
            "effect":effect.effect,
-           "desc":effect.desc
+           "desc":effect.desc,
+           "buttons":effect.buttons,
+           "attacks":effect.attacks
           }
          for effect in combatant.effects},
          "attacks": [
@@ -108,15 +110,15 @@ Combat={combatant.name: {
           "caster_level": combatant.spellbook.caster_level,
           "dc": combatant.spellbook.dc,
           "sab": combatant.spellbook.sab,
-          "spell_mod": combatant.spellbook.spell_mod
-          ,"spells": {
-          spell: {
-           "dc": spell.dc,
-           "mod": spell.mod,
-           "name": spell.name,
-           "sab": spell.sab
-          }
-          for spell in combatant.spellbook.spells
+          "spell_mod": combatant.spellbook.spell_mod,
+          "spells": {
+            spell: {
+             "dc": spell.dc,
+             "mod": spell.mod,
+             "name": spell.name,
+             "sab": spell.sab
+            }
+            for spell in combatant.spellbook.spells
           }
          }
         }
