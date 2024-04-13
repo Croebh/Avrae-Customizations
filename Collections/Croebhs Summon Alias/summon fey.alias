@@ -36,7 +36,7 @@ stat_block = {
   "type": "fey",
 }
 
-attacks = [{"name":"Shortsword","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + 3 + {spell_level} [force]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level piercing damage + 1d6 force damage."}],"_v":2}]
+attacks = [{"name":"Shortsword","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d6 + 3 + {spell_level} [piercing] + 1d6 [force]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d6 + 3 + the spell's level piercing damage + 1d6 force damage."}],"_v":2}]
 extra_effects = []
 match summon_type:
   case "fuming" | "fume":
