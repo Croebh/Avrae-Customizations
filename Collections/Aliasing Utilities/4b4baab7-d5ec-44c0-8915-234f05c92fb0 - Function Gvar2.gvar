@@ -506,7 +506,7 @@
       "type": "str or default"
     }
   },
-  "argparse(args).last(arg, default=None, type_: type = <class 'str'>, ephem=False)": {
+  "argparse(args).last(arg, default=None, type_=<class 'str'>, ephem=False)": {
     "desc": "Gets the last value of an arg.",
     "url": "utils.argparser.ParsedArguments.last",
     "param": [

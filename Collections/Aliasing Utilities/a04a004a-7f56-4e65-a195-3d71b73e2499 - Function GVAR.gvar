@@ -235,7 +235,7 @@
     },
     "syntax": ">>> str(5)\n\\\"5\\\"\n>>> \\\"Hello, \\\" + str(2)\n\\\"Hello, 2\\\" "
   },
-  "sum(iterable [, start])": {
+  "sum(iterable[, start])": {
     "desc": "Sums *start* and the items of an *iterable* from left to right and returns the total. *start* defaults to `0`. The iterable’s items are normally numbers, and the start value is not allowed to be a string.",
     "url": "sum",
     "syntax": ">>> sum([6, 4, 2, 3, 6])\n21\n>>> sum([6, 7], 10)\n23"
@@ -450,7 +450,7 @@
       "desc": "The value of the uvar, or default if it does not exist."
     }
   },
-  "randint(stop)`\n`randint(start, stop[, step])": {
+  "randint(stop) | randint(start, stop[, step])": {
     "desc": "Returns a random integer in the range `[start..stop)`.\n\nIf the step argument is omitted, it defaults to `1`. If the start argument is omitted, it defaults to `0`. If step is zero, ValueError is raised.\n\nFor a positive step, the contents of a range `r` are determined by the formula `r[i] = start + step*i` where `i >= 0` and `r[i] < stop`.\n\nFor a negative step, the contents of the range are still determined by the formula `r[i] = start + step*i`, but the constraints are `i >= 0` and `r[i] > stop`.",
     "url": "randint",
     "param": [
@@ -778,7 +778,7 @@
     },
     "syntax": ">>> combat().turn_num\n17"
   },
-  "combat().delete_metadata(k: str) → Optional[str]": {
+  "combat().delete_metadata(k: str)": {
     "desc": "Removes a key from the metadata.",
     "param": [
       {
@@ -795,7 +795,7 @@
     },
     "url": "aliasing.api.combat.SimpleCombat.delete_metadata"
   },
-  "combat().get_metadata(k: str, default=None) → str": {
+  "combat().get_metadata(k: str, default=None)": {
     "desc": "Gets a metadata value for the passed key or returns default if the name is not set.",
     "param": [
       {
