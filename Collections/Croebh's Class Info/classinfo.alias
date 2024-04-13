@@ -23,6 +23,9 @@ classes = merge_dicts(classes, server_classes)
 uvar_classes = load_json(get_uvar('class_info', '{}'))
 classes = merge_dicts(classes, uvar_classes)
 
+cvar_classes = load_json(get('class_info', '{}'))
+classes = merge_dicts(classes, cvar_classes)
+
 dice_out = []
 sub_out  = []
 note_out = []
