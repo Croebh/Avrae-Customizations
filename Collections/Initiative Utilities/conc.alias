@@ -18,6 +18,7 @@ adv = args.adv(boolwise=True)
 bladesong = args.last('bs') if self else None
 transmuter = args.last('ts') if self else None
 reroll = args.last('reroll', character().csettings.get('reroll') if self else None, type_=int)
+minimum_check = args.last('mc', None, int)
 
 rr = args.last('rr', 1, int)
 
@@ -27,14 +28,14 @@ if c and (target := c.get_combatant(target)):
   bladesong  = bladesong or target.get_effect("Bladesong")
   transmuter = transmuter or target.get_effect("Transmuter's Stone")
   sb         = ' + '.join([sb_ for eff in target.effects if (sb_ := eff.effect.get('sb', eff.effect.get('save_bonus')))])
-  rollString = f"{target.saves.get('constitution').d20(adv, reroll)}" +  \
+  rollString = f"{target.saves.get('constitution').d20(adv, reroll, minimum_check)}" +  \
               (f' + {b}' if b else '') +  \
               (f' + {sb}' if sb else '') + \
               (f' + {max(1, (target.stats.get_mod("int")))} [bladesong]' if bladesong else '') + \
               (f' + {(target.stats.prof_bonus)} [transmuter stone]' if transmuter else '')
 elif target == name:
   target = character()
-  rollString = f"{target.saves.get('constitution').d20(adv, reroll)}" +  \
+  rollString = f"{target.saves.get('constitution').d20(adv, reroll, minimum_check)}" +  \
               (f' + {b}' if b else '') + \
               (f' + {max(1, (target.stats.constitution-10)//2)} [bladesong]' if bladesong else '')
 else:
