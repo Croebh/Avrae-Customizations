@@ -73,8 +73,14 @@ stat_block['p'] = True
 stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
+choice = args.last('choice', '').lower()
+passive = {}
+if choice:
+  choice = [i for i in stat_block['resist'] if choice in i] + [choice]
+  passive = {"resistances": choice[:1]}
+
 c.me.set_group(group_name)
-c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600, passive_effects=passive)
 
 embed_args = {
   "title": f"{name} summoned a {summon_name} {TYPE}!",
