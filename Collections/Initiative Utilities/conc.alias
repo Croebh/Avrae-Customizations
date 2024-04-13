@@ -15,11 +15,13 @@ effect = None
 dc = args.last('dc', 10, int)
 b = args.join("b", ' + ')
 adv = args.adv(boolwise=True)
-bladesong = args.last('bs') if self else None
-transmuter = args.last('ts') if self else None
+bladesong = args.last('bs') if self else None   # Wizard (Bladesinger Bladesong) [+ intelligence mod]
+transmuter = args.last('ts') if self else None  # Wizard (Transmutation: Transmuter's Stone) [+ proficiency]
+dragon = args.last('dragon') if self else None  # Druid (Starry Form: Dragon) [Minimum 10]
 reroll = args.last('reroll', character().csettings.get('reroll') if self else None, type_=int)
 minimum_check = args.last('mc', None, int)
-
+if dragon:
+  minimum_check = max(minimum_check or 0, 10)
 rr = args.last('rr', 1, int)
 
 if c and (target := c.get_combatant(target)):
@@ -27,6 +29,9 @@ if c and (target := c.get_combatant(target)):
   effect     = ([eff for eff in target.effects if eff.conc] + [None])[0]
   bladesong  = bladesong or target.get_effect("Bladesong")
   transmuter = transmuter or target.get_effect("Transmuter's Stone")
+  dragon = dragon or ((eff :=target.get_effect("Starry Form")) and eff.desc.startswith("Constellation: Dragon"))
+  if dragon:
+    minimum_check = max(minimum_check or 0, 10)
   sb         = ' + '.join([sb_ for eff in target.effects if (sb_ := eff.effect.get('sb', eff.effect.get('save_bonus')))])
   rollString = f"{target.saves.get('constitution').d20(adv, reroll, minimum_check)}" +  \
               (f' + {b}' if b else '') +  \
@@ -67,6 +72,12 @@ if failed:
   else:
     concOut += """ -f "No Concentration|You weren't concentrating on a spell in init." """
 
+if bladesong:
+  concOut += f""" -f "Bladesong|You gain a bonus to any Constitution saving throw you make to maintain your concentration on a spell. The bonus equals your Intelligence modifier (minimum of +1)." """
+if transmuter:
+  concOut += f""" -f "Transmuter's Stone|Proficiency in Constitution saving throws" """
+if dragon:
+  concOut += f""" -f "Starry Form: Dragon|A constellation of a wise dragon appears on you. When you make an Intelligence or a Wisdom check or a Constitution saving throw to maintain concentration on a spell, you can treat a roll of 9 or lower on the d20 as a 10." """
 
 return concOut
 </drac2>
