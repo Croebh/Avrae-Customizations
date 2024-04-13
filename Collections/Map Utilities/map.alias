@@ -1164,7 +1164,19 @@ if c:
    else:
     mapbg = args.last('mapbg', args.last('bg', mapbg))
     mapbg = mapbg.split('?')[0]
-    desc.append(f"Map background changed to `{mapbg}`")
+    if mapbg.startswith('https://imgur.com/') and 'gallery' not in mapbg:
+      mapbg = mapbg.replace('https://imgur.com/', 'https://i.imgur.com/') + '.png'
+      desc.append("Background updated to direct link")
+    if mapbg.startswith(('https://ibb.co/', 'https://imgur.com/gallery')):
+      mapbg = ""
+      desc.append("\n **Warning:** You have linked to the album/gallery page for the background. Right click/long tap the image on that page and select 'Open image in a new tab' or 'Copy image address' to get the correct link.\n")
+    else:
+      
+      # Imgur outage
+      if 'imgur' in mapbg:
+        desc.append("\n**Warning:** Imgur has been having an [outage](https://status.imgur.com/), which may be causing your backgrounds to fail. Try using an alternative image host, such as [imgbb](https://imgbb.com/)\n")
+
+      desc.append(f"Map background changed to `{mapbg}`")
   if mapoptions != args.last('mapoptions', args.last('options', mapoptions)):
   # If the new mapoptions are different from the old ones, update and display
    if args.last('mapoptions', args.last('options', '')).lower() == 'reset':
