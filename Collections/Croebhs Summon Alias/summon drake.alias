@@ -14,7 +14,7 @@ sdc = ch.spellbook.dc
 true, false, null = True, False, None
 
 ranger = ch.levels.get('Ranger')
-if not( ranger >= 6 or ignore):
+if not( ranger >= 3 or ignore):
   return f"""embed -title "Woopsie!" -desc "You're not a Ranger of sufficient level!" """
 
 if ignore:
