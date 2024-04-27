@@ -3,6 +3,11 @@ argslist = &ARGS&
 wn, g, args = argslist[0] if argslist else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(argslist)
 style, customName, bonus, damage = g.style, args.last("name"), args.join("b", "+"), args.join("d", "+")
 cmd = f"""embed -title "It's dangerous to go alone..." -desc "I'm afraid **&1&** isn't a valid item in my database.\n\nPlease note that with little exception, this alias only has support for weapons found in the PHB." """
+ch = character()
+c = combat()
+t = args.last("t")
+prof = "+"+str((ch if not (c and t) else c.get_combatant(t)).stats.prof_bonus)
+stat = (ch if not (c and t) else c.get_combatant(t)).stats.get_mod
 chosenWeapon = None
 for weapon in g.weapons:
  if wn and wn.lower()in weapon.name.lower():
@@ -11,7 +16,7 @@ for weapon in g.weapons:
 if chosenWeapon:
  offhand   = args.last("off")
  twohanded = "2h" in argslist and chosenWeapon.get("vers")
- noprof    = args.last("noprof") or args.last('t')
+ noprof    = args.last("noprof")
  monk      = args.last("monk")
  archery   = args.last("archery") and "ranged" in chosenWeapon.type.lower()
  dueling   = args.last("dueling") and not twohanded and not "two" in chosenWeapon.desc
@@ -30,12 +35,12 @@ if chosenWeapon:
  verb    = args.last('verb') or ""
  if verb:
   verb = f""" -verb "{verb}" """
- mod = g.z[args.last("stat")] if args.last("stat") else "dexterityMod"if "ranged" in chosenWeapon.type.lower() else f'max(dexterityMod, strengthMod)'if chosenWeapon.get('finesse') or monk else "strengthMod"
+ mod = g.z[args.last("stat")] if args.last("stat") else stat("dexterity") if "ranged" in chosenWeapon.type.lower() else max(stat("dexterity"),stat("strength")) if chosenWeapon.get('finesse') or monk else stat("strength")
  twohanded = unarmed and twohanded if "Unarmed" in chosenWeapon.name else twohanded
- tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else g.prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
+ tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
  dieSize = (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice).split('d')[-1] if chosenWeapon.get('dice') else None
  damageDice = (("1d{{max(4+2*((int(MonkLevel)+1)//6)" + f",{dieSize}" + ")}}")  if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + ("ro<3" if gwf else "")) if chosenWeapon.get("dice") else ""
- damageDice = ((f'({damageDice},{damageDice})kh1' if savage else damageDice) + "+" + ("0" if args.last("t") or offhand else '{{' + mod + '}}') + ("+2" if dueling else "") + ("+1" if thrown else "") + (f' [{" ".join([x for x in g.at if x in args]+[""])}{chosenWeapon.damage}]' if chosenWeapon.get("damage")else '') + ("+" + damage if damage else "")) if damageDice and not nodmg else ''
+ damageDice = ((f'({damageDice},{damageDice})kh1' if savage else damageDice) + "+" + '{{' + mod + '}}' + ("+2" if dueling else "") + ("+1" if thrown else "") + (f' [{" ".join([x for x in g.at if x in args]+[""])}{chosenWeapon.damage}]' if chosenWeapon.get("damage")else '') + ("+" + damage if damage else "")) if damageDice and not nodmg else ''
  desc = [f"**{chosenWeapon.get('class')} {chosenWeapon.get('type')} Weapon**. " + chosenWeapon.get('desc')] + ([chosenWeapon.special] if chosenWeapon.get("special") else [])
  for x in style:
   desc += [style[x]] if get(x) else ""
@@ -45,4 +50,4 @@ if chosenWeapon:
  desc = "\n\n".join(desc)
  tag = " (2H)" if twohanded else " (Offhand)" if offhand else " (1H)" if chosenWeapon.get("vers") and not("Unarm" in chosenWeapon.name and not unarmed) else ""
  cmd = f'''attack add "{customName if customName else chosenWeapon.name}{tag}" -b "{tohit}" {f""" -d "{damageDice}" """ if damageDice else ""} -desc "{desc}" {verb} {critd} {criton} {"proper"*proper}'''
-return get_gvar(g.help) if not &ARGS& or args.last("help") or not chosenWeapon else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if args.last('t') else cmd</drac2>
+return get_gvar(g.help) if not &ARGS& or args.last("help") or not chosenWeapon else f'i effect {args.last("t")} "{customName if customName else chosenWeapon.name}{tag}" -attack "{tohit}|{damageDice}|{desc}"' if t else cmd</drac2>
