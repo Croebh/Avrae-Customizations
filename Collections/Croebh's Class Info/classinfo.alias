@@ -1,4 +1,4 @@
-embed <drac2>
+<drac2>
 
 args = &ARGS&
 ch = character()
@@ -60,7 +60,7 @@ for size, num in hit_dice.items():
     ch.edit_cc(cc_name, maxVal=num.int)
   dice_out.append(f"""{num.int}d{size}""")
 
-out = [f""" -f "Total Level|{ch.levels.total_level}" """]
+out = [f"""embed -f "Total Level|{ch.levels.total_level}" """]
 out.append(f""" -f "Hit Dice|{n.join(dice_out)}|inline" """)
 out.append(f""" -f "Class Levels|{n.join(sub_out)}|inline"   """)
 if note_out:
@@ -71,3 +71,4 @@ return n.join(out)
 
 -title "Level Summary for {{name}}:"
 -footer "{{ctx.prefix+ctx.alias}} [class] [subclass]"
+{{ch.set_cvar('test', dump_json(classes)) if "debug" in &ARGS& else ''}}

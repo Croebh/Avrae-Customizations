@@ -163,15 +163,15 @@
     "hit_die": 8,
     "sub_level": 1,
     "subclasses": [
-      "The Fiend",
-      "The Archfey",
-      "The Great Old One",
-      "The Undying",
-      "The Celestial",
-      "The Hexblade",
-      "The Genie",
-      "The Fathomless",
-      "The Undead"
+      "Fiend",
+      "Archfey",
+      "Great Old One",
+      "Undying",
+      "Celestial",
+      "Hexblade",
+      "Genie",
+      "Fathomless",
+      "Undead"
     ]
   },
   "Wizard":{
