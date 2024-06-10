@@ -24,7 +24,7 @@ init = combat()
 a     = &ARGS&
 c     = []
 
-args  = argparse(a)
+args  = argparse(a, parse_ephem=False)
 
 out   = args.last('out')
 help  = not a or args.last('?') or args.last('help')
@@ -57,7 +57,7 @@ if not (help or out) and (input := (get(cvar) or cgvar.get(cvar))):
    c.extend([f"-{arg}", str(item)])
 
 # Reparse with the new arg list
-args = argparse(c + a)
+args = argparse(c + a, parse_ephem=False)
 
 totalDamage = 0
 anno = {}
@@ -333,7 +333,7 @@ if anno.get('effect'):
    effect["dur"]  = (eSplit[aCount:] or [-1])[0]
 
  # Handle our special arguments
- effectArgs = argparse(effect["args"])
+ effectArgs = argparse(effect["args"], parse_ephem=False)
  for special in ["end", "conc", "desc"]:
   effect[special] = effectArgs.last(special)
 
@@ -365,7 +365,7 @@ if anno.get('seffect'):
    effect["dur"] = -1
 
  # Handle our special arguments
- effectArgs = argparse(effect["args"])
+ effectArgs = argparse(effect["args"], parse_ephem=False)
  for special in ["separate", "parent", "end", "conc", "desc"]:
   effect[special] = effectArgs.last(special)
 
@@ -381,7 +381,7 @@ targetArg = {}
 if init:
  for targ in targetsCache.values():
    targName, targArgs = (targ.split("|")+[""])[:2]
-   targArgs = argparse(targArgs)
+   targArgs = argparse(targArgs, parse_ephem=False)
    if curTarg := init.get_combatant(targName.replace('{name}', name)):
     targets.append(curTarg)
     args.add_context(curTarg.name, targArgs)
@@ -439,9 +439,9 @@ if not (out or help) and valid:
      save_dis.extend(sdis)
 
    if save_type in save_adv or 'all' in save_adv:
-    args.add_context(target.name, argparse(targetArg[target.name] + ' adv'))
+    args.add_context(target.name, argparse(targetArg[target.name] + ' adv', parse_ephem=False))
    if save_type in save_dis or 'all' in save_dis:
-    args.add_context(target.name, argparse(targetArg[target.name] + ' dis'))
+    args.add_context(target.name, argparse(targetArg[target.name] + ' dis', parse_ephem=False))
 
    args.set_context(target.name)
    adv = args.adv(boolwise=True)

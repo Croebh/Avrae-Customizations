@@ -1164,17 +1164,16 @@ if c:
    else:
     mapbg = args.last('mapbg', args.last('bg', mapbg))
     mapbg = mapbg.split('?')[0]
-    if mapbg.startswith('https://imgur.com/') and 'gallery' not in mapbg:
-      mapbg = mapbg.replace('https://imgur.com/', 'https://i.imgur.com/') + '.png'
-      desc.append("Background updated to direct link")
     if mapbg.startswith(('https://ibb.co/', 'https://imgur.com/gallery')):
       mapbg = ""
       desc.append("\n **Warning:** You have linked to the album/gallery page for the background. Right click/long tap the image on that page and select 'Open image in a new tab' or 'Copy image address' to get the correct link.\n")
     else:
-      
+      alternative = "Try using an alternative image host, such as [imgbb](https://imgbb.com/)"
       # Imgur outage
       if 'imgur' in mapbg:
-        desc.append("\n**Warning:** Imgur has been having an [outage](https://status.imgur.com/), which may be causing your backgrounds to fail. Try using an alternative image host, such as [imgbb](https://imgbb.com/)\n")
+        desc.append(f"\n**Warning:** Imgur has been causing issues with `!map`, which may be causing your backgrounds to fail. {alternative}\n")
+      elif 'discordapp' in mapbg:
+        desc.append(f"\n**Warning:** Discord changed how images are saved and shared, which may be causing your backgrounds to fail. {alternative}\n")
 
       desc.append(f"Map background changed to `{mapbg}`")
   if mapoptions != args.last('mapoptions', args.last('options', mapoptions)):
