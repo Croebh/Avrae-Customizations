@@ -1,4 +1,4 @@
-`!summon blighted [args]` 
+Druid: Blighted Sapling - `!summon blighted [args]` 
 
 Summons a Blighted Sapling from the Circle of the Blighted Druid subclass.
  

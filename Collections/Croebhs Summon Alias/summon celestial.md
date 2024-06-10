@@ -1,4 +1,4 @@
-`!summon celestial <type> [args]` 
+Summon Celestial - `!summon celestial <type> [args]` 
  
 **Types**
 `avenger` (or `avenge`)

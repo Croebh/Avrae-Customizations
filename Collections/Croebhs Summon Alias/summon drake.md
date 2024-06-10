@@ -1,4 +1,4 @@
-`!summon drake <type> [args]` 
+Ranger: Drake Companion - `!summon drake <type> [args]` 
 
 Summons a Drake Companion from the Drakewarden Ranger subclass.
  

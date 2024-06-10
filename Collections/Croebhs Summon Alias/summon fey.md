@@ -1,4 +1,4 @@
-`!summon fey <type> [args]` 
+Summon Fey - `!summon fey <type> [args]` 
  
 **Types**
 `fuming` (or `fume`)

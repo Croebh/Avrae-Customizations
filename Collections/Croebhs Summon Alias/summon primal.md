@@ -1,4 +1,4 @@
-`!summon primal <type> [args]` 
+Ranger: Primal Companion - `!summon primal <type> [args]` 
 
 Summons a Primal Companion from the Ranger Beast Master subclass.
  

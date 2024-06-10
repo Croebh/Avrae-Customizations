@@ -1,4 +1,4 @@
-`!summon draconic <type> [args]` 
+Summon Draconic Spirit - `!summon draconic <type> [args]` 
  
 **Types**
 `chromatic`

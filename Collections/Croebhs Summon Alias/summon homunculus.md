@@ -1,4 +1,4 @@
-`!summon homunculus [args]` 
+Artificer: Homunculus - `!summon homunculus [args]` 
 
 Summons a Homunculus from the Artificer infusion.
  

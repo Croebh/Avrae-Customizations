@@ -1,4 +1,4 @@
-`!summon construct <type> [args]` 
+Summon Construct - `!summon construct <type> [args]` 
  
 **Types**
 `clay`

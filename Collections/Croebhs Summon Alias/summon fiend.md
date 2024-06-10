@@ -1,4 +1,4 @@
-`!summon fiend <type> [args]` 
+Summon Fiend - `!summon fiend <type> [args]` 
  
 **Types**
 `demon`

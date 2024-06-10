@@ -1,4 +1,4 @@
-`!summon aberration <type> [args]` 
+Summon Aberration - `!summon aberration <type> [args]` 
  
 **Types**
 `beholderkin` (or `beholder`)

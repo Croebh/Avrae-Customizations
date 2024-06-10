@@ -1,4 +1,4 @@
-`!summon reaper [args]` 
+Spirit of Death - `!summon reaper [args]` 
   
 **Arguments**
 `-l [#]` to set the spell level. Defaults to 4 or lowest warlock slot

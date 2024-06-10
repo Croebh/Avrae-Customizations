@@ -1,4 +1,4 @@
-`!summon steel [args]` 
+Artificer: Steel Defender - `!summon steel [args]` 
 
 Summons a Steel Defender from the Battle Smith Artificer subclass.
  

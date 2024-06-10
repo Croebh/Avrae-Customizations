@@ -1,4 +1,4 @@
-`!summon beast <type> [args]` 
+Summon Beast - `!summon beast <type> [args]` 
  
 **Types**
 `air`

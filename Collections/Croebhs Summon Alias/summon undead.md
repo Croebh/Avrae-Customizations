@@ -1,4 +1,4 @@
-`!summon undead <type> [args]` 
+Summon Undead - `!summon undead <type> [args]` 
  
 **Types**
 `ghostly` (or `ghost`)

@@ -1,4 +1,4 @@
-`!summon elemental <type> [args]` 
+Summon Elemental - `!summon elemental <type> [args]` 
  
 **Types**
 `air`

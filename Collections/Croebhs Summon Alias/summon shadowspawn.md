@@ -1,4 +1,4 @@
-`!summon shadowspawn <type> [args]` 
+Summon Shadowspawn - `!summon shadowspawn <type> [args]` 
  
 **Types**
 `fury`

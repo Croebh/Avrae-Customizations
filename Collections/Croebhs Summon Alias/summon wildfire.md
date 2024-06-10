@@ -1,4 +1,4 @@
-`!summon wildfire [args]` 
+Druid: Wildfire Spirit - `!summon wildfire [args]` 
 
 Summons a Wildfire Spirit from the Circle of the Wildfire Druid subclass.
  
