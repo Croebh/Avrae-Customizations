@@ -23,7 +23,7 @@ if not (c and c.me):
   return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
 
 stat_block = {
-  "hp": 2 + intelligenceMod + artificer,
+  "hp": 1 + intelligenceMod + artificer,
   "ac": 13,
   "pb": proficiencyBonus,
   "strength": 4,
