@@ -35,7 +35,8 @@ stat_block = {
   "type": "construct",
   "save": ["dex", "con"],
   "prof": ["athletics"],
-  "exp": ["perception"]
+  "exp": ["perception"],
+  "immune": ["poison"]
 }
 
 summon_name = "Steel Defender"
