@@ -4,7 +4,7 @@
     "sub_level": 3,
     "subclasses": [
       "Berserker",
-      "Totem Warrior",
+      "Wild Heart",
       "Battlerager",
       "Ancestral Guardian",
       "Storm Herald",
@@ -12,7 +12,8 @@
       "Beast",
       "Wild Magic",
       "Giant",
-      "Juggernaut"
+      "Juggernaut",
+      "World Tree"
     ]
   },
   "Bard":{
@@ -26,12 +27,13 @@
       "Whispers",
       "Eloquence",
       "Creation",
-      "Tragedy"
+      "Tragedy",
+      "Dance"
     ]
   },
   "Cleric":{
     "hit_die": 8,
-    "sub_level": 1,
+    "sub_level": 3,
     "subclasses": [
       "Life",
       "Knowledge",
@@ -53,7 +55,7 @@
   },
   "Druid":{
     "hit_die": 8,
-    "sub_level": 2,
+    "sub_level": 3,
     "subclasses": [
       "Land",
       "Moon",
@@ -62,7 +64,8 @@
       "Spores",
       "Wildfire",
       "Stars",
-      "Blighted"
+      "Blighted",
+      "Sea"
     ]
   },
   "Fighter":{
@@ -88,14 +91,14 @@
     "subclasses": [
       "Open Hand",
       "Shadow",
-      "Four Elements",
+      "Elements",
       "Long Death",
       "Sun Soul",
       "Drunken Master",
       "Kensei",
       "Cobalt Soul",
       "Astral Self",
-      "Way of Mercy",
+      "Mercy",
       "Ascendant Dragon"
     ]
   },
@@ -146,22 +149,22 @@
   },
   "Sorcerer":{
     "hit_die": 6,
-    "sub_level": 1,
+    "sub_level": 3,
     "subclasses": [
-      "Draconic Bloodline",
+      "Draconic",
       "Wild Magic",
       "Storm Sorcery",
       "Divine Soul",
       "Shadow Magic",
-      "Clockwork Soul",
-      "Aberrant Mind",
-      "Lunar Sorcery",
+      "Clockwork",
+      "Aberrant",
+      "Lunar",
       "Runechild"
     ]
   },
   "Warlock":{
     "hit_die": 8,
-    "sub_level": 1,
+    "sub_level": 3,
     "subclasses": [
       "Fiend",
       "Archfey",
@@ -176,14 +179,14 @@
   },
   "Wizard":{
     "hit_die": 6,
-    "sub_level": 2,
+    "sub_level": 3,
     "subclasses": [
-      "Evocation",
-      "Abjuration",
+      "Evoker",
+      "Abjurer",
       "Conjuration",
-      "Divination",
+      "Diviner",
       "Enchantment",
-      "Illusion",
+      "Illusionist",
       "Necromancy",
       "Transmutation",
       "Bladesinging",
