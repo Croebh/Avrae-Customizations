@@ -15,4 +15,4 @@ You can also just do `!sr X` to use X Hit Dice, starting with the largest availa
 
 **Verdan: Black Blood Healing:** If your race is set as Verdan, `!sr` will automatically reroll any 1s or 2s you roll on a Hit Die.
 
-`!sr` will try to automatically detect if you're a Warlock and recover pact slots appropriately. You can override this with `!cvar ignorePactSlots 1` to always disable recovering spell slots on short rest, or use `!csettings` -> Gameplay Settings -> Toggle Short Rest Slots to always recover *all* slots on short rest.
+**Warlock: Pact Slots:** `!sr` will try to automatically detect if you're a Warlock and recover pact slots appropriately. You can override this with `!cvar ignorePactSlots 1` to always disable recovering spell slots on short rest, or use `!csettings` -> Gameplay Settings -> Toggle Short Rest Slots to always recover *all* slots on short rest.
