@@ -53,6 +53,8 @@ hitDice = [f"d{x}" for x in range(20,0,-1)]
 
 Bardness = int(get('BardLevel',1))-1
 Warlockness = int(get('WarlockLevel',0))
+ignorePactSlots = int(get('ignorePactSlots',0))
+srslots = 'srslots' in character().csettings and character().csettings['srslots']
 yourRace = get("race",ch.race)
 Verdan = "ro<3" if yourRace.lower()=='verdan' else ""
 spentDice = []
@@ -125,7 +127,17 @@ if countersToResetO:
     counterFields[counterField] += counterText
   counterFields = [field.strip(', ') for field in counterFields if field]
   outText += ' -f "Reset Counters|'+'" -f "Continued|'.join(counterFields)+'"'
-if Warlockness:
+if srslots:
+  if sum([sb.get_max_slots(slotLevel) for slotLevel in range(1,10)]):
+   spellSlotText = ''
+   for slotLevel in range(1,10):
+    if sb.get_max_slots(slotLevel):
+     if delta := sb.get_max_slots(slotLevel)-sb.get_slots(slotLevel):
+      delta = f' ({delta:+})'
+     sb.set_slots(slotLevel,sb.get_max_slots(slotLevel))
+     spellSlotText += character().spellbook.slots_str(slotLevel)+(delta if delta else '')+n
+   outText += ', Spell Slots' if compact else f' -f "Spell Slots|{spellSlotText}|inline"'
+elif not ignorePactSlots and Warlockness:
   W = int(WarlockLevel)
   slotLevel = min(ceil(W/2),5)
   totalSlots = sb.get_max_slots(slotLevel)
@@ -136,6 +148,7 @@ if Warlockness:
   delta = min(sb.get_max_slots(slotLevel)-sb.get_slots(slotLevel)-int(get('ssSpent',0)),pactSlots)
   sb.set_slots(slotLevel,min(delta+sb.get_slots(slotLevel),sb.get_max_slots(slotLevel)))
   outText += f' -f "Spell Slots|{sb.slots_str(slotLevel)}{f" ({delta:+})" if delta else ""}"'
+
 hitDieText = ''
 for hitdie in ownedHitDice:
   delta = 0

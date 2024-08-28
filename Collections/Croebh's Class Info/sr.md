@@ -14,3 +14,5 @@ You can also just do `!sr X` to use X Hit Dice, starting with the largest availa
 **Periapt of Wound Closure:** If you have a Periapt of Wound Closure, create a cvar named `attunedItems` and put `Periapt of Wound Closure` in it. You can also use the `periapt` or `closure` argument with the alias to apply the effect. 
 
 **Verdan: Black Blood Healing:** If your race is set as Verdan, `!sr` will automatically reroll any 1s or 2s you roll on a Hit Die.
+
+**Warlock: Pact Slots:** `!sr` will try to automatically detect if you're a Warlock and recover pact slots appropriately. You can override this with `!cvar ignorePactSlots 1` to always disable recovering spell slots on short rest, or use `!csettings` -> Gameplay Settings -> Toggle Short Rest Slots to always recover *all* slots on short rest.
