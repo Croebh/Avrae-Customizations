@@ -75,7 +75,9 @@ stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
 c.me.set_group(group_name)
-c.me.add_effect(f"Summon {TYPE}", concentration=True, duration=600)
+useconc = "noconc" not in args
+usedur = int(args.get("dur",[600])[0])
+c.me.add_effect(f"Summon {TYPE}", concentration=useconc, duration=usedur)
 
 embed_args = {
   "title": f"{name} summoned a {summon_name} {TYPE}!",
