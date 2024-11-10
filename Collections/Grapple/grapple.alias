@@ -37,14 +37,16 @@ else:
 if grappler and target:
   aOver,tOver = None, None
   # Lets grab args for the grappler
-  if grappler.get_effect("Rage"):
+  if [i for i in grappler.effects if (grapplerStatOverride or 'strength') in i.effect.get('check_adv', '')]:
    aArgs += " adv"
+  if [i for i in grappler.effects if (grapplerStatOverride or 'strength') in i.effect.get('check_dis', '')]:
+   aArgs += " dis"
   # Handle using different modifier
   if grapplerStatOverride:
    aOver = grappler.skills.athletics.value + grappler.stats.get_mod(grapplerStatOverride) - grappler.stats.get_mod('strength')
   args.add_context(grappler.name, argparse(aArgs))
   args.set_context(grappler.name)
-  aDice  = grappler.skills.athletics.d20(args.adv(boolwise=True),mod_override=aOver)
+  aDice  = grappler.skills.athletics.d20(args.adv(boolwise=True), mod_override=aOver)
   aDice += '+' + args.join('b', '+') if args.last('b') else ''
 
   # And now for the target
@@ -53,8 +55,11 @@ if grappler and target:
   args.set_context(target.name)
   # Note to self, add `acro` an `athl` for args to select this
   if target.skills.athletics.value > target.skills.acrobatics.value and not args.last('acro'):
-    if target.get_effect("Rage"):
+    if [i for i in target.effects if (targetStatOverride or 'strength') in i.effect.get('check_adv', '')]:
       args.add_context(target.name, argparse(tArgs + " tadv"))
+      args.set_context(target.name)
+    if [i for i in target.effects if (targetStatOverride or 'strength') in i.effect.get('check_dis', '')]:
+      args.add_context(target.name, argparse(tArgs + " tdis"))
       args.set_context(target.name)
     # Handle using different modifier
     if targetStatOverride:
@@ -63,6 +68,12 @@ if grappler and target:
     tType = "Athletics"
   else:
     # Handle using different modifier
+    if [i for i in target.effects if (targetStatOverride or 'dexterity') in i.effect.get('check_adv', '')]:
+      args.add_context(target.name, argparse(tArgs + " tadv"))
+      args.set_context(target.name)
+    if [i for i in target.effects if (targetStatOverride or 'dexterity') in i.effect.get('check_dis', '')]:
+      args.add_context(target.name, argparse(tArgs + " tdis"))
+      args.set_context(target.name)
     if targetStatOverride:
      tOver = target.skills.acrobatics.value + target.stats.get_mod(targetStatOverride) - target.stats.get_mod('dexterity')
     tDice = target.skills.acrobatics.d20(args.adv(boolwise=True, custom={"adv": "tadv", "dis": "tdis"}),mod_override=tOver)
