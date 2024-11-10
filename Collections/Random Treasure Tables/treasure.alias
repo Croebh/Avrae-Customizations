@@ -1,13 +1,17 @@
-embed {{cr,r=max(0,int("&*&")) if "&*&".isdigit() else 1,vroll('1d100')}}{{b,g=0 if cr in range(5) else 1 if cr in range(5,11) else 2 if cr in range(11,17) else 3,load_json(get_gvar('2c232804-aac9-4195-a5d9-d35f7315f6c4'))}} -footer "{{g['footer']}}" {{g,t=g['treasure'][b],0}}
-{{g=[i for i in g if i.min<=r.total<=i.max][0]}}
-{{G=[i for i in g if g[i]][2:]}}
-{{c={i:vroll(g[i]) for i in g if i in G} }}
-
--title "Treasure Table for CR {{cr}} ({{'0-4' if b==0 else '5-10' if b==1 else '11-16' if b==2 else '17+'}}) - {{r.dice}}"
--desc "{{'\n'.join([f"{c[i].dice} = `{c[i].total:,} {i.upper()}`" for i in c])}}
+embed
 <drac2>
+cr = max(0,int("&*&")) if "&*&".isdigit() else 1
+treasure_roll = vroll('1d100')
+tier = 0 if cr in range(5) else 1 if cr in range(5,11) else 2 if cr in range(11,17) else 3
+data = load_json(get_gvar('2c232804-aac9-4195-a5d9-d35f7315f6c4'))
+
+treasure = data['treasure'][tier]
+
+treasure = [i for i in treasure if i.min<=treasure_roll.total<=i.max][0]
+coins = {i: vroll(treasure[i]) for i in treasure if i not in ("min", "max") and treasure[i]} 
+
 total = 0
-for coin, r in c.items():
+for coin, r in coins.items():
   match coin:
     case 'pp':
       total += r.total * 10
@@ -19,4 +23,10 @@ for coin, r in c.items():
       total += r.total * 0.1
     case 'cp':
       total += r.total * 0.01
-</drac2>Total = `{{f"{round(total,2):,}"}} GP`"
+</drac2>
+
+-title "Treasure Table for CR {{cr}} ({{'0-4' if tier==0 else '5-10' if tier==1 else '11-16' if tier==2 else '17+'}}) - {{treasure_roll.dice}}"
+-desc "{{'\n'.join([f"{coins[i].dice} = `{coins[i].total:,} {i.upper()}`" for i in coins])}}
+Total = `{{f"{round(total,2):,}"}} GP`"
+
+-footer "{{data['footer']}}" 

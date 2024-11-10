@@ -1,6 +1,8 @@
 embed <drac2>
 gvar = load_json(get_gvar('2c232804-aac9-4195-a5d9-d35f7315f6c4'))
 defaults = load_json(get_svar("mitableDefault") or "[]") # format in a list, e.g. ["a","2","b","1d4","d","f"] rolls 2 items on A, 1d4 on B, and 1 each on D and F.
+magicItems = load_json(get_svar("mitable") or "[]") or gvar.magicItems
+
 args = [f'{"" if x.isdigit() or "-" in x or ("d" in x and roll(x)) else "-"}{x.lower() if "d" in x and roll(x) else x.upper()}' for x in (&ARGS& or defaults)]
 calls = {x:argparse(args).last(x,0) for x in "ABCDEFGHI" if argparse(args).get(x)}
 calls.update({x:calls[x] if calls[x].isdigit() or "d" in calls[x] else "1" for x in calls})
@@ -11,7 +13,7 @@ for x in calls:
  for y in range(numberRoll.total):
   itemRoll = vroll("1d100")
   outText += ('\n' if y else '')+f'{f"**{y+1}.** " if numberRoll.total>1 else ""}1d100 = `{str(itemRoll.total):0>2}` - '
-  for z in gvar.magicItems[x]:
+  for z in magicItems[x]:
    if z.min<=itemRoll.total<z.max:
     outText += z.name
     break
