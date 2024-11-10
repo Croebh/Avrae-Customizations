@@ -18,7 +18,16 @@
     "monk": "",
     "adamantine": "**Adamantine.** Whenever an adamantine weapon or piece of ammunition hits an object, the hit is a critical hit.",
     "silvered": "**Silvered.** Some monsters that have immunity or resistance to nonmagical weapons are susceptible to silver weapons.",
-    "magical":""
+    "magical":"",
+    "truestrike" : "**True Strike** Guided by a flash of magical insight, you make one attack with the weapon used in the spell’s casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon’s normal damage type (your choice).",
+    "cleave" : "**Cleave**: If you hit a creature with a melee attack roll using this weapon, you can make a melee attack roll with the weapon against a second creature within 5 feet of the first that is also within your reach. On a hit, the second creature takes the weapon’s damage, but don’t add your ability modifier to that damage unless that modifier is negative. You can make this extra attack only once per turn.",
+    "graze" : "**Graze**: If your attack roll with this weapon misses a creature, you can deal damage to that creature equal to the ability modifier you used to make the attack roll. This damage is the same type dealt by the weapon, and the damage can be increased only by increasing the ability modifier.",
+    "nick" : "**Nick**: When you make the extra attack of the Light property, you can make it as part of the Attack action instead of as a Bonus Action. You can make this extra attack only once per turn.",
+    "push" : "**Push**: If you hit a creature with this weapon, you can push the creature up to 10 feet straight away from yourself if it is Large or smaller.",
+    "sap" : "**Sap**: If you hit a creature with this weapon, that creature has Disadvantage on its next attack roll before the start of your next turn.",
+    "slow" : "**Slow**: If you hit a creature with this weapon and deal damage to it, you can reduce its Speed by 10 feet until the start of your next turn. If the creature is hit more than once by weapons that have this property, the Speed reduction doesn’t exceed 10 feet.",
+    "topple" : "**Topple**: If you hit a creature with this weapon, you can force the creature to make a Constitution saving throw (DC 8 plus the ability modifier used to make the attack roll and your Proficiency Bonus). On a failed save, the creature has the Prone condition.",
+    "vex" : "**Topple**: If you hit a creature with this weapon and deal damage to the creature, you have Advantage on your next attack roll against that creature before the end of your next turn."
   },
   "prof":"+proficiencyBonus",
   "at": ["adamantine", "magical", "silvered"],
@@ -33,7 +42,8 @@
       "damage": "bludgeoning",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Light"
+      "desc": "Light",
+      "mastery" : "slow"
     },
     {
       "name": "Dagger",
@@ -42,7 +52,8 @@
       "finesse": true,
       "class": "Simple",
       "type": "Melee",
-      "desc": "Finesse, light, thrown (range 20/60)"
+      "desc": "Finesse, light, thrown (range 20/60)",
+      "mastery" : "nick"
     },
     {
       "name": "Greatclub",
@@ -50,7 +61,8 @@
       "damage": "bludgeoning",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Two-handed"
+      "desc": "Two-handed",
+      "mastery" : "push"
     },
     {
       "name": "Handaxe",
@@ -58,7 +70,8 @@
       "damage": "slashing",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Light, thrown (range 20/60)"
+      "desc": "Light, thrown (range 20/60)",
+      "mastery" : "vex"
     },
     {
       "name": "Javelin",
@@ -66,7 +79,8 @@
       "damage": "piercing",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Thrown (range 30/120)"
+      "desc": "Thrown (range 30/120)",
+      "mastery" : "slow"
     },
     {
       "name": "Light hammer",
@@ -74,7 +88,8 @@
       "damage": "bludgeoning",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Light, thrown (range 20/60)"
+      "desc": "Light, thrown (range 20/60)",
+      "mastery" : "nick"
     },
     {
       "name": "Mace",
@@ -82,7 +97,8 @@
       "damage": "bludgeoning",
       "class": "Simple",
       "type": "Melee",
-      "desc": ""
+      "desc": "",
+      "mastery" : "sap"
     },
     {
       "name": "Quarterstaff",
@@ -91,7 +107,8 @@
       "vers": "1d8",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Versatile (1d8)"
+      "desc": "Versatile (1d8)",
+      "mastery" : "topple"
     },
     {
       "name": "Sickle",
@@ -100,7 +117,8 @@
       "finesse": true,
       "class": "Simple",
       "type": "Melee",
-      "desc": "Light"
+      "desc": "Light",
+      "mastery" : "nick"
     },
     {
       "name": "Spear",
@@ -109,7 +127,8 @@
       "vers": "1d8",
       "class": "Simple",
       "type": "Melee",
-      "desc": "Thrown (range 20/60), versatile (1d8)"
+      "desc": "Thrown (range 20/60), versatile (1d8)",
+      "mastery" : "sap"
     },
     {
       "name": "Light Crossbow",
@@ -117,7 +136,8 @@
       "damage": "piercing",
       "class": "Simple",
       "type": "Ranged",
-      "desc": "Ammunition (range 80/320), loading, two-handed"
+      "desc": "Ammunition (range 80/320), loading, two-handed",
+      "mastery" : "slow"
     },
     {
       "name": "Dart",
@@ -126,7 +146,8 @@
       "finesse": true,
       "class": "Simple",
       "type": "Ranged",
-      "desc": "Finesse, thrown (range 20/60)"
+      "desc": "Finesse, thrown (range 20/60)",
+      "mastery" : "vex"
     },
     {
       "name": "Shortbow",
@@ -134,7 +155,8 @@
       "damage": "piercing",
       "class": "Simple",
       "type": "Ranged",
-      "desc": "Ammunition (range 80/320), two-handed"
+      "desc": "Ammunition (range 80/320), two-handed",
+      "mastery" : "vex"
     },
     {
       "name": "Sling",
@@ -142,7 +164,8 @@
       "damage": "bludgeoning",
       "class": "Simple",
       "type": "Ranged",
-      "desc": "Ammunition (range 30/120)"
+      "desc": "Ammunition (range 30/120)",
+      "mastery" : "slow"
     },
     {
       "name": "Battleaxe",
@@ -151,7 +174,8 @@
       "vers": "1d10",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Versatile (1d10)"
+      "desc": "Versatile (1d10)",
+      "mastery" : "topple"
     },
     {
       "name": "Flail",
@@ -159,7 +183,8 @@
       "damage": "bludgeoning",
       "class": "Martial",
       "type": "Melee",
-      "desc": ""
+      "desc": "",
+      "mastery" : "sap"
     },
     {
       "name": "Glaive",
@@ -167,7 +192,8 @@
       "damage": "slashing",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, reach, two-handed"
+      "desc": "Heavy, reach, two-handed",
+      "mastery" : "graze"
     },
     {
       "name": "Greataxe",
@@ -175,7 +201,8 @@
       "damage": "slashing",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, two-handed"
+      "desc": "Heavy, two-handed",
+      "mastery" : "cleave"
     },
     {
       "name": "Greatsword",
@@ -183,7 +210,8 @@
       "damage": "slashing",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, two-handed"
+      "desc": "Heavy, two-handed",
+      "mastery" : "graze"
     },
     {
       "name": "Halberd",
@@ -191,7 +219,8 @@
       "damage": "slashing",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, reach, two-handed"
+      "desc": "Heavy, reach, two-handed",
+      "mastery" : "cleave"
     },
     {
       "name": "Lance",
@@ -200,7 +229,8 @@
       "class": "Martial",
       "type": "Melee",
       "desc": "Reach, special",
-      "special": "**Special.** You have disadvantage when you use a lance to attack a target within 5 feet of you. Also, a lance requires two hands to wield when you aren't mounted."
+      "special": "Heavy, Reach, Two-Handed (unless mounted)",
+      "mastery" : "topple"
     },
     {
       "name": "Longsword",
@@ -209,7 +239,8 @@
       "vers": "1d10",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Versatile (1d10)"
+      "desc": "Versatile (1d10)",
+      "mastery" : "sap"
     },
     {
       "name": "Maul",
@@ -217,7 +248,8 @@
       "damage": "bludgeoning",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, two-handed"
+      "desc": "Heavy, two-handed",
+      "mastery" : "topple"
     },
     {
       "name": "Morningstar",
@@ -225,7 +257,8 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Melee",
-      "desc": ""
+      "desc": "",
+      "mastery" : "sap"
     },
     {
       "name": "Pike",
@@ -233,7 +266,8 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Heavy, reach, two-handed"
+      "desc": "Heavy, reach, two-handed",
+      "mastery" : "push"
     },
     {
       "name": "Rapier",
@@ -242,7 +276,8 @@
       "finesse": true,
       "class": "Martial",
       "type": "Melee",
-      "desc": "Finesse"
+      "desc": "Finesse",
+      "mastery" : "vex"
     },
     {
       "name": "Scimitar",
@@ -251,7 +286,8 @@
       "finesse": true,
       "class": "Martial",
       "type": "Melee",
-      "desc": "Finesse, light"
+      "desc": "Finesse, light",
+      "mastery" : "nick"
     },
     {
       "name": "Shortsword",
@@ -260,24 +296,28 @@
       "finesse": true,
       "class": "Martial",
       "type": "Melee",
-      "desc": "Finesse, light"
+      "desc": "Finesse, light",
+      "mastery" : "vex"
     },
     {
       "name": "Trident",
-      "dice": "1d6",
+      "dice": "1d8",
       "damage": "piercing",
-      "vers": "1d8",
+      "vers": "1d10",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Thrown (range 20/60), versatile (1d8)"
+      "desc": "Thrown (range 20/60), versatile (1d10)",
+      "mastery" : "topple"
     },
     {
       "name": "War Pick",
       "dice": "1d8",
       "damage": "piercing",
+      "vers": "1d10",
       "class": "Martial",
       "type": "Melee",
-      "desc": ""
+      "desc": "versatile (1d10)",
+      "mastery" : "sap"
     },
     {
       "name": "Warhammer",
@@ -286,7 +326,8 @@
       "vers": "1d10",
       "class": "Martial",
       "type": "Melee",
-      "desc": "Versatile (1d10)"
+      "desc": "Versatile (1d10)",
+      "mastery" : "push"
     },
     {
       "name": "Whip",
@@ -295,7 +336,8 @@
       "finesse": true,
       "class": "Martial",
       "type": "Melee",
-      "desc": "Finesse, reach"
+      "desc": "Finesse, reach",
+      "mastery" : "slow"
     },
     {
       "name": "Blowgun",
@@ -303,7 +345,8 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 25/100), loading"
+      "desc": "Ammunition (range 25/100), loading",
+      "mastery" : "vex"
     },
     {
       "name": "Hand Crossbow",
@@ -311,7 +354,8 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 30/120), light, loading"
+      "desc": "Ammunition (range 30/120), light, loading",
+      "mastery" : "vex"
     },
     {
       "name": "Heavy Crossbow",
@@ -319,7 +363,8 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 100/400), heavy, loading, two-handed"
+      "desc": "Ammunition (range 100/400), heavy, loading, two-handed",
+      "mastery" : "push"
     },
     {
       "name": "Longbow",
@@ -327,16 +372,26 @@
       "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Ammunition (range 150/600), heavy, two-handed"
+      "desc": "Ammunition (range 150/600), heavy, two-handed",
+      "mastery" : "slow"
     },
     {
-      "name": "Net",
-      "dice": null,
-      "damage": null,
+      "name": "Musket",
+      "dice": "1d12",
+      "damage": "piercing",
       "class": "Martial",
       "type": "Ranged",
-      "desc": "Special, thrown (range 5/15)",
-      "special": "**Special.** A Large or smaller creature hit by a net is restrained until it is freed. A net has no effect on creatures that are formless, or creatures that are Huge or larger. A creature can use its action to make a DC 10 Strength check, freeing itself or another creature within its reach on a success. Dealing 5 slashing damage to the net (AC 10) also frees the creature without harming it, ending the effect and destroying the net.\n\nWhen you use an action, bonus action, or reaction to attack with a net, you can make only one attack regardless of the number of attacks you can normally make."
+      "desc": "Ammunition (Range 40/120; Bullet), Loading, Two-Handed",
+      "mastery" : "slow"
+    },
+    {
+      "name": "Pistol",
+      "dice": "1d10",
+      "damage": "piercing",
+      "class": "Martial",
+      "type": "Ranged",
+      "desc": "Ammunition (Range 30/90; Bullet), Loading",
+      "mastery" : "vex"
     },
     {
       "name": "Unarmed Strike",
