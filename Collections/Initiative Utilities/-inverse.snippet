@@ -11,8 +11,9 @@ if not c:
   return """ -f "Inverse Targets|This channel is not in combat." """
 
 inversed = []
-for targ_name in args.get('inverse'):
-  inversed.extend([t.name for t in (c.get_group(targ_name).combatants if c.get_group(targ_name) else [c.get_combatant(targ_name)]) if t])
+for targ_names in args.get('inverse'):
+  for targ_name in targ_names.split(','):
+    inversed.extend([t.name for t in (c.get_group(targ_name).combatants if c.get_group(targ_name) else [c.get_combatant(targ_name)]) if t])
 
 targets = ""
 for combatant in c.combatants:

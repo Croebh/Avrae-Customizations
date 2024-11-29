@@ -13,6 +13,13 @@ if warcaster or mind:
 effect = None
 
 dc = args.last('dc', 10, int)
+
+if character().csettings.get('version') == '2024':
+  dc = min(dc, 30)
+  rule = "If you take damage, you must succeed on a Constitution saving throw to maintain Concentration. The DC equals 10 or half the damage taken (round down), whichever number is higher, up to a maximum DC of 30."
+else:
+  rule = "Whenever you take damage while you are concentrating on a spell, you must make a Constitution saving throw to maintain your concentration. The DC equals 10 or half the damage you take, whichever number is higher. If you take damage from multiple sources, such as an arrow and a dragon's breath, you make a separate saving throw for each source of damage."
+
 b = args.join("b", ' + ')
 adv = args.adv(boolwise=True)
 bladesong = args.last('bs') if self else None   # Wizard (Bladesinger Bladesong) [+ intelligence mod]
@@ -49,8 +56,11 @@ else:
   Either join initiative with `{ctx.prefix}init join`, or select a valid target with `-t <name>`." """
   return concOut
 
+
+
+
 concOut    = f"""-title "{name} makes a Concentration Save!"
-  -desc "**DC {dc}**" """
+  -desc "{rule}\n\n**DC {dc}**" """
 failed = False
 for index in range(rr):
   concRoll   = vroll(rollString)

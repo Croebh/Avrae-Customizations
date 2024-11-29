@@ -12,5 +12,5 @@ __Valid Arguments__
 `-rr [#]` - Allows you to roll multiple saves at once
 
 `bs` - Adds your Intelligence modifier for when Bladesong is active. The alias also checks for an active effect named "Bladesong" to apply the bonus.
-`ts` - Adds your Proficiency bonus for when you're holding a Transmuter's stone that grants proficiency in Constitution Saves. The alias also checks for an effect called "Tranmuter's Stone" to apply the bonus. 
+`ts` - Adds your Proficiency bonus for when you're holding a Transmuter's stone that grants proficiency in Constitution Saves. The alias also checks for an effect called "Transmuter's Stone" to apply the bonus. 
 `dragon` - Sets the Minimum Check to be 10 for when Starry Form: Dragon is active. The alias also checks for an active effect named "Starry Form" with a description starting with "Constellation: Dragon" to apply the bonus.
