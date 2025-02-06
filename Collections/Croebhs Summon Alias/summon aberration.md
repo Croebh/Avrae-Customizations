@@ -11,3 +11,5 @@ Summon Aberration - `!summon aberration <type> [args]`
 `-name [name]` Sets a custom name to be used for this and future summons of that type. Use `-name reset` to reset it.
 `noconc` Sets the granted effect to not be concentration
 `-dur [#]` Overrides the default duration of the effect
+`-dc [#]` Overrides the default dc of any actions on the summon
+`-mod [#]` Overrides the default attack modifier of the attacks of the summon
