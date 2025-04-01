@@ -1,13 +1,29 @@
 embed
-{{cc="Sorcery Points"}}
-{{n='\n'}}
-{{ch=character()}}
-{{mode, sl = '+' in "&*&" or 'create' in '&*&', [int(i) for i in '&*&0'.replace(' ','') if i.isdigit()][0]}}
-{{h=(not sl) or "&*&".lower() in "help?"}}
-{{cost,suffix=[2,3,5,6,7,0,0,0,0][sl-1],(["st","nd","rd"]+["th"]*6)[sl-1]}}
-{{v=ch.cc_exists(cc) and (ch.get_cc(cc)>=cost if mode else ch.spellbook.get_slots(sl)) and (cost if mode else sl)}}
+<drac2>
+cc="Sorcery Points"
+n='\n'
+ch=character()
+mode, sl = '+' in "&*&" or 'create' in '&*&', [int(i) for i in '&*&0'.replace(' ','') if i.isdigit()][0]
+ecc="Font Spell Level " + sl
+h=(not sl) or "&*&".lower() in "help?"
+cost,suffix=[2,3,5,6,7,0,0,0,0][sl-1],(["st","nd","rd"]+["th"]*6)[sl-1]
+v=ch.cc_exists(cc) and (ch.get_cc(cc)>=cost if mode else ch.spellbook.get_slots(sl)) and (cost if mode else sl)
+if v:
+	if mode:
+		ch.mod_cc(cc,-cost)
+		if (ch.spellbook.get_max_slots(sl) == ch.spellbook.get_slots(sl)):
+			ch.create_cc_nx(ecc,0,10,"long",dispType="bubble",reset_to=0,initial_value=0)
+			ch.mod_cc(ecc,+1)
+		else:
+			ch.spellbook.set_slots(sl,ch.spellbook.get_slots(sl)+1)
+	else:
+		ch.mod_cc(cc,+sl)
+		if (ch.cc_exists(ecc) and ch.get_cc(ecc)>=1):
+			ch.mod_cc(ecc,-1)
+		else:
+			ch.spellbook.use_slot(sl)
+</drac2>
 -title "<name> {{f"invokes the Font of Magic - {['Spend','Create'][mode]} {sl}{suffix}-Level Slot" if v else "tries to invoke the Font of Magic"}}!"
-{{((ch.mod_cc(cc,-cost),ch.spellbook.set_slots(sl,ch.spellbook.get_slots(sl)+1)) if mode else (ch.mod_cc(cc,+sl), ch.spellbook.use_slot(sl))) if v else ""}}
 -f "{{cc+(f" ({[f'+{sl}',f'-{cost}'][mode]})" if v else "")}}|{{ch.cc_str(cc) if ch.cc_exists(cc) else "*None*"}}"
 -f "{{f'''Spell Slots {f"({['-','+'][mode]}1)" if v else ""}|{ch.spellbook.slots_str(sl) if sl else n.join([ch.spellbook.slots_str(lvl) for lvl in range(1,10) if ch.spellbook.get_max_slots(lvl)])}'''}}"
 -desc "{{"**Create Spell Slot:** `!font [+/create] [slot-level]`\n**Create Sorcery Points:** `!font [-/spend] [slot-level]`" if h else "You do not have this ability." if not ch.cc_exists(cc) else [f"**Converting a Spell Slot to Sorcery Points.** As a bonus action on your turn, you can expend one spell slot and gain a number of sorcery points equal to the slot's level.\n\nSpending a {sl}{suffix} Level Slot, creating {sl} Sorcery Points.", f"**Creating Spell Slots.** You can transform unexpended sorcery points into one spell slot as a bonus action on your turn. The created spell slots vanish at the end of a long rest. You can create spell slots no higher in level than 5th.\n\nCreating a {sl}{suffix} Level Slot, spending {cost} Sorcery Points."][mode] if v else ["You do not have spell slots of the desired level.",["You do not have enough sorcery points for this.","You cannot create spell slots above 5th level."][sl>5]][mode]}}"

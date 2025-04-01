@@ -22,6 +22,7 @@ if not spell_level:
     return f"""embed -title "Spell not found!" -desc "Sorry, `{spell_name}` could not be matched to a level in the database. If this is a valid spell (perhaps homebrew?) you can bypass this by specifying a level with `-l #`" """
 
 
+
 # Figure out which meta magics we're using
 meta_out  = []
 meta_cost = 0
@@ -73,5 +74,17 @@ Anything from `!help cast`
 
 # Otherwise, lets cast some magic, baby!
 else:
-  return f"""cast "{spell_name}" {' '.join([(f'"{i}"' if ' ' in i else i) for i in args[1:]])} """ + ' '.join(meta_out) + cc_out
+  # Check the spell slot levels and if necessary try to fill out with a font spell slot
+  a = argparse(args)
+  ignore = ""
+  ss_out = ""
+  if (character().spellbook.get_slots(spell_level) == 0 and not "i" in a):
+    ch,ecc=character(),"Font Spell Level " + spell_level
+    if (ch.cc_exists(ecc) and ch.cc(ecc).value > 0):
+      ch.mod_cc(ecc,-1)
+      ignore = " -i "
+      ss_out  = f""" -f "**{ecc}** \n{character().cc_str(ecc)} (-1)"  """
+
+
+  return f"""cast "{spell_name}" {' '.join([(f'"{i}"' if ' ' in i else i) for i in args[1:]])} {ignore} """ + ' '.join(meta_out) + cc_out + ss_out
 </drac2>
