@@ -1614,7 +1614,7 @@ helpindex = f"""
 `!map help <over|spells>` - Overlays and Spells
 `!map help <walls|doors|objects>` - Walls, Doors and Objects
 **Additional help**
-Check our [Documentation website](http://docs.otfbm.com/) to find every command and argument explained in detail and with practical examples.
+Check our [Documentation website](http://docs.otfbm.com/#/pages/starting-battle) to find some practical examples.
 **Support Us**
 You can support OTFBM on [Patreon](https://www.patreon.com/otfbm) and this alias at [Ko-Fi](https://ko-fi.com/croebh)"
 """
