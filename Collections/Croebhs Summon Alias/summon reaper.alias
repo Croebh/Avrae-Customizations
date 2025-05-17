@@ -56,7 +56,7 @@ if s_name == 'reset':
 elif s_name:
   custom_names[summon_name] = s_name
 ch.set_cvar('summon_names', dump_yaml(custom_names))
-s_name = custom_names.get(summon_name, f"{s_name} {TYPE} ({init_add.get_initials(name)})")
+s_name = custom_names.get(summon_name, f"{s_name or ''} {TYPE} ({init_add.get_initials(name)})")
 
 group_name = args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
 
