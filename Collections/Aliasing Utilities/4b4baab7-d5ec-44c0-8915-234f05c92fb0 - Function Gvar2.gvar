@@ -622,6 +622,13 @@
       "type": "str"
     }
   },
+  "ctx.guild.servsettings()": {
+    "desc": "The server settings of the guild.",
+    "url": "aliasing.api.context.AliasGuild.servsettings",
+    "returns": {
+      "type": "dict"
+    }
+  },
   "ctx.channel": {
     "desc": "The channel the alias was run in.",
     "url": "aliasing.api.context.AliasContext.channel",

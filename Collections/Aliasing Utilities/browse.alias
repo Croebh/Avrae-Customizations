@@ -232,7 +232,8 @@ context = {
            },
            "guild":
             ({"id": ctx.guild.id,
-             "name": ctx.guild.name}) if ctx.guild else None,
+             "name": ctx.guild.name,
+             "servsettings()": ctx.guild.servsettings()}) if ctx.guild else None,
            "prefix": ctx.prefix
           }
 
