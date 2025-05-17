@@ -19,6 +19,8 @@ if not effect:
 
 targets = []
 for t_name in targets_names:
+  if t_name == "-t":
+    continue
   targets.extend(c.get_group(t_name).combatants if c.get_group(t_name) else [c.get_combatant(t_name)])
 if not (targets and any(targets)):
   return f""" -desc "Invalid target(s): {targets_names}" """
