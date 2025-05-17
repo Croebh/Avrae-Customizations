@@ -89,7 +89,7 @@ if sum([sb.get_max_slots(slotLevel) for slotLevel in range(1,10)]):
    spellSlotText += character().spellbook.slots_str(slotLevel)+(delta if delta else '')+n
  outText += ', Spell Slots' if compact else f' -f "Spell Slots|{spellSlotText}|inline"'
 
-countersToResetO = {counter.name + (f" {not counterNames.pop(counterNames.index(counter.name)) or i-1}" if (i := counterNames.count(counter.name))>1 else ""):{"reset_to":counter.reset_to,"reset_by":counter.reset_by, "cc": counter} for counter in counters if counter.reset_on and counter.reset_on in 'shortlong' and counter.name.lower() not in ('exhaustion', 'short rest tokens', 'travel tokens')}
+countersToResetO = {counter.name + (f" {not counterNames.pop(counterNames.index(counter.name)) or i-1}" if (i := counterNames.count(counter.name))>1 else ""):{"reset_to":counter.reset_to,"reset_by":counter.reset_by, "cc": counter} for counter in counters if counter.reset_on and counter.reset_on in 'shortlong' and counter.name.lower() not in ('exhaustion',)}
 if countersToResetO:
  countersToResetList = list(countersToResetO)
  countersToResetList.sort()
