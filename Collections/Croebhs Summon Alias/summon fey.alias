@@ -23,8 +23,57 @@ spell_level = args.last('l', min_slot, int)
 summon_type = args.last('type', "", str).lower()
 ignore  = args.last('i')
 
+
+# Use Class Features:
+dur     = 600
+rconc   = True
+cc      = ''
+cc_desc = ''
+cc_used = ''
+multiplier = 1
+
+# Fey Wanderer: Fey Reinforcements
+if 'reinforcement' in &ARGS& or 'reinforcements' in &ARGS&:
+  if ch.cc_exists('Fey Reinforcements: Summon Fey'):
+    if ignore or ch.get_cc('Fey Reinforcements: Summon Fey'):
+      cc = 'Fey Reinforcements: Summon Fey'
+      spell_level = MIN_LEVEL
+      if not ignore:
+        ch.mod_cc(cc, -1)
+        cc_used = '(-1)'
+      else:
+        cc_used = '_use ignored_'
+      dur    = 10
+      rconc  = False
+      ignore = True
+      cc_desc= '''You can cast Summon Fey without a Material component. Once per Long Rest, you can cast it without a spell slot.\n\nWhenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do the spell's duration becomes 1 minute for that casting.'''
+    else:
+      return f"""embed -title "Woopsie!" -desc "You don't have any more uses of your Fey Reinforcements: Summon Fey ability!\nAdd the `-i` argument if you'd like to bypass using the counter." """
+  else:
+    return f"""embed -title "Woopsie!" -desc «You don't have a counter called "Fey Reinforcements: Summon Fey"\nIf you create such a counter, you may summon a fey creature with this ability.» """
+
+# Illusionist: Phantasmal Creatures
+if 'phantasmal' in &ARGS&:
+  if ch.cc_exists('Phantasmal Creatures: Summon Fey'):
+    if ignore or ch.get_cc('Phantasmal Creatures: Summon Fey'):
+      cc = 'Phantasmal Creatures: Summon Fey'
+      spell_level = MIN_LEVEL
+      if not ignore:
+        ch.mod_cc(cc, -1)
+        cc_used = '(-1)'
+      else:
+        cc_used = '_use ignored_'
+      multiplier = 0.5
+      ignore     = True
+      cc_desc    = '''You always have the Summon Beast and Summon Fey spells prepared. Whenever you cast either spell, you can change its school to Illusion, which causes the summoned creature to appear spectral. You can cast the Illusion version of each spell without expending a spell slot, but casting it without a slot halves the creature’s Hit Points. Once you cast either spell without a spell slot, you must finish a Long Rest before you can cast the spell in that way again.'''
+    else:
+      return f"""embed -title "Woopsie!" -desc "You don't have any more uses of your Phantsmal Creatures: Summon Fey ability.\nAdd the `-i` argument if you'd like to bypass using the counter." """
+  else:
+    return f"""embed -title "Woopsie!" -desc «You don't have a counter called "Phantasmal Creatures: Summon Fey"\nIf you create such a counter, you may summon a fey creature with this ability.» """
+
+
 stat_block = {
-  "hp": 10 * spell_level,
+  "hp": int((10 * spell_level) * multiplier),
   "ac": 12 + spell_level,
   "pb": proficiencyBonus,
   "strength": 13,
@@ -74,8 +123,8 @@ stat_block['group'] = group_name
 stat_block['note'] = f"Summoned by {name}\nMultiattack: {max(1, spell_level//2)}"
 
 c.me.set_group(group_name)
-useconc = "noconc" not in args
-usedur = int(args.get("dur",[600])[0])
+useconc = False if not rconc else ("noconc" not in args)
+usedur  = int(args.get("dur",[dur])[0])
 c.me.add_effect(f"Summon {TYPE}", concentration=useconc, duration=usedur)
 
 embed_args = {
@@ -86,6 +135,9 @@ embed_args = {
   "color": color,
   "thumb": image
 }
+
+if cc:
+  embed_args['fields'] = [{"title": cc, "desc": f"{ch.cc_str(cc)} {cc_used}\n\n{cc_desc}"}]
 
 summon_command = init_add.build_init_add(s_name, c.me.init, stat_block)
 embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=attacks, effect_name=f"Summon {TYPE}", extra_effects=extra_effects)
