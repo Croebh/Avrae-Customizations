@@ -9,8 +9,8 @@ using(init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3")
 args = argparse(["-type"] + &ARGS&)
 c = combat()
 ch = character()
-sab = ch.spellbook.sab
-sdc = ch.spellbook.dc
+sab = int(args.last('mod', ch.spellbook.sab ))
+sdc = int(args.last('dc', ch.spellbook.dc)) 
 true, false, null = True, False, None
 
 warlock = ch.levels.get('Warlock')
