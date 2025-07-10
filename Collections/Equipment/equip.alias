@@ -3,6 +3,7 @@ argslist = &ARGS&
 wn, g, args = argslist[0] if argslist else "", load_json(get_gvar("94eea929-4c4f-4e3e-9f99-09fc2fc6c92d")), argparse(argslist)
 style, customName, bonus, damage = g.style, args.last("name"), args.join("b", "+"), args.join("d", "+")
 cmd = f"""embed -title "It's dangerous to go alone..." -desc "I'm afraid **&1&** isn't a valid item in my database.\n\nPlease note that with little exception, this alias only has support for weapons found in the PHB." """
+version = character().csettings.version
 chosenWeapon = None
 for weapon in g.weapons:
  if wn and wn.lower()in weapon.name.lower():
@@ -42,13 +43,13 @@ if chosenWeapon:
  twohanded = unarmed and twohanded if "Unarmed" in chosenWeapon.name else twohanded
  tohit = mod + ( "" if noprof or ("Improvised" in chosenWeapon.get('class')) else g.prof) + ("+2" if archery else "+1" if thrown else "") + ("+" + bonus if bonus else "")
  dieSize = (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice).split('d')[-1] if chosenWeapon.get('dice') else None
- damageDice = (("1d{{max(4+2*((int(MonkLevel)+1)//6)" + f",{dieSize}" + ")}}")  if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + ("ro<3" if gwf else "")) if chosenWeapon.get("dice") else ""
+ damageDice = (("1d{{max(4+2*((int(MonkLevel)+1)//6)" + f",{dieSize}" + ")}}")  if monk else (chosenWeapon.vers if twohanded and chosenWeapon.get("vers") else "1d6" if "Unarm" in chosenWeapon.name and unarmed else chosenWeapon.dice) + (("ro<3" if version == '2014' else 'mi3') if gwf else "")) if chosenWeapon.get("dice") else ""
  damageDice = ((f'({damageDice},{damageDice})kh1' if savage else damageDice) + "+" + ("0" if args.last("t") or offhand else '{{' + mod + '}}') + ("+2" if dueling else "") + ("+1" if thrown else "") + (f' [{" ".join([x for x in g.at if x in args]+[""])}{damagetype}]' if damagetype else '') + ("+" + damage if damage else "")) if damageDice and not nodmg else ''
  desc = [f"**{chosenWeapon.get('class')} {chosenWeapon.get('type')} Weapon**. " + chosenWeapon.get('desc')] + ([chosenWeapon.special] if chosenWeapon.get("special") else [])
  for x in style:
-  desc += [style[x]] if get(x) else ""
+  desc += [style.get(x + version, style.get(x))] if get(x) else ""
  for x in g.at:
-  desc += [style[x]] if args.last(x) else ""
+  desc += [style.get(x + version, style.get(x))] if args.last(x) else ""
  if mastery:
   if mtype := chosenWeapon.get("mastery"):
    desc += [style[mtype]] if mtype in style else None

@@ -92,15 +92,29 @@ ch.modify_hp(hpGain,0,0)
 outText = (f' -title "{name} takes a Short Rest!"')+(f' -desc "{name} spends {spentDiceString} hit di{"c" if sum([die.numberSpent for die in spentDice])!=1 else ""}e{bonusText}, recovering a total of {hpGain} hit points."')
 outText += f' -f "Healing|{n.join([str(Roll) for Roll in hdRolls])}|inline"' if hpGain else ''
 outText += f' -f "Bonus Healing|{n.join([str(Roll) for Roll in bonusRolls])}|inline"' if bonus else ''
+add_one_on_sr = ["Rage", "Channel Divinity", "Wild Shape", "Second Wind", "Psionic Power: Psionic Energy Dice", "Rage (Enter)"]
 
 countersToResetO = {counter.name:{"reset_to":counter.reset_to,"reset_by":counter.reset_by, "cc": counter} for counter in counters if counter.reset_on and counter.reset_on in 'short'}
+countersToAdd1 = {counter.name: counter for counter in counters if counter.name in add_one_on_sr}
+
+counterFields = ['' for i in range(20)]
+counterField = 0
+for cc_name, counter in countersToAdd1.items():
+  delta = counter.value - ch.mod_cc(cc_name, +1)
+  if delta:
+    delta *= -1
+    delta = f" ({delta:+})"
+  else:
+    delta = ""
+  counterText = f"{cc_name}{delta}, " if compact else f'''{cc_name}: {counter}{delta}{n}'''
+  counterField += 1 if len(counterFields[counterField]+counterText)>1020 else 0
+  counterFields[counterField] += counterText
+  
 if countersToResetO:
   countersToResetList = list(countersToResetO)
   countersToResetList.sort()
   countersToReset = {}
   countersToReset.update({x:countersToResetO[x] for x in countersToResetList})
-  counterFields = ['' for i in range(20)]
-  counterField = 0
   for counter in countersToReset:
     if delta := countersToReset[counter].reset_by:
       if ('-' in delta and ch.get_cc(counter) == ch.get_cc_min(counter)) or (not '-' in delta and ch.get_cc(counter) == ch.get_cc_max(counter)):
@@ -123,8 +137,8 @@ if countersToResetO:
     counterText = countersToReset[counter].cc.name+(f'{delta if delta else ""}, ' if compact else f''': {countersToReset[counter].cc}{delta if delta else ""}{n}''')
     counterField += 1 if len(counterFields[counterField]+counterText)>1020 else 0
     counterFields[counterField] += counterText
-  counterFields = [field.strip(', ') for field in counterFields if field]
-  outText += ' -f "Reset Counters|'+'" -f "Continued|'.join(counterFields)+'"'
+counterFields = [field.strip(', ') for field in counterFields if field]
+outText += ' -f "Reset Counters|'+'" -f "Continued|'.join(counterFields)+'"'
 if Warlockness:
   W = int(WarlockLevel)
   slotLevel = min(ceil(W/2),5)

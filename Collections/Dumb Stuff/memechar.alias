@@ -21,19 +21,19 @@ CLASSES = {
           }
 
 EMOJI = {
-          "Sorcerer": "<:sorcerer:908398771652685915>", 
-          "Bard": "<:bard:908398771304562769>", 
-          "Warlock": "<:warlock:908398772218888202>", 
-          "Paladin": "<:paladin:908398771723980830>",
-          "Cleric": "<:Cleric:908398770818023434>",
-          "Artificer": "<:artificer:908398770373398538>",
-          "Barbarian": "<:barbarian:908398771237437562>",
-          "Druid": "<:druid:908398771677843516>",
-          "Fighter": "<:fighter:908398771958874132>",
-          "Monk": "<:monk:908398771749126174>",
-          "Ranger": "<:ranger:908398771782692924>",
-          "Rogue": "<:rogue:908398771812040724>",
-          "Wizard": "<:wizard:908398771979821066>"
+          "Artificer": "<:classArtificer:787797990680690779>",
+          "Barbarian": "<:classBarbarian:1280593993884766350>",
+          "Bard": "<:classBard:1280594010712572020>",
+          "Cleric": "<:classCleric:1280594027615490048>",
+          "Druid": "<:classDruid:1280594042060669078>",
+          "Fighter": "<:classFighter:1280594056208060478>",
+          "Monk": "<:classMonk:1280594071802613803>",
+          "Paladin": "<:classPaladin:1280594088340492338>",
+          "Ranger": "<:classRanger:1280594106459881553>",
+          "Rogue": "<:classRogue:1280594125258752020>",
+          "Sorcerer": "<:classSorcerer:1280594144213078190>",
+          "Warlock": "<:classWarlock:1280594161204199569>",
+          "Wizard": "<:classWizard:1280594178920812626>",
         }
 
 stats = [i.lower()[:3] for i in &ARGS& if i.lower()[:3] in STATS]

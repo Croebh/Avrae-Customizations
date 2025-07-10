@@ -8,7 +8,7 @@ More detailed help can be found inside the alias:
 `!map help <walls|doors|objects>` - Walls, Doors and Objects
 
 **__First time using this alias?__**
-Check our [Getting Started Guide](http://docs.otfbm.com/#/guides_getting_started) to learn how to set up your first map.
+Check our [Getting Started Guide](http://docs.otfbm.com/#/pages/guides_getting_started) to learn how to set up your first map.
 
 **Support Us**
 You can support OTFBM on [Patreon](https://www.patreon.com/otfbm) and this alias at [Ko-Fi](https://ko-fi.com/croebh)
