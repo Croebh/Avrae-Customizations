@@ -7,6 +7,8 @@ ch = character()
 sb = ch.spellbook
 compact = parsed.last('h',parsed.last('compact',False))
 
+v2014 = character().csettings['version']=='2014' if ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()['version']=='2014'
+
 classes    = load_json(get_gvar("a53f12b4-bd1d-40d7-844f-9403a7dc5246"))
 subclasses = load_json(get("subclass", "{}"))
 
@@ -99,16 +101,18 @@ countersToAdd1 = {counter.name: counter for counter in counters if counter.name 
 
 counterFields = ['' for i in range(20)]
 counterField = 0
-for cc_name, counter in countersToAdd1.items():
-  delta = counter.value - ch.mod_cc(cc_name, +1)
-  if delta:
-    delta *= -1
-    delta = f" ({delta:+})"
-  else:
-    delta = ""
-  counterText = f"{cc_name}{delta}, " if compact else f'''{cc_name}: {counter}{delta}{n}'''
-  counterField += 1 if len(counterFields[counterField]+counterText)>1020 else 0
-  counterFields[counterField] += counterText
+
+if not v2014:
+  for cc_name, counter in countersToAdd1.items():
+    delta = counter.value - ch.mod_cc(cc_name, +1)
+    if delta:
+      delta *= -1
+      delta = f" ({delta:+})"
+    else:
+      delta = ""
+    counterText = f"{cc_name}{delta}, " if compact else f'''{cc_name}: {counter}{delta}{n}'''
+    counterField += 1 if len(counterFields[counterField]+counterText)>1020 else 0
+    counterFields[counterField] += counterText
   
 if countersToResetO:
   countersToResetList = list(countersToResetO)

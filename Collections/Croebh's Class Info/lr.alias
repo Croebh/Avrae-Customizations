@@ -8,6 +8,9 @@ ch = character()
 classes    = load_json(get_gvar("a53f12b4-bd1d-40d7-844f-9403a7dc5246"))
 subclasses = load_json(get("subclass", "{}"))
 
+
+v2014 = character().csettings['version']=='2014' if ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()['version']=='2014'
+
 def merge_dicts(dict1, dict2):
   for class_name, details in dict2.items():
     if class_name in dict1:
@@ -59,7 +62,7 @@ tempHP = character().temp_hp
 character().set_hp(hp)
 character().set_temp_hp(0)
 outText += ', Hit Points' if compact else f'''" -f "Hit Points|{character().hp_str()}{f' ({hpGain:+})' if hpGain else ''}|inline"'''
-hitDieRate = int(max(1,level/(4 if sleptInArmor else 2)))+sum([int(b) for b in parsed.get('b')])
+hitDieRate = int(max(1,level/(4 if sleptInArmor else 2)))+sum([int(b) for b in parsed.get('b')]) if v2014 else 999
 hitDieText = ''
 for hd in hitDice:
  if (hitdie := f"Hit Dice ({hd})") in counterNames:
