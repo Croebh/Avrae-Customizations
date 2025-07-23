@@ -4,6 +4,7 @@ parsed = argparse(&ARGS&)
 arguments = &ARGS&
 n = '\n'
 ch = character()
+co = combat()
 
 classes    = load_json(get_gvar("a53f12b4-bd1d-40d7-844f-9403a7dc5246"))
 subclasses = load_json(get("subclass", "{}"))
@@ -57,11 +58,27 @@ hitDice = [f"d{x}" for x in range(20,0,-1)]
 
 outText = f'-title "{name} takes a Long Rest!" -desc "Reset Death Saves'
 sleptInArmor = parsed.last('armor',False)
-hpGain = hp-character().hp
-tempHP = character().temp_hp
-character().set_hp(hp)
-character().set_temp_hp(0)
-outText += ', Hit Points' if compact else f'''" -f "Hit Points|{character().hp_str()}{f' ({hpGain:+})' if hpGain else ''}|inline"'''
+if co and co.me:
+    hpGain = co.me.max_hp - co.me.hp
+    co.me.set_hp(co.me.max_hp)
+    tempHP = co.me.temp_hp
+    co.me.set_temp_hp(0)
+else:
+    hpGain = ch.max_hp - ch.hp
+    ch.set_hp(ch.max_hp)
+    tempHP = ch.temp_hp
+    ch.set_temp_hp(0)
+if hpGain:
+    if tempHP:
+        hpGainText = f' (+{hpGain} HP, -{tempHP} temp)'
+    else:
+        hpGainText = f' (+{hpGain} HP)'
+else:
+    if tempHP:
+        hpGainText = f' (-{tempHP} temp)'
+    else:
+        hpGainText = ''
+outText += ', Hit Points' if compact else f'''" -f "Hit Points|{co.me.hp_str() if co and co.me else ch.hp_str()}{hpGainText}|inline"'''
 hitDieRate = int(max(1,level/(4 if sleptInArmor else 2)))+sum([int(b) for b in parsed.get('b')]) if v2014 else 999
 hitDieText = ''
 for hd in hitDice:
@@ -124,5 +141,5 @@ if countersToResetO:
  counterFields = [field.strip(', ') for field in counterFields if field]
  outText += (', ' if compact else ' -f "Reset Counters|')+'" -f "Continued|'.join(counterFields)+'"'
 
-return outText+f' -thumb {image} -color {color} -footer "{name}: <{character().hp_str()}>"'
+return outText+f' -thumb {image} -color {color} -footer "{name}: {co.me.hp_str() if co and co.me else "<"+ch.hp_str()+">"}{hpGainText}"'
 </drac2>
