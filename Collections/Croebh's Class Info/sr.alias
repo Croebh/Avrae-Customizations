@@ -4,6 +4,7 @@ arguments = &ARGS&
 mode = 'help'
 n = '\n'
 ch = character()
+co = combat()
 sb = ch.spellbook
 compact = parsed.last('h',parsed.last('compact',False))
 
@@ -90,7 +91,14 @@ bonus = ([f"1d{2*(3+(Bardness>7)+(Bardness>11)+(Bardness>15))}[Song of Rest]"] i
 bonusText = f', along with {(", " if len(bonus)!=2 else " and ").join([("and " if len(bonus)>2 and bonus[bonus.index(value)]==bonus[-1] else "")+value[:value.index("[") if "[" in value else None] for value in bonus])} bonus healing' if bonus else ''
 bonusRolls = [vroll(value) for value in bonus]
 hpGain += sum([Roll.total for Roll in bonusRolls])
-ch.modify_hp(hpGain,0,0)
+if co and co.me:
+    origHp = co.me.hp
+    co.me.modify_hp(hpGain,0,0)
+    hpOverflow = origHp+hpGain - co.me.hp
+else:
+    origHp = ch.hp
+    ch.modify_hp(hpGain,0,0)
+    hpOverflow = origHp+hpGain - ch.hp
 outText = (f' -title "{name} takes a Short Rest!"')+(f' -desc "{name} spends {spentDiceString} hit di{"c" if sum([die.numberSpent for die in spentDice])!=1 else ""}e{bonusText}, recovering a total of {hpGain} hit points."')
 outText += f' -f "Healing|{n.join([str(Roll) for Roll in hdRolls])}|inline"' if hpGain else ''
 outText += f' -f "Bonus Healing|{n.join([str(Roll) for Roll in bonusRolls])}|inline"' if bonus else ''
@@ -113,7 +121,7 @@ if not v2014:
     counterText = f"{cc_name}{delta}, " if compact else f'''{cc_name}: {counter}{delta}{n}'''
     counterField += 1 if len(counterFields[counterField]+counterText)>1020 else 0
     counterFields[counterField] += counterText
-  
+
 if countersToResetO:
   countersToResetList = list(countersToResetO)
   countersToResetList.sort()
@@ -163,5 +171,15 @@ for hitdie in ownedHitDice:
   hitDieText += f'**{hitdie[hitdie.index("d"):-1]}**: {character().cc_str(hitdie)}{delta if delta else ""}{n}'
 outText += f' -f "Hit Dice|{hitDieText}"' if ownedHitDice else ''
 outText += f' -f "{yourRace} Regeneration|{ch.cc_str("Regeneration")}|inline"' if get('regenValid') else ''
-return outText+ f''' -thumb {image} -color {color} -footer "{name}: <{character().hp_str()}>" '''
+if hpGain:
+    if hpOverflow:
+        if hpGain-hpOverflow:
+            hpGainText = f' (+{hpGain-hpOverflow} HP, {hpOverflow} overflow)'
+        else:
+            hpGainText = f' ({hpOverflow} overflow)'
+    else:
+        hpGainText = f' (+{hpGain} HP)'
+else:
+    hpGainText = ''
+return outText+ f''' -thumb {image} -color {color} -footer "{name}: {co.me.hp_str() if co and co.me else "<"+character().hp_str()+">"}{hpGainText}" '''
 </drac2>
