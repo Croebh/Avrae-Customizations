@@ -4,4 +4,4 @@ Exports an attack's raw data.
 
 Always sets `!uvar exported_attack` in case the output is too long.
 
-Can automatically import the attack on your current character using the `import` argumetn
+Can automatically import the attack on your current character using the `import` argument
