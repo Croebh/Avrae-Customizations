@@ -26,9 +26,9 @@ if "bear" == get("l3totem", "").lower():
          "force",   "lightning", "cold",
          "poison",  "radiant",   "acid"]
  else:
-  b  += ["thunder", "fire",
+  b  += ["thunder",   "fire",
          "lightning", "cold",
-         "poison", "acid"]
+         "poison",    "acid"]
 
 image = args.last('image', '')
 thumb = args.last('thumb', '')
