@@ -211,7 +211,17 @@ Character = {
               "wisdom": Char.stats.wisdom,
               "charisma": Char.stats.charisma
              },
-             "temp_hp": Char.temp_hp
+             "temp_hp": Char.temp_hp,
+              "actions": [
+                {
+                  "name": action.name,
+                  "activation_type_name": action.activation_type_name,
+                  "snippet": action.snippet,
+                  "activation_type": action.activation_type,
+                  "description": action.description,
+                }
+                for action in Char.actions
+              ]
             }
 
 context = {

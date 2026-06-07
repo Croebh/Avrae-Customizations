@@ -1,0 +1,73 @@
+embed
+<drac2>
+using(NLP="d78dfa16-8e77-408e-8c6b-660f1bf97f59")
+if ctx.channel.id not in (1057052411216269474, 1031651539363844216, 1047937278833606758):
+    return f""" -title "{name} attempts to use a raid token for crafting!" -desc "But they went in the wrong channel! Whoops! Please use <#1057052411216269474> for downtime activities!" """
+
+ch = character()
+a = argparse(&ARGS&)
+args = &ARGS&
+
+tokens = load_json(get('crafting_tokens', '[]'))
+
+# Cooldown and Crafting
+crafting = load_json(get('current_craft', '{}'))
+last_run = float(get(f'craft_Cooldown', 0))
+current = int(time())
+period = 64800
+if not crafting:
+    cooldown = f"<t:{int(last_run + period)}:R> (<t:{int(last_run + period)}>)" if (current - last_run) < period else ""
+    return f' -title "{name} is not currently crafting an item!" -desc "You can start crafting by looking up an item with `{ctx.prefix+ctx.alias} search [item]`, then `{ctx.prefix+ctx.alias} start [item]` to start {cooldown}" -color {color} -thumb {image} ' + NLP.crafting_token_disp(tokens, crafting)
+
+
+size = "&*&"
+match size:
+  case "5" | "10":
+    size = int(size)
+  case _:
+    return f""" -title "{name} attempts to use a raid token for crafting!" -desc "But they didn't provide the size of the token! Use `{ctx.prefix+ctx.alias} raid <#>`, where `#` is the size of the token." """ + NLP.crafting_token_disp(tokens, crafting)
+
+selected = []
+for token in tokens:
+  if token.size == size:
+    selected.append(token)
+selected.sort(key=lambda tk: tk['expiring'], reverse=True)
+
+if not selected:
+  return f""" -title "{name} attempts to use a raid token for crafting!" -desc "But they don't have a token of that size available! Use `{ctx.prefix+ctx.alias} raid <#>`, where `#` is the size of the token." """ + NLP.crafting_token_disp(tokens, crafting)
+
+selected = selected[0]
+tokens.remove(selected)
+
+out = f''' -title "Raid Crafting Token" -desc "**{name} applies a {size} Day Raid Token on their crafting project!** 🛠️
+<@&1031277822142066708>"'''
+crafting['remaining'] -= size
+expired = None
+
+if crafting['remaining'] <= 0:
+    completed = True
+    progress = f"> Congratulations on finishing your {crafting['name']}!\n"
+    ch.set_cvar('current_craft', '{}')
+    expired = [token.size for token in tokens if token.expiring]
+    tokens = [{"size": token.size, "expiring": True} for token in tokens if not token.expiring] 
+else:
+    completed = False  
+    progress = f"You have {crafting['remaining']} day{'s' * (crafting['remaining'] != 1)} left on this craft.\n"
+    ch.set_cvar('current_craft', dump_json(crafting))
+
+if expired:
+  exp_5 = f"{exp_5}x 5 Day Tokens" if (exp_5 := expired.count(5)) else ""
+  exp_10 = f"{exp_10}x 10 Day Tokens" if (exp_10 := expired.count(10)) else ""
+  out += f""" -f "Expired Tokens|On finishing this craft, {' and '.join([exp_5, exp_10])} have expired." """   
+out += f""" -f "Crafting: {crafting['name']} | {progress}\n{name} can craft again <t:{int(last_run + period)}:R> (<t:{int(last_run + period)}>)" """
+
+if completed:
+  crafting = False
+
+out += NLP.crafting_token_disp(tokens, crafting)
+character().set_cvar("crafting_tokens", dump_json(tokens))
+
+return out
+</drac2>
+-color <color> -thumb <image>
+-footer "{{ctx.prefix+ctx.alias}} raid [#] | Alias by the NLP team"

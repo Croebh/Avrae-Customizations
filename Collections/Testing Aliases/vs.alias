@@ -1,0 +1,1 @@
+echo \📜 {{character().set_cvar('test', '📜')}} {{dump_json(test)}} {{load_json(dump_json(test))}}

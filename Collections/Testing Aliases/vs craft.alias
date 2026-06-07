@@ -1,0 +1,181 @@
+embed <drac2>
+
+current_parts = load_json(get("monster_parts", '{}'))
+newline = "\n"
+searchTerm = "&*&".strip(''' "' ''')
+searchTerms = &ARGS&
+searchResults = []
+out = []
+
+gvar = load_json(get_gvar('308c2245-381b-4b57-9142-b5d83eeebc15'))
+
+CREATURE_TYPES = ["aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey", "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead", "notorious monster"]
+
+subclasses = load_json(get('subclass', '{}'))
+arti = character().levels.get('Artificer') >= 10
+scribe = character().levels.get('Wizard') >= 10 and subclasses.get('WizardLevel') == "Order of Scribes"
+
+def class_divisor(item: dict, output: str = None):
+    divisor = 1
+    if scribe and "Spell Scroll" in item.name:
+        divisor *= 2
+    if arti and item.rarity in ('common', 'uncommon'):
+        divisor *= 2
+    reduced = "__" * (divisor != 1)
+    if output:
+        num = item.cost if output == "gp" else item.days
+        num = ceil(num/divisor)
+        return f"""{reduced}{num} {output}{reduced}"""
+    return divisor, reduced
+
+def natural_join(things, between: str):
+    if len(things) < 3:
+        return f" {between} ".join(things)
+    first_part = ", ".join(things[:-1])
+    return f"{first_part}, {between} {things[-1]}"
+
+def cr_str(cr):
+  if not cr or cr >= 1:
+    return str(cr)
+  return f"1/{int(1/cr)}"
+
+old_parts = load_json(get('monster_parts', '[]'))
+if old_parts:
+  # Split the list by creature type
+  creatures_by_type = {}
+  for creature in old_parts:
+      creature_type = creature["type"]
+      creature["type"] = CREATURE_TYPES.index(creature_type)
+      if creature_type not in creatures_by_type:
+          creatures_by_type[creature_type] = []
+      creatures_by_type[creature_type].append(creature)
+
+  merged_list = []
+  for creature_type, creatures in creatures_by_type.items():
+      merged_list.extend(creatures)
+      character().set_cvar(f"monster_parts_{creature_type.replace(' ', '_')}", dump_json(creatures))
+  character().delete_cvar("monster_parts")
+
+  current_parts = merged_list
+else:
+  current_parts = []
+  for creature_type in CREATURE_TYPES:
+    creatures = load_json(get(f"monster_parts_{creature_type.replace(' ', '_')}", "[]"))
+    if creatures:
+      current_parts.extend(creatures)
+
+TIME_OFFSET = 1682486000
+
+CREATURE_TYPES = ["aberration", "beast", "celestial", "construct", "dragon", "elemental", "fey", "fiend", "giant", "humanoid", "monstrosity", "ooze", "plant", "undead", "notorious monster"]
+
+# If we have a search term
+if searchTerm:
+    # Loop through our gvar
+    for item in gvar:
+        # Is it an exact match?
+        if searchTerm.lower() == item.lower():
+            searchResults = [item]
+            break
+        # Or does it fuzzy match all our terms
+        elif searchTerm.lower() in item.lower() or all([term.lower() in item.lower() for term in searchTerms]):
+            searchResults.append(item)
+else:
+    # I guess we'll display the basic help, then
+    return f""" -desc "`{ctx.prefix}{ctx.alias} search [itemname]` to look up a craftable item.\nIf multiple similar, aim for an exact match." """
+
+if len(searchResults) == 1:
+
+
+    gvar_ = []
+    key_mapping = {
+        "n": "name",
+        "d": "days",
+        "c": "cost",
+        "N": "comment",
+        "r": "rarity",
+        "C": "components",
+        "R": "restrictions"
+    }
+
+    for d in gvar:
+        new_dict = {}
+        for key, value in d.items():
+            new_dict[key_mapping.get(key)] = value
+        gvar_.append(new_dict)
+    gvar = gvar_
+
+
+    # We found it, bois!
+    item = searchResults[0]
+
+    components = item.get('components', [])
+
+    divisor, r = class_divisor(item)
+    time_to_craft = ceil(item.days / divisor)
+    cost = ceil(item.cost / divisor)
+
+    out = f""" -title "Craftable Item Found" -f "{item.name}|This item will cost **{r}{cost} gp{r}** to start, and will take **{r}{time_to_craft} days{r}** to complete.\n\nYou can start crafting this item with `{ctx.prefix}{ctx.alias} start {item.name}`" """
+    if item.get('restrictions'):
+        out += f""" -f "Restrictions|{item.restrictions}" """
+    if item.get('comment'):
+        out += f""" -f "Comments|{item.comment}" """
+    if components:
+        missing_components = []
+        selected_components = []
+        if components.cr != "*":
+            for component in components.amt:
+                c_types = component.type_
+                if component.type_ == ['any']:
+                    c_types = CREATURE_TYPES[:-1]
+                cur_select = [part for part in current_parts if part.cr >= components.cr and any(i for i in c_types if CREATURE_TYPES[part.type] in c_types)]
+                cur_select.sort(key=lambda x: x.cr)
+                cur_select = cur_select[:component.num]
+                if len(cur_select) != component.num:
+                    missing_components.append(f"""> {component.num - len(cur_select)}x CR {cr_str(components.cr)} {natural_join(component.type_, 'or').title().replace('Or', 'or')}""")
+                    continue
+                selected_components.extend(cur_select)
+            req_out = '\n'.join([f"""> {req.num}x CR {cr_str(components.cr)} {natural_join(req.type_, 'or').title().replace('Or', 'or')}""" for req in components.amt])
+        else:
+            for component in components.amt:
+                cur_select = [part for part in current_parts if part.name.lower() in component.type_]
+                cur_select.sort(key=lambda x: x.cr)
+                cur_select = cur_select[:component.num]
+                if len(cur_select) != component.num:
+                    missing_components.append(f"""> {component.num - len(cur_select)}x {natural_join(component.type_, 'or').title().replace('Or', 'or')}""")
+                    continue
+                selected_components.extend(cur_select)
+            req_out = '\n'.join([f"""> {req.num}x {natural_join(req.type_, 'or').title().replace('Or', 'or')}""" for req in components.amt])
+
+        selected = '\n'.join([f"> 1x CR {cr_str(comp.cr)} {CREATURE_TYPES[comp.type].title()} - {comp.name} (<t:{comp.time+TIME_OFFSET}>)" for comp in selected_components])
+        if selected:
+            selected = f"""**Components that would be used**\n{selected}"""
+
+        missing = '\n'.join(missing_components)
+        if missing:
+            missing = f"""**Missing Components**\n{missing}\n"""
+
+
+
+        out += f""" -f "Creature Component|This item requires:\n{req_out}\n\n{missing}{selected}" """
+    return out
+else:
+    # I guess we didn't find what we're looking for
+    searchResults = [f"{result.name} — *{result.rarity}, {class_divisor(result, 'gp')}, {class_divisor(result, 'days')}*" for result in searchResults]
+    out = f""" -title "List of craftable items containing {f'`{searchTerm}`' if len(searchTerms)==1 else '`' + '` and `'.join(searchTerms) + '`'  if len(searchTerms)<=2 else '`' + '`, `'.join(searchTerms[:-1]) + f'`, and `{searchTerms[-1]}`'} ({len(searchResults)} Found) "  """
+    if len(searchResults):
+        # We found possibilities, bois!
+        num=32
+        out += f""" -desc "{newline.join(searchResults[:num])}
+        {f"({len(searchResults)-num} results not shown)" if len(searchResults)>num else ""}" """
+    else:
+        # We aint find shit, bois :-(
+        out += """ -desc "*No Results Found*" """
+    return out
+</drac2>
+-color <color> -thumb <image>
+-footer "{{ctx.prefix+ctx.alias}} search [item] | Alias by the NLP team"
+
+<drac2>
+if arti or scribe:
+    return f""" -f "Cost/Time Reductions|Costs and Time that are underscored are halved due to your class features." """
+</drac2>
