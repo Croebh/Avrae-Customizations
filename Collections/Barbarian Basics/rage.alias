@@ -1,6 +1,7 @@
 embed
 <drac2>
 args = argparse(&ARGS&)
+v2014 = character().csettings['version']=='2014' if ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()
 out = ""
 wildshape = None
 ff  = "Fanatical Focus"
@@ -12,9 +13,14 @@ lvl = int(get("BarbarianLevel", 0)) if not args.last('t') else 1
 r   = args.last("t") if "t" in args else name
 b   = ["bludgeoning", "piercing", "slashing"]
 if "bear" == get("l3totem", "").lower():
+ if v2014:
   b  += ["thunder", "necrotic",  "fire",
          "force",   "lightning", "cold",
          "poison",  "radiant",   "acid"]
+ else:
+  b  += ["thunder",   "fire",
+         "lightning", "cold",
+         "poison",    "acid"]
 
 image = args.last('image', '')
 thumb = args.last('thumb', '')
