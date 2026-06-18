@@ -13,6 +13,7 @@ args = argparse(argList, parse_ephem=False)
 # **********************
 
 defaults = load_json(get_svar("mapDefaults") or "{}") or {}
+silent = args.last('silent') or defaults.get('silent')
 mapsize  = defaults.get("size", "10x10") or "10x10"
 maxSize  = 99
 if mapsize != "JSON":
@@ -1598,7 +1599,7 @@ if c:
   finalMap = f"""{map}{mapsize}{f"/{mapviewlocation}:{mapviewsize}" if mapviewsize and mapviewlocation else ""}/{f'_{"_".join(walls)}/' if walls else ""}{f"@{mapoptions}/"if mapoptions else""}{f'{"/".join(objects)}/' if objects else ""}{f'{"*f"+"/*f".join(fow).replace(":", "")}/' if fow else ""}{'/'.join(people+overlays)}/?a=2{f"&load={'&load='.join(loadedjson)}" if loadedjson else ""}{f"&bg={mapbg.split('?')[0]}" if mapbg else ""}"""
   if args.last('debug'):
     return f""" -f "Debug|```\n{finalMap}\n```" """
-  return f"""{'' if args.last('silent') else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
+  return f"""{'' if silent else f'-image "{finalMap}"'} -f "[Map]({finalMap})" """ + (f"""  -desc "{newline.join(desc)}"  """ if desc else "")
 </drac2>
 
 <drac2>
@@ -1760,7 +1761,7 @@ elif (not c or '?' in argList or args.get('help')) and not args.get("tokenimport
              `!map undo` - Reverts all combatants to the state of last time you ran a `!map` command. You only have one undo, and running `!map undo` a second time undoes it. This information is kept in the `mapStates` uvar, keyed to the channel ID."
              -f "__Server Settings__|
              To set defaults for your server, simply create an svar named `mapDefaults`, containing a dict as follows, filling in the information as needed:
-             `!svar mapDefaults {\\\"size\\\":\\\"\\\", \\\"background\\\":\\\"\\\", \\\"options\\\":\\\"\\\"}`
+             `!svar mapDefaults {\\\"size\\\":\\\"\\\", \\\"background\\\":\\\"\\\", \\\"options\\\":\\\"\\\",\\\"silent\\\":\\\"\\\"}`
              You can also copy your `mapOverlays`, `mapPresets`, `mapTokens`, `mapBattles`, `trueDistance` uvars into svars, and they'll be set/available for the whole server."
   """
  elif any(args.last(potentialArg) for potentialArg in ('walls', 'wall', 'door', 'doors', 'object', 'objects')):
