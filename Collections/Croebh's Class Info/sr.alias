@@ -8,7 +8,7 @@ co = combat()
 sb = ch.spellbook
 compact = parsed.last('h',parsed.last('compact',False))
 
-v2014 = character().csettings['version']=='2014' if ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()['version']=='2014'
+v2014 = character().csettings['version']=='2014' if not ctx.guild or ctx.guild.servsettings()['allow_character_override'] else ctx.guild.servsettings()['version']=='2014'
 
 classes    = load_json(get_gvar("a53f12b4-bd1d-40d7-844f-9403a7dc5246"))
 subclasses = load_json(get("subclass", "{}"))
@@ -56,11 +56,13 @@ hitDice = [f"d{x}" for x in range(20,0,-1)]
 
 Bardness = int(get('BardLevel',1))-1
 Warlockness = int(get('WarlockLevel',0))
+feats = get('feats','').lower()
+maxed = 'boon of bountiful health' in feats or parsed.last('max',False)
 yourRace = get("race",ch.race)
-Verdan = "ro<3" if yourRace.lower()=='verdan' else ""
+Verdan = "ro<3" if not maxed and yourRace.lower()=='verdan' else ""
 spentDice = []
-maxed = parsed.last('max',False)
-durable = 'durable' in get('feats','').lower() or parsed.last('durable',parsed.last('dur',False))
+durable = v2014 and not maxed and 'durable' in feats or parsed.last('durable',parsed.last('dur',False))
+bloodlust = not maxed and ('bloodlust' in feats or parsed.last('bloodlust',False)) and (not durable or constitutionMod <= 1)
 periapt = 'periapt of wound closure' in get('attunedItems','').lower() or parsed.last('periapt',parsed.last('closure',False))
 ownedHitDice = []
 for hd in hitDice:
@@ -83,11 +85,11 @@ if arguments and (arguments[0].isdigit()) and ownedHitDice and not spentDice:
       spentDice.append({"size":hd,"counter":hitdie,"numberSpent":min(totalDice,ch.get_cc(hitdie))})
       totalDice -= ch.get_cc(hitdie)
 spentDiceString = (', ' if len(spentDice)!=2 else ' and ').join([f"{'and ' if len(spentDice)>2 and spentDice[spentDice.index(die)]==spentDice[-1] else ''}{die.numberSpent} {die.size}" for die in spentDice]) or 0
-hdRolls = [vroll(f"{die.numberSpent}{die.size.replace('d','*' if maxed else 'd')}{Verdan}{f'mi{max(2,constitutionMod*2)}[durable]' if durable else ''}{'*2[Periapt of Wound Closure]' if periapt else ''}+({die.numberSpent} [dice spent]*{constitutionMod} [constitution mod])") for die in spentDice]
+hdRolls = [vroll(f"{die.numberSpent}{die.size.replace('d','*' if maxed else 'd')}{Verdan}{'mi3[Bloodlust]' if bloodlust else f'mi{max(2,constitutionMod*2)}[Durable]' if durable else ''}{'*2[Periapt of Wound Closure]' if periapt else ''}+({die.numberSpent} [dice spent]*{constitutionMod} [CON mod])") for die in spentDice]
 for die in spentDice:
   ch.mod_cc(die.counter,-die.numberSpent)
 hpGain = sum([Roll.total for Roll in hdRolls])
-bonus = ([f"1d{2*(3+(Bardness>7)+(Bardness>11)+(Bardness>15))}[Song of Rest]"] if Bardness and spentDiceString else [])+parsed.get('b') if hpGain else []
+bonus = ([f"1d{2*(3+(Bardness>7)+(Bardness>11)+(Bardness>15))}[Song of Rest]"] if Bardness and v2014 and spentDiceString else [])+parsed.get('b') if hpGain else []
 bonusText = f', along with {(", " if len(bonus)!=2 else " and ").join([("and " if len(bonus)>2 and bonus[bonus.index(value)]==bonus[-1] else "")+value[:value.index("[") if "[" in value else None] for value in bonus])} bonus healing' if bonus else ''
 bonusRolls = [vroll(value) for value in bonus]
 hpGain += sum([Roll.total for Roll in bonusRolls])
