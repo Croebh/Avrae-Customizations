@@ -1,0 +1,71 @@
+TYPE = "Aberration"
+SPELL_NAME = "Summon Aberration"
+SPELL_DESC = "You call forth an aberrant spirit. It manifests in an unoccupied space that you can see within range. This corporeal form uses the Aberrant Spirit stat block. When you cast the spell, choose Beholderkin, Slaad, or Star Spawn. The creature resembles an aberration of that kind, which determines certain traits in its stat block. The creature disappears when it drops to 0 hit points or when the spell ends.\n\nThe creature is an ally to you and your companions. In combat, the creature shares your initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its move to avoid danger."
+MIN_LEVEL = 4
+
+using(
+  summon="missing-gvar-id",
+)
+
+ch = character()
+warlock = ch.levels.get('Warlock')
+min_slot = max(MIN_LEVEL, ((warlock >= 9) + (warlock >= 7) + (warlock >= 5) + (warlock >= 3) + 1))
+
+def get_summon_resource_fields(parsed_args):
+  spell_level = parsed_args.last('l', min_slot, int)
+  return summon.spell_resource_fields(spell_level=spell_level)
+
+def spend_summon_resources(parsed_args):
+  spell_level = parsed_args.last('l', min_slot, int)
+  return summon.spend_spell_resources(spell_name=SPELL_NAME, spell_level=spell_level)
+
+def build_summon(parsed_args):
+  spell_level = parsed_args.last('l', min_slot, int)
+  summon_type = parsed_args.last('type', "", str).lower()
+
+  stat_block = {
+    "hp": 10 * spell_level,
+    "ac": 11 + spell_level,
+    "pb": proficiencyBonus,
+    "strength": 16,
+    "dexterity": 10,
+    "constitution": 15,
+    "intelligence": 16,
+    "wisdom": 10,
+    "charisma": 6,
+    "immunities": "psychic",
+    "type": "aberration",
+    "note": f"Multiattack: {max(1, spell_level//2)}"
+  }
+
+  attacks = []
+  extra_effects = []
+  match summon_type:
+    case "beholder" | "beholderkin":
+      attacks = [{"name":"Eye Ray","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [psychic]"}],"miss":[],"adv":"0"}]},{"type":"text","text":"*Ranged Spell Attack:* your spell attack modifier to hit, range 150 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None}]
+      summon_name = "Beholderkin"
+    case "slaad":
+      attacks = [{"name":"Claws","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d10 + 3 + {spell_level} [slashing]"},{"type":"ieffect2","name":"Festering Wound","duration":1,"desc":"Cannot heal","effects":{"immunities":["heal"]},"tick_on_caster":True}],"miss":[]}]},{"type":"text","text":"*Melee Weapon Attack:* your spell attack modifier to hit, reach 5 ft., one target. *Hit:* 1d10 + 3 + the spell's level slashing damage. If the target is a creature, it can't regain hit points until the start of the aberration's next turn."}],"_v":2,"verb":None,"proper":True,"activation_type":None}]
+      extra_effects = [{"name":"Regeneration","desc":"Regains 5 hit points at the start of its turn if it has at least 1 hit point","buttons":[{"label":"Regenerate","verb":"begins to regenerate","style":"3","automation":[{"type":"target","target":"self","effects":[{"type":"damage","damage":"{min(0, caster.hp)-5} [heal]"}]},{"type":"text","text":"The slaad regains 5 hit points at the start of its turn if it has at least 1 hit point."}]}]}]
+      summon_name = "Slaad"
+    case "star" | "mind flayer" | "mindflayer" | "flayer":
+      attacks = [{"name":"Psychic Slam","automation":[{"type":"target","target":"each","effects":[{"type":"attack","attackBonus":sab,"hit":[{"type":"damage","damage":f"1d8 + 3 + {spell_level} [psychic]"}],"miss":[]}]},{"type":"text","text":"*Melee Spell Attack:* your spell attack modifier to hit, reach 5 ft., one creature. *Hit:* 1d8 + 3 + the spell's level psychic damage."}],"_v":2,"verb":None,"proper":False,"activation_type":None},{"name":"Whispering Aura","automation":[{"type":"roll","dice":"2d6 [psychic]","name":"damage"},{"type":"target","target":"each","effects":[{"type":"save","stat":"wis","dc":sdc,"fail":[{"type":"damage","damage":"{damage}"}],"success":[]}],"meta":[]},{"type":"text","text":"At the start of each of the spirit's turns, the spirit emits psionic energy if it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC equals your spell save DC, each creature (other than you) within 5 feet of the spirit. Failure: 2d6 Psychic damage."}],"_v":2,"verb":"exudes"}]
+      summon_name = "Mind Flayer"
+    case _:
+      return {
+        'success': False,
+        'desc': "You didn't select a type!\n\nChoose from Beholder, Slaad or Star Spawn."
+      }
+
+  useconc = "noconc" not in parsed_args
+  usedur = int(parsed_args.get("dur",[600])[0])
+
+  return {
+    'success': True,
+    'desc': SPELL_DESC,
+    'summon_name': summon_name,
+    'stat_block': stat_block,
+    'attacks': attacks,
+    'effect': { 'name': f"Summon {TYPE}",'concentration': useconc, 'duration': usedur },
+    'extra_effects': extra_effects
+  }
