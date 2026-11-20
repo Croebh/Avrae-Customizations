@@ -180,6 +180,8 @@ def get_command(args):
 
   # construct the stat block
   summon_data = summon.build_summon(parsed_args)
+  if not summon_data.success:
+    return f"""embed -title "Woopsie!" -desc f"{summon_data.desc}" """
 
   # [custom] name for summon subtype
   custom_names = load_yaml(get('summon_names', '{}'))
@@ -187,31 +189,31 @@ def get_command(args):
   if s_name == 'reset':
     custom_names.pop(summon_data.summon_name, None)
   elif s_name:
-    custom_names[summon_name] = s_name
+    custom_names[summon_data.summon_name] = s_name
   ch.set_cvar('summon_names', dump_yaml(custom_names))
-  s_name = custom_names.get(summon_data.summon_name, f"Summoned {summon_data.summon_name} {summon_type} ({init_add.get_initials(name)})")
+  s_name = custom_names.get(summon_data.get('summon_name'), f"Summoned {summon_data.get('summon_name')} {summon_type} ({init_add.get_initials(ch.name)})")
 
   # group name
-  group_name = parsed_args.last('group', combat().me.group or f"{init_add.get_initials(name)}'s Summons")
+  group_name = parsed_args.last('group', combat().me.group or f"{init_add.get_initials(ch.name)}'s Summons")
 
   summon_data.stat_block['p'] = True
   summon_data.stat_block['group'] = group_name
-  summon_data.stat_block['note'] = f"Summoned by {name}\n{summon_data.stat_block.get('note', '')}"
+  summon_data.stat_block['note'] = f"Summoned by {ch.name}\n{summon_data.stat_block.get('note', '')}"
 
   c.me.set_group(group_name)
   c.me.add_effect(**summon_data.effect)
 
   embed_args = {
-    "title": f"{name} summoned a {summon_data.summon_name} {summon_type}!",
+    "title": f"{ch.name} summoned a {summon_data.summon_name} {summon_type}!",
     "desc": summon_data.desc,
-    "fields": resource_result.get(fields, []),
+    "fields": resource_result.get('fields', []),
     "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
-    "color": color,
-    "thumb": image,
+    "color": ch.color,
+    "thumb": ch.image,
   }
 
   summon_command = init_add.build_init_add(s_name, c.me.init, summon_data.stat_block)
-  embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=summon_data.attacks, effect_name=summon_data.effect_name, extra_effects=summon_data.extra_effects)
+  embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=summon_data.attacks, effect_name=summon_data.effect.name, extra_effects=summon_data.extra_effects)
 
   return f"""multiline
   {summon_command}
