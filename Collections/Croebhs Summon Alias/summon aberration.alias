@@ -1,6 +1,6 @@
 <drac2>
 using(
-  summon="missing-gvar-id",
+  summon="summon-gvar-id",
 )
 return summon.get_command(args=["aberration"] + &ARGS&)
 </drac2>

@@ -4,7 +4,7 @@ SPELL_DESC = "You call forth an aberrant spirit. It manifests in an unoccupied s
 MIN_LEVEL = 4
 
 using(
-  summon="missing-gvar-id",
+  summon="summon-gvar-id",
 )
 
 ch = character()

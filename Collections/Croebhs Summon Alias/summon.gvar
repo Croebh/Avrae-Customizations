@@ -69,9 +69,9 @@ using(
 
 _SUMMON_SVAR = 'summon_config'
 _DEFAULT_CONFIG = {
-  'aberration': 'gvar-id-BAD-F00D',
+  'aberration': 'summon-aberration-gvar-id',
   # ...
-  'wildfire': 'gvar-id-BAD-F00D',
+  # 'wildfire': 'gvar-id-BAD-F00D',
 }
 
 # Spell helpers
