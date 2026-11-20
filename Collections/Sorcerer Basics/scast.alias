@@ -2,7 +2,7 @@
 # Data
 spell_gvar  = load_json(get_gvar('5e2c8e11-6ade-4ce2-9ece-562fc9db70c7'))
 meta_gvar   = load_json(get_gvar('9af34023-6eba-4789-82b1-e68b191220ac'))
-cc          = "Sorcery Points"
+cc_list     = ["Sorcery Points", "Sorcery Points (Metamagic Adept)"]
 
 # Arguments
 args        = &ARGS&
@@ -31,15 +31,40 @@ for meta in meta_gvar:
     # Min 1 for cantrips
     meta_cost += max(int(get(meta.points, meta.points)),1)
 
-if not character().cc_exists(cc) and meta_cost:
+total_cc_value = 0
+cc_counters_exist = False
+
+for cc_name in cc_list:
+  if character().cc_exists(cc_name):
+    cc_counters_exist = True
+    total_cc_value += character().get_cc(cc_name)
+
+
+if character().cc_exists(cc):
+  total_cc_value += character().get_cc(cc_to_use)
+
+if not character().cc_exists(cc) and character().cc_exists(cc_alt):
+  cc_to_use = cc_alt
+
+if not cc_counters_exist and meta_cost:
   return f"""embed -title "I'm sorry {ctx.author.display_name}, I can't let you do that." -desc "You are missing a Sorcery Points custom counter. You can either create one yourself (`!help cc create`), or use the [`{ctx.prefix}level` alias](https://avrae.io/dashboard/workshop/5f7385fe647bb0a416316d1d)." """
 elif meta_cost:
-  if character().cc_exists(cc) and character().get_cc(cc) >= meta_cost:
+  if cc_counters_exist and total_cc_value >= meta_cost:
     # If the character cannot cast the spell at the level specified, safely error before expending sorcery points
     if character().spellbook.get_slots(spell_level) == 0 and not argparse(args).last('i'):
       return f"""embed -title "Cannot cast spell!" -desc "You don't have enough level {spell_level} slots left! Use `-l <level>` to cast at a different level, `!g lr` to take a long rest, or `-i` to ignore spell slots!" """
 
-    character().mod_cc(cc, -meta_cost)
+    current_meta_amount = meta_cost
+    for cc_name in cc_list:
+      if current_meta_amount == 0:
+        break
+      if character().cc_exists(cc_name):
+        current_cc_value = character().get_cc(cc_name)
+        # only deprecate the counter amount if it is smaller than the cost
+        deprecation_amount = min(current_meta_amount, current_cc_value)
+        character().mod_cc(cc_name, -deprecation_amount)
+        current_meta_amount -= deprecation_amount
+
   else:
     return f"""embed -title "I'm sorry {ctx.author.display_name}, I can't let you do that." -desc "You don't have enough Sorcery Points for that." """
 
