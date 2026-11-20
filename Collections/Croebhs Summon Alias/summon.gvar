@@ -94,7 +94,7 @@ def spend_spell_resources(spell_name, spell_level):
   Convenience function for summons which require a spell slot as their resource cost.
   """
   if not ch.spellbook.get_slots(spell_level):
-    return { 'success': False, 'desc': "You don't have any slots left!", 'fields': [{ 'title': "Spell Slots", 'desc': f"{ch.spellbook.slots_str(spell_level)}"] }
+    return { 'success': False, 'desc': "You don't have any slots left!", 'fields': [{ 'title': "Spell Slots", 'desc': f"{ch.spellbook.slots_str(spell_level)}"}] }
   if not ch.spellbook.can_cast(spell_name, spell_level):
     return { 'success': False, 'desc': "You don't have that spell prepared!" }
   ch.spellbook.use_slot(spell_level)
