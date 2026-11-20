@@ -1,0 +1,19 @@
+!"summon aberration" beholder -i
+---
+---
+
+!"summon aberration" beholder -i -name blinky
+---
+---
+
+!"summon aberration" beholder -i -name reset
+---
+---
+
+!"summon aberration" beholder
+---
+---
+
+!"summon aberration"
+---
+---

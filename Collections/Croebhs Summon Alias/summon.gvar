@@ -1,0 +1,221 @@
+# summon = "gvar_id"
+#
+# SUMMON
+# ======
+# A library for building commands which add a summon to initiative.
+# 
+# CONFIGURATION
+# -------------
+# Create a `summon_config` svar containing a dictionary mapping summon names to gvar ids.
+# Each provided gvar plugin will be called as needed to create its summon.
+#
+# PLUGINS
+# -------
+# A summon is defined by a gvar library which conforms to the template below. These
+# functions are called by the `summon` command.
+#
+# ```
+# using(
+#   summon="missing-gvar-id",
+# )
+#
+# def get_summon_resource_fields(parsed_args):
+#   """
+#   An optional function. Returns a list of fields to display the cost of this summon.
+#   This might be a spell slot or custom counter or some other resource.
+#   This function may be called even if the resources are not spent.
+#   """
+#   return {
+#     'fields': [
+#         { 'title': '', "desc": '' },
+#      ]
+#   }
+#
+# def spend_summon_resources(parsed_args):
+#   """
+#   An optional function. Spends resources required by a summon.
+#   Returns a success flag and a list of fields describing the resources spent. Typically 
+#   these are similar to the fields returned from `get_summon_resource_fields`.
+#   If the required resources are not available the function can return `'success': False`
+#   and a `desc` and `fields` to display as an error embed to the user.
+#   """
+#   return {
+#     'succcess': True,
+#     'fields': [
+#        { 'title': '', 'desc': '' }
+#      ]
+#   }
+#   
+#
+# def build_summon(parsed_args):
+#   """
+#   A required function. Returns a stat block and metadata needed to add a summon to
+#   initiative. If called it can be assumed that the resources required for this summon
+#   have already been successfully spent.
+#   """
+#   return {
+#     'desc':          '' # A description of the summoning spell or ability.
+#     'summon_name':   '' # The name of the combatant to add.
+#     'stat_block':    {} # A stat block conforming to the requirements of `build_init_add()` in f48672c2-8f25-4170-ba39-d5f6ffd38bd3.
+#     'attacks':       [] # A list of attack automation objects.
+#     'effect':        {} # An effect definition whose keys are valid arguments to `add_effect()`.
+#     'extra_effects': [] # A list of additional effects to apply, conforming the the requirements of `build_tembed()` in f48672c2-8f25-4170-ba39-d5f6ffd38bd3.
+#   }
+# ```
+
+using(
+  init_add="f48672c2-8f25-4170-ba39-d5f6ffd38bd3",
+)
+
+_SUMMON_SVAR = 'summon_config'
+_DEFAULT_CONFIG = {
+  'aberration': 'summon-aberration-gvar-id',
+  # ...
+  # 'wildfire': 'gvar-id-BAD-F00D',
+}
+
+# Spell helpers
+
+def spell_resource_fields(spell_level):
+  """
+  Convenience function for summons which require a spell slot as their resource cost.
+  """
+  return {
+    'fields': [
+      {
+        'title': "Spell Slots",
+        'desc': f"{ch.spellbook.slots_str(spell_level)}",
+      }
+    ]
+  }
+
+def spend_spell_resources(spell_name, spell_level):
+  """
+  Convenience function for summons which require a spell slot as their resource cost.
+  """
+  if not ch.spellbook.get_slots(spell_level):
+    return { 'success': False, 'desc': "You don't have any slots left!", 'fields': [{ 'title': "Spell Slots", 'desc': f"{ch.spellbook.slots_str(spell_level)}"}] }
+  if not ch.spellbook.can_cast(spell_name, spell_level):
+    return { 'success': False, 'desc': "You don't have that spell prepared!" }
+  ch.spellbook.use_slot(spell_level)
+  fields = spell_resource_fields(spell_level)
+  fields[0]['desc'] = fields[0].desc + ' (-1)'
+  return {
+    'success': True,
+    'fields': fields,
+  }
+
+# Counter helpers
+
+def counter_resource_fields(counter_name):
+  """
+  Convenience function for summons which use a custom counter.
+  """
+  return {
+    'fields': [
+      {
+        'title': "Custom Counters",
+        'desc': ch.cc_str(counter_name) if ch.cc_exists(counter_name) else f"Missing counter `{counter_name}`!",
+      }
+    ]
+  }
+
+def spend_counter_resources(counter_name, amount):
+  """
+  Convenience function for summons which spend charges of a custom counter as their resource cost.
+  """
+  if not ch.cc_exists(counter_name):
+    return { 'success': False, 'desc': f"Missing counter `{counter_name}!"}
+  ch.mod_cc(counter_name, val=amount)
+  fields = counter_resource_fields(counter_name)
+  fields[0]['desc'] = fields[0].desc + f' ({amount})'
+  return {
+    'success': True,
+    'fields': fields,
+  }
+
+# Command builder
+
+def get_command(args):
+  """
+  Builds a set of commands to do the work of spending resources and adding a summon to initiative.
+  May return commands to display a relevant error message instead.
+  """
+  c = combat()
+  ch = character()
+  config = load_yaml(get_svar(_SUMMON_SVAR, default="{}")) | _DEFAULT_CONFIG
+
+  # argument parsing
+  # maintain the behavior of showing help text if called with no arguments
+  # it might be preferable to list known summons instead
+  if len(args) == 0:
+    return f"help {ctx.alias} -here"
+  # expected arguments are: !summon summon_type [subtype] [-i] [-name <name>|reset] [-group <name>]
+  summon_type = args.pop(0)
+  parsed_args = argparse(["-type"] + args)
+
+  if not (c and c.me):
+    return f"""embed -title "Woopsie!" -desc "You're not in initiative!" """
+
+  summon_type_gvar = config.get(summon_type, None)
+  if not summon_type_gvar:
+    return f"""embed -title "Woopsie!" -desc f"`{summon_type}` is not a known type of summon." """
+  using(summon=config.get(summon_type))
+
+  # resource costs
+  ignore  = parsed_args.last('i')
+  resource_result = {}
+  if not ignore:
+    try:
+      resource_result = summon.spend_summon_resources(parsed_args)
+    except "NotDefined":
+      pass
+    if not resource_result.get('success', True):
+      return f"""embed -title "Woopsie!" -desc "{resource_result.get('desc', '')}" {f'-f "{field.title}|{field.desc}"' for field in resource_result.get('fields', [])}"""
+  else:
+    try:
+      resource_result = summon.get_summon_resource_fields(parsed_args)
+    except "NotDefined":
+      pass
+
+  # construct the stat block
+  summon_data = summon.build_summon(parsed_args)
+  if not summon_data.success:
+    return f"""embed -title "Woopsie!" -desc f"{summon_data.desc}" """
+
+  # [custom] name for summon subtype
+  custom_names = load_yaml(get('summon_names', '{}'))
+  s_name = parsed_args.last('name')
+  if s_name == 'reset':
+    custom_names.pop(summon_data.summon_name, None)
+  elif s_name:
+    custom_names[summon_data.summon_name] = s_name
+  ch.set_cvar('summon_names', dump_yaml(custom_names))
+  s_name = custom_names.get(summon_data.get('summon_name'), f"Summoned {summon_data.get('summon_name')} {summon_type} ({init_add.get_initials(ch.name)})")
+
+  # group name
+  group_name = parsed_args.last('group', combat().me.group or f"{init_add.get_initials(ch.name)}'s Summons")
+
+  summon_data.stat_block['p'] = True
+  summon_data.stat_block['group'] = group_name
+  summon_data.stat_block['note'] = f"Summoned by {ch.name}\n{summon_data.stat_block.get('note', '')}"
+
+  c.me.set_group(group_name)
+  c.me.add_effect(**summon_data.effect)
+
+  embed_args = {
+    "title": f"{ch.name} summoned a {summon_data.summon_name} {summon_type}!",
+    "desc": summon_data.desc,
+    "fields": resource_result.get('fields', []),
+    "footer": f"{ctx.prefix+ctx.alias} | Made by Croebh",
+    "color": ch.color,
+    "thumb": ch.image,
+  }
+
+  summon_command = init_add.build_init_add(s_name, c.me.init, summon_data.stat_block)
+  embed = init_add.build_tembed(**embed_args, init_name=s_name, attacks=summon_data.attacks, effect_name=summon_data.effect.name, extra_effects=summon_data.extra_effects)
+
+  return f"""multiline
+  {summon_command}
+  {embed}
+  """

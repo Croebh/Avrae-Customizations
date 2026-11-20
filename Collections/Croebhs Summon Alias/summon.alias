@@ -1,1 +1,6 @@
-help {{ctx.alias}} {{_="""&*&"""}} -here
+<drac2>
+using(
+  summon="missing-gvar-id",
+)
+return summon.get_command(args=&ARGS&)
+</drac2>
