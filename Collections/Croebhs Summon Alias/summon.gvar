@@ -149,9 +149,9 @@ def get_command(args):
   # maintain the behavior of showing help text if called with no arguments
   # it might be preferable to list known summons instead
   if len(args) == 0:
-    return f"help {ctx.alias} {_="""&*&"""} -here"
+    return f"help {ctx.alias} -here"
   # expected arguments are: !summon summon_type [subtype] [-i] [-name <name>|reset] [-group <name>]
-  summon_type = args.pop(index=0)
+  summon_type = args.pop(0)
   parsed_args = argparse(["-type"] + args)
 
   if not (c and c.me):
